@@ -1,0 +1,17 @@
+---
+layout: post
+comments: true
+title: Создание образа дискеты для MKDOS
+category: ru
+tags: [bk11m]
+date: 2013-11-30 21:42:12
+---
+
+Простая утилита
+======================================
+
+Просто компонует указанные файлы в образ диска MKDOS.
+[Описание в формате PDF][1], [Текст на Си][2].
+
+[1]:http://yrabbit.freeshell.org/proj/mkdisk/mkdisk.pdf
+[2]:http://yrabbit.freeshell.org/proj/mkdisk/mkdisk.c
