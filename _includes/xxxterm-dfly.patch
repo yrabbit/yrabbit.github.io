@@ -1,0 +1,44 @@
+diff --git a/about.c b/about.c
+index 77fcde3..98019ae 100644
+--- a/about.c
++++ b/about.c
+@@ -1074,10 +1074,8 @@ xtp_page_dl_row(struct tab *t, char *html, struct download *dl)
+ 		/* gather size info */
+ 		progress = 100 * webkit_download_get_progress(dl->download);
+ 
+-		fmt_scaled(
+-		    webkit_download_get_current_size(dl->download), cur_sz);
+-		fmt_scaled(
+-		    webkit_download_get_total_size(dl->download), tot_sz);
++		format_bytes(cur_sz, sizeof(cur_sz) - 1, webkit_download_get_current_size(dl->download));
++		format_bytes(tot_sz, sizeof(tot_sz) - 1, webkit_download_get_total_size(dl->download));
+ 
+ 		status_html = g_strdup_printf(
+ 		    "<div style='width: 100%%' align='center'>"
+diff --git a/xxxterm.h b/xxxterm.h
+index 3558ed0..ef331ae 100644
+--- a/xxxterm.h
++++ b/xxxterm.h
+@@ -43,6 +43,22 @@ u_int32_t	arc4random_uniform(u_int32_t);
+ #include <libutil.h>
+ #include "freebsd/util.h"
+ #include <sys/tree.h>
++#elif defined (__DragonFly__)
++#include <libutil.h>
++#include "freebsd/util.h"
++#include <sys/tree.h>
++#define RB_FOREACH_REVERSE(x, name, head)                              \
++       for ((x) = RB_MAX(name, head);                                  \
++            (x) != NULL;                                               \
++            (x) = name##_RB_PREV(x))
++#define RB_FOREACH_REVERSE_FROM(x, name, y)                            \
++       for ((x) = (y);                                                 \
++           ((x) != NULL) && ((y) = name##_RB_PREV(x), (x) != NULL);    \
++            (x) = (y))
++#define RB_FOREACH_REVERSE_SAFE(x, name, head, y)                      \
++       for ((x) = RB_MAX(name, head);                                  \
++           ((x) != NULL) && ((y) = name##_RB_PREV(x), (x) != NULL);    \
++            (x) = (y))
+ #else /* OpenBSD */
+ #include <util.h>
+ #include <sys/tree.h>
