@@ -1,52 +1,118 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en-us">
+<html>
+
   <head>
-	<title>Posts Tagged &ldquo;xorg&rdquo;</title>
-	<meta name="author" content="Yellow Rabbit" />
-	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-	<meta http-equiv="content-language" content="ru" />
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta http-equiv="content-language" content="ru" />
 
-	<!-- syntax highlight CSS -->
-	<link rel="stylesheet" href="/files/css/syntax.css" type="text/css" />
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 
-	<!-- Homepage CSS -->
-	<link rel="stylesheet" href="/files/css/screen.css" type="text/css" media="screen, projection" />
-  </head>
+  <title>
+    
+      Posts Tagged &ldquo;xorg&rdquo; &middot; Yellow Rabbit
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+
+  <!-- Icons -->
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
   <body>
-	<header>
-	  <h1><a href="/">Yellow Rabbit</a></h1>
-	  <nav>
-		<a href="/">home</a>
-<!--		<a href="/search.html">search</a> -->
-		<a href="/about.html">about</a>
-	  </nav>
-	</header>
-	<section id="content">
-	<h2 class="post_title">Posts Tagged &ldquo;xorg&rdquo;</h2>
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-item">
+    <p></p>
+  </div>
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/">Home</a>
+
+    
+
+    
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/about/">About</a>
+        
+      
+    
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+
+    <span class="sidebar-nav-item">Currently v0.0.1</span>
+  </nav>
+
+  <div class="sidebar-item">
+    <p>
+      &copy; 2014. All rights reserved.
+    </p>
+  </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">Yellow Rabbit</a>
+            <small>не забывает играть</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <h2 class="post_title">Posts Tagged &ldquo;xorg&rdquo;</h2>
 <ul>
 	
 		
 			
 				<li class="archive_list">
-				<time style="color:#666;font-size:11px;" datetime='2014-12-08'>08/12/14</time> <a class="archive_list_article_link" href='/ru/2014/12/08/acer-720-keyboard.html'>Имитация недостающих клавиш Acer C720</a>
-				<p class="summary">
+				<time style="color:#666;font-size:11px;" datetime='2014-12-08'>08/12/14</time> <a class="archive_list_article_link" href='/ru/2014/12/08/acer-720-keyboard/'>Имитация недостающих клавиш Acer C720</a>
 				<ul class="tag_list">
 					
-						<li class="inline_archive_list"><a class="tag_list_link" href="/tag/xorg">xorg</a></li>
+						<li class="inline archive_list"><a class="tag_list_link" href="/tag/xorg">xorg</a></li>
 					
-						<li class="inline_archive_list"><a class="tag_list_link" href="/tag/c720">c720</a></li>
-					
-						<li class="inline_archive_list"><a class="tag_list_link" href="/tag/dragonflybsd">dragonflybsd</a></li>
+						<li class="inline archive_list"><a class="tag_list_link" href="/tag/c720">c720</a></li>
 					
 					</ul>
 				</li>
 			
-		
-			
-		
-			
-		
-	
 		
 			
 		
@@ -55,10 +121,27 @@
 <!-- vim:ts=4:sw=4:sts=4
 -->
 
-	</section>
-    <section id="footer">
-     <center>
-     </center>
-	</section>
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
   </body>
 </html>
