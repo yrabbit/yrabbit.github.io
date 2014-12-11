@@ -73,7 +73,7 @@
       
     
 
-    <span class="sidebar-nav-item">Currently v0.0.1</span>
+    <span class="sidebar-nav-item">Currently v1.0.1</span>
   </nav>
 
   <div class="sidebar-item">
@@ -112,28 +112,31 @@
 	
 	</ul>
     </div>
-  <p>Клавиатура хромбука Acer C720 видимо хороша для прогулок по сети и работы в Chrome OS, но мне для написания программ некоторых клавиш не хватает. Это Home, End, PageUp, PageDown и Delete.</p>
+  <p>Клавиатура хромбука Acer C720 видимо хороша для прогулок по сети и работы в Chrome OS, но мне для написания программ некоторых клавиш не хватает. Это <em>Home</em>, <em>End</em>, <em>PageUp</em>, <em>PageDown</em>, <em>Insert</em> и <em>Delete</em>.</p>
 
-<p>Можно попробовать использовать клавишу &quot;левый Alt&quot; (генерирует символ LAlt) как модификатор для курсорных клавиш. Тогда получаются следующие клавиатурные комбинации:</p>
+<p>Можно попробовать использовать клавишу <em>Alt</em> (генерирует символ Alt) как модификатор для курсорных клавиш. Тогда получаются следующие клавиатурные комбинации:</p>
 
 <table align="center" style="width:60%;align=center">
     <tr>
         <th>Клавиша</th><th>Комбинация</th>
     </tr>
     <tr>
-        <td>Delete</td><td>LAlt + BackSpace</td>
+        <td>Insert</td><td>Alt + \</td>
     </tr>
     <tr>
-        <td>Home</td><td>LAlt + Left (&larr;)</td>
+        <td>Delete</td><td>Alt + BackSpace</td>
     </tr>
     <tr>
-        <td>End</td><td>LAlt + Right (&rarr;)</td>
+        <td>Home</td><td>Alt + Left (&larr;)</td>
     </tr>
     <tr>
-        <td>PageUp</td><td>LAlt + Up (&uarr;)</td>
+        <td>End</td><td>Alt + Right (&rarr;)</td>
     </tr>
     <tr>
-        <td>PageDown</td><td>LAlt + Down (&darr;)</td>
+        <td>PageUp</td><td>Alt + Up (&uarr;)</td>
+    </tr>
+    <tr>
+        <td>PageDown</td><td>Alt + Down (&darr;)</td>
     </tr>
 </table>
 
@@ -141,24 +144,40 @@
 
 <div class="highlight"><pre><code class="language-console" data-lang="console"><span class="go">mkdir -p ${HOME}/.config/xkb/types ${HOME}/.config/xkb/symbols</span></code></pre></div>
 
-<p>В файле <code>${HOME}/.config/xkb/types/c720</code>  как будут себя вести совместно два модификатора - Shift и LAlt. Интерес представляют ситуации, когда нажат LAlt, то есть уровень 3. </p>
+<p>В файле <code>${HOME}/.config/xkb/types/c720</code>  как будут себя вести совместно два модификатора - <em>Shift</em> и <em>Alt</em>. Интерес представляют ситуации, когда нажат <em>Alt</em>, то есть уровень 3. </p>
 
 <div class="highlight"><pre><code class="language-c" data-lang="c"><span class="n">xkb_types</span> <span class="s">&quot;c720&quot;</span> <span class="p">{</span>
-    <span class="n">virtual_modifiers</span> <span class="n">LAlt</span><span class="p">;</span>
+    <span class="n">virtual_modifiers</span> <span class="n">Alt</span><span class="p">;</span>
     <span class="n">type</span> <span class="s">&quot;ARROW&quot;</span> <span class="p">{</span>
-        <span class="n">modifiers</span>    <span class="o">=</span> <span class="n">Shift</span><span class="o">+</span><span class="n">LAlt</span><span class="p">;</span>
+        <span class="n">modifiers</span>    <span class="o">=</span> <span class="n">Shift</span><span class="o">+</span><span class="n">Alt</span><span class="p">;</span>
         <span class="n">map</span><span class="p">[</span><span class="n">Shift</span><span class="p">]</span>  <span class="o">=</span> <span class="n">Level2</span><span class="p">;</span>
-        <span class="n">map</span><span class="p">[</span><span class="n">LAlt</span><span class="p">]</span>   <span class="o">=</span> <span class="n">Level3</span><span class="p">;</span>
-        <span class="n">map</span><span class="p">[</span><span class="n">LAlt</span><span class="o">+</span><span class="n">Shift</span><span class="p">]</span>   <span class="o">=</span> <span class="n">Level3</span><span class="p">;</span>
+        <span class="n">map</span><span class="p">[</span><span class="n">Alt</span><span class="p">]</span>    <span class="o">=</span> <span class="n">Level3</span><span class="p">;</span>
+        <span class="n">map</span><span class="p">[</span><span class="n">Alt</span><span class="o">+</span><span class="n">Shift</span><span class="p">]</span>    <span class="o">=</span> <span class="n">Level3</span><span class="p">;</span>
         <span class="n">level_name</span><span class="p">[</span><span class="n">Level1</span><span class="p">]</span> <span class="o">=</span> <span class="s">&quot;Base&quot;</span><span class="p">;</span>
         <span class="n">level_name</span><span class="p">[</span><span class="n">Level2</span><span class="p">]</span> <span class="o">=</span> <span class="s">&quot;Caps&quot;</span><span class="p">;</span>
-        <span class="n">level_name</span><span class="p">[</span><span class="n">Level3</span><span class="p">]</span> <span class="o">=</span> <span class="s">&quot;LAlt&quot;</span><span class="p">;</span>
+        <span class="n">level_name</span><span class="p">[</span><span class="n">Level3</span><span class="p">]</span> <span class="o">=</span> <span class="s">&quot;Alt&quot;</span><span class="p">;</span>
     <span class="p">};</span>
 <span class="p">};</span></code></pre></div>
 
 <p>В файле <code>${HOME}/.config/xkb/symbols/c720</code> на уровне 3 производим подмену символов клавиш на нужные и не забываем очистить флажок модификатора, иначе новые символы будут обрабатываться неверно.</p>
 
 <div class="highlight"><pre><code class="language-c" data-lang="c"><span class="n">xkb_symbols</span> <span class="s">&quot;c720&quot;</span> <span class="p">{</span>
+    <span class="n">key</span> <span class="o">&lt;</span><span class="n">BKSL</span><span class="o">&gt;</span> <span class="p">{</span>
+        <span class="n">type</span><span class="o">=</span><span class="s">&quot;ARROW&quot;</span><span class="p">,</span>
+        <span class="n">repeat</span><span class="o">=</span><span class="n">yes</span><span class="p">,</span>
+        <span class="n">symbol</span><span class="p">[</span><span class="n">Group1</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">backslash</span><span class="p">,</span> <span class="n">bar</span><span class="p">,</span> <span class="n">Insert</span><span class="p">],</span>
+        <span class="n">symbol</span><span class="p">[</span><span class="n">Group2</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">backslash</span><span class="p">,</span> <span class="n">slash</span><span class="p">,</span> <span class="n">Insert</span><span class="p">],</span>
+        <span class="n">actions</span><span class="p">[</span><span class="n">Group1</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">NoAction</span><span class="p">(),</span>
+            <span class="n">NoAction</span><span class="p">(),</span>
+            <span class="n">RedirectKey</span><span class="p">(</span><span class="n">key</span><span class="o">=&lt;</span><span class="n">INS</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">clearmods</span><span class="o">=</span><span class="n">Alt</span><span class="p">)</span>
+        <span class="p">],</span>
+        <span class="n">actions</span><span class="p">[</span><span class="n">Group2</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">NoAction</span><span class="p">(),</span>
+            <span class="n">NoAction</span><span class="p">(),</span>
+            <span class="n">RedirectKey</span><span class="p">(</span><span class="n">key</span><span class="o">=&lt;</span><span class="n">INS</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">clearmods</span><span class="o">=</span><span class="n">Alt</span><span class="p">)</span>
+        <span class="p">]</span>
+    <span class="p">};</span>
     <span class="n">key</span> <span class="o">&lt;</span><span class="n">BKSP</span><span class="o">&gt;</span> <span class="p">{</span>
         <span class="n">type</span><span class="o">=</span><span class="s">&quot;ARROW&quot;</span><span class="p">,</span>
         <span class="n">repeat</span><span class="o">=</span><span class="n">yes</span><span class="p">,</span>
@@ -166,7 +185,7 @@
         <span class="n">actions</span><span class="p">[</span><span class="n">Group1</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">NoAction</span><span class="p">(),</span>
             <span class="n">NoAction</span><span class="p">(),</span>
-            <span class="n">RedirectKey</span><span class="p">(</span><span class="n">key</span><span class="o">=&lt;</span><span class="n">DELE</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">clearmods</span><span class="o">=</span><span class="n">LAlt</span><span class="p">)</span>
+            <span class="n">RedirectKey</span><span class="p">(</span><span class="n">key</span><span class="o">=&lt;</span><span class="n">DELE</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">clearmods</span><span class="o">=</span><span class="n">Alt</span><span class="p">)</span>
         <span class="p">]</span>
     <span class="p">};</span>
     <span class="n">key</span> <span class="o">&lt;</span><span class="n">LEFT</span><span class="o">&gt;</span> <span class="p">{</span>
@@ -175,7 +194,7 @@
         <span class="n">actions</span><span class="p">[</span><span class="n">Group1</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">NoAction</span><span class="p">(),</span>
             <span class="n">NoAction</span><span class="p">(),</span>
-            <span class="n">RedirectKey</span><span class="p">(</span><span class="n">key</span><span class="o">=&lt;</span><span class="n">HOME</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">clearmods</span><span class="o">=</span><span class="n">LAlt</span><span class="p">)</span>
+            <span class="n">RedirectKey</span><span class="p">(</span><span class="n">key</span><span class="o">=&lt;</span><span class="n">HOME</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">clearmods</span><span class="o">=</span><span class="n">Alt</span><span class="p">)</span>
         <span class="p">]</span>
     <span class="p">};</span>
     <span class="n">key</span> <span class="o">&lt;</span><span class="n">RGHT</span><span class="o">&gt;</span> <span class="p">{</span>
@@ -185,7 +204,7 @@
         <span class="n">actions</span><span class="p">[</span><span class="n">Group1</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">NoAction</span><span class="p">(),</span>
             <span class="n">NoAction</span><span class="p">(),</span>
-            <span class="n">RedirectKey</span><span class="p">(</span><span class="n">key</span><span class="o">=&lt;</span><span class="n">END</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">clearmods</span><span class="o">=</span><span class="n">LAlt</span><span class="p">)</span>
+            <span class="n">RedirectKey</span><span class="p">(</span><span class="n">key</span><span class="o">=&lt;</span><span class="n">END</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">clearmods</span><span class="o">=</span><span class="n">Alt</span><span class="p">)</span>
         <span class="p">]</span>
     <span class="p">};</span>
     <span class="n">key</span> <span class="o">&lt;</span><span class="n">UP</span><span class="o">&gt;</span> <span class="p">{</span>
@@ -195,7 +214,7 @@
         <span class="n">actions</span><span class="p">[</span><span class="n">Group1</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">NoAction</span><span class="p">(),</span>
             <span class="n">NoAction</span><span class="p">(),</span>
-            <span class="n">RedirectKey</span><span class="p">(</span><span class="n">key</span><span class="o">=&lt;</span><span class="n">PGUP</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">clearmods</span><span class="o">=</span><span class="n">LAlt</span><span class="p">)</span>
+            <span class="n">RedirectKey</span><span class="p">(</span><span class="n">key</span><span class="o">=&lt;</span><span class="n">PGUP</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">clearmods</span><span class="o">=</span><span class="n">Alt</span><span class="p">)</span>
         <span class="p">]</span>
     <span class="p">};</span>
     <span class="n">key</span> <span class="o">&lt;</span><span class="n">DOWN</span><span class="o">&gt;</span> <span class="p">{</span>
@@ -204,14 +223,14 @@
         <span class="n">actions</span><span class="p">[</span><span class="n">Group1</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">NoAction</span><span class="p">(),</span>
             <span class="n">NoAction</span><span class="p">(),</span>
-            <span class="n">RedirectKey</span><span class="p">(</span><span class="n">key</span><span class="o">=&lt;</span><span class="n">PGDN</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">clearmods</span><span class="o">=</span><span class="n">LAlt</span><span class="p">)</span>
+            <span class="n">RedirectKey</span><span class="p">(</span><span class="n">key</span><span class="o">=&lt;</span><span class="n">PGDN</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">clearmods</span><span class="o">=</span><span class="n">Alt</span><span class="p">)</span>
         <span class="p">]</span>
     <span class="p">};</span>
 <span class="p">};</span></code></pre></div>
 
 <p>Осталось записать в .xinitrc следующую команду для загрузки изменённой раскладки:</p>
 
-<div class="highlight"><pre><code class="language-console" data-lang="console"><span class="go">setxkbmap -layout &quot;us+c720,ru&quot; -types &quot;complete+c720&quot; -option grp:toggle -print|xkbcomp -I&quot;$HOME/.config/xkb&quot; - &quot;${DISPLAY%%.*}&quot;</span></code></pre></div>
+<div class="highlight"><pre><code class="language-console" data-lang="console"><span class="go">setxkbmap -layout &quot;us+c720&quot; -types &quot;complete+c720&quot; -print|xkbcomp -I&quot;$HOME/.config/xkb&quot; - &quot;${DISPLAY%%.*}&quot;</span></code></pre></div>
 
 </div>
 
