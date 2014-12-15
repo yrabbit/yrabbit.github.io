@@ -4,13 +4,33 @@
  <title>Yellow Rabbit</title>
  <link href="http://yrabbit.github.com/atom.xml" rel="self"/>
  <link href="http://yrabbit.github.com/"/>
- <updated>2014-12-11T20:36:00+10:00</updated>
+ <updated>2014-12-15T20:30:47+10:00</updated>
  <id>http://yrabbit.github.com</id>
  <author>
    <name>Yellow Rabbit</name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Регулировка громкости функциональными клавишами</title>
+   <link href="http://yrabbit.github.com/ru/2014/12/15/xbindkeys-volume/"/>
+   <updated>2014-12-15T20:12:00+10:00</updated>
+   <id>http://yrabbit.github.com/ru/2014/12/15/xbindkeys-volume</id>
+   <content type="html">&lt;p&gt;У Acer C720 нет обозначенных функциональных клавиш F1-10, вместо этого соответствующие клавиши помечены различными значками. Так F8 обозначена как &amp;quot;выключение звука&amp;quot;, F9 - &amp;quot;уменьшить громкость&amp;quot;, F10 - &amp;quot;увеличить громкость&amp;quot;. Так эти клавиши работают под ChromeOS. Чтобы частично повторить этот функционал воспользуемся &lt;code&gt;xbindkeys&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Создадим файл &lt;code&gt;${HOME}/.xbindkeys&lt;/code&gt; со следующим содержимым:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;# volume&lt;/span&gt;
+&lt;span class=&quot;s2&quot;&gt;&amp;quot;mixer -f /dev/mixer1 vol -5&amp;quot;&lt;/span&gt;
+  F9
+
+&lt;span class=&quot;s2&quot;&gt;&amp;quot;mixer -f /dev/mixer1 vol +5&amp;quot;&lt;/span&gt;
+  F10&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Верно для DragonFly BSD, поскольку устройство /dev/mixer0 соотвествует hdmi выходу.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Имитация недостающих клавиш Acer C720</title>
