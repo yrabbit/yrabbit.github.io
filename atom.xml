@@ -15,13 +15,9 @@
  <entry>
    <title>Регулировка громкости функциональными клавишами</title>
    <link href="http://yrabbit.github.com/ru/2014/12/15/xbindkeys-volume/"/>
-   <updated>2014-12-15T20:12:00+11:00</updated>
+   <updated>2014-12-15T20:12:00+10:00</updated>
    <id>http://yrabbit.github.com/ru/2014/12/15/xbindkeys-volume</id>
    <content type="html">&lt;p&gt;У Acer C720 нет обозначенных функциональных клавиш F1-10, вместо этого соответствующие клавиши помечены различными значками. Так F8 обозначена как &amp;quot;выключение звука&amp;quot;, F9 - &amp;quot;уменьшить громкость&amp;quot;, F10 - &amp;quot;увеличить громкость&amp;quot;. Так эти клавиши работают под ChromeOS. Чтобы частично повторить этот функционал воспользуемся &lt;code&gt;xbindkeys&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;&lt;center&gt;
-    &lt;img src=&quot;/public/imgs/acer-c720-keyboard.jpeg&quot;&gt;
-&lt;/center&gt;&lt;/p&gt;
 
 &lt;p&gt;Создадим файл &lt;code&gt;${HOME}/.xbindkeys&lt;/code&gt; со следующим содержимым:&lt;/p&gt;
 
@@ -39,7 +35,7 @@
  <entry>
    <title>Имитация недостающих клавиш Acer C720</title>
    <link href="http://yrabbit.github.com/ru/2014/12/08/acer-720-keyboard/"/>
-   <updated>2014-12-08T08:01:01+11:00</updated>
+   <updated>2014-12-08T07:01:01+10:00</updated>
    <id>http://yrabbit.github.com/ru/2014/12/08/acer-720-keyboard</id>
    <content type="html">&lt;p&gt;Клавиатура хромбука Acer C720 видимо хороша для прогулок по сети и работы в Chrome OS, но мне для написания программ некоторых клавиш не хватает. Это &lt;em&gt;Home&lt;/em&gt;, &lt;em&gt;End&lt;/em&gt;, &lt;em&gt;PageUp&lt;/em&gt;, &lt;em&gt;PageDown&lt;/em&gt;, &lt;em&gt;Insert&lt;/em&gt; и &lt;em&gt;Delete&lt;/em&gt;.&lt;/p&gt;
 
