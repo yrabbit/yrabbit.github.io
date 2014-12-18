@@ -1,0 +1,105 @@
+diff --git a/sys/dev/drm/drm_sysctl.c b/sys/dev/drm/drm_sysctl.c
+index 3e569e3..57fbbb8 100644
+--- a/sys/dev/drm/drm_sysctl.c
++++ b/sys/dev/drm/drm_sysctl.c
+@@ -52,11 +52,6 @@ struct drm_sysctl_list {
+ };
+ #define DRM_SYSCTL_ENTRIES NELEM(drm_sysctl_list)
+ 
+-struct drm_sysctl_info {
+-	struct sysctl_ctx_list ctx;
+-	char		       name[2];
+-};
+-
+ int drm_sysctl_init(struct drm_device *dev)
+ {
+ 	struct drm_sysctl_info *info;
+diff --git a/sys/dev/drm/i915/intel_panel.c b/sys/dev/drm/i915/intel_panel.c
+index 32b6454..59e038b 100644
+--- a/sys/dev/drm/i915/intel_panel.c
++++ b/sys/dev/drm/i915/intel_panel.c
+@@ -461,9 +461,60 @@ void intel_panel_destroy_backlight(struct drm_device *dev)
+ 	}
+ }
+ #else
++
++/*
++ * Read max backlight level
++ */
++static int
++sysctl_backlight_max(SYSCTL_HANDLER_ARGS)
++{
++	int err, val;
++
++	val =intel_panel_get_max_backlight((struct drm_device *)arg1);
++	err = sysctl_handle_int(oidp, &val, 0, req);
++	return(err);
++}
++
++/*
++ * Read/write backlight level 
++ */
++static int
++sysctl_backlight_handler(SYSCTL_HANDLER_ARGS)
++{
++	struct drm_i915_private *dev_priv;
++	int err, val;
++
++	dev_priv = ((struct drm_device *)arg1)->dev_private;
++	val = dev_priv->backlight_level;
++
++	err = sysctl_handle_int(oidp, &val, 0, req);
++	if (err != 0 || req->newptr == NULL) {
++		return(err);
++	}
++
++	if (val != dev_priv->backlight_level) {
++		intel_panel_set_backlight(arg1, val);
++	}
++
++	return(err);
++}
++
+ int intel_panel_setup_backlight(struct drm_connector *connector)
+ {
+ 	intel_panel_init_backlight(connector->dev);
++
++	SYSCTL_ADD_PROC(&connector->dev->sysctl->ctx, &sysctl__hw_children,
++			OID_AUTO, "backlight_max", 
++			CTLTYPE_INT | CTLFLAG_RD | CTLFLAG_ANYBODY,
++			connector->dev, sizeof(int),
++			sysctl_backlight_max,
++			"I", "Max backlight level");
++	SYSCTL_ADD_PROC(&connector->dev->sysctl->ctx, &sysctl__hw_children,
++			OID_AUTO, "backlight_level", 
++			CTLTYPE_INT | CTLFLAG_RW | CTLFLAG_ANYBODY,
++			connector->dev, sizeof(int),
++			sysctl_backlight_handler,
++			"I", "Backlight level");
+ 	return 0;
+ }
+ 
+@@ -471,6 +522,7 @@ void intel_panel_destroy_backlight(struct drm_device *dev)
+ {
+ 	return;
+ }
++
+ #endif
+ 
+ int intel_panel_init(struct intel_panel *panel,
+diff --git a/sys/dev/drm/include/drm/drmP.h b/sys/dev/drm/include/drm/drmP.h
+index 9e492c6..b01fd29 100644
+--- a/sys/dev/drm/include/drm/drmP.h
++++ b/sys/dev/drm/include/drm/drmP.h
+@@ -340,6 +340,11 @@ vm_page_t vm_phys_fictitious_to_vm_page(vm_paddr_t pa);
+ 	}								\
+ } while (0)
+ 
++struct drm_sysctl_info {
++	        struct sysctl_ctx_list ctx;
++	        char   name[2];
++};
++
+ typedef struct drm_pci_id_list
+ {
+ 	int vendor;
