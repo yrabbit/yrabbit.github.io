@@ -15,10 +15,10 @@ index 3e569e3..57fbbb8 100644
  {
  	struct drm_sysctl_info *info;
 diff --git a/sys/dev/drm/i915/intel_panel.c b/sys/dev/drm/i915/intel_panel.c
-index 32b6454..59e038b 100644
+index 32b6454..4350ebd 100644
 --- a/sys/dev/drm/i915/intel_panel.c
 +++ b/sys/dev/drm/i915/intel_panel.c
-@@ -461,9 +461,60 @@ void intel_panel_destroy_backlight(struct drm_device *dev)
+@@ -461,9 +461,61 @@ void intel_panel_destroy_backlight(struct drm_device *dev)
  	}
  }
  #else
@@ -53,7 +53,8 @@ index 32b6454..59e038b 100644
 +		return(err);
 +	}
 +
-+	if (val != dev_priv->backlight_level) {
++	if (val != dev_priv->backlight_level && val >= 0
++			&& val <= intel_panel_get_max_backlight((struct drm_device *)arg1)) {
 +		intel_panel_set_backlight(arg1, val);
 +	}
 +
@@ -79,7 +80,7 @@ index 32b6454..59e038b 100644
  	return 0;
  }
  
-@@ -471,6 +522,7 @@ void intel_panel_destroy_backlight(struct drm_device *dev)
+@@ -471,6 +523,7 @@ void intel_panel_destroy_backlight(struct drm_device *dev)
  {
  	return;
  }
