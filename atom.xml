@@ -4,7 +4,7 @@
  <title>Yellow Rabbit</title>
  <link href="http://yrabbit.github.com/atom.xml" rel="self"/>
  <link href="http://yrabbit.github.com/"/>
- <updated>2014-12-19T19:00:40+10:00</updated>
+ <updated>2014-12-21T15:09:37+10:00</updated>
  <id>http://yrabbit.github.com</id>
  <author>
    <name>Yellow Rabbit</name>
@@ -14,9 +14,9 @@
  
  <entry>
    <title>3 способа регулировки яркости подсветки на Acer C720 (part 1)</title>
-   <link href="http://yrabbit.github.com/ru/2014/12/18/3-ways-to-adjust-a-backlight-on-acer-c720/"/>
+   <link href="http://yrabbit.github.com/ru/2014/12/18/2-ways-to-adjust-a-backlight-on-acer-c720/"/>
    <updated>2014-12-18T19:35:30+10:00</updated>
-   <id>http://yrabbit.github.com/ru/2014/12/18/3-ways-to-adjust-a-backlight-on-acer-c720</id>
+   <id>http://yrabbit.github.com/ru/2014/12/18/2-ways-to-adjust-a-backlight-on-acer-c720</id>
    <content type="html">&lt;p&gt;Клавиши регулировки подсветки на клавиатуре хромбука Acer C720 являются замаскированными клавишами &lt;em&gt;F6&lt;/em&gt; и &lt;em&gt;F7&lt;/em&gt;. Соответственно при замене ChromeOS на DragoFly BSD регулировка подсветки не работает. Не удаётся также использовать &lt;em&gt;xbacklight&lt;/em&gt; - он не находит видео-выходов с возможностью регулировки подсветки. &lt;em&gt;xrandr&lt;/em&gt; может помочь, но это программное решение, что-то типа приглушения яркости выводимых точек. Ясно, что жизнь батарее это никак не продлит.&lt;/p&gt;
 
 &lt;h2&gt;Первый способ&lt;/h2&gt;
