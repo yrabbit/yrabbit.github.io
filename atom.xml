@@ -4,7 +4,7 @@
  <title>Yellow Rabbit</title>
  <link href="http://yrabbit.github.com/atom.xml" rel="self"/>
  <link href="http://yrabbit.github.com/"/>
- <updated>2014-12-21T15:09:37+10:00</updated>
+ <updated>2014-12-21T15:15:56+10:00</updated>
  <id>http://yrabbit.github.com</id>
  <author>
    <name>Yellow Rabbit</name>
@@ -13,7 +13,7 @@
 
  
  <entry>
-   <title>3 способа регулировки яркости подсветки на Acer C720 (part 1)</title>
+   <title>2 способа регулировки яркости подсветки на Acer C720 (part 1)</title>
    <link href="http://yrabbit.github.com/ru/2014/12/18/2-ways-to-adjust-a-backlight-on-acer-c720/"/>
    <updated>2014-12-18T19:35:30+10:00</updated>
    <id>http://yrabbit.github.com/ru/2014/12/18/2-ways-to-adjust-a-backlight-on-acer-c720</id>
@@ -103,7 +103,7 @@
             &lt;span class=&quot;n&quot;&gt;sysctl_backlight_handler&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
             &lt;span class=&quot;s&quot;&gt;&amp;quot;I&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Backlight level&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;p&gt;В результате становится возможным использовать команды типа &lt;code&gt;sysctl hw.backlight_level=370&lt;/code&gt; чтобы установить приемлимый уровень подсветки. Фактически сейчас эта команда прописана у меня в &lt;em&gt;.xinitrc&lt;/em&gt;, я не озадачиваюсь пока привязкой какого-нибудь скрипта к клавишам &lt;em&gt;F6&lt;/em&gt; и &lt;em&gt;F7&lt;/em&gt;. Это не сложно, просто впереди ещё два способа, которые только предстоит придумать:)&lt;/p&gt;
+&lt;p&gt;В результате становится возможным использовать команды типа &lt;code&gt;sysctl hw.backlight_level=370&lt;/code&gt; чтобы установить приемлимый уровень подсветки. Фактически сейчас эта команда прописана у меня в &lt;em&gt;.xinitrc&lt;/em&gt;, я не озадачиваюсь пока привязкой какого-нибудь скрипта к клавишам &lt;em&gt;F6&lt;/em&gt; и &lt;em&gt;F7&lt;/em&gt;. Это не сложно, просто впереди ещё один способ, который только предстоит придумать:)&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&quot;/public/patches/way1-sysctls.patch&quot;&gt;Полный текст заплатки&lt;/a&gt; накладываемой на DragonFly BSD от 19/12/2014.&lt;/p&gt;
 </content>
