@@ -4,13 +4,51 @@
  <title>Yellow Rabbit</title>
  <link href="http://yrabbit.github.com/atom.xml" rel="self"/>
  <link href="http://yrabbit.github.com/"/>
- <updated>2014-12-21T15:15:56+10:00</updated>
+ <updated>2014-12-25T20:43:21+10:00</updated>
  <id>http://yrabbit.github.com</id>
  <author>
    <name>Yellow Rabbit</name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>2 способа регулировки яркости подсветки на Acer C720 (part 2)</title>
+   <link href="http://yrabbit.github.com/ru/2014/12/26/adjust-a-backlight-on-acer-c720/"/>
+   <updated>2014-12-26T06:03:28+10:00</updated>
+   <id>http://yrabbit.github.com/ru/2014/12/26/adjust-a-backlight-on-acer-c720</id>
+   <content type="html">&lt;h2&gt;То, что не случилось&lt;/h2&gt;
+
+&lt;p&gt;Второй способ заключается в создании специального устройства, чтение из которого возвращает текущий уровень подстветки, а запись в которое изменяет уровень подстветки. И такое устройство было создано. Это потребовало гораздо крупных вмешательств в код, включаяя изменение нескольких Makefile, файла системных настроек (sys/conf/options), добавление каталога с исходными файлами устройства.&lt;/p&gt;
+
+&lt;p&gt;Устройство работало, но это нисколько не помогло сторонним утилитам увидеть наличие регулировки подсветки. Дело в том, что для этих утилит критичным указалось наличие каталога /sys/class/backlight/something, в котором располагались специальные файлы actual&lt;em&gt;brightness, brightness, max&lt;/em&gt;brightness, subsystem/, uevent, bl_power, device/, power/ и тому подобные.&lt;/p&gt;
+
+&lt;p&gt;Это так называемая Линукс-sysfs, которой нет (или я не нашёл) в DragonFly BSD. Создавать её аналог для регулирования уровня подсветки... пожалуй overkill.&lt;/p&gt;
+
+&lt;h2&gt;Привязка клавиш регулировки подсветки&lt;/h2&gt;
+
+&lt;p&gt;Первый скрипт &lt;code&gt;brightness-inc.sh&lt;/code&gt; увеличивает яркость:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;#!/bin/sh&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;LVL&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;/sbin/sysctl -n hw.backlight_level&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;
+/sbin/sysctl hw.backlight_level&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;$((&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;LVL&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;50&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;второй &lt;code&gt;brightness-dec.sh&lt;/code&gt; уменьшает:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;#!/bin/sh&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;LVL&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;/sbin/sysctl -n hw.backlight_level&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;
+/sbin/sysctl hw.backlight_level&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;$((&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;LVL&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;50&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;В файле &lt;em&gt;xbindkeysrc&lt;/em&gt; указываем привязку скриптов к клавишам:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;# brightness&lt;/span&gt;
+&lt;span class=&quot;s2&quot;&gt;&amp;quot;brightness-dec.sh&amp;quot;&lt;/span&gt;
+  F6
+
+&lt;span class=&quot;s2&quot;&gt;&amp;quot;brightness-inc.sh&amp;quot;&lt;/span&gt;
+  F7&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+</content>
+ </entry>
  
  <entry>
    <title>2 способа регулировки яркости подсветки на Acer C720 (part 1)</title>
