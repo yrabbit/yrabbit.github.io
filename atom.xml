@@ -4,7 +4,7 @@
  <title>Yellow Rabbit</title>
  <link href="http://yrabbit.github.com/atom.xml" rel="self"/>
  <link href="http://yrabbit.github.com/"/>
- <updated>2015-01-12T11:47:39+11:00</updated>
+ <updated>2015-01-12T12:06:31+11:00</updated>
  <id>http://yrabbit.github.com</id>
  <author>
    <name>Yellow Rabbit</name>
@@ -39,7 +39,7 @@
 &lt;span class=&quot;nv&quot;&gt;LVL&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;/sbin/sysctl -n hw.backlight_level&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;
 /sbin/sysctl hw.backlight_level&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;$((&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;LVL&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;50&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;p&gt;В файле &lt;code&gt;xbindkeysrc&lt;/code&gt; указываем привязку скриптов к клавишам:&lt;/p&gt;
+&lt;p&gt;В файле &lt;code&gt;.xbindkeysrc&lt;/code&gt; указываем привязку скриптов к клавишам:&lt;/p&gt;
 
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;# brightness&lt;/span&gt;
 &lt;span class=&quot;s2&quot;&gt;&amp;quot;brightness-dec.sh&amp;quot;&lt;/span&gt;
