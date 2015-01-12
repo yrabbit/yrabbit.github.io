@@ -4,7 +4,7 @@
  <title>Yellow Rabbit</title>
  <link href="http://yrabbit.github.com/atom.xml" rel="self"/>
  <link href="http://yrabbit.github.com/"/>
- <updated>2014-12-25T20:43:21+10:00</updated>
+ <updated>2015-01-12T11:37:34+11:00</updated>
  <id>http://yrabbit.github.com</id>
  <author>
    <name>Yellow Rabbit</name>
@@ -15,7 +15,7 @@
  <entry>
    <title>2 способа регулировки яркости подсветки на Acer C720 (part 2)</title>
    <link href="http://yrabbit.github.com/ru/2014/12/26/adjust-a-backlight-on-acer-c720/"/>
-   <updated>2014-12-26T06:03:28+10:00</updated>
+   <updated>2014-12-26T07:03:28+11:00</updated>
    <id>http://yrabbit.github.com/ru/2014/12/26/adjust-a-backlight-on-acer-c720</id>
    <content type="html">&lt;h2&gt;То, что не случилось&lt;/h2&gt;
 
@@ -39,7 +39,7 @@
 &lt;span class=&quot;nv&quot;&gt;LVL&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;/sbin/sysctl -n hw.backlight_level&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;
 /sbin/sysctl hw.backlight_level&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;$((&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;LVL&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;50&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;p&gt;В файле &lt;em&gt;xbindkeysrc&lt;/em&gt; указываем привязку скриптов к клавишам:&lt;/p&gt;
+&lt;p&gt;В файле &lt;code&gt;xbindkeysrc&lt;/code&gt; указываем привязку скриптов к клавишам:&lt;/p&gt;
 
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;# brightness&lt;/span&gt;
 &lt;span class=&quot;s2&quot;&gt;&amp;quot;brightness-dec.sh&amp;quot;&lt;/span&gt;
@@ -53,7 +53,7 @@
  <entry>
    <title>2 способа регулировки яркости подсветки на Acer C720 (part 1)</title>
    <link href="http://yrabbit.github.com/ru/2014/12/18/2-ways-to-adjust-a-backlight-on-acer-c720/"/>
-   <updated>2014-12-18T19:35:30+10:00</updated>
+   <updated>2014-12-18T20:35:30+11:00</updated>
    <id>http://yrabbit.github.com/ru/2014/12/18/2-ways-to-adjust-a-backlight-on-acer-c720</id>
    <content type="html">&lt;p&gt;Клавиши регулировки подсветки на клавиатуре хромбука Acer C720 являются замаскированными клавишами &lt;em&gt;F6&lt;/em&gt; и &lt;em&gt;F7&lt;/em&gt;. Соответственно при замене ChromeOS на DragoFly BSD регулировка подсветки не работает. Не удаётся также использовать &lt;em&gt;xbacklight&lt;/em&gt; - он не находит видео-выходов с возможностью регулировки подсветки. &lt;em&gt;xrandr&lt;/em&gt; может помочь, но это программное решение, что-то типа приглушения яркости выводимых точек. Ясно, что жизнь батарее это никак не продлит.&lt;/p&gt;
 
@@ -150,7 +150,7 @@
  <entry>
    <title>Регулировка громкости функциональными клавишами</title>
    <link href="http://yrabbit.github.com/ru/2014/12/15/xbindkeys-volume/"/>
-   <updated>2014-12-15T20:12:00+10:00</updated>
+   <updated>2014-12-15T20:12:00+11:00</updated>
    <id>http://yrabbit.github.com/ru/2014/12/15/xbindkeys-volume</id>
    <content type="html">&lt;p&gt;У Acer C720 нет обозначенных функциональных клавиш F1-10, вместо этого соответствующие клавиши помечены различными значками. Так F8 обозначена как &amp;quot;выключение звука&amp;quot;, F9 - &amp;quot;уменьшить громкость&amp;quot;, F10 - &amp;quot;увеличить громкость&amp;quot;. Так эти клавиши работают под ChromeOS. Чтобы частично повторить этот функционал воспользуемся &lt;code&gt;xbindkeys&lt;/code&gt;.&lt;/p&gt;
 
@@ -174,7 +174,7 @@
  <entry>
    <title>Имитация недостающих клавиш Acer C720</title>
    <link href="http://yrabbit.github.com/ru/2014/12/08/acer-720-keyboard/"/>
-   <updated>2014-12-08T07:01:01+10:00</updated>
+   <updated>2014-12-08T08:01:01+11:00</updated>
    <id>http://yrabbit.github.com/ru/2014/12/08/acer-720-keyboard</id>
    <content type="html">&lt;p&gt;Клавиатура хромбука Acer C720 видимо хороша для прогулок по сети и работы в Chrome OS, но мне для написания программ некоторых клавиш не хватает. Это &lt;em&gt;Home&lt;/em&gt;, &lt;em&gt;End&lt;/em&gt;, &lt;em&gt;PageUp&lt;/em&gt;, &lt;em&gt;PageDown&lt;/em&gt;, &lt;em&gt;Insert&lt;/em&gt; и &lt;em&gt;Delete&lt;/em&gt;.&lt;/p&gt;
 
