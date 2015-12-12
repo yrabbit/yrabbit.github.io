@@ -4,7 +4,7 @@
  <title>Yellow Rabbit</title>
  <link href="http://yrabbit.github.com/atom.xml" rel="self"/>
  <link href="http://yrabbit.github.com/"/>
- <updated>2015-01-12T12:06:31+11:00</updated>
+ <updated>2015-12-12T21:48:25+10:00</updated>
  <id>http://yrabbit.github.com</id>
  <author>
    <name>Yellow Rabbit</name>
@@ -13,159 +13,284 @@
 
  
  <entry>
+   <title>Трилобит и Лисп</title>
+   <link href="http://yrabbit.github.com/ru/2015/12/11/figth-with-trilobyte/"/>
+   <updated>2015-12-11T21:20:47+10:00</updated>
+   <id>http://yrabbit.github.com/ru/2015/12/11/figth-with-trilobyte</id>
+   <content type="html">&lt;h2 id=&quot;section&quot;&gt;Задачка&lt;/h2&gt;
+&lt;p&gt;В игре 11th hour попалась головоломка-игрушка, цель которой: выстроить в ряд 4 фишки.  Причём нельзя выбрать горизонталь для новой фишки, можно  выбрать только вертикаль.&lt;br /&gt;
+&lt;img src=&quot;/public/imgs/lisp/trilobyte.png&quot; alt=&quot;former game screen&quot; /&gt; Я не могу победить компьютер в этой мини-игре, так что попробую устроить битву двух AI. Было бы забавно написать соперника для компьютера на Lisp, так как я практически не знаком с этим языком.&lt;br /&gt;
+Для начала я прочёл &lt;a href=&quot;http://www.amazon.com/s/ref=nb_sb_noss/179-0107147-8261974?url=search-alias%3Dstripbooks&amp;amp;field-keywords=Land+of+Lisp%3A+Learn+to+Program+in+Lisp%2C+One+Game+at+a+Time%21&quot;&gt;Land of Lisp: Learn to Program in Lisp, One Game at a Time!&lt;/a&gt; чтобы понять как вообще можно писать игры на этом языке. В качестве компилятора/интерпретатора использую SBCL, ну как один из доступных (/usr/dports/lang/sbcl) для &lt;a href=&quot;http://www.dragonflybsd.org/&quot;&gt;DragonFly BSD&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;section-1&quot;&gt;Игровое поле (доска)&lt;/h2&gt;
+&lt;p&gt;Из книги стало ясно, что доску нужного мне размера (8х7) мне скорее всего не получится реализовать без опыта оптимизации программ на Lisp. Так что начнём с крошечной доски 3x3, на которой, тем не менее, можно будет отработать логику искусственного интеллекта.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;;; *** Consts&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;;; board&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defparameter&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*board-width*&lt;/span&gt;  &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defparameter&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*board-height*&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defparameter&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*board-size*&lt;/span&gt;   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*board-width*&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*board-height*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;Условием для победы также будет считаться более короткая линия из фишек:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;;; row length for win&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defparameter&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*win-len*&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;Каждая клетка доски может находиться в одном из трёх состояний:&lt;br /&gt;
+1. быть пустой;&lt;br /&gt;
+2. с фишкой противника;&lt;br /&gt;
+3. с нашей фишкой.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;;; cell types&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defparameter&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*empty-cell*&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defparameter&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*ai-cell*&lt;/span&gt;    &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defparameter&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*human-cell*&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;em&gt;defparameter&lt;/em&gt; не совсем то, что мне нужно, тут скорее подошёл бы старый добрый &lt;em&gt;#define&lt;/em&gt;, но я пока не обнаружил в Lisp какого-либо подобия &lt;em&gt;настоящих&lt;/em&gt; констант.&lt;br /&gt;
+Доска это массив из ячеек. Её можно создать или полностью из пустых клеток, или копированием из списка клеток, а копировать я буду часто поскольку нужно будет очень много досок с различными комбинациями фишек.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;;; *** Board&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;;; two dimentional array of cells&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;;; . X -&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;;; Y&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;;; |&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;;; v&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;;; initial board&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;new-board&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;make-array&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*board-size*&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:initial-element&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*empty-cell*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;;; make board from list&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;board-from-list&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;lst&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;make-array&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*board-size*&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:initial-contents&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;lst&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;Нужно ввести понятия игроков чтобы как-то различать чей сейчас ход и т.д.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;;; players&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defparameter&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*ai-player*&lt;/span&gt;    &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defparameter&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*human-player*&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;change-player&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*ai-player*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;vg&quot;&gt;*human-player*&lt;/span&gt;
+    &lt;span class=&quot;vg&quot;&gt;*ai-player*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;get-player-color&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*ai-player*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;vg&quot;&gt;*ai-cell*&lt;/span&gt;
+    &lt;span class=&quot;vg&quot;&gt;*human-cell*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;get-player-str&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*ai-player*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;&quot;The Evil AI&quot;&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;&quot;Human&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;И возвращаясь к нашей доске опишем пару вспомогательных функция для доступа и проверки ячеек.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;;; get board cell&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;get-cell&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;board&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;cell&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;aref&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;board&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;cell&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;;; cell type predicates&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;cell-emptyp&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;board&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;cell&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;get-cell&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;board&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;cell&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*empty-cell*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;cell-playerp&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;board&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;cell&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;get-cell&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;board&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;cell&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;На данный момент немного посмотреть на работу доски:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;% &lt;/span&gt;rlwrap sbcl --load trilobyte.lisp
+This is SBCL 1.2.9, an implementation of ANSI Common Lisp.
+More information about SBCL is available at &amp;lt;http://www.sbcl.org/&amp;gt;.
+
+SBCL is free software, provided as is, with absolutely no warranty.
+It is mostly &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;the public domain; some portions are provided under
+BSD-style licenses.  See the CREDITS and COPYING files &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;the
+distribution &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;more information.
+&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;board-from-list &lt;span class=&quot;s1&quot;&gt;&#39;(1 2 3 4 5 6 7 8 9))
+
+#(1 2 3 4 5 6 7 8 9)
+* (new-board)
+
+#(0 0 0 0 0 0 0 0 0)
+* (cell-emptyp (new-board) 4)
+
+T
+* (get-cell (new-board) 4)
+
+0
+* (cell-playerp (new-board) 4 *ai-player*)
+
+NIL
+* (exit)
+
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+</content>
+ </entry>
+ 
+ <entry>
    <title>2 способа регулировки яркости подсветки на Acer C720 (part 2)</title>
    <link href="http://yrabbit.github.com/ru/2014/12/26/adjust-a-backlight-on-acer-c720/"/>
-   <updated>2014-12-26T07:03:28+11:00</updated>
+   <updated>2014-12-26T06:03:28+10:00</updated>
    <id>http://yrabbit.github.com/ru/2014/12/26/adjust-a-backlight-on-acer-c720</id>
-   <content type="html">&lt;h2&gt;То, что не случилось&lt;/h2&gt;
-
+   <content type="html">&lt;h2 id=&quot;section&quot;&gt;То, что не случилось&lt;/h2&gt;
 &lt;p&gt;Второй способ заключается в создании специального устройства, чтение из которого возвращает текущий уровень подстветки, а запись в которое изменяет уровень подстветки. И такое устройство было создано. Это потребовало гораздо крупных вмешательств в код, включая изменение нескольких Makefile, файла системных настроек (sys/conf/options), добавление каталога с исходными файлами устройства.&lt;/p&gt;
 
-&lt;p&gt;Устройство работало, но это нисколько не помогло сторонним утилитам увидеть наличие регулировки подсветки. Дело в том, что для этих утилит критичным указалось наличие каталога /sys/class/backlight/something, в котором располагались специальные файлы actual&lt;em&gt;brightness, brightness, max&lt;/em&gt;brightness, subsystem/, uevent, bl_power, device/, power/ и тому подобные.&lt;/p&gt;
+&lt;p&gt;Устройство работало, но это нисколько не помогло сторонним утилитам увидеть наличие регулировки подсветки. Дело в том, что для этих утилит критичным указалось наличие каталога /sys/class/backlight/something, в котором располагались специальные файлы actual_brightness, brightness, max_brightness, subsystem/, uevent, bl_power, device/, power/ и тому подобные.&lt;/p&gt;
 
-&lt;p&gt;Это так называемая Линукс-sysfs, которой нет (или я не нашёл) в DragonFly BSD. Создавать её аналог для регулирования уровня подсветки... пожалуй overkill.&lt;/p&gt;
+&lt;p&gt;Это так называемая Линукс-sysfs, которой нет (или я не нашёл) в DragonFly BSD. Создавать её аналог для регулирования уровня подсветки… пожалуй overkill.&lt;/p&gt;
 
-&lt;h2&gt;Привязка клавиш регулировки подсветки&lt;/h2&gt;
+&lt;h2 id=&quot;section-1&quot;&gt;Привязка клавиш регулировки подсветки&lt;/h2&gt;
 
-&lt;p&gt;Первый скрипт &lt;code&gt;brightness-inc.sh&lt;/code&gt; увеличивает яркость:&lt;/p&gt;
+&lt;p&gt;Первый скрипт &lt;code class=&quot;highlighter-rouge&quot;&gt;brightness-inc.sh&lt;/code&gt; увеличивает яркость:&lt;/p&gt;
 
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;#!/bin/sh&lt;/span&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;#!/bin/sh&lt;/span&gt;
 &lt;span class=&quot;nv&quot;&gt;LVL&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;/sbin/sysctl -n hw.backlight_level&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;
-/sbin/sysctl hw.backlight_level&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;$((&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;LVL&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;50&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+/sbin/sysctl hw.backlight_level&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;$((&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;LVL&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;50&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;p&gt;второй &lt;code&gt;brightness-dec.sh&lt;/code&gt; уменьшает:&lt;/p&gt;
+&lt;p&gt;второй &lt;code class=&quot;highlighter-rouge&quot;&gt;brightness-dec.sh&lt;/code&gt; уменьшает:&lt;/p&gt;
 
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;#!/bin/sh&lt;/span&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;#!/bin/sh&lt;/span&gt;
 &lt;span class=&quot;nv&quot;&gt;LVL&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;/sbin/sysctl -n hw.backlight_level&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;
-/sbin/sysctl hw.backlight_level&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;$((&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;LVL&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;50&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+/sbin/sysctl hw.backlight_level&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;$((&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;LVL&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;50&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;p&gt;В файле &lt;code&gt;.xbindkeysrc&lt;/code&gt; указываем привязку скриптов к клавишам:&lt;/p&gt;
+&lt;p&gt;В файле &lt;code class=&quot;highlighter-rouge&quot;&gt;.xbindkeysrc&lt;/code&gt; указываем привязку скриптов к клавишам:&lt;/p&gt;
 
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;# brightness&lt;/span&gt;
-&lt;span class=&quot;s2&quot;&gt;&amp;quot;brightness-dec.sh&amp;quot;&lt;/span&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;# brightness&lt;/span&gt;
+&lt;span class=&quot;s2&quot;&gt;&quot;brightness-dec.sh&quot;&lt;/span&gt;
   F6
 
-&lt;span class=&quot;s2&quot;&gt;&amp;quot;brightness-inc.sh&amp;quot;&lt;/span&gt;
-  F7&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;span class=&quot;s2&quot;&gt;&quot;brightness-inc.sh&quot;&lt;/span&gt;
+  F7&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
 </content>
  </entry>
  
  <entry>
    <title>2 способа регулировки яркости подсветки на Acer C720 (part 1)</title>
    <link href="http://yrabbit.github.com/ru/2014/12/18/2-ways-to-adjust-a-backlight-on-acer-c720/"/>
-   <updated>2014-12-18T20:35:30+11:00</updated>
+   <updated>2014-12-18T19:35:30+10:00</updated>
    <id>http://yrabbit.github.com/ru/2014/12/18/2-ways-to-adjust-a-backlight-on-acer-c720</id>
    <content type="html">&lt;p&gt;Клавиши регулировки подсветки на клавиатуре хромбука Acer C720 являются замаскированными клавишами &lt;em&gt;F6&lt;/em&gt; и &lt;em&gt;F7&lt;/em&gt;. Соответственно при замене ChromeOS на DragoFly BSD регулировка подсветки не работает. Не удаётся также использовать &lt;em&gt;xbacklight&lt;/em&gt; - он не находит видео-выходов с возможностью регулировки подсветки. &lt;em&gt;xrandr&lt;/em&gt; может помочь, но это программное решение, что-то типа приглушения яркости выводимых точек. Ясно, что жизнь батарее это никак не продлит.&lt;/p&gt;
 
-&lt;h2&gt;Первый способ&lt;/h2&gt;
-
-&lt;p&gt;Изменим драйвер i915 таким образом, чтобы он создавал два sysctl&amp;#39;а:&lt;/p&gt;
+&lt;h2 id=&quot;section&quot;&gt;Первый способ&lt;/h2&gt;
+&lt;p&gt;Изменим драйвер i915 таким образом, чтобы он создавал два sysctl’а:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;  hw.blacklight_max - максимальное значение уровня подсветки,&lt;/li&gt;
-&lt;li&gt;  hw.blacklight_level - получить/установить уровень подсветки.&lt;/li&gt;
+  &lt;li&gt;hw.blacklight_max - максимальное значение уровня подсветки,&lt;/li&gt;
+  &lt;li&gt;hw.blacklight_level - получить/установить уровень подсветки.&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;Из плюсов: &lt;/p&gt;
+&lt;p&gt;Из плюсов:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;небольшое количество изменений, которые не затрагивают Xorg.&lt;/li&gt;
+  &lt;li&gt;небольшое количество изменений, которые не затрагивают Xorg.&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;p&gt;Из минусов:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;регулировать можно только ручками, сторонние программы ничего не знают об этих sysctl&amp;#39;ах.&lt;/li&gt;
+  &lt;li&gt;регулировать можно только ручками, сторонние программы ничего не знают об этих sysctl’ах.&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;Драйвер i915 предоставляет механизм управления подсветкой, достаточно знать указатель на текущее drm-устройство: &lt;code&gt;struct drm_device *dev&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Драйвер i915 предоставляет механизм управления подсветкой, достаточно знать указатель на текущее drm-устройство: &lt;code class=&quot;highlighter-rouge&quot;&gt;struct drm_device *dev&lt;/code&gt;.&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;получить максимальное значение уровня подсветки: &lt;code&gt;u32 intel_panel_get_max_backlight(dev)&lt;/code&gt;;&lt;/li&gt;
-&lt;li&gt;прочитать текущее значение уровня подсветки: &lt;code&gt;dev-&amp;gt;dev_private-&amp;gt;backlight_level&lt;/code&gt;;&lt;/li&gt;
-&lt;li&gt;установить новое значение уровня подсветки: &lt;code&gt;intel_panel_set_backlight(dev, val)&lt;/code&gt;;&lt;/li&gt;
+  &lt;li&gt;получить максимальное значение уровня подсветки: &lt;code class=&quot;highlighter-rouge&quot;&gt;u32 intel_panel_get_max_backlight(dev)&lt;/code&gt;;&lt;/li&gt;
+  &lt;li&gt;прочитать текущее значение уровня подсветки: &lt;code class=&quot;highlighter-rouge&quot;&gt;dev-&amp;gt;dev_private-&amp;gt;backlight_level&lt;/code&gt;;&lt;/li&gt;
+  &lt;li&gt;установить новое значение уровня подсветки: &lt;code class=&quot;highlighter-rouge&quot;&gt;intel_panel_set_backlight(dev, val)&lt;/code&gt;;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;p&gt;Для двух sysctl пишем две функции обработки чтенияr/записи:&lt;/p&gt;
 
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span class=&quot;cm&quot;&gt;/*&lt;/span&gt;
-&lt;span class=&quot;cm&quot;&gt; * Read max backlight level&lt;/span&gt;
-&lt;span class=&quot;cm&quot;&gt; */&lt;/span&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span class=&quot;cm&quot;&gt;/*
+ * Read max backlight level
+ */&lt;/span&gt;
 &lt;span class=&quot;k&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;
 &lt;span class=&quot;nf&quot;&gt;sysctl_backlight_max&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SYSCTL_HANDLER_ARGS&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;err&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+	&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;err&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
 
-    &lt;span class=&quot;n&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;intel_panel_get_max_backlight&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;drm_device&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;arg1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;err&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sysctl_handle_int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;oidp&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;req&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;err&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;intel_panel_get_max_backlight&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;drm_device&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;arg1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;err&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sysctl_handle_int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;oidp&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;req&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;err&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 
-&lt;span class=&quot;cm&quot;&gt;/*&lt;/span&gt;
-&lt;span class=&quot;cm&quot;&gt; * Read/write backlight level &lt;/span&gt;
-&lt;span class=&quot;cm&quot;&gt; */&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;/*
+ * Read/write backlight level 
+ */&lt;/span&gt;
 &lt;span class=&quot;k&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;
 &lt;span class=&quot;nf&quot;&gt;sysctl_backlight_handler&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SYSCTL_HANDLER_ARGS&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;drm_i915_private&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dev_priv&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;err&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;drm_i915_private&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dev_priv&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+	&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;err&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
 
-    &lt;span class=&quot;n&quot;&gt;dev_priv&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;drm_device&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;arg1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dev_private&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dev_priv&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;backlight_level&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;dev_priv&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;drm_device&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;arg1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dev_private&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dev_priv&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;backlight_level&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
 
-    &lt;span class=&quot;n&quot;&gt;err&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sysctl_handle_int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;oidp&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;req&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;err&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;||&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;req&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;newptr&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;NULL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;err&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;err&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sysctl_handle_int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;oidp&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;req&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;err&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;||&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;req&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;newptr&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;NULL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+		&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;err&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 
-    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dev_priv&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;backlight_level&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;
-        &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;intel_panel_get_max_backlight&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;drm_device&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;arg1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;intel_panel_set_backlight&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;arg1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dev_priv&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;backlight_level&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;
+		&lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;intel_panel_get_max_backlight&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;drm_device&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;arg1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;intel_panel_set_backlight&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;arg1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;err&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+	&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;err&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;p&gt;&lt;code&gt;dev&lt;/code&gt; можно узнать только во время выполнения, так что используем динамическое управление sysctl с помощью макроса &lt;code&gt;SYSCTL_ADD_PROC&lt;/code&gt;. &lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;dev&lt;/code&gt; можно узнать только во время выполнения, так что используем динамическое управление sysctl с помощью макроса &lt;code class=&quot;highlighter-rouge&quot;&gt;SYSCTL_ADD_PROC&lt;/code&gt;.&lt;/p&gt;
 
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span class=&quot;n&quot;&gt;SYSCTL_ADD_PROC&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;connector&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dev&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sysctl&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ctx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sysctl__hw_children&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;OID_AUTO&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;backlight_max&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; 
-            &lt;span class=&quot;n&quot;&gt;CTLTYPE_INT&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CTLFLAG_RD&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CTLFLAG_ANYBODY&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;connector&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dev&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;sizeof&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;sysctl_backlight_max&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-            &lt;span class=&quot;s&quot;&gt;&amp;quot;I&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Max backlight level&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span class=&quot;n&quot;&gt;SYSCTL_ADD_PROC&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;connector&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dev&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sysctl&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ctx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sysctl__hw_children&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+			&lt;span class=&quot;n&quot;&gt;OID_AUTO&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;backlight_max&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; 
+			&lt;span class=&quot;n&quot;&gt;CTLTYPE_INT&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CTLFLAG_RD&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CTLFLAG_ANYBODY&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+			&lt;span class=&quot;n&quot;&gt;connector&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dev&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;sizeof&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
+			&lt;span class=&quot;n&quot;&gt;sysctl_backlight_max&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+			&lt;span class=&quot;s&quot;&gt;&quot;I&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Max backlight level&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
 &lt;span class=&quot;n&quot;&gt;SYSCTL_ADD_PROC&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;connector&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dev&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sysctl&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ctx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sysctl__hw_children&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;OID_AUTO&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;backlight_level&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; 
-            &lt;span class=&quot;n&quot;&gt;CTLTYPE_INT&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CTLFLAG_RW&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CTLFLAG_ANYBODY&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;connector&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dev&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;sizeof&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;sysctl_backlight_handler&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-            &lt;span class=&quot;s&quot;&gt;&amp;quot;I&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Backlight level&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+			&lt;span class=&quot;n&quot;&gt;OID_AUTO&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;backlight_level&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; 
+			&lt;span class=&quot;n&quot;&gt;CTLTYPE_INT&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CTLFLAG_RW&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CTLFLAG_ANYBODY&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+			&lt;span class=&quot;n&quot;&gt;connector&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dev&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;sizeof&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
+			&lt;span class=&quot;n&quot;&gt;sysctl_backlight_handler&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+			&lt;span class=&quot;s&quot;&gt;&quot;I&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Backlight level&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;p&gt;В результате становится возможным использовать команды типа &lt;code&gt;sysctl hw.backlight_level=370&lt;/code&gt; чтобы установить приемлимый уровень подсветки. Фактически сейчас эта команда прописана у меня в &lt;em&gt;.xinitrc&lt;/em&gt;, я не озадачиваюсь пока привязкой какого-нибудь скрипта к клавишам &lt;em&gt;F6&lt;/em&gt; и &lt;em&gt;F7&lt;/em&gt;. Это не сложно, просто впереди ещё один способ, который только предстоит придумать:)&lt;/p&gt;
+&lt;p&gt;В результате становится возможным использовать команды типа &lt;code class=&quot;highlighter-rouge&quot;&gt;sysctl hw.backlight_level=370&lt;/code&gt; чтобы установить приемлимый уровень подсветки. Фактически сейчас эта команда прописана у меня в &lt;em&gt;.xinitrc&lt;/em&gt;, я не озадачиваюсь пока привязкой какого-нибудь скрипта к клавишам &lt;em&gt;F6&lt;/em&gt; и &lt;em&gt;F7&lt;/em&gt;. Это не сложно, просто впереди ещё один способ, который только предстоит придумать:)&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&quot;/public/patches/way1-sysctls.patch&quot;&gt;Полный текст заплатки&lt;/a&gt; накладываемой на DragonFly BSD от 19/12/2014.&lt;/p&gt;
+
 </content>
  </entry>
  
  <entry>
    <title>Регулировка громкости функциональными клавишами</title>
    <link href="http://yrabbit.github.com/ru/2014/12/15/xbindkeys-volume/"/>
-   <updated>2014-12-15T20:12:00+11:00</updated>
+   <updated>2014-12-15T20:12:00+10:00</updated>
    <id>http://yrabbit.github.com/ru/2014/12/15/xbindkeys-volume</id>
-   <content type="html">&lt;p&gt;У Acer C720 нет обозначенных функциональных клавиш F1-10, вместо этого соответствующие клавиши помечены различными значками. Так F8 обозначена как &amp;quot;выключение звука&amp;quot;, F9 - &amp;quot;уменьшить громкость&amp;quot;, F10 - &amp;quot;увеличить громкость&amp;quot;. Так эти клавиши работают под ChromeOS. Чтобы частично повторить этот функционал воспользуемся &lt;code&gt;xbindkeys&lt;/code&gt;.&lt;/p&gt;
+   <content type="html">&lt;p&gt;У Acer C720 нет обозначенных функциональных клавиш F1-10, вместо этого соответствующие клавиши помечены различными значками. Так F8 обозначена как “выключение звука”, F9 - “уменьшить громкость”, F10 - “увеличить громкость”. Так эти клавиши работают под ChromeOS. Чтобы частично повторить этот функционал воспользуемся &lt;code class=&quot;highlighter-rouge&quot;&gt;xbindkeys&lt;/code&gt;.&lt;/p&gt;
 
-&lt;p&gt;&lt;center&gt;
-    &lt;img src=&quot;/public/imgs/acer-c720-keyboard.jpeg&quot;&gt;
-&lt;/center&gt;&lt;/p&gt;
+&lt;center&gt;
+	&lt;img src=&quot;/public/imgs/acer-c720-keyboard.jpeg&quot; /&gt;
+&lt;/center&gt;
 
-&lt;p&gt;Создадим файл &lt;code&gt;${HOME}/.xbindkeys&lt;/code&gt; со следующим содержимым:&lt;/p&gt;
+&lt;p&gt;Создадим файл &lt;code class=&quot;highlighter-rouge&quot;&gt;${HOME}/.xbindkeys&lt;/code&gt; со следующим содержимым:&lt;/p&gt;
 
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;# volume&lt;/span&gt;
-&lt;span class=&quot;s2&quot;&gt;&amp;quot;mixer -f /dev/mixer1 vol -5&amp;quot;&lt;/span&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;# volume&lt;/span&gt;
+&lt;span class=&quot;s2&quot;&gt;&quot;mixer -f /dev/mixer1 vol -5&quot;&lt;/span&gt;
   F9
 
-&lt;span class=&quot;s2&quot;&gt;&amp;quot;mixer -f /dev/mixer1 vol +5&amp;quot;&lt;/span&gt;
-  F10&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;span class=&quot;s2&quot;&gt;&quot;mixer -f /dev/mixer1 vol +5&quot;&lt;/span&gt;
+  F10&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;Верно для DragonFly BSD, поскольку устройство /dev/mixer0 соотвествует hdmi выходу.&lt;/p&gt;
 </content>
@@ -174,127 +299,128 @@
  <entry>
    <title>Имитация недостающих клавиш Acer C720</title>
    <link href="http://yrabbit.github.com/ru/2014/12/08/acer-720-keyboard/"/>
-   <updated>2014-12-08T08:01:01+11:00</updated>
+   <updated>2014-12-08T07:01:01+10:00</updated>
    <id>http://yrabbit.github.com/ru/2014/12/08/acer-720-keyboard</id>
    <content type="html">&lt;p&gt;Клавиатура хромбука Acer C720 видимо хороша для прогулок по сети и работы в Chrome OS, но мне для написания программ некоторых клавиш не хватает. Это &lt;em&gt;Home&lt;/em&gt;, &lt;em&gt;End&lt;/em&gt;, &lt;em&gt;PageUp&lt;/em&gt;, &lt;em&gt;PageDown&lt;/em&gt;, &lt;em&gt;Insert&lt;/em&gt; и &lt;em&gt;Delete&lt;/em&gt;.&lt;/p&gt;
 
 &lt;p&gt;Можно попробовать использовать клавишу &lt;em&gt;Alt&lt;/em&gt; (генерирует символ Alt) как модификатор для курсорных клавиш. Тогда получаются следующие клавиатурные комбинации:&lt;/p&gt;
 
 &lt;table align=&quot;center&quot; style=&quot;width:60%;align=center&quot;&gt;
-    &lt;tr&gt;
-        &lt;th&gt;Клавиша&lt;/th&gt;&lt;th&gt;Комбинация&lt;/th&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-        &lt;td&gt;Insert&lt;/td&gt;&lt;td&gt;Alt + \&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-        &lt;td&gt;Delete&lt;/td&gt;&lt;td&gt;Alt + BackSpace&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-        &lt;td&gt;Home&lt;/td&gt;&lt;td&gt;Alt + Left (&amp;larr;)&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-        &lt;td&gt;End&lt;/td&gt;&lt;td&gt;Alt + Right (&amp;rarr;)&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-        &lt;td&gt;PageUp&lt;/td&gt;&lt;td&gt;Alt + Up (&amp;uarr;)&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-        &lt;td&gt;PageDown&lt;/td&gt;&lt;td&gt;Alt + Down (&amp;darr;)&lt;/td&gt;
-    &lt;/tr&gt;
+	&lt;tr&gt;
+		&lt;th&gt;Клавиша&lt;/th&gt;&lt;th&gt;Комбинация&lt;/th&gt;
+	&lt;/tr&gt;
+	&lt;tr&gt;
+		&lt;td&gt;Insert&lt;/td&gt;&lt;td&gt;Alt + \&lt;/td&gt;
+	&lt;/tr&gt;
+	&lt;tr&gt;
+		&lt;td&gt;Delete&lt;/td&gt;&lt;td&gt;Alt + BackSpace&lt;/td&gt;
+	&lt;/tr&gt;
+	&lt;tr&gt;
+		&lt;td&gt;Home&lt;/td&gt;&lt;td&gt;Alt + Left (&amp;larr;)&lt;/td&gt;
+	&lt;/tr&gt;
+	&lt;tr&gt;
+		&lt;td&gt;End&lt;/td&gt;&lt;td&gt;Alt + Right (&amp;rarr;)&lt;/td&gt;
+	&lt;/tr&gt;
+	&lt;tr&gt;
+		&lt;td&gt;PageUp&lt;/td&gt;&lt;td&gt;Alt + Up (&amp;uarr;)&lt;/td&gt;
+	&lt;/tr&gt;
+	&lt;tr&gt;
+		&lt;td&gt;PageDown&lt;/td&gt;&lt;td&gt;Alt + Down (&amp;darr;)&lt;/td&gt;
+	&lt;/tr&gt;
 &lt;/table&gt;
 
 &lt;p&gt;Для модификации раскладки используем &lt;em&gt;xkb&lt;/em&gt;. Сначала создадим каталог для конфигурационых файлов:&lt;/p&gt;
 
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-console&quot; data-lang=&quot;console&quot;&gt;&lt;span class=&quot;go&quot;&gt;mkdir -p ${HOME}/.config/xkb/types ${HOME}/.config/xkb/symbols&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-console&quot; data-lang=&quot;console&quot;&gt;	mkdir -p ${HOME}/.config/xkb/types ${HOME}/.config/xkb/symbols&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;p&gt;В файле &lt;code&gt;${HOME}/.config/xkb/types/c720&lt;/code&gt;  как будут себя вести совместно два модификатора - &lt;em&gt;Shift&lt;/em&gt; и &lt;em&gt;Alt&lt;/em&gt;. Интерес представляют ситуации, когда нажат &lt;em&gt;Alt&lt;/em&gt;, то есть уровень 3. &lt;/p&gt;
+&lt;p&gt;В файле &lt;code class=&quot;highlighter-rouge&quot;&gt;${HOME}/.config/xkb/types/c720&lt;/code&gt;  как будут себя вести совместно два модификатора - &lt;em&gt;Shift&lt;/em&gt; и &lt;em&gt;Alt&lt;/em&gt;. Интерес представляют ситуации, когда нажат &lt;em&gt;Alt&lt;/em&gt;, то есть уровень 3.&lt;/p&gt;
 
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span class=&quot;n&quot;&gt;xkb_types&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;c720&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;virtual_modifiers&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Alt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;ARROW&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;modifiers&lt;/span&gt;    &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Shift&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Alt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Shift&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;  &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Level2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Alt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;    &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Level3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Alt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Shift&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;    &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Level3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;level_name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Level1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Base&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;level_name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Level2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Caps&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;level_name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Level3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Alt&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span class=&quot;n&quot;&gt;xkb_types&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;c720&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;virtual_modifiers&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Alt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;ARROW&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;modifiers&lt;/span&gt;	&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Shift&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Alt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Shift&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;	&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Level2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Alt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;	&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Level3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Alt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Shift&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;	&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Level3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;level_name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Level1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Base&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;level_name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Level2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Caps&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;level_name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Level3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Alt&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;p&gt;В файле &lt;code&gt;${HOME}/.config/xkb/symbols/c720&lt;/code&gt; на уровне 3 производим подмену символов клавиш на нужные и не забываем очистить флажок модификатора, иначе новые символы будут обрабатываться неверно.&lt;/p&gt;
+&lt;p&gt;В файле &lt;code class=&quot;highlighter-rouge&quot;&gt;${HOME}/.config/xkb/symbols/c720&lt;/code&gt; на уровне 3 производим подмену символов клавиш на нужные и не забываем очистить флажок модификатора, иначе новые символы будут обрабатываться неверно.&lt;/p&gt;
 
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span class=&quot;n&quot;&gt;xkb_symbols&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;c720&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;key&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;BKSL&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;ARROW&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;repeat&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;yes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;symbol&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Group1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;backslash&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;bar&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Insert&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;symbol&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Group2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;backslash&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;slash&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Insert&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;actions&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Group1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;NoAction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;NoAction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;RedirectKey&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;INS&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;clearmods&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Alt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;actions&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Group2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;NoAction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;NoAction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;RedirectKey&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;INS&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;clearmods&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Alt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;key&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;BKSP&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;ARROW&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;repeat&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;yes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;BackSpace&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;BackSpace&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Delete&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;actions&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Group1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;NoAction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;NoAction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;RedirectKey&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;DELE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;clearmods&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Alt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;key&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;LEFT&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;ARROW&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Left&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Left&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Home&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;actions&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Group1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;NoAction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;NoAction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;RedirectKey&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;HOME&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;clearmods&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Alt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;key&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;RGHT&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;ARROW&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;repeat&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;yes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Right&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Right&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;End&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;actions&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Group1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;NoAction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;NoAction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;RedirectKey&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;END&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;clearmods&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Alt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;key&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;UP&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;ARROW&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;repeat&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;yes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Up&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Up&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Prior&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;actions&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Group1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;NoAction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;NoAction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;RedirectKey&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;PGUP&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;clearmods&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Alt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;key&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;DOWN&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;ARROW&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Down&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Down&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Next&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;actions&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Group1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;NoAction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;NoAction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;RedirectKey&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;PGDN&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;clearmods&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Alt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span class=&quot;n&quot;&gt;xkb_symbols&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;c720&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;key&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;BKSL&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;ARROW&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;repeat&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;yes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;symbol&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Group1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;backslash&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;bar&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Insert&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;symbol&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Group2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;backslash&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;slash&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Insert&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;actions&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Group1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
+			&lt;span class=&quot;n&quot;&gt;NoAction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
+			&lt;span class=&quot;n&quot;&gt;NoAction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
+			&lt;span class=&quot;n&quot;&gt;RedirectKey&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;INS&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;clearmods&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Alt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+		&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;actions&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Group2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
+			&lt;span class=&quot;n&quot;&gt;NoAction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
+			&lt;span class=&quot;n&quot;&gt;NoAction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
+			&lt;span class=&quot;n&quot;&gt;RedirectKey&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;INS&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;clearmods&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Alt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+		&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;key&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;BKSP&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;ARROW&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;repeat&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;yes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+		&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;BackSpace&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;BackSpace&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Delete&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;actions&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Group1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
+			&lt;span class=&quot;n&quot;&gt;NoAction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
+			&lt;span class=&quot;n&quot;&gt;NoAction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
+			&lt;span class=&quot;n&quot;&gt;RedirectKey&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;DELE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;clearmods&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Alt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+		&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;key&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;LEFT&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;ARROW&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+		&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Left&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Left&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Home&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;actions&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Group1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
+			&lt;span class=&quot;n&quot;&gt;NoAction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
+			&lt;span class=&quot;n&quot;&gt;NoAction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
+			&lt;span class=&quot;n&quot;&gt;RedirectKey&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;HOME&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;clearmods&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Alt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+		&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;key&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;RGHT&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;ARROW&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;repeat&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;yes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+		&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Right&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Right&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;End&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;actions&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Group1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
+			&lt;span class=&quot;n&quot;&gt;NoAction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
+			&lt;span class=&quot;n&quot;&gt;NoAction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
+			&lt;span class=&quot;n&quot;&gt;RedirectKey&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;END&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;clearmods&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Alt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+		&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;key&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;UP&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;ARROW&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;repeat&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;yes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+		&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Up&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Up&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Prior&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;actions&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Group1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
+			&lt;span class=&quot;n&quot;&gt;NoAction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
+			&lt;span class=&quot;n&quot;&gt;NoAction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
+			&lt;span class=&quot;n&quot;&gt;RedirectKey&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;PGUP&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;clearmods&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Alt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+		&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;key&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;DOWN&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;ARROW&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+		&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Down&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Down&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Next&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;actions&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Group1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
+			&lt;span class=&quot;n&quot;&gt;NoAction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
+			&lt;span class=&quot;n&quot;&gt;NoAction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
+			&lt;span class=&quot;n&quot;&gt;RedirectKey&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;PGDN&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;clearmods&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Alt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+		&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;Осталось записать в .xinitrc следующую команду для загрузки изменённой раскладки:&lt;/p&gt;
 
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-console&quot; data-lang=&quot;console&quot;&gt;&lt;span class=&quot;go&quot;&gt;setxkbmap -layout &amp;quot;us+c720&amp;quot; -types &amp;quot;complete+c720&amp;quot; -print|xkbcomp -I&amp;quot;$HOME/.config/xkb&amp;quot; - &amp;quot;${DISPLAY%%.*}&amp;quot;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-console&quot; data-lang=&quot;console&quot;&gt;setxkbmap -layout &quot;us+c720&quot; -types &quot;complete+c720&quot; -print|xkbcomp -I&quot;$HOME/.config/xkb&quot; - &quot;${DISPLAY%%.*}&quot;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
 </content>
  </entry>
  

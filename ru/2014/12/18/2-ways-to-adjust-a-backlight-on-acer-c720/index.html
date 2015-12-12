@@ -80,6 +80,18 @@
         
       
     
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
 
     <span class="sidebar-nav-item">Currently v1.0.1</span>
   </nav>
@@ -98,7 +110,7 @@
       <div class="masthead">
         <div class="container">
           <h3 class="masthead-title">
-            <a href="/" title="Home">Yellow Rabbit</a>
+		  <a href="/" title="Home">Yellow Rabbit</a>
             <small>не забывает играть</small>
           </h3>
         </div>
@@ -126,99 +138,106 @@
     </div>
   <p>Клавиши регулировки подсветки на клавиатуре хромбука Acer C720 являются замаскированными клавишами <em>F6</em> и <em>F7</em>. Соответственно при замене ChromeOS на DragoFly BSD регулировка подсветки не работает. Не удаётся также использовать <em>xbacklight</em> - он не находит видео-выходов с возможностью регулировки подсветки. <em>xrandr</em> может помочь, но это программное решение, что-то типа приглушения яркости выводимых точек. Ясно, что жизнь батарее это никак не продлит.</p>
 
-<h2>Первый способ</h2>
-
-<p>Изменим драйвер i915 таким образом, чтобы он создавал два sysctl&#39;а:</p>
+<h2 id="section">Первый способ</h2>
+<p>Изменим драйвер i915 таким образом, чтобы он создавал два sysctl’а:</p>
 
 <ul>
-<li>  hw.blacklight_max - максимальное значение уровня подсветки,</li>
-<li>  hw.blacklight_level - получить/установить уровень подсветки.</li>
+  <li>hw.blacklight_max - максимальное значение уровня подсветки,</li>
+  <li>hw.blacklight_level - получить/установить уровень подсветки.</li>
 </ul>
 
-<p>Из плюсов: </p>
+<p>Из плюсов:</p>
 
 <ul>
-<li>небольшое количество изменений, которые не затрагивают Xorg.</li>
+  <li>небольшое количество изменений, которые не затрагивают Xorg.</li>
 </ul>
 
 <p>Из минусов:</p>
 
 <ul>
-<li>регулировать можно только ручками, сторонние программы ничего не знают об этих sysctl&#39;ах.</li>
+  <li>регулировать можно только ручками, сторонние программы ничего не знают об этих sysctl’ах.</li>
 </ul>
 
-<p>Драйвер i915 предоставляет механизм управления подсветкой, достаточно знать указатель на текущее drm-устройство: <code>struct drm_device *dev</code>.</p>
+<p>Драйвер i915 предоставляет механизм управления подсветкой, достаточно знать указатель на текущее drm-устройство: <code class="highlighter-rouge">struct drm_device *dev</code>.</p>
 
 <ul>
-<li>получить максимальное значение уровня подсветки: <code>u32 intel_panel_get_max_backlight(dev)</code>;</li>
-<li>прочитать текущее значение уровня подсветки: <code>dev-&gt;dev_private-&gt;backlight_level</code>;</li>
-<li>установить новое значение уровня подсветки: <code>intel_panel_set_backlight(dev, val)</code>;</li>
+  <li>получить максимальное значение уровня подсветки: <code class="highlighter-rouge">u32 intel_panel_get_max_backlight(dev)</code>;</li>
+  <li>прочитать текущее значение уровня подсветки: <code class="highlighter-rouge">dev-&gt;dev_private-&gt;backlight_level</code>;</li>
+  <li>установить новое значение уровня подсветки: <code class="highlighter-rouge">intel_panel_set_backlight(dev, val)</code>;</li>
 </ul>
 
 <p>Для двух sysctl пишем две функции обработки чтенияr/записи:</p>
 
-<div class="highlight"><pre><code class="language-c" data-lang="c"><span class="cm">/*</span>
-<span class="cm"> * Read max backlight level</span>
-<span class="cm"> */</span>
+<figure class="highlight"><pre><code class="language-c" data-lang="c"><span class="cm">/*
+ * Read max backlight level
+ */</span>
 <span class="k">static</span> <span class="kt">int</span>
 <span class="nf">sysctl_backlight_max</span><span class="p">(</span><span class="n">SYSCTL_HANDLER_ARGS</span><span class="p">)</span>
 <span class="p">{</span>
-    <span class="kt">int</span> <span class="n">err</span><span class="p">,</span> <span class="n">val</span><span class="p">;</span>
+	<span class="kt">int</span> <span class="n">err</span><span class="p">,</span> <span class="n">val</span><span class="p">;</span>
 
-    <span class="n">val</span> <span class="o">=</span><span class="n">intel_panel_get_max_backlight</span><span class="p">((</span><span class="k">struct</span> <span class="n">drm_device</span> <span class="o">*</span><span class="p">)</span><span class="n">arg1</span><span class="p">);</span>
-    <span class="n">err</span> <span class="o">=</span> <span class="n">sysctl_handle_int</span><span class="p">(</span><span class="n">oidp</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">val</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">req</span><span class="p">);</span>
-    <span class="k">return</span><span class="p">(</span><span class="n">err</span><span class="p">);</span>
+	<span class="n">val</span> <span class="o">=</span><span class="n">intel_panel_get_max_backlight</span><span class="p">((</span><span class="k">struct</span> <span class="n">drm_device</span> <span class="o">*</span><span class="p">)</span><span class="n">arg1</span><span class="p">);</span>
+	<span class="n">err</span> <span class="o">=</span> <span class="n">sysctl_handle_int</span><span class="p">(</span><span class="n">oidp</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">val</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">req</span><span class="p">);</span>
+	<span class="k">return</span><span class="p">(</span><span class="n">err</span><span class="p">);</span>
 <span class="p">}</span>
 
-<span class="cm">/*</span>
-<span class="cm"> * Read/write backlight level </span>
-<span class="cm"> */</span>
+<span class="cm">/*
+ * Read/write backlight level 
+ */</span>
 <span class="k">static</span> <span class="kt">int</span>
 <span class="nf">sysctl_backlight_handler</span><span class="p">(</span><span class="n">SYSCTL_HANDLER_ARGS</span><span class="p">)</span>
 <span class="p">{</span>
-    <span class="k">struct</span> <span class="n">drm_i915_private</span> <span class="o">*</span><span class="n">dev_priv</span><span class="p">;</span>
-    <span class="kt">int</span> <span class="n">err</span><span class="p">,</span> <span class="n">val</span><span class="p">;</span>
+	<span class="k">struct</span> <span class="n">drm_i915_private</span> <span class="o">*</span><span class="n">dev_priv</span><span class="p">;</span>
+	<span class="kt">int</span> <span class="n">err</span><span class="p">,</span> <span class="n">val</span><span class="p">;</span>
 
-    <span class="n">dev_priv</span> <span class="o">=</span> <span class="p">((</span><span class="k">struct</span> <span class="n">drm_device</span> <span class="o">*</span><span class="p">)</span><span class="n">arg1</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">dev_private</span><span class="p">;</span>
-    <span class="n">val</span> <span class="o">=</span> <span class="n">dev_priv</span><span class="o">-&gt;</span><span class="n">backlight_level</span><span class="p">;</span>
+	<span class="n">dev_priv</span> <span class="o">=</span> <span class="p">((</span><span class="k">struct</span> <span class="n">drm_device</span> <span class="o">*</span><span class="p">)</span><span class="n">arg1</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">dev_private</span><span class="p">;</span>
+	<span class="n">val</span> <span class="o">=</span> <span class="n">dev_priv</span><span class="o">-&gt;</span><span class="n">backlight_level</span><span class="p">;</span>
 
-    <span class="n">err</span> <span class="o">=</span> <span class="n">sysctl_handle_int</span><span class="p">(</span><span class="n">oidp</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">val</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">req</span><span class="p">);</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">err</span> <span class="o">!=</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">req</span><span class="o">-&gt;</span><span class="n">newptr</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">return</span><span class="p">(</span><span class="n">err</span><span class="p">);</span>
-    <span class="p">}</span>
+	<span class="n">err</span> <span class="o">=</span> <span class="n">sysctl_handle_int</span><span class="p">(</span><span class="n">oidp</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">val</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">req</span><span class="p">);</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">err</span> <span class="o">!=</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">req</span><span class="o">-&gt;</span><span class="n">newptr</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span><span class="p">(</span><span class="n">err</span><span class="p">);</span>
+	<span class="p">}</span>
 
-    <span class="k">if</span> <span class="p">(</span><span class="n">val</span> <span class="o">!=</span> <span class="n">dev_priv</span><span class="o">-&gt;</span><span class="n">backlight_level</span> <span class="o">&amp;&amp;</span> <span class="n">val</span> <span class="o">&gt;=</span> <span class="mi">0</span>
-        <span class="o">&amp;&amp;</span> <span class="n">val</span> <span class="o">&lt;=</span> <span class="n">intel_panel_get_max_backlight</span><span class="p">((</span><span class="k">struct</span> <span class="n">drm_device</span> <span class="o">*</span><span class="p">)</span><span class="n">arg1</span><span class="p">))</span> <span class="p">{</span>
-        <span class="n">intel_panel_set_backlight</span><span class="p">(</span><span class="n">arg1</span><span class="p">,</span> <span class="n">val</span><span class="p">);</span>
-    <span class="p">}</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">val</span> <span class="o">!=</span> <span class="n">dev_priv</span><span class="o">-&gt;</span><span class="n">backlight_level</span> <span class="o">&amp;&amp;</span> <span class="n">val</span> <span class="o">&gt;=</span> <span class="mi">0</span>
+		<span class="o">&amp;&amp;</span> <span class="n">val</span> <span class="o">&lt;=</span> <span class="n">intel_panel_get_max_backlight</span><span class="p">((</span><span class="k">struct</span> <span class="n">drm_device</span> <span class="o">*</span><span class="p">)</span><span class="n">arg1</span><span class="p">))</span> <span class="p">{</span>
+		<span class="n">intel_panel_set_backlight</span><span class="p">(</span><span class="n">arg1</span><span class="p">,</span> <span class="n">val</span><span class="p">);</span>
+	<span class="p">}</span>
 
-    <span class="k">return</span><span class="p">(</span><span class="n">err</span><span class="p">);</span>
-<span class="p">}</span></code></pre></div>
+	<span class="k">return</span><span class="p">(</span><span class="n">err</span><span class="p">);</span>
+<span class="p">}</span></code></pre></figure>
 
-<p><code>dev</code> можно узнать только во время выполнения, так что используем динамическое управление sysctl с помощью макроса <code>SYSCTL_ADD_PROC</code>. </p>
+<p><code class="highlighter-rouge">dev</code> можно узнать только во время выполнения, так что используем динамическое управление sysctl с помощью макроса <code class="highlighter-rouge">SYSCTL_ADD_PROC</code>.</p>
 
-<div class="highlight"><pre><code class="language-c" data-lang="c"><span class="n">SYSCTL_ADD_PROC</span><span class="p">(</span><span class="o">&amp;</span><span class="n">connector</span><span class="o">-&gt;</span><span class="n">dev</span><span class="o">-&gt;</span><span class="n">sysctl</span><span class="o">-&gt;</span><span class="n">ctx</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">sysctl__hw_children</span><span class="p">,</span>
-            <span class="n">OID_AUTO</span><span class="p">,</span> <span class="s">&quot;backlight_max&quot;</span><span class="p">,</span> 
-            <span class="n">CTLTYPE_INT</span> <span class="o">|</span> <span class="n">CTLFLAG_RD</span> <span class="o">|</span> <span class="n">CTLFLAG_ANYBODY</span><span class="p">,</span>
-            <span class="n">connector</span><span class="o">-&gt;</span><span class="n">dev</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">),</span>
-            <span class="n">sysctl_backlight_max</span><span class="p">,</span>
-            <span class="s">&quot;I&quot;</span><span class="p">,</span> <span class="s">&quot;Max backlight level&quot;</span><span class="p">);</span>
+<figure class="highlight"><pre><code class="language-c" data-lang="c"><span class="n">SYSCTL_ADD_PROC</span><span class="p">(</span><span class="o">&amp;</span><span class="n">connector</span><span class="o">-&gt;</span><span class="n">dev</span><span class="o">-&gt;</span><span class="n">sysctl</span><span class="o">-&gt;</span><span class="n">ctx</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">sysctl__hw_children</span><span class="p">,</span>
+			<span class="n">OID_AUTO</span><span class="p">,</span> <span class="s">"backlight_max"</span><span class="p">,</span> 
+			<span class="n">CTLTYPE_INT</span> <span class="o">|</span> <span class="n">CTLFLAG_RD</span> <span class="o">|</span> <span class="n">CTLFLAG_ANYBODY</span><span class="p">,</span>
+			<span class="n">connector</span><span class="o">-&gt;</span><span class="n">dev</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">),</span>
+			<span class="n">sysctl_backlight_max</span><span class="p">,</span>
+			<span class="s">"I"</span><span class="p">,</span> <span class="s">"Max backlight level"</span><span class="p">);</span>
 <span class="n">SYSCTL_ADD_PROC</span><span class="p">(</span><span class="o">&amp;</span><span class="n">connector</span><span class="o">-&gt;</span><span class="n">dev</span><span class="o">-&gt;</span><span class="n">sysctl</span><span class="o">-&gt;</span><span class="n">ctx</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">sysctl__hw_children</span><span class="p">,</span>
-            <span class="n">OID_AUTO</span><span class="p">,</span> <span class="s">&quot;backlight_level&quot;</span><span class="p">,</span> 
-            <span class="n">CTLTYPE_INT</span> <span class="o">|</span> <span class="n">CTLFLAG_RW</span> <span class="o">|</span> <span class="n">CTLFLAG_ANYBODY</span><span class="p">,</span>
-            <span class="n">connector</span><span class="o">-&gt;</span><span class="n">dev</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">),</span>
-            <span class="n">sysctl_backlight_handler</span><span class="p">,</span>
-            <span class="s">&quot;I&quot;</span><span class="p">,</span> <span class="s">&quot;Backlight level&quot;</span><span class="p">);</span></code></pre></div>
+			<span class="n">OID_AUTO</span><span class="p">,</span> <span class="s">"backlight_level"</span><span class="p">,</span> 
+			<span class="n">CTLTYPE_INT</span> <span class="o">|</span> <span class="n">CTLFLAG_RW</span> <span class="o">|</span> <span class="n">CTLFLAG_ANYBODY</span><span class="p">,</span>
+			<span class="n">connector</span><span class="o">-&gt;</span><span class="n">dev</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">),</span>
+			<span class="n">sysctl_backlight_handler</span><span class="p">,</span>
+			<span class="s">"I"</span><span class="p">,</span> <span class="s">"Backlight level"</span><span class="p">);</span></code></pre></figure>
 
-<p>В результате становится возможным использовать команды типа <code>sysctl hw.backlight_level=370</code> чтобы установить приемлимый уровень подсветки. Фактически сейчас эта команда прописана у меня в <em>.xinitrc</em>, я не озадачиваюсь пока привязкой какого-нибудь скрипта к клавишам <em>F6</em> и <em>F7</em>. Это не сложно, просто впереди ещё один способ, который только предстоит придумать:)</p>
+<p>В результате становится возможным использовать команды типа <code class="highlighter-rouge">sysctl hw.backlight_level=370</code> чтобы установить приемлимый уровень подсветки. Фактически сейчас эта команда прописана у меня в <em>.xinitrc</em>, я не озадачиваюсь пока привязкой какого-нибудь скрипта к клавишам <em>F6</em> и <em>F7</em>. Это не сложно, просто впереди ещё один способ, который только предстоит придумать:)</p>
 
 <p><a href="/public/patches/way1-sysctls.patch">Полный текст заплатки</a> накладываемой на DragonFly BSD от 19/12/2014.</p>
+
 
 </div>
 
 <div class="related">
   <h2>Related Posts</h2>
   <ul class="related-posts">
+    
+      <li>
+          <a href="/ru/2015/12/11/figth-with-trilobyte/">
+            Трилобит и Лисп
+            <small>11 Dec 2015</small>
+          </a>
+      </li>
     
       <li>
           <a href="/ru/2014/12/26/adjust-a-backlight-on-acer-c720/">
@@ -231,13 +250,6 @@
           <a href="/ru/2014/12/15/xbindkeys-volume/">
             Регулировка громкости функциональными клавишами
             <small>15 Dec 2014</small>
-          </a>
-      </li>
-    
-      <li>
-          <a href="/ru/2014/12/08/acer-720-keyboard/">
-            Имитация недостающих клавиш Acer C720
-            <small>08 Dec 2014</small>
           </a>
       </li>
     

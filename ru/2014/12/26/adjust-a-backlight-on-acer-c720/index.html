@@ -80,6 +80,18 @@
         
       
     
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
 
     <span class="sidebar-nav-item">Currently v1.0.1</span>
   </nav>
@@ -98,7 +110,7 @@
       <div class="masthead">
         <div class="container">
           <h3 class="masthead-title">
-            <a href="/" title="Home">Yellow Rabbit</a>
+		  <a href="/" title="Home">Yellow Rabbit</a>
             <small>не забывает играть</small>
           </h3>
         </div>
@@ -120,42 +132,49 @@
 	
 	</ul>
     </div>
-  <h2>То, что не случилось</h2>
-
+  <h2 id="section">То, что не случилось</h2>
 <p>Второй способ заключается в создании специального устройства, чтение из которого возвращает текущий уровень подстветки, а запись в которое изменяет уровень подстветки. И такое устройство было создано. Это потребовало гораздо крупных вмешательств в код, включая изменение нескольких Makefile, файла системных настроек (sys/conf/options), добавление каталога с исходными файлами устройства.</p>
 
-<p>Устройство работало, но это нисколько не помогло сторонним утилитам увидеть наличие регулировки подсветки. Дело в том, что для этих утилит критичным указалось наличие каталога /sys/class/backlight/something, в котором располагались специальные файлы actual<em>brightness, brightness, max</em>brightness, subsystem/, uevent, bl_power, device/, power/ и тому подобные.</p>
+<p>Устройство работало, но это нисколько не помогло сторонним утилитам увидеть наличие регулировки подсветки. Дело в том, что для этих утилит критичным указалось наличие каталога /sys/class/backlight/something, в котором располагались специальные файлы actual_brightness, brightness, max_brightness, subsystem/, uevent, bl_power, device/, power/ и тому подобные.</p>
 
-<p>Это так называемая Линукс-sysfs, которой нет (или я не нашёл) в DragonFly BSD. Создавать её аналог для регулирования уровня подсветки... пожалуй overkill.</p>
+<p>Это так называемая Линукс-sysfs, которой нет (или я не нашёл) в DragonFly BSD. Создавать её аналог для регулирования уровня подсветки… пожалуй overkill.</p>
 
-<h2>Привязка клавиш регулировки подсветки</h2>
+<h2 id="section-1">Привязка клавиш регулировки подсветки</h2>
 
-<p>Первый скрипт <code>brightness-inc.sh</code> увеличивает яркость:</p>
+<p>Первый скрипт <code class="highlighter-rouge">brightness-inc.sh</code> увеличивает яркость:</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="c">#!/bin/sh</span>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="c">#!/bin/sh</span>
 <span class="nv">LVL</span><span class="o">=</span><span class="sb">`</span>/sbin/sysctl -n hw.backlight_level<span class="sb">`</span>
-/sbin/sysctl hw.backlight_level<span class="o">=</span><span class="k">$((</span> <span class="k">${</span><span class="nv">LVL</span><span class="k">}</span> <span class="o">+</span> <span class="m">50</span> <span class="k">))</span></code></pre></div>
+/sbin/sysctl hw.backlight_level<span class="o">=</span><span class="k">$((</span> <span class="k">${</span><span class="nv">LVL</span><span class="k">}</span> <span class="o">+</span> <span class="m">50</span> <span class="k">))</span></code></pre></figure>
 
-<p>второй <code>brightness-dec.sh</code> уменьшает:</p>
+<p>второй <code class="highlighter-rouge">brightness-dec.sh</code> уменьшает:</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="c">#!/bin/sh</span>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="c">#!/bin/sh</span>
 <span class="nv">LVL</span><span class="o">=</span><span class="sb">`</span>/sbin/sysctl -n hw.backlight_level<span class="sb">`</span>
-/sbin/sysctl hw.backlight_level<span class="o">=</span><span class="k">$((</span> <span class="k">${</span><span class="nv">LVL</span><span class="k">}</span> <span class="o">-</span> <span class="m">50</span> <span class="k">))</span></code></pre></div>
+/sbin/sysctl hw.backlight_level<span class="o">=</span><span class="k">$((</span> <span class="k">${</span><span class="nv">LVL</span><span class="k">}</span> <span class="o">-</span> <span class="m">50</span> <span class="k">))</span></code></pre></figure>
 
-<p>В файле <code>.xbindkeysrc</code> указываем привязку скриптов к клавишам:</p>
+<p>В файле <code class="highlighter-rouge">.xbindkeysrc</code> указываем привязку скриптов к клавишам:</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="c"># brightness</span>
-<span class="s2">&quot;brightness-dec.sh&quot;</span>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="c"># brightness</span>
+<span class="s2">"brightness-dec.sh"</span>
   F6
 
-<span class="s2">&quot;brightness-inc.sh&quot;</span>
-  F7</code></pre></div>
+<span class="s2">"brightness-inc.sh"</span>
+  F7</code></pre></figure>
+
 
 </div>
 
 <div class="related">
   <h2>Related Posts</h2>
   <ul class="related-posts">
+    
+      <li>
+          <a href="/ru/2015/12/11/figth-with-trilobyte/">
+            Трилобит и Лисп
+            <small>11 Dec 2015</small>
+          </a>
+      </li>
     
       <li>
           <a href="/ru/2014/12/18/2-ways-to-adjust-a-backlight-on-acer-c720/">
@@ -168,13 +187,6 @@
           <a href="/ru/2014/12/15/xbindkeys-volume/">
             Регулировка громкости функциональными клавишами
             <small>15 Dec 2014</small>
-          </a>
-      </li>
-    
-      <li>
-          <a href="/ru/2014/12/08/acer-720-keyboard/">
-            Имитация недостающих клавиш Acer C720
-            <small>08 Dec 2014</small>
           </a>
       </li>
     
