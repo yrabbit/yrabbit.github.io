@@ -149,7 +149,7 @@
     <span class="p">(</span><span class="nb">loop</span>
       <span class="nv">for</span> <span class="nv">idx</span> <span class="nv">from</span> <span class="mi">0</span>
       <span class="nv">for</span> <span class="nv">cell</span> <span class="nv">across</span> <span class="nv">board</span>
-      <span class="nv">collect</span> <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">=</span> <span class="nv">idx</span> <span class="nv">move-cell</span><span class="p">)</span>
+      <span class="nv">collect</span> <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">eql</span> <span class="nv">idx</span> <span class="nv">move-cell</span><span class="p">)</span>
                 <span class="p">(</span><span class="nv">get-player-color</span> <span class="nv">player</span><span class="p">)</span>
                 <span class="nv">cell</span><span class="p">))))</span>
 </code></pre>

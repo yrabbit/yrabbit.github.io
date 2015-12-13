@@ -4,7 +4,7 @@
  <title>Yellow Rabbit</title>
  <link href="http://yrabbit.github.com/atom.xml" rel="self"/>
  <link href="http://yrabbit.github.com/"/>
- <updated>2015-12-13T17:32:12+10:00</updated>
+ <updated>2015-12-13T18:07:04+10:00</updated>
  <id>http://yrabbit.github.com</id>
  <author>
    <name>Yellow Rabbit</name>
@@ -26,7 +26,7 @@
     &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;loop&lt;/span&gt;
       &lt;span class=&quot;nv&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;idx&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;
       &lt;span class=&quot;nv&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;cell&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;across&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;board&lt;/span&gt;
-      &lt;span class=&quot;nv&quot;&gt;collect&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;idx&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;move-cell&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;nv&quot;&gt;collect&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;eql&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;idx&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;move-cell&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
                 &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;get-player-color&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
                 &lt;span class=&quot;nv&quot;&gt;cell&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;
@@ -283,17 +283,17 @@
 &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defparameter&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*human-player*&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 
 &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;change-player&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*ai-player*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;eql&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*ai-player*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
     &lt;span class=&quot;vg&quot;&gt;*human-player*&lt;/span&gt;
     &lt;span class=&quot;vg&quot;&gt;*ai-player*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
 
 &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;get-player-color&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*ai-player*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;eql&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*ai-player*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
     &lt;span class=&quot;vg&quot;&gt;*ai-cell*&lt;/span&gt;
     &lt;span class=&quot;vg&quot;&gt;*human-cell*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
 
 &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;get-player-str&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*ai-player*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;eql&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*ai-player*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
     &lt;span class=&quot;s&quot;&gt;&quot;The Evil AI&quot;&lt;/span&gt;
     &lt;span class=&quot;s&quot;&gt;&quot;Human&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;
@@ -306,10 +306,10 @@
 
 &lt;span class=&quot;c1&quot;&gt;;; cell type predicates&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;cell-emptyp&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;board&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;cell&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;get-cell&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;board&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;cell&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*empty-cell*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;eql&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;get-cell&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;board&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;cell&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*empty-cell*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
 
 &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;cell-playerp&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;board&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;cell&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;get-cell&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;board&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;cell&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;eql&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;get-cell&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;board&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;cell&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 &lt;p&gt;На данный момент можно немного посмотреть на работу доски:&lt;/p&gt;

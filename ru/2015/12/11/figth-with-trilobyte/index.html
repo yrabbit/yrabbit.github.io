@@ -198,17 +198,17 @@
 <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*human-player*</span> <span class="mi">2</span><span class="p">)</span>
 
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">change-player</span> <span class="p">(</span><span class="nv">player</span><span class="p">)</span>
-  <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">=</span> <span class="nv">player</span> <span class="vg">*ai-player*</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">eql</span> <span class="nv">player</span> <span class="vg">*ai-player*</span><span class="p">)</span>
     <span class="vg">*human-player*</span>
     <span class="vg">*ai-player*</span><span class="p">))</span>
 
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">get-player-color</span> <span class="p">(</span><span class="nv">player</span><span class="p">)</span>
-  <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">=</span> <span class="nv">player</span> <span class="vg">*ai-player*</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">eql</span> <span class="nv">player</span> <span class="vg">*ai-player*</span><span class="p">)</span>
     <span class="vg">*ai-cell*</span>
     <span class="vg">*human-cell*</span><span class="p">))</span>
 
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">get-player-str</span> <span class="p">(</span><span class="nv">player</span><span class="p">)</span>
-  <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">=</span> <span class="nv">player</span> <span class="vg">*ai-player*</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">eql</span> <span class="nv">player</span> <span class="vg">*ai-player*</span><span class="p">)</span>
     <span class="s">"The Evil AI"</span>
     <span class="s">"Human"</span><span class="p">))</span>
 </code></pre>
@@ -221,10 +221,10 @@
 
 <span class="c1">;; cell type predicates</span>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">cell-emptyp</span> <span class="p">(</span><span class="nv">board</span> <span class="nv">cell</span><span class="p">)</span>
-  <span class="p">(</span><span class="nb">=</span> <span class="p">(</span><span class="nv">get-cell</span> <span class="nv">board</span> <span class="nv">cell</span><span class="p">)</span> <span class="vg">*empty-cell*</span><span class="p">))</span>
+  <span class="p">(</span><span class="nb">eql</span> <span class="p">(</span><span class="nv">get-cell</span> <span class="nv">board</span> <span class="nv">cell</span><span class="p">)</span> <span class="vg">*empty-cell*</span><span class="p">))</span>
 
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">cell-playerp</span> <span class="p">(</span><span class="nv">board</span> <span class="nv">cell</span> <span class="nv">player</span><span class="p">)</span>
-  <span class="p">(</span><span class="nb">=</span> <span class="p">(</span><span class="nv">get-cell</span> <span class="nv">board</span> <span class="nv">cell</span><span class="p">)</span> <span class="nv">player</span><span class="p">))</span>
+  <span class="p">(</span><span class="nb">eql</span> <span class="p">(</span><span class="nv">get-cell</span> <span class="nv">board</span> <span class="nv">cell</span><span class="p">)</span> <span class="nv">player</span><span class="p">))</span>
 </code></pre>
 </div>
 <p>На данный момент можно немного посмотреть на работу доски:</p>
