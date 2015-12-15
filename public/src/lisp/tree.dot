@@ -1,0 +1,21 @@
+# rules engine tree
+digraph RulesEngine {
+	node [shape=record, height=0.1];
+
+	node0 [label = "player | board | failp | <m> moves"];
+	node1 [label = "<p> player | board | nil | <m> moves"];
+	node2 [label = "<p> player | board | nil | <m> moves"];
+	node3 [label = "<p> player | board | nil | <m> moves"];
+	node4 [label = "<p> player | board | nil | <m> nil"];
+
+	
+	node8 [label = "<p> player | board | T | <m> nil"];
+	node9 [label = "<p> player | board | nil | nil"];
+
+	node0:m -> node1:p;
+	node0:m -> node2:p;
+	node0:m -> node4:p;
+	node2:m -> node3:p;
+	node3:m -> node9:p;
+	node1:m -> node8:p;
+}
