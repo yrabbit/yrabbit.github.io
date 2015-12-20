@@ -218,11 +218,14 @@
   <span class="p">(</span><span class="nb">fresh-line</span><span class="p">)</span>
   <span class="p">(</span><span class="nb">princ</span> <span class="s">"choose your move:"</span><span class="p">)</span>
   <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">moves</span> <span class="p">(</span><span class="nv">game-node-moves</span> <span class="nv">tree</span><span class="p">)))</span>
-    <span class="p">(</span><span class="nb">loop</span> <span class="nv">for</span> <span class="nv">move</span> <span class="nv">in</span> <span class="nv">moves</span>
-          <span class="nv">for</span> <span class="nv">n</span> <span class="nv">from</span> <span class="mi">1</span>
-          <span class="nb">do</span> <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">action</span> <span class="p">(</span><span class="nb">code-char</span> <span class="p">(</span><span class="nb">+</span> <span class="mi">97</span> <span class="p">(</span><span class="nb">mod</span> <span class="p">(</span><span class="nb">car</span> <span class="nv">move</span><span class="p">)</span> <span class="vg">*board-width*</span><span class="p">)))))</span>
-               <span class="p">(</span><span class="nb">fresh-line</span><span class="p">)</span>
-               <span class="p">(</span><span class="nb">format</span> <span class="no">t</span> <span class="s">"~a. ~a"</span> <span class="nv">n</span> <span class="nv">action</span><span class="p">)))</span>
+    <span class="p">(</span><span class="k">labels</span> <span class="p">((</span><span class="nv">print-moves</span> <span class="p">(</span><span class="nv">lst</span> <span class="nv">n</span><span class="p">)</span> 
+                          <span class="p">(</span><span class="nb">unless</span> <span class="p">(</span><span class="nb">null</span> <span class="nv">lst</span><span class="p">)</span>
+                            <span class="p">(</span><span class="k">let*</span> <span class="p">((</span><span class="nv">move</span> <span class="p">(</span><span class="nb">car</span> <span class="nv">lst</span><span class="p">))</span>
+                                   <span class="p">(</span><span class="nv">action</span> <span class="p">(</span><span class="nb">code-char</span> <span class="p">(</span><span class="nb">+</span> <span class="mi">97</span> <span class="p">(</span><span class="nb">mod</span> <span class="p">(</span><span class="nb">car</span> <span class="nv">move</span><span class="p">)</span> <span class="vg">*board-width*</span><span class="p">)))))</span>
+                              <span class="p">(</span><span class="nb">fresh-line</span><span class="p">)</span>
+                              <span class="p">(</span><span class="nb">format</span> <span class="no">t</span> <span class="s">"~a. ~a"</span> <span class="nv">n</span> <span class="nv">action</span><span class="p">)</span>
+                              <span class="p">(</span><span class="nv">print-moves</span> <span class="p">(</span><span class="nb">cdr</span> <span class="nv">lst</span><span class="p">)</span> <span class="p">(</span><span class="nb">1+</span> <span class="nv">n</span><span class="p">))))))</span>
+      <span class="p">(</span><span class="nv">print-moves</span> <span class="nv">moves</span> <span class="mi">1</span><span class="p">))</span>
     <span class="p">(</span><span class="nb">fresh-line</span><span class="p">)</span>
     <span class="p">(</span><span class="nb">cadr</span> <span class="p">(</span><span class="nb">nth</span> <span class="p">(</span><span class="nb">1-</span> <span class="p">(</span><span class="nb">read</span><span class="p">))</span> <span class="nv">moves</span><span class="p">))))</span>
 </code></pre>
@@ -314,6 +317,13 @@
   <ul class="related-posts">
     
       <li>
+          <a href="/ru/2015/12/15/trilobyte-big-lazy-tree/">
+            Trilobyte. Big Lazy Tree.
+            <small>15 Dec 2015</small>
+          </a>
+      </li>
+    
+      <li>
           <a href="/ru/2015/12/14/rules-engine/">
             Trilobyte. Rules engine and AI
             <small>14 Dec 2015</small>
@@ -324,13 +334,6 @@
           <a href="/ru/2015/12/13/trilobyte-checking-patterns/">
             Trilobyte. Moves & checking patterns.
             <small>13 Dec 2015</small>
-          </a>
-      </li>
-    
-      <li>
-          <a href="/ru/2015/12/11/figth-with-trilobyte/">
-            Трилобит и Лисп
-            <small>11 Dec 2015</small>
           </a>
       </li>
     
