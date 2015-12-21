@@ -4,13 +4,309 @@
  <title>Yellow Rabbit</title>
  <link href="http://yrabbit.github.com/atom.xml" rel="self"/>
  <link href="http://yrabbit.github.com/"/>
- <updated>2015-12-20T16:50:55+11:00</updated>
+ <updated>2015-12-21T20:39:49+11:00</updated>
  <id>http://yrabbit.github.com</id>
  <author>
    <name>Yellow Rabbit</name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Trilobyte. Lazy AI.</title>
+   <link href="http://yrabbit.github.com/ru/2015/12/21/trilobyte.-lazy-ai/"/>
+   <updated>2015-12-21T20:09:53+11:00</updated>
+   <id>http://yrabbit.github.com/ru/2015/12/21/trilobyte.-lazy-ai</id>
+   <content type="html">&lt;h2 id=&quot;section&quot;&gt;Ограничение дерева&lt;/h2&gt;
+&lt;p&gt;Итак AI не может искать решения в ленивом дереве, поскольку по мере просчитывания ходов он материализует всё это дерево из небытия. Выходом может быть ограничение количества ходов, на которое AI просчитывает ситуацию. И это можно сделать очень изящно, а именно не подсчитывать глубину по ходу оценки комбинаций, а сразу подсунуть AI короткое дерево!&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defparameter&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*ai-level*&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;limit-tree-depth&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;tree&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;depth&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;list&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;game-node-player&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tree&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;game-node-board&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tree&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;game-node-failp&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tree&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;zerop&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;depth&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;lazy-nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;lazy-mapcar&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;move&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                         &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;list&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;car&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;move&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                               &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;limit-tree-depth&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cadr&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;move&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;1-&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;depth&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
+                       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;game-node-moves&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tree&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;Здесь *ai-level* — на сколько ходов заглядывает AI или глубина дерева, которое мы предоставляем ему для анализа. Теперь изменим ход компьютера, чтобы он работал с новым урезанным деревом:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;handle-computer&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;tree&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ratings&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;get-ratings&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;limit-tree-depth&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tree&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*ai-level*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cadr&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;lazy-nth&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;position&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;apply&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;#&#39;&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;max&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ratings&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ratings&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;game-node-moves&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tree&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;И финальный штрих: условием прекращением анализа сделаем в том числе проверку на пустоту ленивого списка:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;rate-position&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;tree&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;moves&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;game-node-moves&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tree&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;not&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;lazy-null&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;moves&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;apply&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;eq&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*ai-player*&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;game-node-player&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tree&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+                   &lt;span class=&quot;nf&quot;&gt;#&#39;&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;max&lt;/span&gt;
+                   &lt;span class=&quot;nf&quot;&gt;#&#39;&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;min&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                 &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;get-ratings&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tree&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;game-node-failp&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tree&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;eql&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*ai-player*&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;game-node-player&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tree&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+              &lt;span class=&quot;vg&quot;&gt;*human-win*&lt;/span&gt;
+              &lt;span class=&quot;vg&quot;&gt;*ai-win*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;vg&quot;&gt;*draw*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;section-1&quot;&gt;Шуточная игра&lt;/h2&gt;
+&lt;p&gt;Длинный листинг сеанса игры с человеком.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;play&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;game-tree&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;new-board&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*ai-player*&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;-1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+
+&lt;span class=&quot;nv&quot;&gt;current&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;The&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Evil&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;AI&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;abcdefgh&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;current&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Human&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;abcdefgh&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;choose&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;your&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;move:&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;1.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;a&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;2.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;b&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;3.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;c&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;4.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;d&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;5.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;e&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;6.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;f&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;7.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;g&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;8.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;h&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;current&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;The&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Evil&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;AI&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;H.......&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;abcdefgh&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;current&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Human&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;H.......&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;abcdefgh&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;choose&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;your&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;move:&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;1.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;a&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;2.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;b&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;3.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;c&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;4.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;d&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;5.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;e&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;6.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;f&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;7.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;g&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;8.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;h&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;current&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;The&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Evil&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;AI&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;H.......&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;AH......&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;abcdefgh&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;current&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Human&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;H.......&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;AH......&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;abcdefgh&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;choose&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;your&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;move:&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;1.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;a&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;2.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;b&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;3.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;c&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;4.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;d&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;5.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;e&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;6.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;f&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;7.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;g&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;8.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;h&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;current&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;The&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Evil&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;AI&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;H.......&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;AHH.....&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;abcdefgh&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;current&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Human&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;H.......&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;AHH.....&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;abcdefgh&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;choose&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;your&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;move:&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;1.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;a&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;2.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;b&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;3.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;c&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;4.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;d&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;5.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;e&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;6.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;f&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;7.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;g&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;8.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;h&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;current&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;The&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Evil&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;AI&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;H.......&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;H.......&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;AHH.....&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;abcdefgh&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;current&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Human&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;H.......&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;H.......&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;AHH.....&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;abcdefgh&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;choose&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;your&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;move:&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;1.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;b&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;2.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;c&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;3.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;d&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;4.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;e&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;5.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;f&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;6.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;g&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;7.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;h&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;current&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;The&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Evil&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;AI&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;H.......&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;H.......&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;AHH.....&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;abcdefgh&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;choose&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;your&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;move:&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;1.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;b&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;2.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;c&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;3.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;d&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;4.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;e&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;5.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;f&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;6.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;g&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;7.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;h&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;current&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;The&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Evil&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;AI&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;H.......&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;H.......&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;AHHH....&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;abcdefgh&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;current&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Human&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;H.......&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;H.......&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;AHHHA...&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;abcdefgh&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;choose&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;your&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;move:&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;1.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;b&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;2.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;c&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;3.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;d&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;4.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;e&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;5.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;f&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;6.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;g&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;7.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;h&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;current&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;The&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Evil&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;AI&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;H.......&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;H.H.....&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;AHHHA...&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;abcdefgh&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;current&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Human&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;H.......&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;A.A.....&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;H.H.....&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;AHHHA...&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;abcdefgh&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;choose&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;your&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;move:&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;1.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;c&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;2.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;b&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;3.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;d&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;4.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;e&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;5.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;f&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;6.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;g&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;7.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;h&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;current&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;The&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Evil&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;AI&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;H.......&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;A.A.....&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;H.HH....&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;AHHHA...&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;abcdefgh&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;current&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Human&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;H.......&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;A.A.....&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;HAHH....&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;AHHHA...&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;abcdefgh&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;choose&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;your&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;move:&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;1.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;c&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;2.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;b&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;3.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;d&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;4.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;e&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;5.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;f&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;6.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;g&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;7.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;h&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;It’s alive! Забавно как AI не даёт мне выиграть:) Хотя чувствуется, что он не так активно стремится к своей победе.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Trilobyte. Big Lazy Tree.</title>
@@ -666,7 +962,7 @@
   &lt;li&gt;(
     &lt;ul&gt;
       &lt;li&gt;(список клеток влево) (список клеток вправо)&lt;/li&gt;
-      &lt;li&gt;(спиcок клеток вверх) (список клеток вниз)&lt;/li&gt;
+      &lt;li&gt;(спиcок клеток вверх)&lt;sup id=&quot;fnref:up&quot;&gt;&lt;a href=&quot;#fn:up&quot; class=&quot;footnote&quot;&gt;3&lt;/a&gt;&lt;/sup&gt; (список клеток вниз)&lt;/li&gt;
       &lt;li&gt;(спиcок клеток налево и вверх) (список клеток направо и вниз)&lt;/li&gt;
       &lt;li&gt;(спиcок клеток налево и вниз) (список клеток направо и вверх)&lt;/li&gt;
     &lt;/ul&gt;
@@ -820,6 +1116,9 @@
     &lt;/li&gt;
     &lt;li id=&quot;fn:list-of-lists&quot;&gt;
       &lt;p&gt;А что вы хотели? Язык обработки списков всё таки! :) &lt;a href=&quot;#fnref:list-of-lists&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+    &lt;li id=&quot;fn:up&quot;&gt;
+      &lt;p&gt;Вверх можно и не проверять, но возможно пригодится. &lt;a href=&quot;#fnref:up&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
     &lt;/li&gt;
   &lt;/ol&gt;
 &lt;/div&gt;
