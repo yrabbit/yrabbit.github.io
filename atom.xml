@@ -4,7 +4,7 @@
  <title>Yellow Rabbit</title>
  <link href="http://yrabbit.github.com/atom.xml" rel="self"/>
  <link href="http://yrabbit.github.com/"/>
- <updated>2015-12-21T20:39:49+11:00</updated>
+ <updated>2015-12-21T21:19:21+11:00</updated>
  <id>http://yrabbit.github.com</id>
  <author>
    <name>Yellow Rabbit</name>
@@ -14,7 +14,7 @@
  
  <entry>
    <title>Trilobyte. Lazy AI.</title>
-   <link href="http://yrabbit.github.com/ru/2015/12/21/trilobyte.-lazy-ai/"/>
+   <link href="http://yrabbit.github.com/ru/2015/12/21/trilobyte.-lazy-ai.html"/>
    <updated>2015-12-21T20:09:53+11:00</updated>
    <id>http://yrabbit.github.com/ru/2015/12/21/trilobyte.-lazy-ai</id>
    <content type="html">&lt;h2 id=&quot;section&quot;&gt;Ограничение дерева&lt;/h2&gt;
@@ -310,7 +310,7 @@
  
  <entry>
    <title>Trilobyte. Big Lazy Tree.</title>
-   <link href="http://yrabbit.github.com/ru/2015/12/15/trilobyte-big-lazy-tree/"/>
+   <link href="http://yrabbit.github.com/ru/2015/12/15/trilobyte-big-lazy-tree.html"/>
    <updated>2015-12-15T19:59:21+11:00</updated>
    <id>http://yrabbit.github.com/ru/2015/12/15/trilobyte-big-lazy-tree</id>
    <content type="html">&lt;h2 id=&quot;section&quot;&gt;Ленивые списки&lt;/h2&gt;
@@ -549,7 +549,7 @@
  
  <entry>
    <title>Trilobyte. An UI.</title>
-   <link href="http://yrabbit.github.com/ru/2015/12/15/trilobyte-ui/"/>
+   <link href="http://yrabbit.github.com/ru/2015/12/15/trilobyte-ui.html"/>
    <updated>2015-12-15T14:22:42+11:00</updated>
    <id>http://yrabbit.github.com/ru/2015/12/15/trilobyte-ui</id>
    <content type="html">&lt;h2 id=&quot;section&quot;&gt;Интерфейс&lt;/h2&gt;
@@ -726,7 +726,7 @@
  
  <entry>
    <title>Trilobyte. Rules engine and AI</title>
-   <link href="http://yrabbit.github.com/ru/2015/12/14/rules-engine/"/>
+   <link href="http://yrabbit.github.com/ru/2015/12/14/rules-engine.html"/>
    <updated>2015-12-14T18:39:13+11:00</updated>
    <id>http://yrabbit.github.com/ru/2015/12/14/rules-engine</id>
    <content type="html">&lt;h2 id=&quot;section&quot;&gt;Движок игровых правил&lt;/h2&gt;
@@ -916,7 +916,7 @@
  
  <entry>
    <title>Trilobyte. Moves & checking patterns.</title>
-   <link href="http://yrabbit.github.com/ru/2015/12/13/trilobyte-checking-patterns/"/>
+   <link href="http://yrabbit.github.com/ru/2015/12/13/trilobyte-checking-patterns.html"/>
    <updated>2015-12-13T10:42:08+11:00</updated>
    <id>http://yrabbit.github.com/ru/2015/12/13/trilobyte-checking-patterns</id>
    <content type="html">&lt;h2 id=&quot;section&quot;&gt;Ходы&lt;/h2&gt;
@@ -1127,7 +1127,7 @@
  
  <entry>
    <title>Трилобит и Лисп</title>
-   <link href="http://yrabbit.github.com/ru/2015/12/11/figth-with-trilobyte/"/>
+   <link href="http://yrabbit.github.com/ru/2015/12/11/figth-with-trilobyte.html"/>
    <updated>2015-12-11T22:20:47+11:00</updated>
    <id>http://yrabbit.github.com/ru/2015/12/11/figth-with-trilobyte</id>
    <content type="html">&lt;h2 id=&quot;section&quot;&gt;Задачка&lt;/h2&gt;
@@ -1252,7 +1252,7 @@ NIL
  
  <entry>
    <title>2 способа регулировки яркости подсветки на Acer C720 (part 2)</title>
-   <link href="http://yrabbit.github.com/ru/2014/12/26/adjust-a-backlight-on-acer-c720/"/>
+   <link href="http://yrabbit.github.com/ru/2014/12/26/adjust-a-backlight-on-acer-c720.html"/>
    <updated>2014-12-26T07:03:28+11:00</updated>
    <id>http://yrabbit.github.com/ru/2014/12/26/adjust-a-backlight-on-acer-c720</id>
    <content type="html">&lt;h2 id=&quot;section&quot;&gt;То, что не случилось&lt;/h2&gt;
@@ -1290,7 +1290,7 @@ NIL
  
  <entry>
    <title>2 способа регулировки яркости подсветки на Acer C720 (part 1)</title>
-   <link href="http://yrabbit.github.com/ru/2014/12/18/2-ways-to-adjust-a-backlight-on-acer-c720/"/>
+   <link href="http://yrabbit.github.com/ru/2014/12/18/2-ways-to-adjust-a-backlight-on-acer-c720.html"/>
    <updated>2014-12-18T20:35:30+11:00</updated>
    <id>http://yrabbit.github.com/ru/2014/12/18/2-ways-to-adjust-a-backlight-on-acer-c720</id>
    <content type="html">&lt;p&gt;Клавиши регулировки подсветки на клавиатуре хромбука Acer C720 являются замаскированными клавишами &lt;em&gt;F6&lt;/em&gt; и &lt;em&gt;F7&lt;/em&gt;. Соответственно при замене ChromeOS на DragoFly BSD регулировка подсветки не работает. Не удаётся также использовать &lt;em&gt;xbacklight&lt;/em&gt; - он не находит видео-выходов с возможностью регулировки подсветки. &lt;em&gt;xrandr&lt;/em&gt; может помочь, но это программное решение, что-то типа приглушения яркости выводимых точек. Ясно, что жизнь батарее это никак не продлит.&lt;/p&gt;
@@ -1387,7 +1387,7 @@ NIL
  
  <entry>
    <title>Регулировка громкости функциональными клавишами</title>
-   <link href="http://yrabbit.github.com/ru/2014/12/15/xbindkeys-volume/"/>
+   <link href="http://yrabbit.github.com/ru/2014/12/15/xbindkeys-volume.html"/>
    <updated>2014-12-15T20:12:00+11:00</updated>
    <id>http://yrabbit.github.com/ru/2014/12/15/xbindkeys-volume</id>
    <content type="html">&lt;p&gt;У Acer C720 нет обозначенных функциональных клавиш F1-10, вместо этого соответствующие клавиши помечены различными значками. Так F8 обозначена как “выключение звука”, F9 - “уменьшить громкость”, F10 - “увеличить громкость”. Так эти клавиши работают под ChromeOS. Чтобы частично повторить этот функционал воспользуемся &lt;code class=&quot;highlighter-rouge&quot;&gt;xbindkeys&lt;/code&gt;.&lt;/p&gt;
@@ -1411,7 +1411,7 @@ NIL
  
  <entry>
    <title>Имитация недостающих клавиш Acer C720</title>
-   <link href="http://yrabbit.github.com/ru/2014/12/08/acer-720-keyboard/"/>
+   <link href="http://yrabbit.github.com/ru/2014/12/08/acer-720-keyboard.html"/>
    <updated>2014-12-08T08:01:01+11:00</updated>
    <id>http://yrabbit.github.com/ru/2014/12/08/acer-720-keyboard</id>
    <content type="html">&lt;p&gt;Клавиатура хромбука Acer C720 видимо хороша для прогулок по сети и работы в Chrome OS, но мне для написания программ некоторых клавиш не хватает. Это &lt;em&gt;Home&lt;/em&gt;, &lt;em&gt;End&lt;/em&gt;, &lt;em&gt;PageUp&lt;/em&gt;, &lt;em&gt;PageDown&lt;/em&gt;, &lt;em&gt;Insert&lt;/em&gt; и &lt;em&gt;Delete&lt;/em&gt;.&lt;/p&gt;

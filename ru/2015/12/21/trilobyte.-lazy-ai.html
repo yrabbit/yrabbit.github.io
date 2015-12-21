@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta http-equiv="content-language" content="ru" />
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Trilobyte. Lazy AI. &middot; Yellow Rabbit
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+
+  <!-- Icons -->
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body>
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-item">
+    <p></p>
+  </div>
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/">Home</a>
+
+    
+
+    
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/about.html">About</a>
+        
+      
+    
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+
+    <span class="sidebar-nav-item">Currently v1.0.1</span>
+  </nav>
+
+  <div class="sidebar-item">
+    <p>
+      &copy; 2015. All rights reserved.
+    </p>
+  </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+		  <a href="/" title="Home">Yellow Rabbit</a>
+            <small>не забывает играть</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Trilobyte. Lazy AI.</h1>
+    <div class="post-meta">21 Dec 2015
+	<ul class="tag_list_in_post">
+	
+	<li class="inline tag_list_item">
+		<a class="tag_list_link" href="/tag/lisp"> lisp</a>
+	</li>
+	
+	<li class="inline tag_list_item">
+		<a class="tag_list_link" href="/tag/trilobyte"> trilobyte</a>
+	</li>
+	
+	<li class="inline tag_list_item">
+		<a class="tag_list_link" href="/tag/games"> games</a>
+	</li>
+	
+	</ul>
+    </div>
+  <h2 id="section">Ограничение дерева</h2>
+<p>Итак AI не может искать решения в ленивом дереве, поскольку по мере просчитывания ходов он материализует всё это дерево из небытия. Выходом может быть ограничение количества ходов, на которое AI просчитывает ситуацию. И это можно сделать очень изящно, а именно не подсчитывать глубину по ходу оценки комбинаций, а сразу подсунуть AI короткое дерево!</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*ai-level*</span> <span class="mi">5</span><span class="p">)</span>
+
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">limit-tree-depth</span> <span class="p">(</span><span class="nv">tree</span> <span class="nv">depth</span><span class="p">)</span>
+  <span class="p">(</span><span class="nb">list</span> <span class="p">(</span><span class="nv">game-node-player</span> <span class="nv">tree</span><span class="p">)</span>
+        <span class="p">(</span><span class="nv">game-node-board</span> <span class="nv">tree</span><span class="p">)</span>
+        <span class="p">(</span><span class="nv">game-node-failp</span> <span class="nv">tree</span><span class="p">)</span>
+        <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">zerop</span> <span class="nv">depth</span><span class="p">)</span>
+          <span class="p">(</span><span class="nv">lazy-nil</span><span class="p">)</span>
+          <span class="p">(</span><span class="nv">lazy-mapcar</span> <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">move</span><span class="p">)</span>
+                         <span class="p">(</span><span class="nb">list</span> <span class="p">(</span><span class="nb">car</span> <span class="nv">move</span><span class="p">)</span>
+                               <span class="p">(</span><span class="nv">limit-tree-depth</span> <span class="p">(</span><span class="nb">cadr</span> <span class="nv">move</span><span class="p">)</span> <span class="p">(</span><span class="nb">1-</span> <span class="nv">depth</span><span class="p">))))</span>
+                       <span class="p">(</span><span class="nv">game-node-moves</span> <span class="nv">tree</span><span class="p">)))))</span>
+</code></pre>
+</div>
+<p>Здесь *ai-level* — на сколько ходов заглядывает AI или глубина дерева, которое мы предоставляем ему для анализа. Теперь изменим ход компьютера, чтобы он работал с новым урезанным деревом:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nb">defun</span> <span class="nv">handle-computer</span> <span class="p">(</span><span class="nv">tree</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">ratings</span> <span class="p">(</span><span class="nv">get-ratings</span> <span class="p">(</span><span class="nv">limit-tree-depth</span> <span class="nv">tree</span> <span class="vg">*ai-level*</span><span class="p">))))</span>
+    <span class="p">(</span><span class="nb">cadr</span> <span class="p">(</span><span class="nv">lazy-nth</span> <span class="p">(</span><span class="nb">position</span> <span class="p">(</span><span class="nb">apply</span> <span class="nf">#'</span><span class="nb">max</span> <span class="nv">ratings</span><span class="p">)</span> <span class="nv">ratings</span><span class="p">)</span> <span class="p">(</span><span class="nv">game-node-moves</span> <span class="nv">tree</span><span class="p">)))))</span>
+</code></pre>
+</div>
+
+<p>И финальный штрих: условием прекращением анализа сделаем в том числе проверку на пустоту ленивого списка:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nb">defun</span> <span class="nv">rate-position</span> <span class="p">(</span><span class="nv">tree</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">moves</span> <span class="p">(</span><span class="nv">game-node-moves</span> <span class="nv">tree</span><span class="p">)))</span>
+        <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">not</span> <span class="p">(</span><span class="nv">lazy-null</span> <span class="nv">moves</span><span class="p">))</span>
+          <span class="p">(</span><span class="nb">apply</span> <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">eq</span> <span class="vg">*ai-player*</span> <span class="p">(</span><span class="nv">game-node-player</span> <span class="nv">tree</span><span class="p">))</span>
+                   <span class="nf">#'</span><span class="nb">max</span>
+                   <span class="nf">#'</span><span class="nb">min</span><span class="p">)</span>
+                 <span class="p">(</span><span class="nv">get-ratings</span> <span class="nv">tree</span><span class="p">))</span>
+          <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nv">game-node-failp</span> <span class="nv">tree</span><span class="p">)</span>
+            <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">eql</span> <span class="vg">*ai-player*</span> <span class="p">(</span><span class="nv">game-node-player</span> <span class="nv">tree</span><span class="p">))</span>
+              <span class="vg">*human-win*</span>
+              <span class="vg">*ai-win*</span><span class="p">)</span>
+            <span class="vg">*draw*</span><span class="p">))))</span>
+</code></pre>
+</div>
+
+<h2 id="section-1">Шуточная игра</h2>
+<p>Длинный листинг сеанса игры с человеком.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="nb">*</span> <span class="p">(</span><span class="nv">play</span> <span class="p">(</span><span class="nv">game-tree</span> <span class="p">(</span><span class="nv">new-board</span><span class="p">)</span> <span class="vg">*ai-player*</span> <span class="mi">-1</span><span class="p">))</span>
+
+<span class="nv">current</span> <span class="nv">player</span> <span class="nb">=</span> <span class="nv">The</span> <span class="nv">Evil</span> <span class="nv">AI</span>
+<span class="o">........</span>
+<span class="o">........</span>
+<span class="o">........</span>
+<span class="o">........</span>
+<span class="o">........</span>
+<span class="o">........</span>
+<span class="o">........</span>
+<span class="nv">abcdefgh</span>
+<span class="nv">current</span> <span class="nv">player</span> <span class="nb">=</span> <span class="nv">Human</span>
+<span class="o">........</span>
+<span class="o">........</span>
+<span class="o">........</span>
+<span class="o">........</span>
+<span class="o">........</span>
+<span class="o">........</span>
+<span class="nv">A.......</span>
+<span class="nv">abcdefgh</span>
+<span class="nv">choose</span> <span class="nv">your</span> <span class="nv">move:</span>
+<span class="mi">1.</span> <span class="nv">a</span>
+<span class="mi">2.</span> <span class="nv">b</span>
+<span class="mi">3.</span> <span class="nv">c</span>
+<span class="mi">4.</span> <span class="nv">d</span>
+<span class="mi">5.</span> <span class="nv">e</span>
+<span class="mi">6.</span> <span class="nv">f</span>
+<span class="mi">7.</span> <span class="nv">g</span>
+<span class="mi">8.</span> <span class="nv">h</span>
+<span class="mi">1</span>
+<span class="nv">current</span> <span class="nv">player</span> <span class="nb">=</span> <span class="nv">The</span> <span class="nv">Evil</span> <span class="nv">AI</span>
+<span class="o">........</span>
+<span class="o">........</span>
+<span class="o">........</span>
+<span class="o">........</span>
+<span class="o">........</span>
+<span class="nv">H.......</span>
+<span class="nv">A.......</span>
+<span class="nv">abcdefgh</span>
+<span class="nv">current</span> <span class="nv">player</span> <span class="nb">=</span> <span class="nv">Human</span>
+<span class="o">........</span>
+<span class="o">........</span>
+<span class="o">........</span>
+<span class="o">........</span>
+<span class="nv">A.......</span>
+<span class="nv">H.......</span>
+<span class="nv">A.......</span>
+<span class="nv">abcdefgh</span>
+<span class="nv">choose</span> <span class="nv">your</span> <span class="nv">move:</span>
+<span class="mi">1.</span> <span class="nv">a</span>
+<span class="mi">2.</span> <span class="nv">b</span>
+<span class="mi">3.</span> <span class="nv">c</span>
+<span class="mi">4.</span> <span class="nv">d</span>
+<span class="mi">5.</span> <span class="nv">e</span>
+<span class="mi">6.</span> <span class="nv">f</span>
+<span class="mi">7.</span> <span class="nv">g</span>
+<span class="mi">8.</span> <span class="nv">h</span>
+<span class="mi">2</span>
+<span class="nv">current</span> <span class="nv">player</span> <span class="nb">=</span> <span class="nv">The</span> <span class="nv">Evil</span> <span class="nv">AI</span>
+<span class="o">........</span>
+<span class="o">........</span>
+<span class="o">........</span>
+<span class="o">........</span>
+<span class="nv">A.......</span>
+<span class="nv">H.......</span>
+<span class="nv">AH......</span>
+<span class="nv">abcdefgh</span>
+<span class="nv">current</span> <span class="nv">player</span> <span class="nb">=</span> <span class="nv">Human</span>
+<span class="o">........</span>
+<span class="o">........</span>
+<span class="o">........</span>
+<span class="nv">A.......</span>
+<span class="nv">A.......</span>
+<span class="nv">H.......</span>
+<span class="nv">AH......</span>
+<span class="nv">abcdefgh</span>
+<span class="nv">choose</span> <span class="nv">your</span> <span class="nv">move:</span>
+<span class="mi">1.</span> <span class="nv">a</span>
+<span class="mi">2.</span> <span class="nv">b</span>
+<span class="mi">3.</span> <span class="nv">c</span>
+<span class="mi">4.</span> <span class="nv">d</span>
+<span class="mi">5.</span> <span class="nv">e</span>
+<span class="mi">6.</span> <span class="nv">f</span>
+<span class="mi">7.</span> <span class="nv">g</span>
+<span class="mi">8.</span> <span class="nv">h</span>
+<span class="mi">3</span>
+<span class="nv">current</span> <span class="nv">player</span> <span class="nb">=</span> <span class="nv">The</span> <span class="nv">Evil</span> <span class="nv">AI</span>
+<span class="o">........</span>
+<span class="o">........</span>
+<span class="o">........</span>
+<span class="nv">A.......</span>
+<span class="nv">A.......</span>
+<span class="nv">H.......</span>
+<span class="nv">AHH.....</span>
+<span class="nv">abcdefgh</span>
+<span class="nv">current</span> <span class="nv">player</span> <span class="nb">=</span> <span class="nv">Human</span>
+<span class="o">........</span>
+<span class="o">........</span>
+<span class="nv">A.......</span>
+<span class="nv">A.......</span>
+<span class="nv">A.......</span>
+<span class="nv">H.......</span>
+<span class="nv">AHH.....</span>
+<span class="nv">abcdefgh</span>
+<span class="nv">choose</span> <span class="nv">your</span> <span class="nv">move:</span>
+<span class="mi">1.</span> <span class="nv">a</span>
+<span class="mi">2.</span> <span class="nv">b</span>
+<span class="mi">3.</span> <span class="nv">c</span>
+<span class="mi">4.</span> <span class="nv">d</span>
+<span class="mi">5.</span> <span class="nv">e</span>
+<span class="mi">6.</span> <span class="nv">f</span>
+<span class="mi">7.</span> <span class="nv">g</span>
+<span class="mi">8.</span> <span class="nv">h</span>
+<span class="mi">1</span>
+<span class="nv">current</span> <span class="nv">player</span> <span class="nb">=</span> <span class="nv">The</span> <span class="nv">Evil</span> <span class="nv">AI</span>
+<span class="o">........</span>
+<span class="nv">H.......</span>
+<span class="nv">A.......</span>
+<span class="nv">A.......</span>
+<span class="nv">A.......</span>
+<span class="nv">H.......</span>
+<span class="nv">AHH.....</span>
+<span class="nv">abcdefgh</span>
+<span class="nv">current</span> <span class="nv">player</span> <span class="nb">=</span> <span class="nv">Human</span>
+<span class="nv">A.......</span>
+<span class="nv">H.......</span>
+<span class="nv">A.......</span>
+<span class="nv">A.......</span>
+<span class="nv">A.......</span>
+<span class="nv">H.......</span>
+<span class="nv">AHH.....</span>
+<span class="nv">abcdefgh</span>
+<span class="nv">choose</span> <span class="nv">your</span> <span class="nv">move:</span>
+<span class="mi">1.</span> <span class="nv">b</span>
+<span class="mi">2.</span> <span class="nv">c</span>
+<span class="mi">3.</span> <span class="nv">d</span>
+<span class="mi">4.</span> <span class="nv">e</span>
+<span class="mi">5.</span> <span class="nv">f</span>
+<span class="mi">6.</span> <span class="nv">g</span>
+<span class="mi">7.</span> <span class="nv">h</span>
+<span class="mi">3</span>
+<span class="nv">current</span> <span class="nv">player</span> <span class="nb">=</span> <span class="nv">The</span> <span class="nv">Evil</span> <span class="nv">AI</span>
+<span class="nv">A.......</span>
+<span class="nv">H.......</span>
+<span class="nv">A.......</span>
+<span class="nv">A.......</span>
+<span class="nv">A.......</span>
+<span class="nv">H.......</span>
+<span class="nv">AHH.....</span>
+<span class="nv">abcdefgh</span>
+<span class="nv">choose</span> <span class="nv">your</span> <span class="nv">move:</span>
+<span class="mi">1.</span> <span class="nv">b</span>
+<span class="mi">2.</span> <span class="nv">c</span>
+<span class="mi">3.</span> <span class="nv">d</span>
+<span class="mi">4.</span> <span class="nv">e</span>
+<span class="mi">5.</span> <span class="nv">f</span>
+<span class="mi">6.</span> <span class="nv">g</span>
+<span class="mi">7.</span> <span class="nv">h</span>
+<span class="mi">3</span>
+<span class="nv">current</span> <span class="nv">player</span> <span class="nb">=</span> <span class="nv">The</span> <span class="nv">Evil</span> <span class="nv">AI</span>
+<span class="nv">A.......</span>
+<span class="nv">H.......</span>
+<span class="nv">A.......</span>
+<span class="nv">A.......</span>
+<span class="nv">A.......</span>
+<span class="nv">H.......</span>
+<span class="nv">AHHH....</span>
+<span class="nv">abcdefgh</span>
+<span class="nv">current</span> <span class="nv">player</span> <span class="nb">=</span> <span class="nv">Human</span>
+<span class="nv">A.......</span>
+<span class="nv">H.......</span>
+<span class="nv">A.......</span>
+<span class="nv">A.......</span>
+<span class="nv">A.......</span>
+<span class="nv">H.......</span>
+<span class="nv">AHHHA...</span>
+<span class="nv">abcdefgh</span>
+<span class="nv">choose</span> <span class="nv">your</span> <span class="nv">move:</span>
+<span class="mi">1.</span> <span class="nv">b</span>
+<span class="mi">2.</span> <span class="nv">c</span>
+<span class="mi">3.</span> <span class="nv">d</span>
+<span class="mi">4.</span> <span class="nv">e</span>
+<span class="mi">5.</span> <span class="nv">f</span>
+<span class="mi">6.</span> <span class="nv">g</span>
+<span class="mi">7.</span> <span class="nv">h</span>
+<span class="mi">2</span>
+<span class="nv">current</span> <span class="nv">player</span> <span class="nb">=</span> <span class="nv">The</span> <span class="nv">Evil</span> <span class="nv">AI</span>
+<span class="nv">A.......</span>
+<span class="nv">H.......</span>
+<span class="nv">A.......</span>
+<span class="nv">A.......</span>
+<span class="nv">A.......</span>
+<span class="nv">H.H.....</span>
+<span class="nv">AHHHA...</span>
+<span class="nv">abcdefgh</span>
+<span class="nv">current</span> <span class="nv">player</span> <span class="nb">=</span> <span class="nv">Human</span>
+<span class="nv">A.......</span>
+<span class="nv">H.......</span>
+<span class="nv">A.......</span>
+<span class="nv">A.......</span>
+<span class="nv">A.A.....</span>
+<span class="nv">H.H.....</span>
+<span class="nv">AHHHA...</span>
+<span class="nv">abcdefgh</span>
+<span class="nv">choose</span> <span class="nv">your</span> <span class="nv">move:</span>
+<span class="mi">1.</span> <span class="nv">c</span>
+<span class="mi">2.</span> <span class="nv">b</span>
+<span class="mi">3.</span> <span class="nv">d</span>
+<span class="mi">4.</span> <span class="nv">e</span>
+<span class="mi">5.</span> <span class="nv">f</span>
+<span class="mi">6.</span> <span class="nv">g</span>
+<span class="mi">7.</span> <span class="nv">h</span>
+<span class="mi">3</span>
+<span class="nv">current</span> <span class="nv">player</span> <span class="nb">=</span> <span class="nv">The</span> <span class="nv">Evil</span> <span class="nv">AI</span>
+<span class="nv">A.......</span>
+<span class="nv">H.......</span>
+<span class="nv">A.......</span>
+<span class="nv">A.......</span>
+<span class="nv">A.A.....</span>
+<span class="nv">H.HH....</span>
+<span class="nv">AHHHA...</span>
+<span class="nv">abcdefgh</span>
+<span class="nv">current</span> <span class="nv">player</span> <span class="nb">=</span> <span class="nv">Human</span>
+<span class="nv">A.......</span>
+<span class="nv">H.......</span>
+<span class="nv">A.......</span>
+<span class="nv">A.......</span>
+<span class="nv">A.A.....</span>
+<span class="nv">HAHH....</span>
+<span class="nv">AHHHA...</span>
+<span class="nv">abcdefgh</span>
+<span class="nv">choose</span> <span class="nv">your</span> <span class="nv">move:</span>
+<span class="mi">1.</span> <span class="nv">c</span>
+<span class="mi">2.</span> <span class="nv">b</span>
+<span class="mi">3.</span> <span class="nv">d</span>
+<span class="mi">4.</span> <span class="nv">e</span>
+<span class="mi">5.</span> <span class="nv">f</span>
+<span class="mi">6.</span> <span class="nv">g</span>
+<span class="mi">7.</span> <span class="nv">h</span>
+<span class="o">...</span>
+</code></pre>
+</div>
+<p>It’s alive! Забавно как AI не даёт мне выиграть:) Хотя чувствуется, что он не так активно стремится к своей победе.</p>
+
+</div>
+
+<div class="related">
+  <h2>Related Posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+          <a href="/ru/2015/12/15/trilobyte-big-lazy-tree.html">
+            Trilobyte. Big Lazy Tree.
+            <small>15 Dec 2015</small>
+          </a>
+      </li>
+    
+      <li>
+          <a href="/ru/2015/12/15/trilobyte-ui.html">
+            Trilobyte. An UI.
+            <small>15 Dec 2015</small>
+          </a>
+      </li>
+    
+      <li>
+          <a href="/ru/2015/12/14/rules-engine.html">
+            Trilobyte. Rules engine and AI
+            <small>14 Dec 2015</small>
+          </a>
+      </li>
+    
+  </ul>
+</div>
+
+<!-- vim:ts=4:sw=4:sts=4
+-->
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+  </body>
+</html>
