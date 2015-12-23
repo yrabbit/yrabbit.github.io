@@ -96,6 +96,10 @@
         
       
     
+      
+        
+      
+    
 
     <span class="sidebar-nav-item">Currently v1.0.1</span>
   </nav>
@@ -122,6 +126,32 @@
 
       <div class="container content">
           
+  <div class="post">
+    <h2 class="post-title">
+		<a href="/ru/2015/12/23/trolibyte.-add-an-heuristic.html">
+        Trolibyte. Add an heuristic.
+      </a>
+    </h2>
+    <div class="post-meta">23 Dec 2015
+	<ul class="tag_list_in_post">
+	
+	<li class="inline tag_list_item">
+		<a class="tag_list_link" href="/tag/lisp"> lisp</a>
+	</li>
+	
+	<li class="inline tag_list_item">
+		<a class="tag_list_link" href="/tag/trilobyte"> trilobyte</a>
+	</li>
+	
+	<li class="inline tag_list_item">
+		<a class="tag_list_link" href="/tag/games"> games</a>
+	</li>
+	
+	</ul>
+    </div>
+    Чуточку умнее Итак, AI действует разумно только когда видит чью-нибудь победу через ближашие *ai-level* ходов, иначе просто выбирает первый же ход. Попробуем следующую эвристику: лучшей является позиция, где длина линии из фишек нашего цвета максимальна; худшей является позиция, где длина линии из фишек цвета противника максимальна. Отсюда наилучшая позиция —...
+  </div>
+  
   <div class="post">
     <h2 class="post-title">
 		<a href="/ru/2015/12/21/trilobyte.-lazy-ai.html">
@@ -226,39 +256,13 @@
     Движок игровых правил Поскольку мы можем просчитать все комбинцаии (пока что для крошечной доски), то движок правил будет представлять из себя просто древовидную структуру данных1. ;; game rules engine is a tree which elements are lists (defstruct (game-node (:type list)) player ; *human-player* or *ai-player* board ; current board situation...
   </div>
   
-  <div class="post">
-    <h2 class="post-title">
-		<a href="/ru/2015/12/13/trilobyte-checking-patterns.html">
-        Trilobyte. Moves & checking patterns.
-      </a>
-    </h2>
-    <div class="post-meta">13 Dec 2015
-	<ul class="tag_list_in_post">
-	
-	<li class="inline tag_list_item">
-		<a class="tag_list_link" href="/tag/lisp"> lisp</a>
-	</li>
-	
-	<li class="inline tag_list_item">
-		<a class="tag_list_link" href="/tag/games"> games</a>
-	</li>
-	
-	<li class="inline tag_list_item">
-		<a class="tag_list_link" href="/tag/trilobyte"> trilobyte</a>
-	</li>
-	
-	</ul>
-    </div>
-    Ходы Сделать ход - значит скопировать доску, попутно заменив одну из клеток на нужную. ;; add move to the board (defun board-add-move (board move-cell player) (board-from-list (loop for idx from 0 for cell across board collect (if (eql idx move-cell) (get-player-color player) cell)))) Формируем список возможных клеток для хода. Это...
-  </div>
-  
 
 <!-- Pagination links -->
 <div class="pagination">
   
     <span class="previous">Previous</span>
   
-  <span class="page_number ">Page: 1 of 2</span>
+  <span class="page_number ">Page: 1 of 3</span>
   
     <a href="/blog/page2/" class="next">Next</a>
   
