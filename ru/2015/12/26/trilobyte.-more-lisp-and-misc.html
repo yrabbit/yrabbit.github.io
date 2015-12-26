@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta http-equiv="content-language" content="ru" />
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Trilobyte. More Lisp and misc. &middot; Yellow Rabbit
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+
+  <!-- Icons -->
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body>
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-item">
+    <p></p>
+  </div>
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/">Home</a>
+
+    
+
+    
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/about.html">About</a>
+        
+      
+    
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+
+    <span class="sidebar-nav-item">Currently v1.0.1</span>
+  </nav>
+
+  <div class="sidebar-item">
+    <p>
+      &copy; 2015. All rights reserved.
+    </p>
+  </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+		  <a href="/" title="Home">Yellow Rabbit</a>
+            <small>не забывает играть</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Trilobyte. More Lisp and misc.</h1>
+    <div class="post-meta">26 Dec 2015
+	<ul class="tag_list_in_post">
+	
+	<li class="inline tag_list_item">
+		<a class="tag_list_link" href="/tag/lisp"> lisp</a>
+	</li>
+	
+	<li class="inline tag_list_item">
+		<a class="tag_list_link" href="/tag/games"> games</a>
+	</li>
+	
+	<li class="inline tag_list_item">
+		<a class="tag_list_link" href="/tag/trilobyte"> trilobyte</a>
+	</li>
+	
+	</ul>
+    </div>
+  <h2 id="section">Немного причёсывания</h2>
+
+<p>Хотя я проигрываю AI, он не может победить монстра из 11-го часа:( И, пока у меня не появилось идей по улучшению его работы, займусь украшательствами. Для начала чуть-чуть упростим построение шаблонов для проверки соседних ячеек, ну и заодно сделаем её запоминающей.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="c1">;; test pattern for win</span>
+<span class="c1">;; ((left...) (right...)</span>
+<span class="c1">;;  (up...) (down...)</span>
+<span class="c1">;;  (left-up...) (right-down...)</span>
+<span class="c1">;;  (left-down...) (right-up))</span>
+<span class="p">(</span><span class="k">let</span> 
+   <span class="p">((</span><span class="nv">left-pattern</span> <span class="p">(</span><span class="nb">loop</span> <span class="nv">repeat</span> <span class="p">(</span><span class="nb">1-</span> <span class="vg">*win-len*</span><span class="p">)</span> <span class="nv">for</span> <span class="nv">i</span> <span class="nv">from</span> <span class="mi">1</span> <span class="nv">collect</span> <span class="p">(</span><span class="nb">-</span> <span class="nv">i</span><span class="p">)))</span>
+    <span class="p">(</span><span class="nv">right-pattern</span> <span class="p">(</span><span class="nb">loop</span> <span class="nv">repeat</span> <span class="p">(</span><span class="nb">1-</span> <span class="vg">*win-len*</span><span class="p">)</span> <span class="nv">for</span> <span class="nv">i</span> <span class="nv">from</span> <span class="mi">1</span> <span class="nv">collect</span> <span class="nv">i</span><span class="p">))</span>
+    <span class="p">(</span><span class="nv">up-pattern</span> <span class="p">(</span><span class="nb">loop</span> <span class="nv">repeat</span> <span class="p">(</span><span class="nb">1-</span> <span class="vg">*win-len*</span><span class="p">)</span>
+                                      <span class="nv">for</span> <span class="nv">i</span> <span class="nv">from</span> <span class="mi">1</span> <span class="nv">collect</span> <span class="p">(</span><span class="nb">-</span> <span class="p">(</span><span class="nb">*</span> <span class="vg">*board-width*</span> <span class="nv">i</span><span class="p">))))</span>
+    <span class="p">(</span><span class="nv">down-pattern</span> <span class="p">(</span><span class="nb">loop</span> <span class="nv">repeat</span> <span class="p">(</span><span class="nb">1-</span> <span class="vg">*win-len*</span><span class="p">)</span>
+                                      <span class="nv">for</span> <span class="nv">i</span> <span class="nv">from</span> <span class="mi">1</span> <span class="nv">collect</span> <span class="p">(</span><span class="nb">+</span> <span class="p">(</span><span class="nb">*</span> <span class="vg">*board-width*</span> <span class="nv">i</span><span class="p">))))</span>
+    <span class="p">(</span><span class="nv">left-up-pattern</span> <span class="p">(</span><span class="nb">loop</span> <span class="nv">repeat</span> <span class="p">(</span><span class="nb">1-</span> <span class="vg">*win-len*</span><span class="p">)</span>
+                                      <span class="nv">for</span> <span class="nv">i</span> <span class="nv">from</span> <span class="mi">1</span> <span class="nv">collect</span> <span class="p">(</span><span class="nb">-</span> <span class="p">(</span><span class="nb">*</span> <span class="nv">i</span> <span class="p">(</span><span class="nb">1+</span> <span class="vg">*board-width*</span><span class="p">)))))</span>
+    <span class="p">(</span><span class="nv">right-down-pattern</span> <span class="p">(</span><span class="nb">loop</span> <span class="nv">repeat</span> <span class="p">(</span><span class="nb">1-</span> <span class="vg">*win-len*</span><span class="p">)</span>
+                                          <span class="nv">for</span> <span class="nv">i</span> <span class="nv">from</span> <span class="mi">1</span> <span class="nv">collect</span> <span class="p">(</span><span class="nb">*</span> <span class="nv">i</span> <span class="p">(</span><span class="nb">1+</span> <span class="vg">*board-width*</span><span class="p">))))</span>
+    <span class="p">(</span><span class="nv">left-down-pattern</span> <span class="p">(</span><span class="nb">loop</span> <span class="nv">repeat</span> <span class="p">(</span><span class="nb">1-</span> <span class="vg">*win-len*</span><span class="p">)</span>
+                                          <span class="nv">for</span> <span class="nv">i</span> <span class="nv">from</span> <span class="mi">1</span> <span class="nv">collect</span> <span class="p">(</span><span class="nb">+</span> <span class="p">(</span><span class="nb">*</span> <span class="nv">i</span> <span class="p">(</span><span class="nb">1-</span> <span class="vg">*board-width*</span><span class="p">)))))</span>
+    <span class="p">(</span><span class="nv">right-up-pattern</span> <span class="p">(</span><span class="nb">loop</span> <span class="nv">repeat</span> <span class="p">(</span><span class="nb">1-</span> <span class="vg">*win-len*</span><span class="p">)</span>
+                                          <span class="nv">for</span> <span class="nv">i</span> <span class="nv">from</span> <span class="mi">1</span> <span class="nv">collect</span> <span class="p">(</span><span class="nb">-</span> <span class="p">(</span><span class="nb">*</span> <span class="nv">i</span> <span class="p">(</span><span class="nb">1-</span> <span class="vg">*board-width*</span><span class="p">))))))</span>
+    <span class="p">(</span><span class="nb">defun</span> <span class="nv">slow-get-test-patterns</span> <span class="p">(</span><span class="nv">cell</span><span class="p">)</span>
+      <span class="p">(</span><span class="nb">list</span>
+        <span class="c1">; left</span>
+        <span class="p">(</span><span class="nb">loop</span>
+            <span class="nv">repeat</span> <span class="p">(</span><span class="nb">min</span> <span class="p">(</span><span class="nb">1-</span> <span class="vg">*win-len*</span><span class="p">)</span> <span class="p">(</span><span class="nb">mod</span> <span class="nv">cell</span> <span class="vg">*board-width*</span><span class="p">))</span>
+            <span class="nv">for</span> <span class="nv">off</span> <span class="nv">in</span> <span class="nv">left-pattern</span>
+            <span class="nv">collect</span> <span class="p">(</span><span class="nb">+</span> <span class="nv">cell</span> <span class="nv">off</span><span class="p">))</span>
+        <span class="c1">; right</span>
+        <span class="p">(</span><span class="nb">loop</span>
+            <span class="nv">repeat</span> <span class="p">(</span><span class="nb">min</span> <span class="p">(</span><span class="nb">1-</span> <span class="vg">*win-len*</span><span class="p">)</span> 
+                                   <span class="p">(</span><span class="nb">-</span> <span class="vg">*board-width*</span> <span class="p">(</span><span class="nb">mod</span> <span class="nv">cell</span> <span class="vg">*board-width*</span><span class="p">)</span> <span class="mi">1</span><span class="p">))</span>
+            <span class="nv">for</span> <span class="nv">off</span> <span class="nv">in</span> <span class="nv">right-pattern</span>
+            <span class="nv">collect</span> <span class="p">(</span><span class="nb">+</span> <span class="nv">cell</span> <span class="nv">off</span><span class="p">))</span>
+        <span class="c1">; up</span>
+        <span class="p">(</span><span class="nb">loop</span>
+            <span class="nv">repeat</span> <span class="p">(</span><span class="nb">min</span> <span class="p">(</span><span class="nb">1-</span> <span class="vg">*win-len*</span><span class="p">)</span> <span class="p">(</span><span class="nb">floor</span> <span class="nv">cell</span> <span class="vg">*board-width*</span><span class="p">))</span>
+            <span class="nv">for</span> <span class="nv">off</span> <span class="nv">in</span> <span class="nv">up-pattern</span>
+            <span class="nv">collect</span> <span class="p">(</span><span class="nb">+</span> <span class="nv">cell</span> <span class="nv">off</span><span class="p">))</span>
+        <span class="c1">; down</span>
+        <span class="p">(</span><span class="nb">loop</span>
+            <span class="nv">repeat</span> <span class="p">(</span><span class="nb">min</span> <span class="p">(</span><span class="nb">1-</span> <span class="vg">*win-len*</span><span class="p">)</span>
+                                   <span class="p">(</span><span class="nb">-</span> <span class="vg">*board-height*</span> <span class="p">(</span><span class="nb">floor</span> <span class="nv">cell</span> <span class="vg">*board-width*</span><span class="p">)</span> <span class="mi">1</span><span class="p">))</span>
+            <span class="nv">for</span> <span class="nv">off</span> <span class="nv">in</span> <span class="nv">down-pattern</span>
+            <span class="nv">collect</span> <span class="p">(</span><span class="nb">+</span> <span class="nv">cell</span> <span class="nv">off</span><span class="p">))</span>
+        <span class="c1">; left-up</span>
+        <span class="p">(</span><span class="nb">loop</span>
+            <span class="nv">repeat</span> <span class="p">(</span><span class="nb">min</span> <span class="p">(</span><span class="nb">1-</span> <span class="vg">*win-len*</span><span class="p">)</span> <span class="p">(</span><span class="nb">mod</span> <span class="nv">cell</span> <span class="vg">*board-width*</span><span class="p">)</span> <span class="p">(</span><span class="nb">floor</span> <span class="nv">cell</span> <span class="vg">*board-width*</span><span class="p">))</span>
+            <span class="nv">for</span> <span class="nv">off</span> <span class="nv">in</span> <span class="nv">left-up-pattern</span>
+            <span class="nv">collect</span> <span class="p">(</span><span class="nb">+</span> <span class="nv">cell</span> <span class="nv">off</span><span class="p">))</span>
+        <span class="c1">; right-down</span>
+        <span class="p">(</span><span class="nb">loop</span>
+            <span class="nv">repeat</span> <span class="p">(</span><span class="nb">min</span> <span class="p">(</span><span class="nb">1-</span> <span class="vg">*win-len*</span><span class="p">)</span>
+                        <span class="p">(</span><span class="nb">-</span> <span class="vg">*board-width*</span> <span class="p">(</span><span class="nb">mod</span> <span class="nv">cell</span> <span class="vg">*board-width*</span><span class="p">)</span> <span class="mi">1</span><span class="p">)</span>
+                        <span class="p">(</span><span class="nb">-</span> <span class="vg">*board-height*</span> <span class="p">(</span><span class="nb">floor</span> <span class="nv">cell</span> <span class="vg">*board-width*</span><span class="p">)</span> <span class="mi">1</span><span class="p">))</span>
+            <span class="nv">for</span> <span class="nv">off</span> <span class="nv">in</span> <span class="nv">right-down-pattern</span>
+            <span class="nv">collect</span> <span class="p">(</span><span class="nb">+</span> <span class="nv">cell</span> <span class="nv">off</span><span class="p">))</span>
+        <span class="c1">; left-down</span>
+        <span class="p">(</span><span class="nb">loop</span>
+            <span class="nv">repeat</span> <span class="p">(</span><span class="nb">min</span> <span class="p">(</span><span class="nb">1-</span> <span class="vg">*win-len*</span><span class="p">)</span>
+                        <span class="p">(</span><span class="nb">mod</span> <span class="nv">cell</span> <span class="vg">*board-width*</span><span class="p">)</span>
+                        <span class="p">(</span><span class="nb">-</span> <span class="vg">*board-height*</span> <span class="p">(</span><span class="nb">floor</span> <span class="nv">cell</span> <span class="vg">*board-width*</span><span class="p">)</span> <span class="mi">1</span><span class="p">))</span>
+            <span class="nv">for</span> <span class="nv">off</span> <span class="nv">in</span> <span class="nv">left-down-pattern</span>
+            <span class="nv">collect</span> <span class="p">(</span><span class="nb">+</span> <span class="nv">cell</span> <span class="nv">off</span><span class="p">))</span>
+        <span class="c1">; right-up</span>
+        <span class="p">(</span><span class="nb">loop</span>
+            <span class="nv">repeat</span> <span class="p">(</span><span class="nb">min</span> <span class="p">(</span><span class="nb">1-</span> <span class="vg">*win-len*</span><span class="p">)</span>
+                        <span class="p">(</span><span class="nb">-</span> <span class="vg">*board-width*</span> <span class="p">(</span><span class="nb">mod</span> <span class="nv">cell</span> <span class="vg">*board-width*</span><span class="p">)</span> <span class="mi">1</span><span class="p">)</span>
+                        <span class="p">(</span><span class="nb">floor</span> <span class="nv">cell</span> <span class="vg">*board-width*</span><span class="p">))</span>
+            <span class="nv">for</span> <span class="nv">off</span> <span class="nv">in</span> <span class="nv">right-up-pattern</span>
+            <span class="nv">collect</span> <span class="p">(</span><span class="nb">+</span> <span class="nv">cell</span> <span class="nv">off</span><span class="p">)))))</span>
+
+<span class="c1">;; memorized version of get-test-patterns</span>
+<span class="p">(</span><span class="k">let</span>
+  <span class="p">((</span><span class="nv">previous</span> <span class="p">(</span><span class="nb">make-hash-table</span><span class="p">)))</span>
+  <span class="p">(</span><span class="nb">defun</span> <span class="nv">get-test-patterns</span> <span class="p">(</span><span class="nv">cell</span><span class="p">)</span>
+    <span class="p">(</span><span class="nb">or</span> <span class="p">(</span><span class="nb">gethash</span> <span class="nv">cell</span> <span class="nv">previous</span><span class="p">)</span>
+        <span class="p">(</span><span class="nb">setf</span> <span class="p">(</span><span class="nb">gethash</span> <span class="nv">cell</span> <span class="nv">previous</span><span class="p">)</span> <span class="p">(</span><span class="nv">slow-get-test-patterns</span> <span class="nv">cell</span><span class="p">)))))</span>
+</code></pre>
+</div>
+
+<h2 id="section-1">Несколько вспомогательных предикатов</h2>
+<p>Выражения типа (if (eql *ai-player* (game-node-player tree)) смотрятся не очень, поэтому введём несколько предикатов.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="c1">;; which player made the move</span>
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">last-player</span> <span class="p">(</span><span class="nv">tree</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">change-player</span> <span class="p">(</span><span class="nv">game-node-player</span> <span class="nv">tree</span><span class="p">)))</span>
+
+<span class="c1">;; was last player</span>
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">last-playerp</span> <span class="p">(</span><span class="nv">tree</span> <span class="nv">player</span><span class="p">)</span>
+  <span class="p">(</span><span class="nb">eql</span> <span class="nv">player</span> <span class="p">(</span><span class="nv">last-player</span> <span class="nv">tree</span><span class="p">)))</span>
+
+<span class="c1">;; is current player</span>
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">cur-playerp</span> <span class="p">(</span><span class="nv">tree</span> <span class="nv">player</span><span class="p">)</span>
+  <span class="p">(</span><span class="nb">eql</span> <span class="nv">player</span> <span class="p">(</span><span class="nv">game-node-player</span> <span class="nv">tree</span><span class="p">)))</span>
+</code></pre>
+</div>
+
+<h2 id="section-2">Новая эвристика</h2>
+<p>Отличие её от старой заключается в том, что старая оценивала позицию подсчитывая длины уже построенных линий из фишек, а новая допускает пустые клетки между клетками с фишками AI. Другими словами она принимает в расчёт потенциальные линии из фишек. Сразу скажу, что она всё равно не позволяет победить компьютер из 11-го часа.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="c1">;; count player cells in line</span>
+<span class="c1">;; empty cells are allowed but other player cells not</span>
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">count-player-cells</span> <span class="p">(</span><span class="nv">board</span> <span class="nv">cell</span> <span class="nv">player</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">pattern</span> <span class="p">(</span><span class="nv">get-test-patterns</span> <span class="nv">cell</span><span class="p">)))</span>
+    <span class="p">(</span><span class="k">labels</span>
+      <span class="p">((</span><span class="nv">test-halfline</span> <span class="p">(</span><span class="nv">pat</span> <span class="nv">acc1</span><span class="p">)</span>
+                       <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">and</span> <span class="nv">pat</span> <span class="p">(</span><span class="nb">not</span> <span class="p">(</span><span class="nv">cell-playerp</span> <span class="nv">board</span> <span class="p">(</span><span class="nb">car</span> <span class="nv">pat</span><span class="p">)</span> <span class="p">(</span><span class="nv">change-player</span> <span class="nv">player</span><span class="p">))))</span>
+                         <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nv">cell-emptyp</span> <span class="nv">board</span> <span class="p">(</span><span class="nb">car</span> <span class="nv">pat</span><span class="p">))</span>
+                           <span class="p">(</span><span class="nv">test-halfline</span> <span class="p">(</span><span class="nb">cdr</span> <span class="nv">pat</span><span class="p">)</span> <span class="nv">acc1</span><span class="p">)</span>
+                           <span class="p">(</span><span class="nv">test-halfline</span> <span class="p">(</span><span class="nb">cdr</span> <span class="nv">pat</span><span class="p">)</span> <span class="p">(</span><span class="nb">1+</span> <span class="nv">acc1</span><span class="p">)))</span>
+                         <span class="nv">acc1</span><span class="p">))</span>
+       <span class="p">(</span><span class="nv">test-line</span> <span class="p">(</span><span class="nv">pat</span> <span class="nv">acc</span><span class="p">)</span>
+                   <span class="p">(</span><span class="k">if</span> <span class="nv">pat</span>
+                     <span class="p">(</span><span class="nv">test-line</span> <span class="p">(</span><span class="nb">cddr</span> <span class="nv">pat</span><span class="p">)</span>
+                                <span class="p">(</span><span class="nb">max</span> <span class="nv">acc</span> <span class="p">(</span><span class="nb">+</span> <span class="mi">1</span>
+                                             <span class="p">(</span><span class="nv">test-halfline</span> <span class="p">(</span><span class="nb">car</span> <span class="nv">pat</span><span class="p">)</span> <span class="mi">0</span><span class="p">)</span>
+                                             <span class="p">(</span><span class="nv">test-halfline</span> <span class="p">(</span><span class="nb">cadr</span> <span class="nv">pat</span><span class="p">)</span> <span class="mi">0</span><span class="p">))))</span>
+                     <span class="nv">acc</span><span class="p">)))</span>
+      <span class="p">(</span><span class="nv">test-line</span> <span class="nv">pattern</span> <span class="mi">0</span><span class="p">))))</span>
+</code></pre>
+</div>
+
+</div>
+
+<div class="related">
+  <h2>Related Posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+          <a href="/ru/2015/12/23/trolibyte.-add-an-heuristic.html">
+            Trolibyte. Add an heuristic.
+            <small>23 Dec 2015</small>
+          </a>
+      </li>
+    
+      <li>
+          <a href="/ru/2015/12/21/trilobyte.-lazy-ai.html">
+            Trilobyte. Lazy AI.
+            <small>21 Dec 2015</small>
+          </a>
+      </li>
+    
+      <li>
+          <a href="/ru/2015/12/15/trilobyte-big-lazy-tree.html">
+            Trilobyte. Big Lazy Tree.
+            <small>15 Dec 2015</small>
+          </a>
+      </li>
+    
+  </ul>
+</div>
+
+<!-- vim:ts=4:sw=4:sts=4
+-->
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+  </body>
+</html>
