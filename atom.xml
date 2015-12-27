@@ -4,7 +4,7 @@
  <title>Yellow Rabbit</title>
  <link href="http://yrabbit.github.com/atom.xml" rel="self"/>
  <link href="http://yrabbit.github.com/"/>
- <updated>2015-12-26T22:46:13+11:00</updated>
+ <updated>2015-12-27T20:54:51+11:00</updated>
  <id>http://yrabbit.github.com</id>
  <author>
    <name>Yellow Rabbit</name>
@@ -15,7 +15,7 @@
  <entry>
    <title>Trilobyte. A new heuristic.</title>
    <link href="http://yrabbit.github.com/ru/2015/12/26/trilobyte.-a-new-heuristic.html"/>
-   <updated>2015-12-26T21:53:48+11:00</updated>
+   <updated>2015-12-26T22:53:48+11:00</updated>
    <id>http://yrabbit.github.com/ru/2015/12/26/trilobyte.-a-new-heuristic</id>
    <content type="html">&lt;h2 id=&quot;section&quot;&gt;Идея&lt;/h2&gt;
 &lt;p&gt;Для начала небольшая парочка функций, которые подсчитывают количество фишек противника в соседних клетках.&lt;/p&gt;
