@@ -4,7 +4,7 @@
  <title>Yellow Rabbit</title>
  <link href="http://yrabbit.github.com/atom.xml" rel="self"/>
  <link href="http://yrabbit.github.com/"/>
- <updated>2016-01-23T18:47:11+11:00</updated>
+ <updated>2016-03-30T08:39:51+10:00</updated>
  <id>http://yrabbit.github.com</id>
  <author>
    <name>Yellow Rabbit</name>
@@ -13,9 +13,50 @@
 
  
  <entry>
+   <title>Xiaomi, Android 6 and Wear</title>
+   <link href="http://yrabbit.github.com/ru/2016/03/27/xiaomi-android-6-wear.html"/>
+   <updated>2016-03-27T16:33:00+10:00</updated>
+   <id>http://yrabbit.github.com/ru/2016/03/27/xiaomi-android-6-wear</id>
+   <content type="html">&lt;h2 id=&quot;xiaomi-with-android-6-and-lg-wear&quot;&gt;Xiaomi with Android 6 and LG wear&lt;/h2&gt;
+
+&lt;p&gt;После обновления Xiaomi Mi 4LTE на MIUI 7.2.9.0 (MXDCNDB) версия андроида в телефоне изменилась на 6.0.1. Как побочный эффект часы LG G Watch R 1085 перестали соединяться с телефоном, а на самом телефоне Google Play Services впали в панику. Ниже приведен способ восстановления работоспособности связки телефон – часы.&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;img src=&quot;/public/imgs/xiaomi/android.settings.png&quot; alt=&quot;delete Google apps&quot; width=&quot;40%&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Перезагрузиться в родное Recovery и очистить кэш (Wipe Cache).&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Установить Google installer. Легко находится в Mi store.&lt;br /&gt;
+&lt;img src=&quot;/public/imgs/xiaomi/market1.png&quot; alt=&quot;market&quot; width=&quot;40%&quot; /&gt; &lt;img src=&quot;/public/imgs/xiaomi/market2.png&quot; alt=&quot;Google installer&quot; width=&quot;40%&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Перезагрузиться.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Запустить Google Play и установить Google App. &lt;br /&gt;
+&lt;img src=&quot;/public/imgs/xiaomi/miui.home.png&quot; alt=&quot;market&quot; width=&quot;40%&quot; /&gt; &lt;img src=&quot;/public/imgs/xiaomi/google.app.png&quot; alt=&quot;Google app&quot; width=&quot;40%&quot; /&gt; &lt;img src=&quot;/public/imgs/xiaomi/Google.app.install.png&quot; alt=&quot;Google app install&quot; width=&quot;40%&quot; /&gt;&lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Перезагрузиться.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Удалить аккаунт Google.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Перезагрузиться.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Запустить Google Play и установить Android Wear. &lt;br /&gt;
+&lt;img src=&quot;/public/imgs/xiaomi/wear.png&quot; alt=&quot;wear install&quot; width=&quot;40%&quot; /&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+</content>
+ </entry>
+ 
+ <entry>
    <title>Trilobyte. Simple macros</title>
    <link href="http://yrabbit.github.com/ru/2016/01/23/trilobyte.-simple-macros.html"/>
-   <updated>2016-01-23T17:49:28+11:00</updated>
+   <updated>2016-01-23T16:49:28+10:00</updated>
    <id>http://yrabbit.github.com/ru/2016/01/23/trilobyte.-simple-macros</id>
    <content type="html">&lt;h2 id=&quot;make-things-shorter&quot;&gt;Make things shorter&lt;/h2&gt;
 
@@ -82,7 +123,7 @@
  <entry>
    <title>Trilobyte. A new heuristic.</title>
    <link href="http://yrabbit.github.com/ru/2015/12/26/trilobyte.-a-new-heuristic.html"/>
-   <updated>2015-12-26T22:53:48+11:00</updated>
+   <updated>2015-12-26T21:53:48+10:00</updated>
    <id>http://yrabbit.github.com/ru/2015/12/26/trilobyte.-a-new-heuristic</id>
    <content type="html">&lt;h2 id=&quot;section&quot;&gt;Идея&lt;/h2&gt;
 &lt;p&gt;Для начала небольшая парочка функций, которые подсчитывают количество фишек противника в соседних клетках.&lt;/p&gt;
@@ -163,7 +204,7 @@
  <entry>
    <title>Trilobyte. More Lisp and misc.</title>
    <link href="http://yrabbit.github.com/ru/2015/12/26/trilobyte.-more-lisp-and-misc.html"/>
-   <updated>2015-12-26T15:12:08+11:00</updated>
+   <updated>2015-12-26T14:12:08+10:00</updated>
    <id>http://yrabbit.github.com/ru/2015/12/26/trilobyte.-more-lisp-and-misc</id>
    <content type="html">&lt;h2 id=&quot;section&quot;&gt;Немного причёсывания&lt;/h2&gt;
 
@@ -296,7 +337,7 @@
  <entry>
    <title>Trolibyte. Add an heuristic.</title>
    <link href="http://yrabbit.github.com/ru/2015/12/23/trolibyte.-add-an-heuristic.html"/>
-   <updated>2015-12-23T20:30:09+11:00</updated>
+   <updated>2015-12-23T19:30:09+10:00</updated>
    <id>http://yrabbit.github.com/ru/2015/12/23/trolibyte.-add-an-heuristic</id>
    <content type="html">&lt;h2 id=&quot;section&quot;&gt;Чуточку умнее&lt;/h2&gt;
 &lt;p&gt;Итак, AI действует разумно только когда видит чью-нибудь победу через ближашие *ai-level* ходов, иначе просто выбирает первый же ход. Попробуем следующую эвристику:&lt;/p&gt;
@@ -662,7 +703,7 @@
  <entry>
    <title>Trilobyte. Lazy AI.</title>
    <link href="http://yrabbit.github.com/ru/2015/12/21/trilobyte.-lazy-ai.html"/>
-   <updated>2015-12-21T20:09:53+11:00</updated>
+   <updated>2015-12-21T19:09:53+10:00</updated>
    <id>http://yrabbit.github.com/ru/2015/12/21/trilobyte.-lazy-ai</id>
    <content type="html">&lt;h2 id=&quot;section&quot;&gt;Ограничение дерева&lt;/h2&gt;
 &lt;p&gt;Итак AI не может искать решения в ленивом дереве, поскольку по мере просчитывания ходов он материализует всё это дерево из небытия. Выходом может быть ограничение количества ходов, на которое AI просчитывает ситуацию. И это можно сделать очень изящно, а именно не подсчитывать глубину по ходу оценки комбинаций, а сразу подсунуть AI короткое дерево!&lt;/p&gt;
@@ -958,7 +999,7 @@
  <entry>
    <title>Trilobyte. Big Lazy Tree.</title>
    <link href="http://yrabbit.github.com/ru/2015/12/15/trilobyte-big-lazy-tree.html"/>
-   <updated>2015-12-15T19:59:21+11:00</updated>
+   <updated>2015-12-15T18:59:21+10:00</updated>
    <id>http://yrabbit.github.com/ru/2015/12/15/trilobyte-big-lazy-tree</id>
    <content type="html">&lt;h2 id=&quot;section&quot;&gt;Ленивые списки&lt;/h2&gt;
 &lt;p&gt;Программа прилично играет на крошечной доске, пора задуматься об увеличении игрового поля. Поскольку при простом увеличении размеров доски память быстро заканчивается, то придется жульничать: создавать в памяти только те кусочки дерева комбинаций, которые действительно нужны. Здесь нужно заметить, что, не имея возможности проанализировать всё дерево комбинаций, AI придётся немного поднапрячься.&lt;br /&gt;
@@ -1197,7 +1238,7 @@
  <entry>
    <title>Trilobyte. An UI.</title>
    <link href="http://yrabbit.github.com/ru/2015/12/15/trilobyte-ui.html"/>
-   <updated>2015-12-15T14:22:42+11:00</updated>
+   <updated>2015-12-15T13:22:42+10:00</updated>
    <id>http://yrabbit.github.com/ru/2015/12/15/trilobyte-ui</id>
    <content type="html">&lt;h2 id=&quot;section&quot;&gt;Интерфейс&lt;/h2&gt;
 &lt;p&gt;Вот и подошло время обзавестись небольшой системой взаимодействия с человеком. Для начала покажем доску:&lt;/p&gt;
@@ -1374,7 +1415,7 @@
  <entry>
    <title>Trilobyte. Rules engine and AI</title>
    <link href="http://yrabbit.github.com/ru/2015/12/14/rules-engine.html"/>
-   <updated>2015-12-14T18:39:13+11:00</updated>
+   <updated>2015-12-14T17:39:13+10:00</updated>
    <id>http://yrabbit.github.com/ru/2015/12/14/rules-engine</id>
    <content type="html">&lt;h2 id=&quot;section&quot;&gt;Движок игровых правил&lt;/h2&gt;
 &lt;p&gt;Поскольку мы можем просчитать все комбинцаии (пока что для крошечной доски), то движок правил будет представлять из себя просто древовидную структуру данных&lt;sup id=&quot;fnref:tree-picture-source&quot;&gt;&lt;a href=&quot;#fn:tree-picture-source&quot; class=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt;.&lt;br /&gt;
@@ -1564,7 +1605,7 @@
  <entry>
    <title>Trilobyte. Moves & checking patterns.</title>
    <link href="http://yrabbit.github.com/ru/2015/12/13/trilobyte-checking-patterns.html"/>
-   <updated>2015-12-13T10:42:08+11:00</updated>
+   <updated>2015-12-13T09:42:08+10:00</updated>
    <id>http://yrabbit.github.com/ru/2015/12/13/trilobyte-checking-patterns</id>
    <content type="html">&lt;h2 id=&quot;section&quot;&gt;Ходы&lt;/h2&gt;
 &lt;p&gt;Сделать ход - значит скопировать доску, попутно заменив одну из клеток на нужную.&lt;/p&gt;
@@ -1775,7 +1816,7 @@
  <entry>
    <title>Трилобит и Лисп</title>
    <link href="http://yrabbit.github.com/ru/2015/12/11/figth-with-trilobyte.html"/>
-   <updated>2015-12-11T22:20:47+11:00</updated>
+   <updated>2015-12-11T21:20:47+10:00</updated>
    <id>http://yrabbit.github.com/ru/2015/12/11/figth-with-trilobyte</id>
    <content type="html">&lt;h2 id=&quot;section&quot;&gt;Задачка&lt;/h2&gt;
 &lt;p&gt;В игре 11th hour попалась головоломка-игрушка, цель которой: выстроить в ряд 4 фишки.  Причём нельзя выбрать горизонталь для новой фишки, можно  выбрать только вертикаль.&lt;br /&gt;
@@ -1900,7 +1941,7 @@ NIL
  <entry>
    <title>2 способа регулировки яркости подсветки на Acer C720 (part 2)</title>
    <link href="http://yrabbit.github.com/ru/2014/12/26/adjust-a-backlight-on-acer-c720.html"/>
-   <updated>2014-12-26T07:03:28+11:00</updated>
+   <updated>2014-12-26T06:03:28+10:00</updated>
    <id>http://yrabbit.github.com/ru/2014/12/26/adjust-a-backlight-on-acer-c720</id>
    <content type="html">&lt;h2 id=&quot;section&quot;&gt;То, что не случилось&lt;/h2&gt;
 &lt;p&gt;Второй способ заключается в создании специального устройства, чтение из которого возвращает текущий уровень подстветки, а запись в которое изменяет уровень подстветки. И такое устройство было создано. Это потребовало гораздо крупных вмешательств в код, включая изменение нескольких Makefile, файла системных настроек (sys/conf/options), добавление каталога с исходными файлами устройства.&lt;/p&gt;
@@ -1938,7 +1979,7 @@ NIL
  <entry>
    <title>2 способа регулировки яркости подсветки на Acer C720 (part 1)</title>
    <link href="http://yrabbit.github.com/ru/2014/12/18/2-ways-to-adjust-a-backlight-on-acer-c720.html"/>
-   <updated>2014-12-18T20:35:30+11:00</updated>
+   <updated>2014-12-18T19:35:30+10:00</updated>
    <id>http://yrabbit.github.com/ru/2014/12/18/2-ways-to-adjust-a-backlight-on-acer-c720</id>
    <content type="html">&lt;p&gt;Клавиши регулировки подсветки на клавиатуре хромбука Acer C720 являются замаскированными клавишами &lt;em&gt;F6&lt;/em&gt; и &lt;em&gt;F7&lt;/em&gt;. Соответственно при замене ChromeOS на DragoFly BSD регулировка подсветки не работает. Не удаётся также использовать &lt;em&gt;xbacklight&lt;/em&gt; - он не находит видео-выходов с возможностью регулировки подсветки. &lt;em&gt;xrandr&lt;/em&gt; может помочь, но это программное решение, что-то типа приглушения яркости выводимых точек. Ясно, что жизнь батарее это никак не продлит.&lt;/p&gt;
 
@@ -2035,7 +2076,7 @@ NIL
  <entry>
    <title>Регулировка громкости функциональными клавишами</title>
    <link href="http://yrabbit.github.com/ru/2014/12/15/xbindkeys-volume.html"/>
-   <updated>2014-12-15T20:12:00+11:00</updated>
+   <updated>2014-12-15T20:12:00+10:00</updated>
    <id>http://yrabbit.github.com/ru/2014/12/15/xbindkeys-volume</id>
    <content type="html">&lt;p&gt;У Acer C720 нет обозначенных функциональных клавиш F1-10, вместо этого соответствующие клавиши помечены различными значками. Так F8 обозначена как “выключение звука”, F9 - “уменьшить громкость”, F10 - “увеличить громкость”. Так эти клавиши работают под ChromeOS. Чтобы частично повторить этот функционал воспользуемся &lt;code class=&quot;highlighter-rouge&quot;&gt;xbindkeys&lt;/code&gt;.&lt;/p&gt;
 
@@ -2059,7 +2100,7 @@ NIL
  <entry>
    <title>Имитация недостающих клавиш Acer C720</title>
    <link href="http://yrabbit.github.com/ru/2014/12/08/acer-720-keyboard.html"/>
-   <updated>2014-12-08T08:01:01+11:00</updated>
+   <updated>2014-12-08T07:01:01+10:00</updated>
    <id>http://yrabbit.github.com/ru/2014/12/08/acer-720-keyboard</id>
    <content type="html">&lt;p&gt;Клавиатура хромбука Acer C720 видимо хороша для прогулок по сети и работы в Chrome OS, но мне для написания программ некоторых клавиш не хватает. Это &lt;em&gt;Home&lt;/em&gt;, &lt;em&gt;End&lt;/em&gt;, &lt;em&gt;PageUp&lt;/em&gt;, &lt;em&gt;PageDown&lt;/em&gt;, &lt;em&gt;Insert&lt;/em&gt; и &lt;em&gt;Delete&lt;/em&gt;.&lt;/p&gt;
 

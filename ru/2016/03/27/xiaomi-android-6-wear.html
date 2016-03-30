@@ -12,7 +12,7 @@
 
   <title>
     
-      2 способа регулировки яркости подсветки на Acer C720 (part 2) &middot; Yellow Rabbit
+      Xiaomi, Android 6 and Wear &middot; Yellow Rabbit
     
   </title>
 
@@ -126,49 +126,48 @@
 
       <div class="container content">
         <div class="post">
-  <h1 class="post-title">2 способа регулировки яркости подсветки на Acer C720 (part 2)</h1>
-    <div class="post-meta">26 Dec 2014
+  <h1 class="post-title">Xiaomi, Android 6 and Wear</h1>
+    <div class="post-meta">27 Mar 2016
 	<ul class="tag_list_in_post">
 	
 	<li class="inline tag_list_item">
-		<a class="tag_list_link" href="/tag/xorg"> xorg</a>
-	</li>
-	
-	<li class="inline tag_list_item">
-		<a class="tag_list_link" href="/tag/c720"> c720</a>
+		<a class="tag_list_link" href="/tag/xiaomi"> xiaomi</a>
 	</li>
 	
 	</ul>
     </div>
-  <h2 id="section">То, что не случилось</h2>
-<p>Второй способ заключается в создании специального устройства, чтение из которого возвращает текущий уровень подстветки, а запись в которое изменяет уровень подстветки. И такое устройство было создано. Это потребовало гораздо крупных вмешательств в код, включая изменение нескольких Makefile, файла системных настроек (sys/conf/options), добавление каталога с исходными файлами устройства.</p>
+  <h2 id="xiaomi-with-android-6-and-lg-wear">Xiaomi with Android 6 and LG wear</h2>
 
-<p>Устройство работало, но это нисколько не помогло сторонним утилитам увидеть наличие регулировки подсветки. Дело в том, что для этих утилит критичным указалось наличие каталога /sys/class/backlight/something, в котором располагались специальные файлы actual_brightness, brightness, max_brightness, subsystem/, uevent, bl_power, device/, power/ и тому подобные.</p>
+<p>После обновления Xiaomi Mi 4LTE на MIUI 7.2.9.0 (MXDCNDB) версия андроида в телефоне изменилась на 6.0.1. Как побочный эффект часы LG G Watch R 1085 перестали соединяться с телефоном, а на самом телефоне Google Play Services впали в панику. Ниже приведен способ восстановления работоспособности связки телефон – часы.</p>
 
-<p>Это так называемая Линукс-sysfs, которой нет (или я не нашёл) в DragonFly BSD. Создавать её аналог для регулирования уровня подсветки… пожалуй overkill.</p>
-
-<h2 id="section-1">Привязка клавиш регулировки подсветки</h2>
-
-<p>Первый скрипт <code class="highlighter-rouge">brightness-inc.sh</code> увеличивает яркость:</p>
-
-<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="c">#!/bin/sh</span>
-<span class="nv">LVL</span><span class="o">=</span><span class="sb">`</span>/sbin/sysctl -n hw.backlight_level<span class="sb">`</span>
-/sbin/sysctl hw.backlight_level<span class="o">=</span><span class="k">$((</span> <span class="k">${</span><span class="nv">LVL</span><span class="k">}</span> <span class="o">+</span> <span class="m">50</span> <span class="k">))</span></code></pre></figure>
-
-<p>второй <code class="highlighter-rouge">brightness-dec.sh</code> уменьшает:</p>
-
-<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="c">#!/bin/sh</span>
-<span class="nv">LVL</span><span class="o">=</span><span class="sb">`</span>/sbin/sysctl -n hw.backlight_level<span class="sb">`</span>
-/sbin/sysctl hw.backlight_level<span class="o">=</span><span class="k">$((</span> <span class="k">${</span><span class="nv">LVL</span><span class="k">}</span> <span class="o">-</span> <span class="m">50</span> <span class="k">))</span></code></pre></figure>
-
-<p>В файле <code class="highlighter-rouge">.xbindkeysrc</code> указываем привязку скриптов к клавишам:</p>
-
-<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="c"># brightness</span>
-<span class="s2">"brightness-dec.sh"</span>
-  F6
-
-<span class="s2">"brightness-inc.sh"</span>
-  F7</code></pre></figure>
+<ol>
+  <li>
+    <p><img src="/public/imgs/xiaomi/android.settings.png" alt="delete Google apps" width="40%" /></p>
+  </li>
+  <li>
+    <p>Перезагрузиться в родное Recovery и очистить кэш (Wipe Cache).</p>
+  </li>
+  <li>
+    <p>Установить Google installer. Легко находится в Mi store.<br />
+<img src="/public/imgs/xiaomi/market1.png" alt="market" width="40%" /> <img src="/public/imgs/xiaomi/market2.png" alt="Google installer" width="40%" /></p>
+  </li>
+  <li>
+    <p>Перезагрузиться.</p>
+  </li>
+  <li>Запустить Google Play и установить Google App. <br />
+<img src="/public/imgs/xiaomi/miui.home.png" alt="market" width="40%" /> <img src="/public/imgs/xiaomi/google.app.png" alt="Google app" width="40%" /> <img src="/public/imgs/xiaomi/Google.app.install.png" alt="Google app install" width="40%" /></li>
+  <li>
+    <p>Перезагрузиться.</p>
+  </li>
+  <li>
+    <p>Удалить аккаунт Google.</p>
+  </li>
+  <li>
+    <p>Перезагрузиться.</p>
+  </li>
+  <li>Запустить Google Play и установить Android Wear. <br />
+<img src="/public/imgs/xiaomi/wear.png" alt="wear install" width="40%" /></li>
+</ol>
 
 
 </div>
@@ -176,13 +175,6 @@
 <div class="related">
   <h2>Related Posts</h2>
   <ul class="related-posts">
-    
-      <li>
-          <a href="/ru/2016/03/27/xiaomi-android-6-wear.html">
-            Xiaomi, Android 6 and Wear
-            <small>27 Mar 2016</small>
-          </a>
-      </li>
     
       <li>
           <a href="/ru/2016/01/23/trilobyte.-simple-macros.html">
@@ -194,6 +186,13 @@
       <li>
           <a href="/ru/2015/12/26/trilobyte.-a-new-heuristic.html">
             Trilobyte. A new heuristic.
+            <small>26 Dec 2015</small>
+          </a>
+      </li>
+    
+      <li>
+          <a href="/ru/2015/12/26/trilobyte.-more-lisp-and-misc.html">
+            Trilobyte. More Lisp and misc.
             <small>26 Dec 2015</small>
           </a>
       </li>
