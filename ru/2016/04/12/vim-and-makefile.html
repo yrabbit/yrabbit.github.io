@@ -12,7 +12,7 @@
 
   <title>
     
-      Регулировка громкости функциональными клавишами &middot; Yellow Rabbit
+      Vim and makefile &middot; Yellow Rabbit
     
   </title>
 
@@ -130,53 +130,36 @@
 
       <div class="container content">
         <div class="post">
-  <h1 class="post-title">Регулировка громкости функциональными клавишами</h1>
-    <div class="post-meta">15 Dec 2014
+  <h1 class="post-title">Vim and makefile</h1>
+    <div class="post-meta">12 Apr 2016
 	<ul class="tag_list_in_post">
 	
 	<li class="inline tag_list_item">
-		<a class="tag_list_link" href="/tag/xorg"> xorg</a>
-	</li>
-	
-	<li class="inline tag_list_item">
-		<a class="tag_list_link" href="/tag/c720"> c720</a>
-	</li>
-	
-	<li class="inline tag_list_item">
-		<a class="tag_list_link" href="/tag/dflybsd"> dflybsd</a>
+		<a class="tag_list_link" href="/tag/vim"> vim</a>
 	</li>
 	
 	</ul>
     </div>
-  <p>У Acer C720 нет обозначенных функциональных клавиш F1-10, вместо этого соответствующие клавиши помечены различными значками. Так F8 обозначена как “выключение звука”, F9 - “уменьшить громкость”, F10 - “увеличить громкость”. Так эти клавиши работают под ChromeOS. Чтобы частично повторить этот функционал воспользуемся <code class="highlighter-rouge">xbindkeys</code>.</p>
+  <h2 id="section">Умная замена табуляции на пробелы.</h2>
 
-<center>
-	<img src="/public/imgs/acer-c720-keyboard.jpeg" />
-</center>
+<p>Сегодня убил много времени чтобы заставить работать Makefile. Как оказалось Vim заменял все табуляции в файле на пробелы. Это меня вполне устравивает, но приводит make в замешательство.</p>
 
-<p>Создадим файл <code class="highlighter-rouge">${HOME}/.xbindkeys</code> со следующим содержимым:</p>
+<p>Решение таково: проверяем имя файла и не заменяем табуляцию на пробелы для некоторых файлов.</p>
 
-<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="c"># volume</span>
-<span class="s2">"mixer -f /dev/mixer1 vol -5"</span>
-  F9
-
-<span class="s2">"mixer -f /dev/mixer1 vol +5"</span>
-  F10</code></pre></figure>
-
-<p>Верно для DragonFly BSD, поскольку устройство /dev/mixer0 соотвествует hdmi выходу.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">let</span> _curfile <span class="p">=</span> expand<span class="p">(</span><span class="s2">"%:t"</span><span class="p">)</span>
+<span class="k">if</span> _curfile <span class="p">=~</span> <span class="s2">"Makefile"</span> <span class="p">||</span> _curfile <span class="p">=~</span> <span class="s2">"makefile"</span> <span class="p">||</span> _curfile <span class="p">=~</span> <span class="s2">".*\.mk"</span>
+        <span class="k">set</span> noexpandtab
+<span class="k">else</span>
+        <span class="k">set</span> expandtab
+<span class="k">endif</span>
+</code></pre>
+</div>
 
 </div>
 
 <div class="related">
   <h2>Related Posts</h2>
   <ul class="related-posts">
-    
-      <li>
-          <a href="/ru/2016/04/12/vim-and-makefile.html">
-            Vim and makefile
-            <small>12 Apr 2016</small>
-          </a>
-      </li>
     
       <li>
           <a href="/ru/2016/03/27/xiaomi-android-6-wear.html">
@@ -189,6 +172,13 @@
           <a href="/ru/2016/01/23/trilobyte.-simple-macros.html">
             Trilobyte. Simple macros
             <small>23 Jan 2016</small>
+          </a>
+      </li>
+    
+      <li>
+          <a href="/ru/2015/12/26/trilobyte.-a-new-heuristic.html">
+            Trilobyte. A new heuristic.
+            <small>26 Dec 2015</small>
           </a>
       </li>
     

@@ -4,13 +4,35 @@
  <title>Yellow Rabbit</title>
  <link href="http://yrabbit.github.com/atom.xml" rel="self"/>
  <link href="http://yrabbit.github.com/"/>
- <updated>2016-03-30T08:39:51+10:00</updated>
+ <updated>2016-04-12T21:34:42+10:00</updated>
  <id>http://yrabbit.github.com</id>
  <author>
    <name>Yellow Rabbit</name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Vim and makefile</title>
+   <link href="http://yrabbit.github.com/ru/2016/04/12/vim-and-makefile.html"/>
+   <updated>2016-04-12T21:00:10+10:00</updated>
+   <id>http://yrabbit.github.com/ru/2016/04/12/vim-and-makefile</id>
+   <content type="html">&lt;h2 id=&quot;section&quot;&gt;Умная замена табуляции на пробелы.&lt;/h2&gt;
+
+&lt;p&gt;Сегодня убил много времени чтобы заставить работать Makefile. Как оказалось Vim заменял все табуляции в файле на пробелы. Это меня вполне устравивает, но приводит make в замешательство.&lt;/p&gt;
+
+&lt;p&gt;Решение таково: проверяем имя файла и не заменяем табуляцию на пробелы для некоторых файлов.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; _curfile &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; expand&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;%:t&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; _curfile &lt;span class=&quot;p&quot;&gt;=~&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Makefile&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;||&lt;/span&gt; _curfile &lt;span class=&quot;p&quot;&gt;=~&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;makefile&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;||&lt;/span&gt; _curfile &lt;span class=&quot;p&quot;&gt;=~&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;.*\.mk&quot;&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;set&lt;/span&gt; noexpandtab
+&lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;set&lt;/span&gt; expandtab
+&lt;span class=&quot;k&quot;&gt;endif&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Xiaomi, Android 6 and Wear</title>
