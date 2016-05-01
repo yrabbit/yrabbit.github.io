@@ -4,13 +4,63 @@
  <title>Yellow Rabbit</title>
  <link href="http://yrabbit.github.com/atom.xml" rel="self"/>
  <link href="http://yrabbit.github.com/"/>
- <updated>2016-04-12T21:34:42+10:00</updated>
+ <updated>2016-05-01T22:14:50+10:00</updated>
  <id>http://yrabbit.github.com</id>
  <author>
    <name>Yellow Rabbit</name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Lisp standalone executable</title>
+   <link href="http://yrabbit.github.com/ru/2016/05/01/lisp-standalone-executable.html"/>
+   <updated>2016-05-01T21:09:39+10:00</updated>
+   <id>http://yrabbit.github.com/ru/2016/05/01/lisp-standalone-executable</id>
+   <content type="html">&lt;h2 id=&quot;sbcl-quicklisp-buildapp&quot;&gt;Создание исполняемого файла (SBCL, quicklisp, buildapp)&lt;/h2&gt;
+
+&lt;p&gt;Желание делать отдельный самодостаточный исполняемый файл, хотя можно просто дать исходники, немного станновато, но допустим, что такая необходимость возникла. Проект к этому моменту уже приобрёл законченный вид и организован как локальная система quicklisp. &lt;a href=&quot;http://xach.livejournal.com/278047.html&quot;&gt;Здесь&lt;/a&gt; можно прочитать как сразу создать удобную среду для разработки.&lt;/p&gt;
+
+&lt;p&gt;Далее нужен buildapp, это исполняемый файл, так что переходим в каталог, который у нас в ${PATH}. Для меня это &lt;em&gt;~/local/bin&lt;/em&gt;. Запускаем sbcl&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ql:quickload&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&#39;buildapp&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;buildapp:build-buildapp&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Переходим в каталог проекта и запускаем sbcl, загружаем наш проект (в моём случае &lt;em&gt;test-cffi&lt;/em&gt;) и записываем его манифест.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ql:quickload&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:test-cffi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ql:write-asdf-manifest-file&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;test-cffi.manifest&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;И уже окончательно:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;% &lt;/span&gt;buildapp --output &lt;span class=&quot;nb&quot;&gt;test&lt;/span&gt;-cffi --manifest-file &lt;span class=&quot;nb&quot;&gt;test&lt;/span&gt;-cffi.manifest &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+--load-system &lt;span class=&quot;nb&quot;&gt;test&lt;/span&gt;-cffi --entry &lt;span class=&quot;nb&quot;&gt;test&lt;/span&gt;-cffi:main
+&lt;span class=&quot;gp&quot;&gt;% &lt;/span&gt;ls -l
+-rw-r--r--  1 rabbit  rabbit      1654 01-May-2016 20:49 &lt;span class=&quot;nb&quot;&gt;test&lt;/span&gt;-cffi.manifest
+-rw-r--r--  1 rabbit  rabbit       111 01-May-2016 20:57 package.lisp
+-rw-r--r--  1 rabbit  rabbit        57 17-Apr-2016 15:22 README.txt
+-rwxr-xr-x  1 rabbit  rabbit  57802800 01-May-2016 22:06 &lt;span class=&quot;nb&quot;&gt;test&lt;/span&gt;-cffi&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;
+-rw-r--r--  1 rabbit  rabbit       280 17-Apr-2016 15:45 &lt;span class=&quot;nb&quot;&gt;test&lt;/span&gt;-cffi.asd
+-rw-r--r--  1 rabbit  rabbit      2181 01-May-2016 20:59 &lt;span class=&quot;nb&quot;&gt;test&lt;/span&gt;-cffi.lisp
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Функция &lt;em&gt;main&lt;/em&gt;, которая дожна быть экспортирована из нашего проекта имеет вид:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;main&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;argv&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;declare&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;ignore&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;argv&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;win-box&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+</content>
+ </entry>
  
  <entry>
    <title>Vim and makefile</title>

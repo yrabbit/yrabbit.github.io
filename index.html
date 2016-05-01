@@ -132,6 +132,24 @@
           
   <div class="post">
     <h2 class="post-title">
+		<a href="/ru/2016/05/01/lisp-standalone-executable.html">
+        Lisp standalone executable
+      </a>
+    </h2>
+    <div class="post-meta">01 May 2016
+	<ul class="tag_list_in_post">
+	
+	<li class="inline tag_list_item">
+		<a class="tag_list_link" href="/tag/lisp"> lisp</a>
+	</li>
+	
+	</ul>
+    </div>
+    Создание исполняемого файла (SBCL, quicklisp, buildapp) Желание делать отдельный самодостаточный исполняемый файл, хотя можно просто дать исходники, немного станновато, но допустим, что такая необходимость возникла. Проект к этому моменту уже приобрёл законченный вид и организован как локальная система quicklisp. Здесь можно прочитать как сразу создать удобную среду для разработки. Далее...
+  </div>
+  
+  <div class="post">
+    <h2 class="post-title">
 		<a href="/ru/2016/04/12/vim-and-makefile.html">
         Vim and makefile
       </a>
@@ -346,32 +364,6 @@
 	</ul>
     </div>
     Интерфейс Вот и подошло время обзавестись небольшой системой взаимодействия с человеком. Для начала покажем доску: ;; *** UI ;; show board (defun draw-board (board) (flet ((get-cell-char (cell) (cond ((eql cell *ai-cell*) #\A) ((eql cell *human-cell*) #\H) (t #\.)))) (loop for j below *board-height* for row-idx from 0 by *board-width* do...
-  </div>
-  
-  <div class="post">
-    <h2 class="post-title">
-		<a href="/ru/2015/12/14/rules-engine.html">
-        Trilobyte. Rules engine and AI
-      </a>
-    </h2>
-    <div class="post-meta">14 Dec 2015
-	<ul class="tag_list_in_post">
-	
-	<li class="inline tag_list_item">
-		<a class="tag_list_link" href="/tag/lisp"> lisp</a>
-	</li>
-	
-	<li class="inline tag_list_item">
-		<a class="tag_list_link" href="/tag/games"> games</a>
-	</li>
-	
-	<li class="inline tag_list_item">
-		<a class="tag_list_link" href="/tag/trilobyte"> trilobyte</a>
-	</li>
-	
-	</ul>
-    </div>
-    Движок игровых правил Поскольку мы можем просчитать все комбинцаии (пока что для крошечной доски), то движок правил будет представлять из себя просто древовидную структуру данных1. ;; game rules engine is a tree which elements are lists (defstruct (game-node (:type list)) player ; *human-player* or *ai-player* board ; current board situation...
   </div>
   
 

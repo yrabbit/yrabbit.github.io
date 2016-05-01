@@ -12,7 +12,7 @@
 
   <title>
     
-      Vim and makefile &middot; Yellow Rabbit
+      Lisp standalone executable &middot; Yellow Rabbit
     
   </title>
 
@@ -130,30 +130,58 @@
 
       <div class="container content">
         <div class="post">
-  <h1 class="post-title">Vim and makefile</h1>
-    <div class="post-meta">12 Apr 2016
+  <h1 class="post-title">Lisp standalone executable</h1>
+    <div class="post-meta">01 May 2016
 	<ul class="tag_list_in_post">
 	
 	<li class="inline tag_list_item">
-		<a class="tag_list_link" href="/tag/vim"> vim</a>
+		<a class="tag_list_link" href="/tag/lisp"> lisp</a>
 	</li>
 	
 	</ul>
     </div>
-  <h2 id="section">Умная замена табуляции на пробелы.</h2>
+  <h2 id="sbcl-quicklisp-buildapp">Создание исполняемого файла (SBCL, quicklisp, buildapp)</h2>
 
-<p>Сегодня убил много времени чтобы заставить работать Makefile. Как оказалось Vim заменял все табуляции в файле на пробелы. Это меня вполне устравивает, но приводит make в замешательство.</p>
+<p>Желание делать отдельный самодостаточный исполняемый файл, хотя можно просто дать исходники, немного станновато, но допустим, что такая необходимость возникла. Проект к этому моменту уже приобрёл законченный вид и организован как локальная система quicklisp. <a href="http://xach.livejournal.com/278047.html">Здесь</a> можно прочитать как сразу создать удобную среду для разработки.</p>
 
-<p>Решение таково: проверяем имя файла и не заменяем табуляцию на пробелы для некоторых файлов.</p>
+<p>Далее нужен buildapp, это исполняемый файл, так что переходим в каталог, который у нас в ${PATH}. Для меня это <em>~/local/bin</em>. Запускаем sbcl</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">let</span> _curfile <span class="p">=</span> expand<span class="p">(</span><span class="s2">"%:t"</span><span class="p">)</span>
-<span class="k">if</span> _curfile <span class="p">=~</span> <span class="s2">"Makefile"</span> <span class="p">||</span> _curfile <span class="p">=~</span> <span class="s2">"makefile"</span> <span class="p">||</span> _curfile <span class="p">=~</span> <span class="s2">".*\.mk"</span>
-        <span class="k">set</span> noexpandtab
-<span class="k">else</span>
-        <span class="k">set</span> expandtab
-<span class="k">endif</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nv">ql:quickload</span> <span class="ss">'buildapp</span><span class="p">)</span>
+<span class="p">(</span><span class="nv">buildapp:build-buildapp</span><span class="p">)</span>
+
 </code></pre>
 </div>
+
+<p>Переходим в каталог проекта и запускаем sbcl, загружаем наш проект (в моём случае <em>test-cffi</em>) и записываем его манифест.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nv">ql:quickload</span> <span class="ss">:test-cffi</span><span class="p">)</span>
+<span class="p">(</span><span class="nv">ql:write-asdf-manifest-file</span> <span class="s">"test-cffi.manifest"</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>И уже окончательно:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="gp">% </span>buildapp --output <span class="nb">test</span>-cffi --manifest-file <span class="nb">test</span>-cffi.manifest <span class="se">\</span>
+--load-system <span class="nb">test</span>-cffi --entry <span class="nb">test</span>-cffi:main
+<span class="gp">% </span>ls -l
+-rw-r--r--  1 rabbit  rabbit      1654 01-May-2016 20:49 <span class="nb">test</span>-cffi.manifest
+-rw-r--r--  1 rabbit  rabbit       111 01-May-2016 20:57 package.lisp
+-rw-r--r--  1 rabbit  rabbit        57 17-Apr-2016 15:22 README.txt
+-rwxr-xr-x  1 rabbit  rabbit  57802800 01-May-2016 22:06 <span class="nb">test</span>-cffi<span class="k">*</span>
+-rw-r--r--  1 rabbit  rabbit       280 17-Apr-2016 15:45 <span class="nb">test</span>-cffi.asd
+-rw-r--r--  1 rabbit  rabbit      2181 01-May-2016 20:59 <span class="nb">test</span>-cffi.lisp
+</code></pre>
+</div>
+
+<p>Функция <em>main</em>, которая дожна быть экспортирована из нашего проекта имеет вид:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nb">defun</span> <span class="nv">main</span> <span class="p">(</span><span class="nv">argv</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">declare</span> <span class="p">(</span><span class="k">ignore</span> <span class="nv">argv</span><span class="p">))</span>
+  <span class="p">(</span><span class="nv">win-box</span><span class="p">))</span>
+
+</code></pre>
+</div>
+
 
 </div>
 
@@ -162,9 +190,9 @@
   <ul class="related-posts">
     
       <li>
-          <a href="/ru/2016/05/01/lisp-standalone-executable.html">
-            Lisp standalone executable
-            <small>01 May 2016</small>
+          <a href="/ru/2016/04/12/vim-and-makefile.html">
+            Vim and makefile
+            <small>12 Apr 2016</small>
           </a>
       </li>
     
