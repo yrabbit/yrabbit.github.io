@@ -104,6 +104,10 @@
         
       
     
+      
+        
+      
+    
 
     <span class="sidebar-nav-item">Currently v1.0.1</span>
   </nav>
@@ -130,6 +134,32 @@
 
       <div class="container content">
           
+  <div class="post">
+    <h2 class="post-title">
+		<a href="/ru/2015/12/15/trilobyte-ui.html">
+        Trilobyte. An UI.
+      </a>
+    </h2>
+    <div class="post-meta">15 Dec 2015
+	<ul class="tag_list_in_post">
+	
+	<li class="inline tag_list_item">
+		<a class="tag_list_link" href="/tag/lisp"> lisp</a>
+	</li>
+	
+	<li class="inline tag_list_item">
+		<a class="tag_list_link" href="/tag/games"> games</a>
+	</li>
+	
+	<li class="inline tag_list_item">
+		<a class="tag_list_link" href="/tag/trilobyte"> trilobyte</a>
+	</li>
+	
+	</ul>
+    </div>
+    Интерфейс Вот и подошло время обзавестись небольшой системой взаимодействия с человеком. Для начала покажем доску: ;; *** UI ;; show board (defun draw-board (board) (flet ((get-cell-char (cell) (cond ((eql cell *ai-cell*) #\A) ((eql cell *human-cell*) #\H) (t #\.)))) (loop for j below *board-height* for row-idx from 0 by *board-width* do...
+  </div>
+  
   <div class="post">
     <h2 class="post-title">
 		<a href="/ru/2015/12/14/rules-engine.html">

@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta http-equiv="content-language" content="ru" />
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Toy web engine in lisp &middot; Yellow Rabbit
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+
+  <!-- Icons -->
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body>
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-item">
+    <p></p>
+  </div>
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/">Home</a>
+
+    
+
+    
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/about.html">About</a>
+        
+      
+    
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+
+    <span class="sidebar-nav-item">Currently v1.0.1</span>
+  </nav>
+
+  <div class="sidebar-item">
+    <p>
+      &copy; 2016. All rights reserved.
+    </p>
+  </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+		  <a href="/" title="Home">Yellow Rabbit</a>
+            <small>не забывает играть</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Toy web engine in lisp</h1>
+    <div class="post-meta">07 May 2016
+	<ul class="tag_list_in_post">
+	
+	<li class="inline tag_list_item">
+		<a class="tag_list_link" href="/tag/lisp"> lisp</a>
+	</li>
+	
+	<li class="inline tag_list_item">
+		<a class="tag_list_link" href="/tag/toy-engine"> toy-engine</a>
+	</li>
+	
+	</ul>
+    </div>
+  <h2 id="section">Теория</h2>
+<p>Здесь всё просто: <a href="https://limpet.net/mbrubeck/2014/08/08/toy-layout-engine-1.html">читаем серию статей об игрушечном вэб движке</a>. А здесь я буду повторять только самый минимум.</p>
+
+<h2 id="dom">Первый шаг: DOM</h2>
+<p>DOM (объектная модель документа) дерево узлов. Узал имеет ноль или больше потомков. Потомки храним как простой список. Понятно, что список очень плохо масштабируется, но вероятно для игрушечного движка это не будет проблемой.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nb">defclass</span> <span class="nv">node</span> <span class="p">()</span>
+  <span class="p">((</span><span class="nv">children</span> <span class="ss">:accessor</span> <span class="nv">node-children</span>
+	     <span class="ss">:initform</span> <span class="o">'</span><span class="p">()</span>
+	     <span class="ss">:initarg</span> <span class="ss">:children</span><span class="p">)))</span>
+</code></pre>
+</div>
+
+<p>Дабавление потомка достаточно простое, хотя возможно, что обратный порядок потомков в списке и скажется в будущем. В таком случае просто изменим метод.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nb">defgeneric</span> <span class="nv">node-add-child</span> <span class="p">(</span><span class="nv">tree-node</span> <span class="nv">child</span><span class="p">)</span>
+	    <span class="p">(</span><span class="ss">:method</span> <span class="p">((</span><span class="nv">tree-node</span> <span class="nv">node</span><span class="p">)</span> <span class="p">(</span><span class="nv">child</span> <span class="nv">node</span><span class="p">))</span>
+		     <span class="p">(</span><span class="nb">setf</span> <span class="p">(</span><span class="nv">node-children</span> <span class="nv">tree-node</span><span class="p">)</span>
+			   <span class="p">(</span><span class="nb">push</span> <span class="nv">child</span> <span class="p">(</span><span class="nv">node-children</span> <span class="nv">tree-node</span><span class="p">)))))</span>
+</code></pre>
+</div>
+
+<p>Существует <a href="https://dom.spec.whatwg.org/#nodes">много типов узлов</a>, но игрушечный движок будет использовать только несколько. Просто текст:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="c1">;; Text is a simplest node.</span>
+<span class="c1">;; Just string of text.</span>
+<span class="p">(</span><span class="nb">defclass</span> <span class="nv">text-node</span> <span class="p">(</span><span class="nv">node</span><span class="p">)</span>
+  <span class="p">((</span><span class="nv">text</span> <span class="ss">:accessor</span> <span class="nv">text-node-text</span>
+	 <span class="ss">:initform</span> <span class="s">""</span>
+	 <span class="ss">:initarg</span> <span class="ss">:text</span><span class="p">)))</span>
+</code></pre>
+</div>
+
+<p>Далее элемент или таг и его атрибуты. Атрибуты хранятся в хэш-таблице:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="c1">;; Element represents all remaining types of nodes (joke).</span>
+<span class="c1">;; Tag name and any number of attributes.</span>
+<span class="p">(</span><span class="nb">defclass</span> <span class="nv">element-node</span> <span class="p">(</span><span class="nv">node</span><span class="p">)</span>
+  <span class="p">((</span><span class="nv">tag</span> <span class="ss">:accessor</span> <span class="nv">element-node-tag</span>
+	<span class="ss">:initform</span> <span class="s">""</span>
+	<span class="ss">:initarg</span> <span class="ss">:tag</span><span class="p">)</span>
+   <span class="p">(</span><span class="nv">attrs</span> <span class="ss">:reader</span> <span class="nv">element-node-attrs</span>
+	  <span class="ss">:initform</span> <span class="p">(</span><span class="nb">make-hash-table</span> <span class="ss">:test</span> <span class="nf">#'</span><span class="nb">equal</span><span class="p">))))</span>  <span class="c1">; "key" --- "value", they are strings</span>
+							<span class="c1">; so use "equal"</span>
+</code></pre>
+</div>
+
+<p>Ну и комментарий:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="c1">;; Comment</span>
+<span class="p">(</span><span class="nb">defclass</span> <span class="nv">comment-node</span> <span class="p">(</span><span class="nv">node</span><span class="p">)</span>
+  <span class="p">())</span>
+</code></pre>
+</div>
+
+<h2 id="section-1">Отладочная картинка</h2>
+<p>Для визуализации дерева. которое будет строится по HTML документу напишем пару функций, создающих файл для Graphviz:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;html</span> <span class="na">class=</span><span class="s">e</span><span class="nt">&gt;</span>
+ <span class="nt">&lt;head&gt;&lt;title&gt;</span>Aliens?<span class="nt">&lt;/title&gt;&lt;/head&gt;</span>
+ <span class="nt">&lt;body&gt;</span>Why yes.<span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre>
+</div>
+
+<p><img src="/public/imgs/lisp/dom-part1.png" alt="Дерево, часть 1" /></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="c1">;;; ========================</span>
+<span class="c1">;;; Pretty-print a DOM tree.</span>
+<span class="c1">;;; ========================</span>
+<span class="p">(</span><span class="nb">defgeneric</span> <span class="nv">pp-node-title</span> <span class="p">(</span><span class="nv">tree-node</span><span class="p">)</span>
+	    <span class="p">(</span><span class="ss">:documentation</span> <span class="s">"What to print in the node box."</span><span class="p">)</span>
+	    <span class="p">(</span><span class="ss">:method</span> <span class="p">((</span><span class="nv">tree-node</span> <span class="nv">node</span><span class="p">))</span>
+		     <span class="s">"!empty!"</span><span class="p">)</span>
+	    <span class="p">(</span><span class="ss">:method</span> <span class="p">((</span><span class="nv">tree-node</span> <span class="nv">text-node</span><span class="p">))</span>
+		     <span class="p">(</span><span class="nv">text-node-text</span> <span class="nv">tree-node</span><span class="p">))</span>
+	    <span class="p">(</span><span class="ss">:method</span> <span class="p">((</span><span class="nv">tree-node</span> <span class="nv">element-node</span><span class="p">))</span>
+		     <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">s</span> <span class="p">(</span><span class="nb">concatenate</span> <span class="ss">'string</span> <span class="p">(</span><span class="nv">element-node-tag</span> <span class="nv">tree-node</span><span class="p">)</span> <span class="s">"|"</span><span class="p">)))</span>
+		       <span class="p">(</span><span class="nb">concatenate</span> <span class="ss">'string</span> <span class="nv">s</span>
+				    <span class="p">(</span><span class="nb">with-output-to-string</span> <span class="p">(</span><span class="nv">out</span><span class="p">)</span>
+				      <span class="p">(</span><span class="nb">maphash</span> <span class="nf">#'</span><span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">k</span> <span class="nv">v</span><span class="p">)</span>
+						   <span class="p">(</span><span class="nb">format</span> <span class="nv">out</span> <span class="s">"~a:~a,"</span> <span class="nv">k</span> <span class="nv">v</span><span class="p">))</span>
+					       <span class="p">(</span><span class="nv">element-node-attrs</span> <span class="nv">tree-node</span><span class="p">)))</span>
+				    <span class="s">"|"</span><span class="p">)))</span>
+	    <span class="p">(</span><span class="ss">:method</span> <span class="p">((</span><span class="nv">tree-node</span> <span class="nv">comment-node</span><span class="p">))</span>
+		     <span class="s">"!comment!"</span><span class="p">))</span>
+
+<span class="p">(</span><span class="nb">defgeneric</span> <span class="nv">pp-node-class</span> <span class="p">(</span><span class="nv">tree-node</span><span class="p">)</span>
+	    <span class="p">(</span><span class="ss">:documentation</span> <span class="s">"Enumerate classes of nodes."</span><span class="p">)</span>
+	    <span class="p">(</span><span class="ss">:method</span> <span class="p">((</span><span class="nv">tree-node</span> <span class="nv">node</span><span class="p">))</span>         <span class="s">"?"</span><span class="p">)</span>
+	    <span class="p">(</span><span class="ss">:method</span> <span class="p">((</span><span class="nv">tree-node</span> <span class="nv">text-node</span><span class="p">))</span>    <span class="s">"T"</span><span class="p">)</span>
+	    <span class="p">(</span><span class="ss">:method</span> <span class="p">((</span><span class="nv">tree-node</span> <span class="nv">element-node</span><span class="p">))</span> <span class="s">"E"</span><span class="p">)</span>
+	    <span class="p">(</span><span class="ss">:method</span> <span class="p">((</span><span class="nv">tree-node</span> <span class="nv">comment-node</span><span class="p">))</span> <span class="s">"C"</span><span class="p">))</span>
+
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">pp-dom</span> <span class="p">(</span><span class="nv">root-node</span><span class="p">)</span>
+  <span class="s">"Print DOM tree in the nice way."</span>
+  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">nodes</span> <span class="p">(</span><span class="nb">make-hash-table</span><span class="p">))</span>                <span class="c1">; node object --- seq.id</span>
+	<span class="p">(</span><span class="nv">types</span> <span class="p">(</span><span class="nb">make-hash-table</span> <span class="ss">:test</span> <span class="nf">#'</span><span class="nb">equal</span><span class="p">)))</span> <span class="c1">; node class --- new sq.id</span>
+	<span class="p">(</span><span class="k">labels</span>
+	  <span class="p">((</span><span class="nv">new-seq.id</span> <span class="p">(</span><span class="nv">node</span><span class="p">)</span>
+		       <span class="s">"New sequentual id for class object."</span>
+		       <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">gethash</span> <span class="p">(</span><span class="nv">pp-node-class</span> <span class="nv">node</span><span class="p">)</span> <span class="nv">types</span><span class="p">)</span>
+			 <span class="p">(</span><span class="nb">incf</span> <span class="p">(</span><span class="nb">gethash</span> <span class="p">(</span><span class="nv">pp-node-class</span> <span class="nv">node</span><span class="p">)</span> <span class="nv">types</span><span class="p">))</span>
+			 <span class="p">(</span><span class="nb">setf</span> <span class="p">(</span><span class="nb">gethash</span> <span class="p">(</span><span class="nv">pp-node-class</span> <span class="nv">node</span><span class="p">)</span> <span class="nv">types</span><span class="p">)</span> <span class="mi">0</span><span class="p">)))</span>
+	   <span class="p">(</span><span class="nv">seq.id</span> <span class="p">(</span><span class="nv">node</span><span class="p">)</span>
+		   <span class="s">"Id by object"</span>
+		   <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">id</span> <span class="p">(</span><span class="nb">gethash</span> <span class="nv">node</span> <span class="nv">nodes</span><span class="p">)))</span>
+		     <span class="p">(</span><span class="k">if</span> <span class="nv">id</span>
+		       <span class="nv">id</span>
+		       <span class="p">(</span><span class="nb">setf</span> <span class="p">(</span><span class="nb">gethash</span> <span class="nv">node</span> <span class="nv">nodes</span><span class="p">)</span> <span class="p">(</span><span class="nv">new-seq.id</span> <span class="nv">node</span><span class="p">)))))</span>
+	   <span class="p">(</span><span class="nv">pp-node-name</span> <span class="p">(</span><span class="nv">node</span><span class="p">)</span>
+			 <span class="s">"Make node name for graphwizard."</span>
+			 <span class="p">(</span><span class="nb">format</span> <span class="no">nil</span> <span class="s">"~a~d"</span> <span class="p">(</span><span class="nv">pp-node-class</span> <span class="nv">node</span><span class="p">)</span> <span class="p">(</span><span class="nv">seq.id</span> <span class="nv">node</span><span class="p">)))</span>
+	   <span class="p">(</span><span class="nv">pp-node</span> <span class="p">(</span><span class="nv">node</span><span class="p">)</span>
+		    <span class="s">"Print one node."</span>
+		    <span class="p">(</span><span class="k">let</span>
+		      <span class="p">((</span><span class="nv">name</span> <span class="p">(</span><span class="nv">pp-node-name</span> <span class="nv">node</span><span class="p">)))</span>
+		      <span class="p">(</span><span class="nb">format</span> <span class="no">t</span> <span class="s">"~a[label=~s];~%"</span> <span class="nv">name</span>
+			    <span class="p">(</span><span class="nb">concatenate</span> <span class="ss">'string</span> <span class="nv">name</span> <span class="s">":"</span> <span class="p">(</span><span class="nv">pp-node-title</span> <span class="nv">node</span><span class="p">)))</span>
+		      <span class="p">(</span><span class="nb">mapc</span> <span class="nf">#'</span><span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
+				<span class="p">(</span><span class="k">progn</span>
+				  <span class="p">(</span><span class="nb">format</span> <span class="no">t</span> <span class="s">"~a -&gt; ~a~%"</span> <span class="nv">name</span> <span class="p">(</span><span class="nv">pp-node-name</span> <span class="nv">x</span><span class="p">))</span>
+				  <span class="p">(</span><span class="nv">pp-node</span> <span class="nv">x</span><span class="p">)))</span>
+			    <span class="p">(</span><span class="nv">node-children</span> <span class="nv">node</span><span class="p">)))))</span>
+	  <span class="p">(</span><span class="nb">write-string</span> <span class="s">"digraph dom {label=\"DOM tree\";node [color=lightblue2, style=filled];"</span><span class="p">)</span>
+	  <span class="p">(</span><span class="nv">pp-node</span> <span class="nv">root-node</span><span class="p">)</span>
+	  <span class="p">(</span><span class="nb">write-string</span> <span class="s">"}"</span><span class="p">))))</span>
+
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">pp-&gt;dot</span> <span class="p">(</span><span class="nv">fname</span> <span class="nv">thunk</span><span class="p">)</span>
+  <span class="s">"Run the thunk and write any it's output to file."</span>
+  <span class="p">(</span><span class="nb">with-open-file</span> <span class="p">(</span><span class="vg">*standard-output*</span>
+		    <span class="nv">fname</span>
+		    <span class="ss">:direction</span> <span class="ss">:output</span>
+		    <span class="ss">:if-exists</span> <span class="ss">:supersede</span><span class="p">)</span>
+    <span class="p">(</span><span class="nb">funcall</span> <span class="nv">thunk</span><span class="p">)))</span>
+
+</code></pre>
+</div>
+
+</div>
+
+<div class="related">
+  <h2>Related Posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+          <a href="/ru/2016/05/01/lisp-standalone-executable.html">
+            Lisp standalone executable
+            <small>01 May 2016</small>
+          </a>
+      </li>
+    
+      <li>
+          <a href="/ru/2016/04/12/vim-and-makefile.html">
+            Vim and makefile
+            <small>12 Apr 2016</small>
+          </a>
+      </li>
+    
+      <li>
+          <a href="/ru/2016/03/27/xiaomi-android-6-wear.html">
+            Xiaomi, Android 6 and Wear
+            <small>27 Mar 2016</small>
+          </a>
+      </li>
+    
+  </ul>
+</div>
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'yrabbitblog'; // required: replace example with your forum shortname
+	/* var disqus_developer = 1; */
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+<!-- vim:ts=4:sw=4:sts=4
+-->
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+  </body>
+</html>
