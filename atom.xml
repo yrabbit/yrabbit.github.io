@@ -4,7 +4,7 @@
  <title>Yellow Rabbit</title>
  <link href="http://yrabbit.github.com/atom.xml" rel="self"/>
  <link href="http://yrabbit.github.com/"/>
- <updated>2016-05-07T22:10:14+10:00</updated>
+ <updated>2016-05-08T10:45:04+10:00</updated>
  <id>http://yrabbit.github.com</id>
  <author>
    <name>Yellow Rabbit</name>
@@ -21,7 +21,10 @@
 &lt;p&gt;Здесь всё просто: &lt;a href=&quot;https://limpet.net/mbrubeck/2014/08/08/toy-layout-engine-1.html&quot;&gt;читаем серию статей об игрушечном вэб движке&lt;/a&gt;. А здесь я буду повторять только самый минимум.&lt;/p&gt;
 
 &lt;h2 id=&quot;dom&quot;&gt;Первый шаг: DOM&lt;/h2&gt;
-&lt;p&gt;DOM (объектная модель документа) дерево узлов. Узал имеет ноль или больше потомков. Потомки храним как простой список. Понятно, что список очень плохо масштабируется, но вероятно для игрушечного движка это не будет проблемой.&lt;/p&gt;
+&lt;p&gt;DOM (объектная модель документа) дерево узлов. Узал имеет ноль или больше потомков. &lt;br /&gt;
+Потомки храним как простой список. Понятно, что список очень плохо масштабируется, но вероятно для игрушечного движка это не будет проблемой.&lt;/p&gt;
+
+&lt;p&gt;И самое главное — знакомимся с CLOS!&lt;/p&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defclass&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;node&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
   &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;children&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:accessor&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;node-children&lt;/span&gt;
@@ -75,6 +78,8 @@
 &lt;h2 id=&quot;section-1&quot;&gt;Отладочная картинка&lt;/h2&gt;
 &lt;p&gt;Для визуализации дерева. которое будет строится по HTML документу напишем пару функций, создающих файл для Graphviz:&lt;/p&gt;
 
+&lt;p&gt;Допустим имеем простой HTML файл:&lt;/p&gt;
+
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;html&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
  &lt;span class=&quot;nt&quot;&gt;&amp;lt;head&amp;gt;&amp;lt;title&amp;gt;&lt;/span&gt;Aliens?&lt;span class=&quot;nt&quot;&gt;&amp;lt;/title&amp;gt;&amp;lt;/head&amp;gt;&lt;/span&gt;
  &lt;span class=&quot;nt&quot;&gt;&amp;lt;body&amp;gt;&lt;/span&gt;Why yes.&lt;span class=&quot;nt&quot;&gt;&amp;lt;/body&amp;gt;&lt;/span&gt;
@@ -82,7 +87,34 @@
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
-&lt;p&gt;&lt;img src=&quot;/public/imgs/lisp/dom-part1.png&quot; alt=&quot;Дерево, часть 1&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;Поскольку парсер HTML ещё даже не в проекте, то сделаем дерево руками:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ql:quickload&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:toy-engine&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;in-package&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:toy-engine&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;; &amp;lt;html class=&quot;e&quot;&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defparameter&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*root*&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;make-instance&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&#39;element-node&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:tag&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;html&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;setf&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;gethash&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;class&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;element-node-attrs&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*root*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;e&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;; &amp;lt;head&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defparameter&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*head*&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;make-instance&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&#39;element-node&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:tag&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;head&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;node-add-child&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*root*&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*head*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;; &amp;lt;title&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;node-add-child&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*head*&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;make-instance&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&#39;element-node&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:tag&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;title&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;; Aliens?&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;node-add-child&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;car&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;node-children&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*head*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;make-instance&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&#39;text-node&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:text&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Aliens?&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;; &amp;lt;body&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defparameter&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*body*&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;make-instance&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&#39;element-node&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:tag&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;body&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;node-add-child&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*root*&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*body*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;; Why yes.&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;node-add-child&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*body*&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;make-instance&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&#39;text-node&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:text&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Why yes.&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;; &lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;pp-&amp;gt;dot&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;#p&quot;~/tmp/part1.dot&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;pp-dom&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*root*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;После прогона через Graphviz получим такое изображение дерева:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/public/imgs/lisp/dom-part1.png&quot; alt=&quot;Дерево, часть 1&quot; style=&quot;display:block;margin-left:auto;margin-right:auto;&quot; /&gt;&lt;/p&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;;;; ========================&lt;/span&gt;
 &lt;span class=&quot;c1&quot;&gt;;;; Pretty-print a DOM tree.&lt;/span&gt;

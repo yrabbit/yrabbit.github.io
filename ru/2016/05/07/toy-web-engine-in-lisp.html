@@ -152,7 +152,10 @@
 <p>Здесь всё просто: <a href="https://limpet.net/mbrubeck/2014/08/08/toy-layout-engine-1.html">читаем серию статей об игрушечном вэб движке</a>. А здесь я буду повторять только самый минимум.</p>
 
 <h2 id="dom">Первый шаг: DOM</h2>
-<p>DOM (объектная модель документа) дерево узлов. Узал имеет ноль или больше потомков. Потомки храним как простой список. Понятно, что список очень плохо масштабируется, но вероятно для игрушечного движка это не будет проблемой.</p>
+<p>DOM (объектная модель документа) дерево узлов. Узал имеет ноль или больше потомков. <br />
+Потомки храним как простой список. Понятно, что список очень плохо масштабируется, но вероятно для игрушечного движка это не будет проблемой.</p>
+
+<p>И самое главное — знакомимся с CLOS!</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nb">defclass</span> <span class="nv">node</span> <span class="p">()</span>
   <span class="p">((</span><span class="nv">children</span> <span class="ss">:accessor</span> <span class="nv">node-children</span>
@@ -206,6 +209,8 @@
 <h2 id="section-1">Отладочная картинка</h2>
 <p>Для визуализации дерева. которое будет строится по HTML документу напишем пару функций, создающих файл для Graphviz:</p>
 
+<p>Допустим имеем простой HTML файл:</p>
+
 <div class="highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;html</span> <span class="na">class=</span><span class="s">e</span><span class="nt">&gt;</span>
  <span class="nt">&lt;head&gt;&lt;title&gt;</span>Aliens?<span class="nt">&lt;/title&gt;&lt;/head&gt;</span>
  <span class="nt">&lt;body&gt;</span>Why yes.<span class="nt">&lt;/body&gt;</span>
@@ -213,7 +218,34 @@
 </code></pre>
 </div>
 
-<p><img src="/public/imgs/lisp/dom-part1.png" alt="Дерево, часть 1" /></p>
+<p>Поскольку парсер HTML ещё даже не в проекте, то сделаем дерево руками:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nv">ql:quickload</span> <span class="ss">:toy-engine</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">in-package</span> <span class="ss">:toy-engine</span><span class="p">)</span>
+<span class="c1">; &lt;html class="e"&gt;</span>
+<span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*root*</span> <span class="p">(</span><span class="nb">make-instance</span> <span class="ss">'element-node</span> <span class="ss">:tag</span> <span class="s">"html"</span><span class="p">))</span>
+<span class="p">(</span><span class="nb">setf</span> <span class="p">(</span><span class="nb">gethash</span> <span class="s">"class"</span> <span class="p">(</span><span class="nv">element-node-attrs</span> <span class="vg">*root*</span><span class="p">))</span> <span class="s">"e"</span><span class="p">)</span>
+<span class="c1">; &lt;head&gt;</span>
+<span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*head*</span> <span class="p">(</span><span class="nb">make-instance</span> <span class="ss">'element-node</span> <span class="ss">:tag</span> <span class="s">"head"</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">node-add-child</span> <span class="vg">*root*</span> <span class="vg">*head*</span><span class="p">)</span>
+<span class="c1">; &lt;title&gt;</span>
+<span class="p">(</span><span class="nv">node-add-child</span> <span class="vg">*head*</span> <span class="p">(</span><span class="nb">make-instance</span> <span class="ss">'element-node</span> <span class="ss">:tag</span> <span class="s">"title"</span><span class="p">))</span>
+<span class="c1">; Aliens?</span>
+<span class="p">(</span><span class="nv">node-add-child</span> <span class="p">(</span><span class="nb">car</span> <span class="p">(</span><span class="nv">node-children</span> <span class="vg">*head*</span><span class="p">))</span> <span class="p">(</span><span class="nb">make-instance</span> <span class="ss">'text-node</span> <span class="ss">:text</span> <span class="s">"Aliens?"</span><span class="p">))</span>
+<span class="c1">; &lt;body&gt;</span>
+<span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*body*</span> <span class="p">(</span><span class="nb">make-instance</span> <span class="ss">'element-node</span> <span class="ss">:tag</span> <span class="s">"body"</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">node-add-child</span> <span class="vg">*root*</span> <span class="vg">*body*</span><span class="p">)</span>
+<span class="c1">; Why yes.</span>
+<span class="p">(</span><span class="nv">node-add-child</span> <span class="vg">*body*</span> <span class="p">(</span><span class="nb">make-instance</span> <span class="ss">'text-node</span> <span class="ss">:text</span> <span class="s">"Why yes."</span><span class="p">))</span>
+
+<span class="c1">; </span>
+<span class="p">(</span><span class="nv">pp-&gt;dot</span> <span class="ss">#p"~/tmp/part1.dot"</span> <span class="p">(</span><span class="k">lambda</span> <span class="p">()</span> <span class="p">(</span><span class="nv">pp-dom</span> <span class="vg">*root*</span><span class="p">)))</span>
+
+</code></pre>
+</div>
+<p>После прогона через Graphviz получим такое изображение дерева:</p>
+
+<p><img src="/public/imgs/lisp/dom-part1.png" alt="Дерево, часть 1" style="display:block;margin-left:auto;margin-right:auto;" /></p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code><span class="c1">;;; ========================</span>
 <span class="c1">;;; Pretty-print a DOM tree.</span>
