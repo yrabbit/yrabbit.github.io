@@ -4,7 +4,7 @@
  <title>Yellow Rabbit</title>
  <link href="http://yrabbit.github.com/atom.xml" rel="self"/>
  <link href="http://yrabbit.github.com/"/>
- <updated>2016-05-08T10:45:04+10:00</updated>
+ <updated>2016-05-08T11:30:46+10:00</updated>
  <id>http://yrabbit.github.com</id>
  <author>
    <name>Yellow Rabbit</name>
@@ -18,10 +18,10 @@
    <updated>2016-05-07T20:22:42+10:00</updated>
    <id>http://yrabbit.github.com/ru/2016/05/07/toy-web-engine-in-lisp</id>
    <content type="html">&lt;h2 id=&quot;section&quot;&gt;Теория&lt;/h2&gt;
-&lt;p&gt;Здесь всё просто: &lt;a href=&quot;https://limpet.net/mbrubeck/2014/08/08/toy-layout-engine-1.html&quot;&gt;читаем серию статей об игрушечном вэб движке&lt;/a&gt;. А здесь я буду повторять только самый минимум.&lt;/p&gt;
+&lt;p&gt;Здесь всё просто: &lt;a href=&quot;https://limpet.net/mbrubeck/2014/08/08/toy-layout-engine-1.html&quot;&gt;читаем серию статей об игрушечном вэб движке&lt;/a&gt;. А дальше я буду повторять только самый минимум.&lt;/p&gt;
 
 &lt;h2 id=&quot;dom&quot;&gt;Первый шаг: DOM&lt;/h2&gt;
-&lt;p&gt;DOM (объектная модель документа) дерево узлов. Узал имеет ноль или больше потомков. &lt;br /&gt;
+&lt;p&gt;DOM (объектная модель документа) дерево узлов. Узел имеет ноль или больше потомков. &lt;br /&gt;
 Потомки храним как простой список. Понятно, что список очень плохо масштабируется, но вероятно для игрушечного движка это не будет проблемой.&lt;/p&gt;
 
 &lt;p&gt;И самое главное — знакомимся с CLOS!&lt;/p&gt;
@@ -33,7 +33,7 @@
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
-&lt;p&gt;Дабавление потомка достаточно простое, хотя возможно, что обратный порядок потомков в списке и скажется в будущем. В таком случае просто изменим метод.&lt;/p&gt;
+&lt;p&gt;Добавление потомка достаточно простое, хотя возможно, что обратный порядок потомков в списке и скажется в будущем. В таком случае просто изменим метод.&lt;/p&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defgeneric&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;node-add-child&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;tree-node&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;child&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 	    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:method&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;tree-node&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;child&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
@@ -76,7 +76,7 @@
 &lt;/div&gt;
 
 &lt;h2 id=&quot;section-1&quot;&gt;Отладочная картинка&lt;/h2&gt;
-&lt;p&gt;Для визуализации дерева. которое будет строится по HTML документу напишем пару функций, создающих файл для Graphviz:&lt;/p&gt;
+&lt;p&gt;Для визуализации дерева, которое будет строится по HTML документу напишем пару функций, создающих файл для Graphviz:&lt;/p&gt;
 
 &lt;p&gt;Допустим имеем простой HTML файл:&lt;/p&gt;
 
