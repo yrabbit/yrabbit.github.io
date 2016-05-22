@@ -252,7 +252,7 @@
 
 </code></pre>
 </div>
-<p>Чтобы эти макросы работали строку нужно описывать как лексические переменные <code class="highlighter-rouge">str</code>, <code class="highlighter-rouge">index</code> и <code class="highlighter-rouge">end</code>.</p>
+<p>Чтобы эти макросы работали, строку нужно описывать как лексические переменные <code class="highlighter-rouge">str</code>, <code class="highlighter-rouge">index</code> и <code class="highlighter-rouge">end</code>.</p>
 
 <p>И одно замечание на прощание: ядро использует reader-макросы, так что нужно следить чтобы всё функции, которые вызываются при работе компилятора META, были доступны на этапе компиляции. Следует использовать <code class="highlighter-rouge">(eval-when (:compile-toplevel) ...)</code> в таких случаях.</p>
 

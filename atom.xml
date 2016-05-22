@@ -4,7 +4,7 @@
  <title>Yellow Rabbit</title>
  <link href="http://yrabbit.github.com/atom.xml" rel="self"/>
  <link href="http://yrabbit.github.com/"/>
- <updated>2016-05-22T16:57:37+10:00</updated>
+ <updated>2016-05-22T20:11:22+10:00</updated>
  <id>http://yrabbit.github.com</id>
  <author>
    <name>Yellow Rabbit</name>
@@ -113,7 +113,7 @@
 
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
-&lt;p&gt;Чтобы эти макросы работали строку нужно описывать как лексические переменные &lt;code class=&quot;highlighter-rouge&quot;&gt;str&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;index&lt;/code&gt; и &lt;code class=&quot;highlighter-rouge&quot;&gt;end&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Чтобы эти макросы работали, строку нужно описывать как лексические переменные &lt;code class=&quot;highlighter-rouge&quot;&gt;str&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;index&lt;/code&gt; и &lt;code class=&quot;highlighter-rouge&quot;&gt;end&lt;/code&gt;.&lt;/p&gt;
 
 &lt;p&gt;И одно замечание на прощание: ядро использует reader-макросы, так что нужно следить чтобы всё функции, которые вызываются при работе компилятора META, были доступны на этапе компиляции. Следует использовать &lt;code class=&quot;highlighter-rouge&quot;&gt;(eval-when (:compile-toplevel) ...)&lt;/code&gt; в таких случаях.&lt;/p&gt;
 
