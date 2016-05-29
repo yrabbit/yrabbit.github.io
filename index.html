@@ -140,6 +140,28 @@
           
   <div class="post">
     <h2 class="post-title">
+		<a href="/ru/2016/05/25/html_parsing_part1.html">
+        HTML parsing (part 1)
+      </a>
+    </h2>
+    <div class="post-meta">25 May 2016
+	<ul class="tag_list_in_post">
+	
+	<li class="inline tag_list_item">
+		<a class="tag_list_link" href="/tag/lisp"> lisp</a>
+	</li>
+	
+	<li class="inline tag_list_item">
+		<a class="tag_list_link" href="/tag/toy-engine"> toy-engine</a>
+	</li>
+	
+	</ul>
+    </div>
+    Housekeeping Ядро META это самостоятельная часть движка, так что можно выделить её в отдельный файл и навести общий порядок в проекте. Файл toy-engine.asd, описывающий состав и последовательность компиляции модулей движка: ;;;; toy-engine.asd (asdf:defsystem #:toy-engine :description "Tiny web-engine" :author "Yellow Rabbit &lt;yrabbit@example.com&gt;" :license "Public domain" :serial t :components ((:file "package") (:file...
+  </div>
+  
+  <div class="post">
+    <h2 class="post-title">
 		<a href="/ru/2016/05/22/html_parsing_(meta).html">
         HTML parsing (META)
       </a>
@@ -342,32 +364,6 @@
 	</ul>
     </div>
     Чуточку умнее Итак, AI действует разумно только когда видит чью-нибудь победу через ближашие *ai-level* ходов, иначе просто выбирает первый же ход. Попробуем следующую эвристику: лучшей является позиция, где длина линии из фишек нашего цвета максимальна; худшей является позиция, где длина линии из фишек цвета противника максимальна. Отсюда наилучшая позиция —...
-  </div>
-  
-  <div class="post">
-    <h2 class="post-title">
-		<a href="/ru/2015/12/21/trilobyte.-lazy-ai.html">
-        Trilobyte. Lazy AI.
-      </a>
-    </h2>
-    <div class="post-meta">21 Dec 2015
-	<ul class="tag_list_in_post">
-	
-	<li class="inline tag_list_item">
-		<a class="tag_list_link" href="/tag/lisp"> lisp</a>
-	</li>
-	
-	<li class="inline tag_list_item">
-		<a class="tag_list_link" href="/tag/trilobyte"> trilobyte</a>
-	</li>
-	
-	<li class="inline tag_list_item">
-		<a class="tag_list_link" href="/tag/games"> games</a>
-	</li>
-	
-	</ul>
-    </div>
-    Ограничение дерева Итак AI не может искать решения в ленивом дереве, поскольку по мере просчитывания ходов он материализует всё это дерево из небытия. Выходом может быть ограничение количества ходов, на которое AI просчитывает ситуацию. И это можно сделать очень изящно, а именно не подсчитывать глубину по ходу оценки комбинаций, а...
   </div>
   
 
