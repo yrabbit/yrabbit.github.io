@@ -249,10 +249,11 @@
        <span class="c1">;; node parsers</span>
        <span class="p">(</span><span class="nv">parse-text</span> <span class="p">()</span>
           <span class="s">"Text until &lt;"</span>
-          <span class="p">(</span><span class="k">let</span> <span class="p">(</span><span class="nv">ch</span><span class="p">)</span>
-            <span class="p">(</span><span class="nv">make-text-node</span>
-              <span class="p">(</span><span class="nb">with-output-to-string</span> <span class="p">(</span><span class="nv">s</span><span class="p">)</span>
-                <span class="p">(</span><span class="nv">matchit</span> <span class="nv">$[@</span><span class="p">(</span><span class="nv">gen-text</span> <span class="nv">ch</span><span class="p">)</span> <span class="nv">!</span><span class="p">(</span><span class="nb">write-char</span> <span class="nv">ch</span> <span class="nv">s</span><span class="p">)</span><span class="nv">]</span><span class="p">))))))</span>
+          <span class="p">(</span><span class="k">let</span> <span class="p">(</span><span class="nv">ch</span> <span class="nv">text</span><span class="p">)</span>
+	    <span class="p">(</span><span class="nb">setf</span> <span class="nv">text</span> <span class="p">(</span><span class="nb">with-output-to-string</span> <span class="p">(</span><span class="nv">s</span><span class="p">)</span> <span class="p">(</span><span class="nv">matchit</span> <span class="nv">$[@</span><span class="p">(</span><span class="nv">gen-text</span> <span class="nv">ch</span><span class="p">)</span> <span class="nv">!</span><span class="p">(</span><span class="nb">write-char</span> <span class="nv">ch</span> <span class="nv">s</span><span class="p">)</span><span class="nv">]</span><span class="p">)))</span>
+	    <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">=</span> <span class="mi">0</span> <span class="p">(</span><span class="nb">length</span> <span class="nv">text</span><span class="p">))</span>
+	        <span class="no">nil</span>
+		<span class="p">(</span><span class="nv">make-text-node</span> <span class="nv">text</span><span class="p">))))</span>
       <span class="p">(</span><span class="nv">parse-text</span><span class="p">))))</span>
 </code></pre>
 </div>
@@ -290,6 +291,13 @@
   <ul class="related-posts">
     
       <li>
+          <a href="/ru/2016/06/02/html_parsing_part3.html">
+            HTML parsing (part 3)
+            <small>02 Jun 2016</small>
+          </a>
+      </li>
+    
+      <li>
           <a href="/ru/2016/05/31/html-parsing-part2.html">
             HTML parsing (part 2)
             <small>31 May 2016</small>
@@ -300,13 +308,6 @@
           <a href="/ru/2016/05/22/html_parsing_(meta).html">
             HTML parsing (META)
             <small>22 May 2016</small>
-          </a>
-      </li>
-    
-      <li>
-          <a href="/ru/2016/05/07/toy-web-engine-in-lisp.html">
-            Toy web engine in lisp
-            <small>07 May 2016</small>
           </a>
       </li>
     

@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta http-equiv="content-language" content="ru" />
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      HTML parsing (part 3) &middot; Yellow Rabbit
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+
+  <!-- Icons -->
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body>
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-item">
+    <p></p>
+  </div>
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/">Home</a>
+
+    
+
+    
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/about.html">About</a>
+        
+      
+    
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+
+    <span class="sidebar-nav-item">Currently v1.0.1</span>
+  </nav>
+
+  <div class="sidebar-item">
+    <p>
+      &copy; 2016. All rights reserved.
+    </p>
+  </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+		  <a href="/" title="Home">Yellow Rabbit</a>
+            <small>не забывает играть</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">HTML parsing (part 3)</h1>
+    <div class="post-meta">02 Jun 2016
+	<ul class="tag_list_in_post">
+	
+	<li class="inline tag_list_item">
+		<a class="tag_list_link" href="/tag/lisp"> lisp</a>
+	</li>
+	
+	<li class="inline tag_list_item">
+		<a class="tag_list_link" href="/tag/toy-engine"> toy-engine</a>
+	</li>
+	
+	</ul>
+    </div>
+  <h2 id="section">Самый сложный элемент</h2>
+<p>У него даже конструктор сложный:)</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nb">defun</span> <span class="nv">make-element-node</span> <span class="p">(</span><span class="nv">tag</span> <span class="nv">attrs</span><span class="p">)</span>
+  <span class="s">"Tag and list of name-value pairs"</span>
+  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">el</span> <span class="p">(</span><span class="nb">make-instance</span> <span class="ss">'element-node</span> <span class="ss">:tag</span> <span class="nv">tag</span><span class="p">)))</span>
+       <span class="p">(</span><span class="nv">element-set-all-attrs</span> <span class="nv">el</span> <span class="nv">attrs</span><span class="p">)</span>
+       <span class="nv">el</span><span class="p">))</span>
+</code></pre>
+</div>
+<p>Чтобы это работало, нужно добавить функцию в <code class="highlighter-rouge">dom.lisp</code>:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="c1">;; Set all attrs at once</span>
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">element-set-all-attrs</span> <span class="p">(</span><span class="nv">el</span> <span class="nv">vals</span><span class="p">)</span>
+  <span class="s">"Set all attrs at once. Vals is name-value pair list."</span>
+  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">attrs</span> <span class="p">(</span><span class="nv">element-node-attrs</span> <span class="nv">el</span><span class="p">)))</span>
+    <span class="p">(</span><span class="nb">mapc</span> <span class="nf">#'</span><span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">nv</span><span class="p">)</span>
+	      <span class="p">(</span><span class="nb">setf</span> <span class="p">(</span><span class="nb">gethash</span> <span class="p">(</span><span class="nb">car</span> <span class="nv">nv</span><span class="p">)</span> <span class="nv">attrs</span><span class="p">)</span> <span class="p">(</span><span class="nb">cdr</span> <span class="nv">nv</span><span class="p">)))</span> <span class="nv">vals</span><span class="p">)))</span>
+</code></pre>
+</div>
+<p>Ещё нам понадобится много маленьких парсеров, начиная с парсера имени тега.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>      <span class="p">(</span><span class="nv">parse-tagname</span> <span class="p">()</span>
+          <span class="s">"Parse tag name"</span>
+          <span class="p">(</span><span class="k">let</span> <span class="p">(</span><span class="nv">ch</span><span class="p">)</span>
+            <span class="p">(</span><span class="nb">with-output-to-string</span> <span class="p">(</span><span class="nv">s</span><span class="p">)</span>
+              <span class="p">(</span><span class="nv">matchit</span> <span class="nv">$[@</span><span class="p">(</span><span class="nv">tag-text</span> <span class="nv">ch</span><span class="p">)</span> <span class="nv">!</span><span class="p">(</span><span class="nb">write-char</span> <span class="nv">ch</span> <span class="nv">s</span><span class="p">)</span><span class="nv">]</span><span class="p">))))</span>
+</code></pre>
+</div>
+<p>Полезная штука — пропуск пробелов, табуляций и пр.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>       <span class="p">(</span><span class="nv">skip-whitespace</span> <span class="p">()</span>
+          <span class="p">(</span><span class="k">let</span> <span class="p">(</span><span class="nv">ch</span><span class="p">)</span>
+            <span class="p">(</span><span class="nv">matchit</span> <span class="nv">$[@</span><span class="p">(</span><span class="nv">whitespace</span> <span class="nv">ch</span><span class="p">)</span><span class="nv">]</span><span class="p">)))</span>
+</code></pre>
+</div>
+<p>Значения атрибутов  могут быть заключены или в двойные или в одинарные кавычки, парсер таким образом должен запомнить с кавычки какого типа началось значение и работать до точно такой же закрывающей кавычки.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>       <span class="p">(</span><span class="nv">parse-value</span> <span class="p">(</span><span class="nv">quo</span><span class="p">)</span>
+          <span class="p">(</span><span class="k">let</span> <span class="p">(</span><span class="nv">ch</span><span class="p">)</span>
+            <span class="p">(</span><span class="nb">with-output-to-string</span> <span class="p">(</span><span class="nv">s</span><span class="p">)</span>
+              <span class="p">(</span><span class="nv">matchit</span> <span class="nv">$[@</span><span class="p">(</span><span class="nv">any-text</span> <span class="nv">ch</span><span class="p">)</span> <span class="nv">!</span><span class="p">(</span><span class="nb">char/=</span> <span class="nv">ch</span> <span class="nv">quo</span><span class="p">)</span> <span class="nv">!</span><span class="p">(</span><span class="nb">write-char</span> <span class="nv">ch</span> <span class="nv">s</span><span class="p">)</span><span class="nv">]</span><span class="p">))))</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>       <span class="p">(</span><span class="nv">parse-quoted-value</span> <span class="p">()</span>
+          <span class="s">"Parse quoted value"</span>
+          <span class="p">(</span><span class="k">let</span> <span class="p">(</span><span class="nv">quo</span> <span class="p">(</span><span class="nv">oldindex</span> <span class="nv">index</span><span class="p">))</span>
+            <span class="p">(</span><span class="nb">or</span> <span class="p">(</span><span class="nv">matchit</span>
+                  <span class="nv">[</span> <span class="nv">{[#\'</span> <span class="nv">!</span><span class="p">(</span><span class="nb">setf</span> <span class="nv">quo</span> <span class="sc">#\'</span><span class="p">)</span><span class="nv">]</span> <span class="nv">[#\"</span> <span class="nv">!</span><span class="p">(</span><span class="nb">setf</span> <span class="nv">quo</span> <span class="sc">#\"</span><span class="p">)</span><span class="nv">]}</span>
+                    <span class="nv">!</span><span class="p">(</span><span class="nv">parse-value</span> <span class="nv">quo</span><span class="p">)</span><span class="nv">]</span><span class="p">)</span>
+                <span class="p">(</span><span class="k">progn</span> <span class="p">(</span><span class="nb">setf</span> <span class="nv">index</span> <span class="nv">oldindex</span><span class="p">)</span> <span class="no">nil</span><span class="p">))))</span>
+</code></pre>
+</div>
+<p>С такими помощниками сделать парсер одного атрибута легко: сначала выделим имя (не пустое), затем знак <code class="highlighter-rouge">=</code> и значение атрибута в каких-нибудь кавычках. На выходе будет пара (имя . значение).</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>       <span class="p">(</span><span class="nv">parse-attr</span> <span class="p">()</span>
+          <span class="s">"name=value"</span>
+          <span class="p">(</span><span class="k">let</span> <span class="p">(</span><span class="nv">name</span> <span class="nv">value</span> <span class="p">(</span><span class="nv">oldindex</span> <span class="nv">index</span><span class="p">))</span>
+            <span class="p">(</span><span class="k">if</span>
+              <span class="p">(</span><span class="nv">matchit</span>
+                <span class="nv">[</span> <span class="nv">!</span><span class="p">(</span><span class="nb">setf</span> <span class="nv">name</span> <span class="p">(</span><span class="nv">parse-tagname</span><span class="p">))</span>
+                  <span class="nv">!</span><span class="p">(</span><span class="nb">not</span> <span class="p">(</span><span class="nb">zerop</span> <span class="p">(</span><span class="nb">length</span> <span class="nv">name</span><span class="p">)))</span>
+                  <span class="sc">#\=</span> <span class="nv">!</span><span class="p">(</span><span class="nb">setf</span> <span class="nv">value</span> <span class="p">(</span><span class="nv">parse-quoted-value</span><span class="p">))</span><span class="nv">]</span><span class="p">)</span>
+              <span class="p">(</span><span class="nb">cons</span> <span class="nv">name</span> <span class="nv">value</span><span class="p">)</span>
+              <span class="p">(</span><span class="k">progn</span> <span class="p">(</span><span class="nb">setf</span> <span class="nv">index</span> <span class="nv">oldindex</span><span class="p">)</span> <span class="no">nil</span><span class="p">))))</span>
+</code></pre>
+</div>
+<p>Распознанные атрибуты заталкиваем в список. Порядок будет обратным.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>       <span class="p">(</span><span class="nv">parse-attrs</span> <span class="p">()</span>
+          <span class="s">"Parse attributes"</span>
+          <span class="p">(</span><span class="k">let</span> <span class="p">(</span><span class="nv">attrs</span><span class="p">)</span>
+            <span class="p">(</span><span class="nv">matchit</span>
+              <span class="nv">$[</span> <span class="nv">!</span><span class="p">(</span><span class="nv">skip-whitespace</span><span class="p">)</span>
+                 <span class="nv">!</span><span class="p">(</span><span class="nb">setf</span> <span class="nv">attr</span> <span class="p">(</span><span class="nv">parse-attr</span><span class="p">))</span>
+                 <span class="nv">!</span><span class="p">(</span><span class="nb">push</span> <span class="nv">attr</span> <span class="nv">attrs</span><span class="p">)</span><span class="nv">]</span><span class="p">)</span>
+            <span class="nv">attrs</span><span class="p">))</span>
+</code></pre>
+</div>
+<p>Закрывающий тег так же требует внимания.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>       <span class="p">(</span><span class="nv">parse-closing-tag</span> <span class="p">(</span><span class="nv">tagname</span><span class="p">)</span>
+          <span class="s">"Parse &lt;/tagname&gt;"</span>
+          <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">oldinde</span> <span class="nv">index</span><span class="p">))</span>
+            <span class="p">(</span><span class="nb">or</span>
+              <span class="p">(</span><span class="nv">matchit</span>
+                <span class="nv">[#\&lt;</span> <span class="sc">#\/</span> <span class="nv">!</span><span class="p">(</span><span class="nb">string=</span> <span class="p">(</span><span class="nv">parse-tagname</span><span class="p">)</span> <span class="nv">tagname</span><span class="p">)</span> <span class="sc">#\&gt;]</span><span class="p">)</span>
+              <span class="p">(</span><span class="k">progn</span> <span class="p">(</span><span class="nb">setf</span> <span class="nv">index</span> <span class="nv">oldindex</span><span class="p">)</span> <span class="no">nil</span><span class="p">))))</span>
+</code></pre>
+</div>
+<p>Эскиз парсера элемента:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>       <span class="p">(</span><span class="nv">parse-element</span> <span class="p">()</span>
+          <span class="s">"&lt;tagname $[attr=value]&gt; ??? &lt;/tagname&gt;"</span>
+          <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">oldindex</span> <span class="nv">index</span><span class="p">)</span>
+                <span class="nv">ch</span> <span class="nv">tagname</span> <span class="nv">attrs</span><span class="p">)</span>
+            <span class="p">(</span><span class="nb">or</span> <span class="p">(</span><span class="nv">matchit</span>
+                  <span class="nv">[!</span><span class="p">(</span><span class="nb">setf</span> <span class="nv">tagname</span> <span class="p">(</span><span class="nv">parse-tagname</span><span class="p">))</span>
+                   <span class="nv">!</span><span class="p">(</span><span class="nb">setf</span> <span class="nv">attrs</span> <span class="p">(</span><span class="nv">parse-attrs</span><span class="p">))</span>
+                   <span class="sc">#\&gt;</span>
+                   <span class="nv">!</span><span class="p">(</span><span class="nv">parse-closing-tag</span> <span class="nv">tagname</span><span class="p">)</span>
+                   <span class="nv">!</span><span class="p">(</span><span class="nv">make-element-node</span> <span class="nv">tagname</span> <span class="nv">attrs</span><span class="p">)</span><span class="nv">]</span><span class="p">)</span>
+                <span class="p">(</span><span class="k">progn</span> <span class="p">(</span><span class="nb">setf</span> <span class="nv">index</span> <span class="nv">oldindex</span><span class="p">)</span> <span class="no">nil</span><span class="p">))))</span>
+</code></pre>
+</div>
+<p>Проблема с этим парсером состоит в том, что он не предусматривает ничего между открывающим и закрывающими тегами. То есть настало время подумать о рекурсии и о том как организовывать потомков. А пока можно проверить как работает парсер элемента.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="nb">*</span> <span class="p">(</span><span class="nv">ql:quickload</span> <span class="ss">'toy-engine</span><span class="p">)</span>
+<span class="nv">To</span> <span class="nb">load</span> <span class="s">"toy-engine"</span><span class="err">:</span>
+  <span class="nv">Load</span> <span class="mi">1</span> <span class="nv">ASDF</span> <span class="nv">system:</span>
+    <span class="nv">toy-engine</span>
+<span class="c1">; Loading "toy-engine"</span>
+
+<span class="p">(</span><span class="nv">TOY-ENGINE</span><span class="p">)</span>
+<span class="nb">*</span> <span class="p">(</span><span class="nb">in-package</span> <span class="ss">:toy-engine</span><span class="p">)</span>
+
+<span class="err">#</span><span class="nv">&lt;PACKAGE</span> <span class="s">"TOY-ENGINE"</span><span class="nb">&gt;</span>
+<span class="nb">*</span> <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*str*</span> <span class="s">"table border=\"1\"   width=\"50%\"   &gt;&lt;/table&gt;"</span><span class="p">)</span>
+
+<span class="vg">*STR*</span>
+<span class="nb">*</span> <span class="p">(</span><span class="nv">parse-html</span> <span class="vg">*str*</span><span class="p">)</span>
+
+<span class="err">#</span><span class="nv">&lt;ELEMENT-NODE</span> <span class="nv">{100504E943}&gt;</span>
+<span class="nb">*</span> <span class="p">(</span><span class="nb">gethash</span> <span class="s">"width"</span> <span class="p">(</span><span class="nv">element-node-attrs</span> <span class="nb">*</span><span class="p">))</span>
+
+<span class="s">"50%"</span>
+<span class="nv">T</span>
+<span class="nb">*</span> <span class="p">(</span><span class="nv">pp-&gt;dot</span> <span class="s">"element-node.dot"</span> <span class="p">(</span><span class="k">lambda</span> <span class="p">()</span> <span class="p">(</span><span class="nv">pp-dom</span> <span class="nv">**</span><span class="p">)))</span>
+
+<span class="s">"}"</span>
+<span class="nb">*</span> 
+</code></pre>
+</div>
+<p><img src="/public/imgs/lisp/element-node.png" alt="Дерево после разбора" style="display:block;margin-left:auto;margin-right:auto;" /></p>
+
+<h2 id="section-1">Рекурсия</h2>
+<p>Так как мы создаём узел только после того, как создадим всех его потомков, то логично будем накапливать их в списке и потом просто передавать его в конструктор узла. Самой интересной функцией будет та, что разбирает несколько расположенных друг за другом узлов в список будущих потомков.</p>
+
+<p>Но сначала парсер одного единственного узла:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>       <span class="p">(</span><span class="nv">parse-node</span> <span class="p">()</span>
+          <span class="s">"Text or node"</span>
+          <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">oldindex</span> <span class="nv">index</span><span class="p">))</span>
+            <span class="p">(</span><span class="nb">or</span> <span class="p">(</span><span class="nv">matchit</span>
+                  <span class="nv">{</span> <span class="nv">[#\&lt;</span> <span class="nv">{!</span><span class="p">(</span><span class="nv">parse-comment</span><span class="p">)</span> <span class="nv">!</span><span class="p">(</span><span class="nv">parse-element</span><span class="p">)</span><span class="nv">}</span> <span class="nv">]</span>
+                    <span class="nv">!</span><span class="p">(</span><span class="nv">parse-text</span><span class="p">)</span><span class="nv">}</span><span class="p">)</span>
+                <span class="p">(</span><span class="k">progn</span> <span class="p">(</span><span class="nb">setf</span> <span class="nv">index</span> <span class="nv">oldindex</span><span class="p">)</span> <span class="no">nil</span><span class="p">))))</span>
+</code></pre>
+</div>
+<p>Проверим, что эта функция распознаёт и создаёт разные типы узлов:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="nb">*</span> <span class="p">(</span><span class="nv">ql:quickload</span> <span class="ss">'toy-engine</span><span class="p">)</span>
+<span class="nv">To</span> <span class="nb">load</span> <span class="s">"toy-engine"</span><span class="err">:</span>
+  <span class="nv">Load</span> <span class="mi">1</span> <span class="nv">ASDF</span> <span class="nv">system:</span>
+    <span class="nv">toy-engine</span>
+<span class="c1">; Loading "toy-engine"</span>
+
+<span class="p">(</span><span class="nv">TOY-ENGINE</span><span class="p">)</span>
+<span class="nb">*</span> <span class="p">(</span><span class="nb">in-package</span> <span class="ss">:toy-engine</span><span class="p">)</span>
+
+<span class="err">#</span><span class="nv">&lt;PACKAGE</span> <span class="s">"TOY-ENGINE"</span><span class="nb">&gt;</span>
+<span class="nb">*</span> <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*str-text*</span> <span class="s">"table border=\"1\"   width=\"50%\"   &gt;&lt;/table&gt;"</span><span class="p">)</span>
+
+<span class="vg">*STR-TEXT*</span>
+<span class="nb">*</span> <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*text*</span> <span class="p">(</span><span class="nv">parse-html</span> <span class="vg">*str-text*</span><span class="p">))</span>
+
+<span class="vg">*TEXT*</span>
+<span class="nb">*</span> <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*str-comment*</span> <span class="s">"&lt;!-- coomn --&gt;"</span><span class="p">)</span>
+
+<span class="vg">*STR-COMMENT*</span>
+<span class="nb">*</span> <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*comment*</span> <span class="p">(</span><span class="nv">parse-html</span> <span class="vg">*str-comment*</span><span class="p">))</span>
+
+<span class="vg">*COMMENT*</span>
+<span class="nb">*</span> <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*str-element*</span> <span class="s">"&lt;table border=\"1\"   width=\"50%\"   &gt;&lt;/table&gt;&gt;"</span><span class="p">)</span>
+
+<span class="vg">*STR-ELEMENT*</span>
+<span class="nb">*</span> <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*element*</span> <span class="p">(</span><span class="nv">parse-html</span> <span class="vg">*str-element*</span><span class="p">))</span>
+
+<span class="vg">*ELEMENT*</span>
+<span class="nb">*</span> <span class="vg">*element*</span>
+
+<span class="err">#</span><span class="nv">&lt;ELEMENT-NODE</span> <span class="nv">{100516F043}&gt;</span>
+<span class="nb">*</span> <span class="vg">*text*</span>
+
+<span class="err">#</span><span class="nv">&lt;TEXT-NODE</span> <span class="nv">{100503DD53}&gt;</span>
+<span class="nb">*</span> <span class="vg">*comment*</span>
+
+<span class="err">#</span><span class="nv">&lt;COMMENT-NODE</span> <span class="nv">{10050C6A93}&gt;</span>
+<span class="nb">*</span>
+</code></pre>
+</div>
+<p>Собираем несколько узлов в список:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code></code></pre>
+</div>
+
+
+</div>
+
+<div class="related">
+  <h2>Related Posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+          <a href="/ru/2016/05/31/html-parsing-part2.html">
+            HTML parsing (part 2)
+            <small>31 May 2016</small>
+          </a>
+      </li>
+    
+      <li>
+          <a href="/ru/2016/05/25/html_parsing_part1.html">
+            HTML parsing (part 1)
+            <small>25 May 2016</small>
+          </a>
+      </li>
+    
+      <li>
+          <a href="/ru/2016/05/22/html_parsing_(meta).html">
+            HTML parsing (META)
+            <small>22 May 2016</small>
+          </a>
+      </li>
+    
+  </ul>
+</div>
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'yrabbitblog'; // required: replace example with your forum shortname
+	/* var disqus_developer = 1; */
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+<!-- vim:ts=4:sw=4:sts=4
+-->
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+  </body>
+</html>

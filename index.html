@@ -144,6 +144,28 @@
           
   <div class="post">
     <h2 class="post-title">
+		<a href="/ru/2016/06/02/html_parsing_part3.html">
+        HTML parsing (part 3)
+      </a>
+    </h2>
+    <div class="post-meta">02 Jun 2016
+	<ul class="tag_list_in_post">
+	
+	<li class="inline tag_list_item">
+		<a class="tag_list_link" href="/tag/lisp"> lisp</a>
+	</li>
+	
+	<li class="inline tag_list_item">
+		<a class="tag_list_link" href="/tag/toy-engine"> toy-engine</a>
+	</li>
+	
+	</ul>
+    </div>
+    Самый сложный элемент У него даже конструктор сложный:) (defun make-element-node (tag attrs) "Tag and list of name-value pairs" (let ((el (make-instance 'element-node :tag tag))) (element-set-all-attrs el attrs) el)) Чтобы это работало, нужно добавить функцию в dom.lisp: ;; Set all attrs at once (defun element-set-all-attrs (el vals) "Set all attrs at...
+  </div>
+  
+  <div class="post">
+    <h2 class="post-title">
 		<a href="/ru/2016/05/31/html-parsing-part2.html">
         HTML parsing (part 2)
       </a>
@@ -338,32 +360,6 @@
 	</ul>
     </div>
     Идея Для начала небольшая парочка функций, которые подсчитывают количество фишек противника в соседних клетках. ;; count enemy neighbors (defun slow-get-neighbors-pattern (cell) (remove-if #'null (list (when (&gt; (mod cell *board-width*) 0) (1- cell)) (when (&gt;= cell *board-width*) (- cell *board-width*)) (when (&lt; (mod cell *board-width*) (1- *board-width*)) (1+ cell)) (when (&lt;...
-  </div>
-  
-  <div class="post">
-    <h2 class="post-title">
-		<a href="/ru/2015/12/26/trilobyte.-more-lisp-and-misc.html">
-        Trilobyte. More Lisp and misc.
-      </a>
-    </h2>
-    <div class="post-meta">26 Dec 2015
-	<ul class="tag_list_in_post">
-	
-	<li class="inline tag_list_item">
-		<a class="tag_list_link" href="/tag/lisp"> lisp</a>
-	</li>
-	
-	<li class="inline tag_list_item">
-		<a class="tag_list_link" href="/tag/games"> games</a>
-	</li>
-	
-	<li class="inline tag_list_item">
-		<a class="tag_list_link" href="/tag/trilobyte"> trilobyte</a>
-	</li>
-	
-	</ul>
-    </div>
-    Немного причёсывания Хотя я проигрываю AI, он не может победить монстра из 11-го часа:( И, пока у меня не появилось идей по улучшению его работы, займусь украшательствами. Для начала чуть-чуть упростим построение шаблонов для проверки соседних ячеек, ну и заодно сделаем её запоминающей. ;; test pattern for win ;; ((left...)...
   </div>
   
 
