@@ -159,9 +159,9 @@
   <h2 id="section">Самый сложный элемент</h2>
 <p>У него даже конструктор сложный:)</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nb">defun</span> <span class="nv">make-element-node</span> <span class="p">(</span><span class="nv">tag</span> <span class="nv">attrs</span><span class="p">)</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nb">defun</span> <span class="nv">make-element-node</span> <span class="p">(</span><span class="nv">tag</span> <span class="nv">attrs</span> <span class="nv">children</span><span class="p">)</span>
   <span class="s">"Tag and list of name-value pairs"</span>
-  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">el</span> <span class="p">(</span><span class="nb">make-instance</span> <span class="ss">'element-node</span> <span class="ss">:tag</span> <span class="nv">tag</span><span class="p">)))</span>
+  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">el</span> <span class="p">(</span><span class="nb">make-instance</span> <span class="ss">'element-node</span> <span class="ss">:tag</span> <span class="nv">tag</span> <span class="ss">:children</span> <span class="nv">children</span><span class="p">)))</span>
        <span class="p">(</span><span class="nv">element-set-all-attrs</span> <span class="nv">el</span> <span class="nv">attrs</span><span class="p">)</span>
        <span class="nv">el</span><span class="p">))</span>
 </code></pre>
@@ -255,10 +255,10 @@
                 <span class="nv">ch</span> <span class="nv">tagname</span> <span class="nv">attrs</span><span class="p">)</span>
             <span class="p">(</span><span class="nb">or</span> <span class="p">(</span><span class="nv">matchit</span>
                   <span class="nv">[!</span><span class="p">(</span><span class="nb">setf</span> <span class="nv">tagname</span> <span class="p">(</span><span class="nv">parse-tagname</span><span class="p">))</span>
-                   <span class="nv">!</span><span class="p">(</span><span class="nb">setf</span> <span class="nv">attrs</span> <span class="p">(</span><span class="nv">parse-attrs</span><span class="p">))</span>
+                   <span class="nv">{!</span><span class="p">(</span><span class="nb">setf</span> <span class="nv">attrs</span> <span class="p">(</span><span class="nv">parse-attrs</span><span class="p">))</span> <span class="nv">!T}</span>
                    <span class="sc">#\&gt;</span>
                    <span class="nv">!</span><span class="p">(</span><span class="nv">parse-closing-tag</span> <span class="nv">tagname</span><span class="p">)</span>
-                   <span class="nv">!</span><span class="p">(</span><span class="nv">make-element-node</span> <span class="nv">tagname</span> <span class="nv">attrs</span><span class="p">)</span><span class="nv">]</span><span class="p">)</span>
+                   <span class="nv">!</span><span class="p">(</span><span class="nv">make-element-node</span> <span class="nv">tagname</span> <span class="nv">attrs</span> <span class="no">nil</span><span class="p">)</span><span class="nv">]</span><span class="p">)</span>
                 <span class="p">(</span><span class="k">progn</span> <span class="p">(</span><span class="nb">setf</span> <span class="nv">index</span> <span class="nv">oldindex</span><span class="p">)</span> <span class="no">nil</span><span class="p">))))</span>
 </code></pre>
 </div>
@@ -301,11 +301,22 @@
           <span class="s">"Text or node"</span>
           <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">oldindex</span> <span class="nv">index</span><span class="p">))</span>
             <span class="p">(</span><span class="nb">or</span> <span class="p">(</span><span class="nv">matchit</span>
-                  <span class="nv">{</span> <span class="nv">[#\&lt;</span> <span class="nv">{!</span><span class="p">(</span><span class="nv">parse-comment</span><span class="p">)</span> <span class="nv">!</span><span class="p">(</span><span class="nv">parse-element</span><span class="p">)</span><span class="nv">}</span> <span class="nv">]</span>
+                  <span class="nv">{</span> <span class="nv">!</span><span class="p">(</span><span class="nv">parse-comment-or-element</span><span class="p">)</span>
                     <span class="nv">!</span><span class="p">(</span><span class="nv">parse-text</span><span class="p">)</span><span class="nv">}</span><span class="p">)</span>
                 <span class="p">(</span><span class="k">progn</span> <span class="p">(</span><span class="nb">setf</span> <span class="nv">index</span> <span class="nv">oldindex</span><span class="p">)</span> <span class="no">nil</span><span class="p">))))</span>
 </code></pre>
 </div>
+<p>Он использует маленький вспомогательный парсер, который нужен для отката назад в том случае, если встретиля не комментарий и не элемент. Дело в том, что элементарные совпадения вроде <code class="highlighter-rouge">#\&lt;</code> или <code class="highlighter-rouge">"example"</code> использованные внутри последовательности <code class="highlighter-rouge">[]</code> нельзя откатить, если они сработали.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>       <span class="p">(</span><span class="nv">parse-comment-or-element</span> <span class="p">()</span>
+	  <span class="s">"&lt; {comment element}"</span>
+	  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">oldindex</span> <span class="nv">index</span><span class="p">))</span>
+	    <span class="p">(</span><span class="nb">or</span> <span class="p">(</span><span class="nv">matchit</span>
+		  <span class="nv">[#\&lt;</span> <span class="nv">{!</span><span class="p">(</span><span class="nv">parse-comment</span><span class="p">)</span> <span class="nv">!</span><span class="p">(</span><span class="nv">parse-element</span><span class="p">)</span><span class="nv">}]</span><span class="p">)</span>
+		<span class="p">(</span><span class="k">progn</span> <span class="p">(</span><span class="nb">setf</span> <span class="nv">index</span> <span class="nv">oldindex</span><span class="p">)</span> <span class="no">nil</span><span class="p">))))</span>
+</code></pre>
+</div>
+
 <p>Проверим, что эта функция распознаёт и создаёт разные типы узлов:</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code><span class="nb">*</span> <span class="p">(</span><span class="nv">ql:quickload</span> <span class="ss">'toy-engine</span><span class="p">)</span>
@@ -350,9 +361,115 @@
 </div>
 <p>Собираем несколько узлов в список:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code></code></pre>
+<div class="highlighter-rouge"><pre class="highlight"><code>       <span class="p">(</span><span class="nv">parse-nodes</span> <span class="p">()</span>
+          <span class="s">"Children"</span>
+          <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">oldindex</span> <span class="nv">index</span><span class="p">)</span> <span class="nv">children</span> <span class="nv">node</span><span class="p">)</span>
+            <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nv">matchit</span>
+                   <span class="nv">$[!</span><span class="p">(</span><span class="nb">setf</span> <span class="nv">node</span> <span class="p">(</span><span class="nv">parse-node</span><span class="p">))</span> <span class="nv">!</span><span class="p">(</span><span class="nb">push</span> <span class="nv">node</span> <span class="nv">children</span><span class="p">)</span><span class="nv">]</span><span class="p">)</span>
+	        <span class="p">(</span><span class="nb">reverse</span> <span class="nv">children</span><span class="p">)</span>
+                <span class="p">(</span><span class="k">progn</span> <span class="p">(</span><span class="nb">setf</span> <span class="nv">index</span> <span class="nv">oldindex</span><span class="p">)</span> <span class="no">nil</span><span class="p">))))</span>
+</code></pre>
 </div>
 
+<p>Проверяем насколько успешно эта функция распознает строку с разными составными частями HTML:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="nb">*</span> <span class="p">(</span><span class="nv">ql:quickload</span> <span class="ss">'toy-engine</span><span class="p">)</span>
+<span class="nv">To</span> <span class="nb">load</span> <span class="s">"toy-engine"</span><span class="err">:</span>
+  <span class="nv">Load</span> <span class="mi">1</span> <span class="nv">ASDF</span> <span class="nv">system:</span>
+    <span class="nv">toy-engine</span>
+<span class="c1">; Loading "toy-engine"</span>
+
+<span class="p">(</span><span class="nv">TOY-ENGINE</span><span class="p">)</span>
+<span class="nb">*</span> <span class="p">(</span><span class="nb">in-package</span> <span class="ss">:toy-engine</span><span class="p">)</span>
+
+<span class="err">#</span><span class="nv">&lt;PACKAGE</span> <span class="s">"TOY-ENGINE"</span><span class="nb">&gt;</span>
+<span class="nb">*</span> <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*str*</span> <span class="s">"Text  rr&lt;!-- coomn --&gt; &lt;p&gt;&lt;/p&gt;"</span><span class="p">)</span>
+
+<span class="vg">*STR*</span>
+<span class="nb">*</span> <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*ch*</span> <span class="p">(</span><span class="nv">parse-html</span> <span class="vg">*str*</span><span class="p">))</span>
+
+<span class="vg">*CH*</span>
+<span class="nb">*</span> <span class="vg">*ch*</span>
+
+<span class="p">(</span><span class="err">#</span><span class="nv">&lt;TEXT-NODE</span> <span class="nv">{1005AD9AA3}&gt;</span> <span class="err">#</span><span class="nv">&lt;COMMENT-NODE</span> <span class="nv">{1005AD9BE3}&gt;</span>
+ <span class="err">#</span><span class="nv">&lt;TEXT-NODE</span> <span class="nv">{1005AD9EE3}&gt;</span> <span class="err">#</span><span class="nv">&lt;ELEMENT-NODE</span> <span class="nv">{1005ADA5E3}&gt;</span><span class="p">)</span>
+<span class="nb">*</span>
+</code></pre>
+</div>
+<p>Если теперь изменить тело фунции <code class="highlighter-rouge">parse-html</code> на</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>      <span class="p">(</span><span class="nb">make-instance</span> <span class="ss">'node</span> <span class="ss">:children</span> <span class="p">(</span><span class="nv">parse-nodes</span><span class="p">))</span>
+</code></pre>
+</div>
+<p>тем самым сделав все разпознанные узлы на верхнем уровне потомками некого узла типа <code class="highlighter-rouge">node</code>.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="nb">*</span> <span class="p">(</span><span class="nv">ql:quickload</span> <span class="ss">'toy-engine</span><span class="p">)</span>
+<span class="nv">To</span> <span class="nb">load</span> <span class="s">"toy-engine"</span><span class="err">:</span>
+  <span class="nv">Load</span> <span class="mi">1</span> <span class="nv">ASDF</span> <span class="nv">system:</span>
+    <span class="nv">toy-engine</span>
+<span class="c1">; Loading "toy-engine"</span>
+
+<span class="p">(</span><span class="nv">TOY-ENGINE</span><span class="p">)</span>
+<span class="nb">*</span> <span class="p">(</span><span class="nb">in-package</span> <span class="ss">:toy-engine</span><span class="p">)</span>
+
+<span class="err">#</span><span class="nv">&lt;PACKAGE</span> <span class="s">"TOY-ENGINE"</span><span class="nb">&gt;</span>
+<span class="nb">*</span> <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*str*</span> <span class="s">"Text  rr&lt;!-- coomn --&gt; &lt;p&gt;&lt;/p&gt;"</span><span class="p">)</span>
+
+<span class="vg">*STR*</span>
+<span class="nb">*</span> <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*ch*</span> <span class="p">(</span><span class="nv">parse-html</span> <span class="vg">*str*</span><span class="p">))</span>
+
+<span class="vg">*CH*</span>
+<span class="nb">*</span> <span class="p">(</span><span class="nv">pp-&gt;dot</span> <span class="s">"children.dot"</span> <span class="p">(</span><span class="k">lambda</span> <span class="p">()</span> <span class="p">(</span><span class="nv">pp-dom</span> <span class="vg">*ch*</span><span class="p">)))</span>
+
+<span class="s">"}"</span>
+<span class="nb">*</span>
+</code></pre>
+</div>
+
+<p><img src="/public/imgs/lisp/children.png" alt="Дерево после разбора" style="display:block;margin-left:auto;margin-right:auto;" /></p>
+
+<p>Окончательно парсер элемента содержит запуск рекурсии:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>       <span class="p">(</span><span class="nv">parse-element</span> <span class="p">()</span>
+          <span class="s">"&lt;tagname $[attr=value]&gt; ??? &lt;/tagname&gt;"</span>
+          <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">oldindex</span> <span class="nv">index</span><span class="p">)</span>
+                <span class="nv">ch</span> <span class="nv">tagname</span> <span class="nv">attrs</span> <span class="nv">children</span><span class="p">)</span>
+            <span class="p">(</span><span class="nb">or</span> <span class="p">(</span><span class="nv">matchit</span>
+                  <span class="nv">[!</span><span class="p">(</span><span class="nb">setf</span> <span class="nv">tagname</span> <span class="p">(</span><span class="nv">parse-tagname</span><span class="p">))</span>
+                   <span class="nv">{!</span><span class="p">(</span><span class="nb">setf</span> <span class="nv">attrs</span> <span class="p">(</span><span class="nv">parse-attrs</span><span class="p">))</span> <span class="nv">!t}</span>
+                   <span class="sc">#\&gt;</span>
+		   <span class="nv">{!</span><span class="p">(</span><span class="nb">setf</span> <span class="nv">children</span> <span class="p">(</span><span class="nv">parse-nodes</span><span class="p">))</span> <span class="nv">!t}</span>
+                   <span class="nv">!</span><span class="p">(</span><span class="nv">parse-closing-tag</span> <span class="nv">tagname</span><span class="p">)</span>
+                   <span class="nv">!</span><span class="p">(</span><span class="nv">make-element-node</span> <span class="nv">tagname</span> <span class="nv">attrs</span> <span class="nv">children</span><span class="p">)</span><span class="nv">]</span><span class="p">)</span>
+                <span class="p">(</span><span class="k">progn</span> <span class="p">(</span><span class="nb">setf</span> <span class="nv">index</span> <span class="nv">oldindex</span><span class="p">)</span> <span class="no">nil</span><span class="p">))))</span>
+</code></pre>
+</div>
+<p>Разбор сложного примера:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="nb">*</span> <span class="p">(</span><span class="nv">ql:quickload</span> <span class="ss">'toy-engine</span><span class="p">)</span>
+<span class="nv">To</span> <span class="nb">load</span> <span class="s">"toy-engine"</span><span class="err">:</span>
+  <span class="nv">Load</span> <span class="mi">1</span> <span class="nv">ASDF</span> <span class="nv">system:</span>
+    <span class="nv">toy-engine</span>
+<span class="c1">; Loading "toy-engine"</span>
+<span class="o">.</span>
+<span class="p">(</span><span class="nv">TOY-ENGINE</span><span class="p">)</span>
+<span class="nb">*</span> <span class="p">(</span><span class="nb">in-package</span> <span class="ss">:toy-engine</span><span class="p">)</span>
+
+<span class="err">#</span><span class="nv">&lt;PACKAGE</span> <span class="s">"TOY-ENGINE"</span><span class="nb">&gt;</span>
+<span class="nb">*</span> <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*str*</span> <span class="s">"Text  rr&lt;!-- coomn --&gt; &lt;p&gt;another text&lt;table color=\"red\"&gt;&lt;tr&gt;Row&lt;/tr&gt;&lt;/table&gt;&lt;/p&gt;"</span><span class="p">)</span>
+
+<span class="vg">*STR*</span>
+<span class="nb">*</span> <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*ch*</span> <span class="p">(</span><span class="nv">parse-html</span> <span class="vg">*str*</span><span class="p">))</span>
+
+<span class="vg">*CH*</span>
+<span class="nb">*</span> <span class="p">(</span><span class="nv">pp-&gt;dot</span> <span class="s">"parse-html.dot"</span> <span class="p">(</span><span class="k">lambda</span> <span class="p">()</span> <span class="p">(</span><span class="nv">pp-dom</span> <span class="vg">*ch*</span><span class="p">)))</span>
+
+<span class="s">"}"</span>
+<span class="nb">*</span>
+</code></pre>
+</div>
+
+<p><img src="/public/imgs/lisp/parse-html.png" alt="Дерево после разбора" style="display:block;margin-left:auto;margin-right:auto;" /></p>
 
 </div>
 

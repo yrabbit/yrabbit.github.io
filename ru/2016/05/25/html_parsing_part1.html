@@ -243,18 +243,17 @@
 <div class="highlighter-rouge"><pre class="highlight"><code><span class="c1">;;; HTML parser</span>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">parse-html</span> <span class="p">(</span><span class="nv">str</span> <span class="k">&amp;optional</span> <span class="p">(</span><span class="nv">index</span> <span class="mi">0</span><span class="p">)</span> <span class="p">(</span><span class="nv">end</span> <span class="p">(</span><span class="nb">length</span> <span class="nv">str</span><span class="p">)))</span>
   <span class="p">(</span><span class="k">declare</span> <span class="p">(</span><span class="k">type</span> <span class="kt">fixnum</span> <span class="nv">index</span> <span class="nv">end</span><span class="p">))</span>
-  <span class="p">(</span><span class="k">let</span> <span class="p">(</span><span class="nv">root</span><span class="p">)</span>
     <span class="p">(</span><span class="k">labels</span>
       <span class="p">(</span>
        <span class="c1">;; node parsers</span>
        <span class="p">(</span><span class="nv">parse-text</span> <span class="p">()</span>
           <span class="s">"Text until &lt;"</span>
-          <span class="p">(</span><span class="k">let</span> <span class="p">(</span><span class="nv">ch</span> <span class="nv">text</span><span class="p">)</span>
-	    <span class="p">(</span><span class="nb">setf</span> <span class="nv">text</span> <span class="p">(</span><span class="nb">with-output-to-string</span> <span class="p">(</span><span class="nv">s</span><span class="p">)</span> <span class="p">(</span><span class="nv">matchit</span> <span class="nv">$[@</span><span class="p">(</span><span class="nv">gen-text</span> <span class="nv">ch</span><span class="p">)</span> <span class="nv">!</span><span class="p">(</span><span class="nb">write-char</span> <span class="nv">ch</span> <span class="nv">s</span><span class="p">)</span><span class="nv">]</span><span class="p">)))</span>
-	    <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">=</span> <span class="mi">0</span> <span class="p">(</span><span class="nb">length</span> <span class="nv">text</span><span class="p">))</span>
+          <span class="p">(</span><span class="k">let</span> <span class="p">(</span><span class="nv">ch</span>
+		 <span class="p">(</span><span class="nv">text</span> <span class="p">(</span><span class="nb">with-output-to-string</span> <span class="p">(</span><span class="nv">s</span><span class="p">)</span> <span class="p">(</span><span class="nv">matchit</span> <span class="nv">$[@</span><span class="p">(</span><span class="nv">gen-text</span> <span class="nv">ch</span><span class="p">)</span> <span class="nv">!</span><span class="p">(</span><span class="nb">write-char</span> <span class="nv">ch</span> <span class="nv">s</span><span class="p">)</span><span class="nv">]</span><span class="p">))))</span>
+	    <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">zerop</span> <span class="p">(</span><span class="nb">length</span> <span class="nv">text</span><span class="p">))</span>
 	        <span class="no">nil</span>
-		<span class="p">(</span><span class="nv">make-text-node</span> <span class="nv">text</span><span class="p">))))</span>
-      <span class="p">(</span><span class="nv">parse-text</span><span class="p">))))</span>
+		<span class="p">(</span><span class="nv">make-text-node</span> <span class="nv">text</span><span class="p">)))))</span>
+      <span class="p">(</span><span class="nv">parse-text</span><span class="p">)))</span>
 </code></pre>
 </div>
 <p>Проверяем на дереве из одного текстового узла:</p>

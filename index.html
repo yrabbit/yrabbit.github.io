@@ -161,7 +161,7 @@
 	
 	</ul>
     </div>
-    Самый сложный элемент У него даже конструктор сложный:) (defun make-element-node (tag attrs) "Tag and list of name-value pairs" (let ((el (make-instance 'element-node :tag tag))) (element-set-all-attrs el attrs) el)) Чтобы это работало, нужно добавить функцию в dom.lisp: ;; Set all attrs at once (defun element-set-all-attrs (el vals) "Set all attrs at...
+    Самый сложный элемент У него даже конструктор сложный:) (defun make-element-node (tag attrs children) "Tag and list of name-value pairs" (let ((el (make-instance 'element-node :tag tag :children children))) (element-set-all-attrs el attrs) el)) Чтобы это работало, нужно добавить функцию в dom.lisp: ;; Set all attrs at once (defun element-set-all-attrs (el vals) "Set...
   </div>
   
   <div class="post">
