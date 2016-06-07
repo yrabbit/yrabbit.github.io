@@ -185,11 +185,12 @@
               <span class="p">(</span><span class="nv">matchit</span> <span class="nv">$[@</span><span class="p">(</span><span class="nv">tag-text</span> <span class="nv">ch</span><span class="p">)</span> <span class="nv">!</span><span class="p">(</span><span class="nb">write-char</span> <span class="nv">ch</span> <span class="nv">s</span><span class="p">)</span><span class="nv">]</span><span class="p">))))</span>
 </code></pre>
 </div>
-<p>Полезная штука — пропуск пробелов, табуляций и пр.</p>
+<p>Полезная штука — пропуск пробелов, табуляций и пр. Успешна всегда.</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>       <span class="p">(</span><span class="nv">skip-whitespace</span> <span class="p">()</span>
           <span class="p">(</span><span class="k">let</span> <span class="p">(</span><span class="nv">ch</span><span class="p">)</span>
-            <span class="p">(</span><span class="nv">matchit</span> <span class="nv">$[@</span><span class="p">(</span><span class="nv">whitespace</span> <span class="nv">ch</span><span class="p">)</span><span class="nv">]</span><span class="p">)))</span>
+            <span class="p">(</span><span class="nv">matchit</span> <span class="nv">$[@</span><span class="p">(</span><span class="nv">whitespace</span> <span class="nv">ch</span><span class="p">)</span><span class="nv">]</span><span class="p">)</span>
+            <span class="no">t</span><span class="p">))</span>
 </code></pre>
 </div>
 <p>Значения атрибутов  могут быть заключены или в двойные или в одинарные кавычки, парсер таким образом должен запомнить с кавычки какого типа началось значение и работать до точно такой же закрывающей кавычки.</p>
