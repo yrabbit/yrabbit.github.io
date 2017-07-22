@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
  <title>Yellow Rabbit's Den</title>
- <link href="http://yrabbit.github.com/atom.xml" rel="self"/>
- <link href="http://yrabbit.github.com/"/>
- <updated>2017-07-22T17:28:44+10:00</updated>
- <id>http://yrabbit.github.com</id>
+ <link href="https://yrabbit.github.com/atom.xml" rel="self"/>
+ <link href="https://yrabbit.github.com/"/>
+ <updated>2017-07-22T17:37:55+10:00</updated>
+ <id>https://yrabbit.github.com</id>
  <author>
    <name>Yellow Rabbit</name>
    <email></email>
@@ -14,9 +14,9 @@
  
  <entry>
    <title>Jekyll SEO</title>
-   <link href="http://yrabbit.github.com/ru/2017/07/22/jekyll-seo.html"/>
+   <link href="https://yrabbit.github.com/ru/2017/07/22/jekyll-seo.html"/>
    <updated>2017-07-22T00:00:00+10:00</updated>
-   <id>http://yrabbit.github.com/ru/2017/07/22/jekyll-seo</id>
+   <id>https://yrabbit.github.com/ru/2017/07/22/jekyll-seo</id>
    <content type="html">&lt;h1 id=&quot;Повышаем-видимость-блока&quot;&gt;Повышаем видимость блока&lt;/h1&gt;
 
 </content>
@@ -24,9 +24,9 @@
  
  <entry>
    <title>HTML parsing (part 3)</title>
-   <link href="http://yrabbit.github.com/ru/2016/06/02/html_parsing_part3.html"/>
+   <link href="https://yrabbit.github.com/ru/2016/06/02/html_parsing_part3.html"/>
    <updated>2016-06-02T20:33:32+10:00</updated>
-   <id>http://yrabbit.github.com/ru/2016/06/02/html_parsing_part3</id>
+   <id>https://yrabbit.github.com/ru/2016/06/02/html_parsing_part3</id>
    <content type="html">&lt;h2 id=&quot;Самый-сложный-элемент&quot;&gt;Самый сложный элемент&lt;/h2&gt;
 &lt;p&gt;У него даже конструктор сложный:)&lt;/p&gt;
 
@@ -347,9 +347,9 @@
  
  <entry>
    <title>HTML parsing (part 2)</title>
-   <link href="http://yrabbit.github.com/ru/2016/05/31/html-parsing-part2.html"/>
+   <link href="https://yrabbit.github.com/ru/2016/05/31/html-parsing-part2.html"/>
    <updated>2016-05-31T20:03:19+10:00</updated>
-   <id>http://yrabbit.github.com/ru/2016/05/31/html-parsing-part2</id>
+   <id>https://yrabbit.github.com/ru/2016/05/31/html-parsing-part2</id>
    <content type="html">&lt;h2 id=&quot;Комментарии&quot;&gt;Комментарии&lt;/h2&gt;
 &lt;p&gt;Комментарии в HTML интересны тем, что заканчиваются аж тремя символами: &lt;code class=&quot;highlighter-rouge&quot;&gt;--&amp;gt;&lt;/code&gt;. То есть, если бы мы читали по-символьно из потока вместо строки, то нам предстояло бы редкое веселье с заглядыванием вперёд на два символа. Сейчас же можно просто восстановить указатель на текущий символ.&lt;/p&gt;
 
@@ -430,9 +430,9 @@
  
  <entry>
    <title>HTML parsing (part 1)</title>
-   <link href="http://yrabbit.github.com/ru/2016/05/25/html_parsing_part1.html"/>
+   <link href="https://yrabbit.github.com/ru/2016/05/25/html_parsing_part1.html"/>
    <updated>2016-05-25T20:42:10+10:00</updated>
-   <id>http://yrabbit.github.com/ru/2016/05/25/html_parsing_part1</id>
+   <id>https://yrabbit.github.com/ru/2016/05/25/html_parsing_part1</id>
    <content type="html">&lt;h2 id=&quot;housekeeping&quot;&gt;Housekeeping&lt;/h2&gt;
 &lt;p&gt;Ядро META это самостоятельная часть движка, так что можно выделить её в &lt;a href=&quot;/public/src/lisp/toy-engine/meta-parser-core.lisp&quot;&gt;отдельный файл&lt;/a&gt; и навести общий порядок в проекте. Файл &lt;code class=&quot;highlighter-rouge&quot;&gt;toy-engine.asd&lt;/code&gt;, описывающий состав и последовательность компиляции модулей движка:&lt;/p&gt;
 
@@ -564,9 +564,9 @@
  
  <entry>
    <title>HTML parsing (META)</title>
-   <link href="http://yrabbit.github.com/ru/2016/05/22/html_parsing_(meta).html"/>
+   <link href="https://yrabbit.github.com/ru/2016/05/22/html_parsing_(meta).html"/>
    <updated>2016-05-22T10:28:25+10:00</updated>
-   <id>http://yrabbit.github.com/ru/2016/05/22/html_parsing_(meta)</id>
+   <id>https://yrabbit.github.com/ru/2016/05/22/html_parsing_(meta)</id>
    <content type="html">&lt;h2 id=&quot;meta&quot;&gt;META&lt;/h2&gt;
 
 &lt;p&gt;Чтобы строить дерево документа нам нужен парсер HTML. Простой. В январе 1991 года появилась статья Henry G. Baker &lt;a href=&quot;http://home.pipeline.com/~hbaker1/Prag-Parse.html&quot; title=&quot;Старая статья о парсинге&quot;&gt;“Прагматичный парсинг на Common Lisp”&lt;/a&gt;, в которой он описывает META — классическую простую и одновременно эффективную технику построения рекурсивных нисходящих парсеров.&lt;/p&gt;
@@ -672,9 +672,9 @@
  
  <entry>
    <title>Toy web engine in lisp</title>
-   <link href="http://yrabbit.github.com/ru/2016/05/07/toy-web-engine-in-lisp.html"/>
+   <link href="https://yrabbit.github.com/ru/2016/05/07/toy-web-engine-in-lisp.html"/>
    <updated>2016-05-07T20:22:42+10:00</updated>
-   <id>http://yrabbit.github.com/ru/2016/05/07/toy-web-engine-in-lisp</id>
+   <id>https://yrabbit.github.com/ru/2016/05/07/toy-web-engine-in-lisp</id>
    <content type="html">&lt;h2 id=&quot;Теория&quot;&gt;Теория&lt;/h2&gt;
 &lt;p&gt;Здесь всё просто: &lt;a href=&quot;https://limpet.net/mbrubeck/2014/08/08/toy-layout-engine-1.html&quot;&gt;читаем серию статей об игрушечном вэб движке&lt;/a&gt;. А дальше я буду повторять только самый минимум.&lt;/p&gt;
 
@@ -850,9 +850,9 @@
  
  <entry>
    <title>Lisp standalone executable</title>
-   <link href="http://yrabbit.github.com/ru/2016/05/01/lisp-standalone-executable.html"/>
+   <link href="https://yrabbit.github.com/ru/2016/05/01/lisp-standalone-executable.html"/>
    <updated>2016-05-01T21:09:39+10:00</updated>
-   <id>http://yrabbit.github.com/ru/2016/05/01/lisp-standalone-executable</id>
+   <id>https://yrabbit.github.com/ru/2016/05/01/lisp-standalone-executable</id>
    <content type="html">&lt;h2 id=&quot;Создание-исполняемого-файла-sbcl-quicklisp-buildapp&quot;&gt;Создание исполняемого файла (SBCL, quicklisp, buildapp)&lt;/h2&gt;
 
 &lt;p&gt;Желание делать отдельный самодостаточный исполняемый файл, хотя можно просто дать исходники, немного станновато, но допустим, что такая необходимость возникла. Проект к этому моменту уже приобрёл законченный вид и организован как локальная система quicklisp. &lt;a href=&quot;http://xach.livejournal.com/278047.html&quot;&gt;Здесь&lt;/a&gt; можно прочитать как сразу создать удобную среду для разработки.&lt;/p&gt;
@@ -900,9 +900,9 @@
  
  <entry>
    <title>Vim and makefile</title>
-   <link href="http://yrabbit.github.com/ru/2016/04/12/vim-and-makefile.html"/>
+   <link href="https://yrabbit.github.com/ru/2016/04/12/vim-and-makefile.html"/>
    <updated>2016-04-12T21:00:10+10:00</updated>
-   <id>http://yrabbit.github.com/ru/2016/04/12/vim-and-makefile</id>
+   <id>https://yrabbit.github.com/ru/2016/04/12/vim-and-makefile</id>
    <content type="html">&lt;h2 id=&quot;Умная-замена-табуляции-на-пробелы&quot;&gt;Умная замена табуляции на пробелы.&lt;/h2&gt;
 
 &lt;p&gt;Сегодня убил много времени чтобы заставить работать Makefile. Как оказалось Vim заменял все табуляции в файле на пробелы. Это меня вполне устравивает, но приводит make в замешательство.&lt;/p&gt;
@@ -922,9 +922,9 @@
  
  <entry>
    <title>Xiaomi, Android 6 and Wear</title>
-   <link href="http://yrabbit.github.com/ru/2016/03/27/xiaomi-android-6-wear.html"/>
+   <link href="https://yrabbit.github.com/ru/2016/03/27/xiaomi-android-6-wear.html"/>
    <updated>2016-03-27T16:33:00+10:00</updated>
-   <id>http://yrabbit.github.com/ru/2016/03/27/xiaomi-android-6-wear</id>
+   <id>https://yrabbit.github.com/ru/2016/03/27/xiaomi-android-6-wear</id>
    <content type="html">&lt;h2 id=&quot;xiaomi-with-android-6-and-lg-wear&quot;&gt;Xiaomi with Android 6 and LG wear&lt;/h2&gt;
 
 &lt;p&gt;После обновления Xiaomi Mi 4LTE на MIUI 7.2.9.0 (MXDCNDB) версия андроида в телефоне изменилась на 6.0.1. Как побочный эффект часы LG G Watch R 1085 перестали соединяться с телефоном, а на самом телефоне Google Play Services впали в панику. Ниже приведен способ восстановления работоспособности связки телефон – часы.&lt;/p&gt;
@@ -963,9 +963,9 @@
  
  <entry>
    <title>Trilobyte. Simple macros</title>
-   <link href="http://yrabbit.github.com/ru/2016/01/23/trilobyte.-simple-macros.html"/>
+   <link href="https://yrabbit.github.com/ru/2016/01/23/trilobyte.-simple-macros.html"/>
    <updated>2016-01-23T16:49:28+10:00</updated>
-   <id>http://yrabbit.github.com/ru/2016/01/23/trilobyte.-simple-macros</id>
+   <id>https://yrabbit.github.com/ru/2016/01/23/trilobyte.-simple-macros</id>
    <content type="html">&lt;h2 id=&quot;make-things-shorter&quot;&gt;Make things shorter&lt;/h2&gt;
 
 &lt;p&gt;Простейшее применение макросов: уменьшение количества строк в коде. Конечно это никак не сделало меньше объектный файл и не ускорило программу. Вообще говоря, если бы макросы могли рассматривать свои аргументы не как формы, то возможна была бы генерация таблиц &lt;em&gt;left-pattern&lt;/em&gt; во время компиляции. Надо подумать над этим.&lt;/p&gt;
@@ -1030,9 +1030,9 @@
  
  <entry>
    <title>Trilobyte. A new heuristic.</title>
-   <link href="http://yrabbit.github.com/ru/2015/12/26/trilobyte.-a-new-heuristic.html"/>
+   <link href="https://yrabbit.github.com/ru/2015/12/26/trilobyte.-a-new-heuristic.html"/>
    <updated>2015-12-26T21:53:48+10:00</updated>
-   <id>http://yrabbit.github.com/ru/2015/12/26/trilobyte.-a-new-heuristic</id>
+   <id>https://yrabbit.github.com/ru/2015/12/26/trilobyte.-a-new-heuristic</id>
    <content type="html">&lt;h2 id=&quot;Идея&quot;&gt;Идея&lt;/h2&gt;
 &lt;p&gt;Для начала небольшая парочка функций, которые подсчитывают количество фишек противника в соседних клетках.&lt;/p&gt;
 
@@ -1111,9 +1111,9 @@
  
  <entry>
    <title>Trilobyte. More Lisp and misc.</title>
-   <link href="http://yrabbit.github.com/ru/2015/12/26/trilobyte.-more-lisp-and-misc.html"/>
+   <link href="https://yrabbit.github.com/ru/2015/12/26/trilobyte.-more-lisp-and-misc.html"/>
    <updated>2015-12-26T14:12:08+10:00</updated>
-   <id>http://yrabbit.github.com/ru/2015/12/26/trilobyte.-more-lisp-and-misc</id>
+   <id>https://yrabbit.github.com/ru/2015/12/26/trilobyte.-more-lisp-and-misc</id>
    <content type="html">&lt;h2 id=&quot;Немного-причёсывания&quot;&gt;Немного причёсывания&lt;/h2&gt;
 
 &lt;p&gt;Хотя я проигрываю AI, он не может победить монстра из 11-го часа:( И, пока у меня не появилось идей по улучшению его работы, займусь украшательствами. Для начала чуть-чуть упростим построение шаблонов для проверки соседних ячеек, ну и заодно сделаем её запоминающей.&lt;/p&gt;
@@ -1244,9 +1244,9 @@
  
  <entry>
    <title>Trolibyte. Add an heuristic.</title>
-   <link href="http://yrabbit.github.com/ru/2015/12/23/trolibyte.-add-an-heuristic.html"/>
+   <link href="https://yrabbit.github.com/ru/2015/12/23/trolibyte.-add-an-heuristic.html"/>
    <updated>2015-12-23T19:30:09+10:00</updated>
-   <id>http://yrabbit.github.com/ru/2015/12/23/trolibyte.-add-an-heuristic</id>
+   <id>https://yrabbit.github.com/ru/2015/12/23/trolibyte.-add-an-heuristic</id>
    <content type="html">&lt;h2 id=&quot;Чуточку-умнее&quot;&gt;Чуточку умнее&lt;/h2&gt;
 &lt;p&gt;Итак, AI действует разумно только когда видит чью-нибудь победу через ближашие *ai-level* ходов, иначе просто выбирает первый же ход. Попробуем следующую эвристику:&lt;/p&gt;
 
@@ -1610,9 +1610,9 @@
  
  <entry>
    <title>Trilobyte. Lazy AI.</title>
-   <link href="http://yrabbit.github.com/ru/2015/12/21/trilobyte.-lazy-ai.html"/>
+   <link href="https://yrabbit.github.com/ru/2015/12/21/trilobyte.-lazy-ai.html"/>
    <updated>2015-12-21T19:09:53+10:00</updated>
-   <id>http://yrabbit.github.com/ru/2015/12/21/trilobyte.-lazy-ai</id>
+   <id>https://yrabbit.github.com/ru/2015/12/21/trilobyte.-lazy-ai</id>
    <content type="html">&lt;h2 id=&quot;Ограничение-дерева&quot;&gt;Ограничение дерева&lt;/h2&gt;
 &lt;p&gt;Итак AI не может искать решения в ленивом дереве, поскольку по мере просчитывания ходов он материализует всё это дерево из небытия. Выходом может быть ограничение количества ходов, на которое AI просчитывает ситуацию. И это можно сделать очень изящно, а именно не подсчитывать глубину по ходу оценки комбинаций, а сразу подсунуть AI короткое дерево!&lt;/p&gt;
 
@@ -1906,9 +1906,9 @@
  
  <entry>
    <title>Trilobyte. Big Lazy Tree.</title>
-   <link href="http://yrabbit.github.com/ru/2015/12/15/trilobyte-big-lazy-tree.html"/>
+   <link href="https://yrabbit.github.com/ru/2015/12/15/trilobyte-big-lazy-tree.html"/>
    <updated>2015-12-15T18:59:21+10:00</updated>
-   <id>http://yrabbit.github.com/ru/2015/12/15/trilobyte-big-lazy-tree</id>
+   <id>https://yrabbit.github.com/ru/2015/12/15/trilobyte-big-lazy-tree</id>
    <content type="html">&lt;h2 id=&quot;Ленивые-списки&quot;&gt;Ленивые списки&lt;/h2&gt;
 &lt;p&gt;Программа прилично играет на крошечной доске, пора задуматься об увеличении игрового поля. Поскольку при простом увеличении размеров доски память быстро заканчивается, то придется жульничать: создавать в памяти только те кусочки дерева комбинаций, которые действительно нужны. Здесь нужно заметить, что, не имея возможности проанализировать всё дерево комбинаций, AI придётся немного поднапрячься.
 Но вернёмся к ленивому дереву комбинаций. Один замечательный макрос и одна простейшая функция сделают сказку былью.&lt;/p&gt;
@@ -2145,9 +2145,9 @@
  
  <entry>
    <title>Trilobyte. An UI.</title>
-   <link href="http://yrabbit.github.com/ru/2015/12/15/trilobyte-ui.html"/>
+   <link href="https://yrabbit.github.com/ru/2015/12/15/trilobyte-ui.html"/>
    <updated>2015-12-15T13:22:42+10:00</updated>
-   <id>http://yrabbit.github.com/ru/2015/12/15/trilobyte-ui</id>
+   <id>https://yrabbit.github.com/ru/2015/12/15/trilobyte-ui</id>
    <content type="html">&lt;h2 id=&quot;Интерфейс&quot;&gt;Интерфейс&lt;/h2&gt;
 &lt;p&gt;Вот и подошло время обзавестись небольшой системой взаимодействия с человеком. Для начала покажем доску:&lt;/p&gt;
 
@@ -2322,9 +2322,9 @@
  
  <entry>
    <title>Trilobyte. Rules engine and AI</title>
-   <link href="http://yrabbit.github.com/ru/2015/12/14/rules-engine.html"/>
+   <link href="https://yrabbit.github.com/ru/2015/12/14/rules-engine.html"/>
    <updated>2015-12-14T17:39:13+10:00</updated>
-   <id>http://yrabbit.github.com/ru/2015/12/14/rules-engine</id>
+   <id>https://yrabbit.github.com/ru/2015/12/14/rules-engine</id>
    <content type="html">&lt;h2 id=&quot;Движок-игровых-правил&quot;&gt;Движок игровых правил&lt;/h2&gt;
 &lt;p&gt;Поскольку мы можем просчитать все комбинцаии (пока что для крошечной доски), то движок правил будет представлять из себя просто древовидную структуру данных&lt;sup id=&quot;fnref:tree-picture-source&quot;&gt;&lt;a href=&quot;#fn:tree-picture-source&quot; class=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt;.
 &lt;img src=&quot;/public/imgs/lisp/tree.png&quot; alt=&quot;Дерево движка игровых правил&quot; /&gt;&lt;/p&gt;
@@ -2512,9 +2512,9 @@
  
  <entry>
    <title>Trilobyte. Moves & checking patterns.</title>
-   <link href="http://yrabbit.github.com/ru/2015/12/13/trilobyte-checking-patterns.html"/>
+   <link href="https://yrabbit.github.com/ru/2015/12/13/trilobyte-checking-patterns.html"/>
    <updated>2015-12-13T09:42:08+10:00</updated>
-   <id>http://yrabbit.github.com/ru/2015/12/13/trilobyte-checking-patterns</id>
+   <id>https://yrabbit.github.com/ru/2015/12/13/trilobyte-checking-patterns</id>
    <content type="html">&lt;h2 id=&quot;Ходы&quot;&gt;Ходы&lt;/h2&gt;
 &lt;p&gt;Сделать ход - значит скопировать доску, попутно заменив одну из клеток на нужную.&lt;/p&gt;
 
@@ -2723,9 +2723,9 @@
  
  <entry>
    <title>Трилобит и Лисп</title>
-   <link href="http://yrabbit.github.com/ru/2015/12/11/figth-with-trilobyte.html"/>
+   <link href="https://yrabbit.github.com/ru/2015/12/11/figth-with-trilobyte.html"/>
    <updated>2015-12-11T21:20:47+10:00</updated>
-   <id>http://yrabbit.github.com/ru/2015/12/11/figth-with-trilobyte</id>
+   <id>https://yrabbit.github.com/ru/2015/12/11/figth-with-trilobyte</id>
    <content type="html">&lt;h2 id=&quot;Задачка&quot;&gt;Задачка&lt;/h2&gt;
 &lt;p&gt;В игре 11th hour попалась головоломка-игрушка, цель которой: выстроить в ряд 4 фишки.  Причём нельзя выбрать горизонталь для новой фишки, можно  выбрать только вертикаль.
 &lt;img src=&quot;/public/imgs/lisp/trilobyte.png&quot; alt=&quot;former game screen&quot; /&gt; Я не могу победить компьютер в этой мини-игре, так что попробую устроить битву двух AI. Было бы забавно написать соперника для компьютера на Lisp, так как я практически не знаком с этим языком.
@@ -2850,9 +2850,9 @@ NIL
  
  <entry>
    <title>2 способа регулировки яркости подсветки на Acer C720 (part 2)</title>
-   <link href="http://yrabbit.github.com/ru/2014/12/26/adjust-a-backlight-on-acer-c720.html"/>
+   <link href="https://yrabbit.github.com/ru/2014/12/26/adjust-a-backlight-on-acer-c720.html"/>
    <updated>2014-12-26T06:03:28+10:00</updated>
-   <id>http://yrabbit.github.com/ru/2014/12/26/adjust-a-backlight-on-acer-c720</id>
+   <id>https://yrabbit.github.com/ru/2014/12/26/adjust-a-backlight-on-acer-c720</id>
    <content type="html">&lt;h2 id=&quot;То-что-не-случилось&quot;&gt;То, что не случилось&lt;/h2&gt;
 &lt;p&gt;Второй способ заключается в создании специального устройства, чтение из которого возвращает текущий уровень подстветки, а запись в которое изменяет уровень подстветки. И такое устройство было создано. Это потребовало гораздо крупных вмешательств в код, включая изменение нескольких Makefile, файла системных настроек (sys/conf/options), добавление каталога с исходными файлами устройства.&lt;/p&gt;
 
@@ -2888,9 +2888,9 @@ NIL
  
  <entry>
    <title>2 способа регулировки яркости подсветки на Acer C720 (part 1)</title>
-   <link href="http://yrabbit.github.com/ru/2014/12/18/2-ways-to-adjust-a-backlight-on-acer-c720.html"/>
+   <link href="https://yrabbit.github.com/ru/2014/12/18/2-ways-to-adjust-a-backlight-on-acer-c720.html"/>
    <updated>2014-12-18T19:35:30+10:00</updated>
-   <id>http://yrabbit.github.com/ru/2014/12/18/2-ways-to-adjust-a-backlight-on-acer-c720</id>
+   <id>https://yrabbit.github.com/ru/2014/12/18/2-ways-to-adjust-a-backlight-on-acer-c720</id>
    <content type="html">&lt;p&gt;Клавиши регулировки подсветки на клавиатуре хромбука Acer C720 являются замаскированными клавишами &lt;em&gt;F6&lt;/em&gt; и &lt;em&gt;F7&lt;/em&gt;. Соответственно при замене ChromeOS на DragoFly BSD регулировка подсветки не работает. Не удаётся также использовать &lt;em&gt;xbacklight&lt;/em&gt; - он не находит видео-выходов с возможностью регулировки подсветки. &lt;em&gt;xrandr&lt;/em&gt; может помочь, но это программное решение, что-то типа приглушения яркости выводимых точек. Ясно, что жизнь батарее это никак не продлит.&lt;/p&gt;
 
 &lt;h2 id=&quot;Первый-способ&quot;&gt;Первый способ&lt;/h2&gt;
@@ -2985,9 +2985,9 @@ NIL
  
  <entry>
    <title>Регулировка громкости функциональными клавишами</title>
-   <link href="http://yrabbit.github.com/ru/2014/12/15/xbindkeys-volume.html"/>
+   <link href="https://yrabbit.github.com/ru/2014/12/15/xbindkeys-volume.html"/>
    <updated>2014-12-15T20:12:00+10:00</updated>
-   <id>http://yrabbit.github.com/ru/2014/12/15/xbindkeys-volume</id>
+   <id>https://yrabbit.github.com/ru/2014/12/15/xbindkeys-volume</id>
    <content type="html">&lt;p&gt;У Acer C720 нет обозначенных функциональных клавиш F1-10, вместо этого соответствующие клавиши помечены различными значками. Так F8 обозначена как “выключение звука”, F9 - “уменьшить громкость”, F10 - “увеличить громкость”. Так эти клавиши работают под ChromeOS. Чтобы частично повторить этот функционал воспользуемся &lt;code class=&quot;highlighter-rouge&quot;&gt;xbindkeys&lt;/code&gt;.&lt;/p&gt;
 
 &lt;center&gt;
@@ -3009,9 +3009,9 @@ NIL
  
  <entry>
    <title>Имитация недостающих клавиш Acer C720</title>
-   <link href="http://yrabbit.github.com/ru/2014/12/08/acer-720-keyboard.html"/>
+   <link href="https://yrabbit.github.com/ru/2014/12/08/acer-720-keyboard.html"/>
    <updated>2014-12-08T07:01:01+10:00</updated>
-   <id>http://yrabbit.github.com/ru/2014/12/08/acer-720-keyboard</id>
+   <id>https://yrabbit.github.com/ru/2014/12/08/acer-720-keyboard</id>
    <content type="html">&lt;p&gt;Клавиатура хромбука Acer C720 видимо хороша для прогулок по сети и работы в Chrome OS, но мне для написания программ некоторых клавиш не хватает. Это &lt;em&gt;Home&lt;/em&gt;, &lt;em&gt;End&lt;/em&gt;, &lt;em&gt;PageUp&lt;/em&gt;, &lt;em&gt;PageDown&lt;/em&gt;, &lt;em&gt;Insert&lt;/em&gt; и &lt;em&gt;Delete&lt;/em&gt;.&lt;/p&gt;
 
 &lt;p&gt;Можно попробовать использовать клавишу &lt;em&gt;Alt&lt;/em&gt; (генерирует символ Alt) как модификатор для курсорных клавиш. Тогда получаются следующие клавиатурные комбинации:&lt;/p&gt;
