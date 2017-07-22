@@ -116,13 +116,17 @@
         
       
     
+      
+        
+      
+    
 
     <span class="sidebar-nav-item">Currently v1.0.1</span>
   </nav>
 
   <div class="sidebar-item">
     <p>
-      &copy; 2016. All rights reserved.
+      &copy; 2017. All rights reserved.
     </p>
   </div>
 </div>
@@ -156,12 +160,12 @@
 	
 	</ul>
     </div>
-  <h2 id="section">Комментарии</h2>
+  <h2 id="Комментарии">Комментарии</h2>
 <p>Комментарии в HTML интересны тем, что заканчиваются аж тремя символами: <code class="highlighter-rouge">--&gt;</code>. То есть, если бы мы читали по-символьно из потока вместо строки, то нам предстояло бы редкое веселье с заглядыванием вперёд на два символа. Сейчас же можно просто восстановить указатель на текущий символ.</p>
 
 <p>Создание узла комментария очень простое:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nb">defun</span> <span class="nv">make-comment-node</span> <span class="p">()</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nb">defun</span> <span class="nv">make-comment-node</span> <span class="p">()</span>
   <span class="p">(</span><span class="nb">make-instance</span> <span class="ss">'comment-node</span><span class="p">))</span>
 </code></pre>
 </div>
@@ -176,7 +180,7 @@
 
 <p>Чтобы сработать сравнение с <code class="highlighter-rouge">--&gt;</code> должно не сработать:) То есть, найдя <code class="highlighter-rouge">--&gt;</code> мы запоминаем факт обнаружения в переменной <code class="highlighter-rouge">eoc-found</code><sup id="fnref:eoc"><a href="#fn:eoc" class="footnote">2</a></sup> и говорим, что сравнение не удалось <code class="highlighter-rouge">!nil</code>. Далее мы будем поглощать все символы подряд только, если <code class="highlighter-rouge">--&gt;</code> не была найдена.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>       <span class="p">(</span><span class="nv">parse-comment</span> <span class="p">()</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code>       <span class="p">(</span><span class="nv">parse-comment</span> <span class="p">()</span>
           <span class="s">"&lt;!-- ??? --&gt;"</span>
           <span class="p">(</span><span class="k">let</span> <span class="p">(</span><span class="nv">ch</span> <span class="nv">eoc-found</span> <span class="p">(</span><span class="nv">oldindex</span> <span class="nv">index</span><span class="p">))</span>
             <span class="p">(</span><span class="nb">or</span> <span class="p">(</span><span class="nb">and</span> <span class="p">(</span><span class="nv">matchit</span>
@@ -191,7 +195,7 @@
 
 <p>Проверяем, заменив вызов <code class="highlighter-rouge">parse-tex</code> в <code class="highlighter-rouge">parse-html</code> на вызов <code class="highlighter-rouge">(cons (parse-comment) (princ index)))</code>:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="nb">*</span> <span class="p">(</span><span class="nv">ql:quickload</span> <span class="ss">'toy-engine</span><span class="p">)</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="nb">*</span> <span class="p">(</span><span class="nv">ql:quickload</span> <span class="ss">'toy-engine</span><span class="p">)</span>
 <span class="nv">To</span> <span class="nb">load</span> <span class="s">"toy-engine"</span><span class="err">:</span>
   <span class="nv">Load</span> <span class="mi">1</span> <span class="nv">ASDF</span> <span class="nv">system:</span>
     <span class="nv">toy-engine</span>
@@ -224,10 +228,10 @@
 <div class="footnotes">
   <ol>
     <li id="fn:why-where-is-no">
-      <p>Здесь нет <code class="highlighter-rouge">&lt;</code> по той причине, что этот символ уже будет использован чтобы отличить комментарий или элемент от простого текста. <a href="#fnref:why-where-is-no" class="reversefootnote">&#8617;</a></p>
+      <p>Здесь нет <code class="highlighter-rouge">&lt;</code> по той причине, что этот символ уже будет использован чтобы отличить комментарий или элемент от простого текста.&nbsp;<a href="#fnref:why-where-is-no" class="reversefootnote">&#8617;</a></p>
     </li>
     <li id="fn:eoc">
-      <p>eoc stands for End Of Comment <a href="#fnref:eoc" class="reversefootnote">&#8617;</a></p>
+      <p>eoc stands for End Of Comment&nbsp;<a href="#fnref:eoc" class="reversefootnote">&#8617;</a></p>
     </li>
   </ol>
 </div>
@@ -237,6 +241,13 @@
 <div class="related">
   <h2>Related Posts</h2>
   <ul class="related-posts">
+    
+      <li>
+          <a href="/ru/2017/07/22/jekyll-seo.html">
+            Jekyll SEO
+            <small>22 Jul 2017</small>
+          </a>
+      </li>
     
       <li>
           <a href="/ru/2016/06/02/html_parsing_part3.html">
@@ -249,13 +260,6 @@
           <a href="/ru/2016/05/25/html_parsing_part1.html">
             HTML parsing (part 1)
             <small>25 May 2016</small>
-          </a>
-      </li>
-    
-      <li>
-          <a href="/ru/2016/05/22/html_parsing_(meta).html">
-            HTML parsing (META)
-            <small>22 May 2016</small>
           </a>
       </li>
     

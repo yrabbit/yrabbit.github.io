@@ -116,13 +116,17 @@
         
       
     
+      
+        
+      
+    
 
     <span class="sidebar-nav-item">Currently v1.0.1</span>
   </nav>
 
   <div class="sidebar-item">
     <p>
-      &copy; 2016. All rights reserved.
+      &copy; 2017. All rights reserved.
     </p>
   </div>
 </div>
@@ -152,13 +156,13 @@
 	
 	</ul>
     </div>
-  <h2 id="section">Умная замена табуляции на пробелы.</h2>
+  <h2 id="Умная-замена-табуляции-на-пробелы">Умная замена табуляции на пробелы.</h2>
 
 <p>Сегодня убил много времени чтобы заставить работать Makefile. Как оказалось Vim заменял все табуляции в файле на пробелы. Это меня вполне устравивает, но приводит make в замешательство.</p>
 
 <p>Решение таково: проверяем имя файла и не заменяем табуляцию на пробелы для некоторых файлов.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">let</span> _curfile <span class="p">=</span> expand<span class="p">(</span><span class="s2">"%:t"</span><span class="p">)</span>
+<div class="language-viml highlighter-rouge"><pre class="highlight"><code><span class="k">let</span> _curfile <span class="p">=</span> expand<span class="p">(</span><span class="s2">"%:t"</span><span class="p">)</span>
 <span class="k">if</span> _curfile <span class="p">=~</span> <span class="s2">"Makefile"</span> <span class="p">||</span> _curfile <span class="p">=~</span> <span class="s2">"makefile"</span> <span class="p">||</span> _curfile <span class="p">=~</span> <span class="s2">".*\.mk"</span>
         <span class="k">set</span> noexpandtab
 <span class="k">else</span>
@@ -174,6 +178,13 @@
   <ul class="related-posts">
     
       <li>
+          <a href="/ru/2017/07/22/jekyll-seo.html">
+            Jekyll SEO
+            <small>22 Jul 2017</small>
+          </a>
+      </li>
+    
+      <li>
           <a href="/ru/2016/06/02/html_parsing_part3.html">
             HTML parsing (part 3)
             <small>02 Jun 2016</small>
@@ -184,13 +195,6 @@
           <a href="/ru/2016/05/31/html-parsing-part2.html">
             HTML parsing (part 2)
             <small>31 May 2016</small>
-          </a>
-      </li>
-    
-      <li>
-          <a href="/ru/2016/05/25/html_parsing_part1.html">
-            HTML parsing (part 1)
-            <small>25 May 2016</small>
           </a>
       </li>
     

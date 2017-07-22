@@ -116,13 +116,17 @@
         
       
     
+      
+        
+      
+    
 
     <span class="sidebar-nav-item">Currently v1.0.1</span>
   </nav>
 
   <div class="sidebar-item">
     <p>
-      &copy; 2016. All rights reserved.
+      &copy; 2017. All rights reserved.
     </p>
   </div>
 </div>
@@ -160,10 +164,10 @@
 	
 	</ul>
     </div>
-  <h2 id="section">Ходы</h2>
+  <h2 id="Ходы">Ходы</h2>
 <p>Сделать ход - значит скопировать доску, попутно заменив одну из клеток на нужную.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="c1">;; add move to the board</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="c1">;; add move to the board</span>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">board-add-move</span> <span class="p">(</span><span class="nv">board</span> <span class="nv">move-cell</span> <span class="nv">player</span><span class="p">)</span>
   <span class="p">(</span><span class="nv">board-from-list</span>
     <span class="p">(</span><span class="nb">loop</span>
@@ -176,7 +180,7 @@
 </div>
 <p>Формируем список возможных клеток для хода. Это пустые клетки, находящиеся в самом низу каждой вертикали. Конечно если на вертикали есть свободные клетки вообще.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="c1">;; possible moves</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="c1">;; possible moves</span>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">possible-moves</span> <span class="p">(</span><span class="nv">board</span><span class="p">)</span>
   <span class="p">(</span><span class="k">labels</span> <span class="p">((</span><span class="nv">lastlinep</span> <span class="p">(</span><span class="nv">idx</span><span class="p">)</span>
                 <span class="p">(</span><span class="nb">&gt;=</span> <span class="nv">idx</span> <span class="p">(</span><span class="nb">-</span> <span class="vg">*board-size*</span> <span class="vg">*board-width*</span><span class="p">)))</span>
@@ -193,8 +197,8 @@
 </code></pre>
 </div>
 
-<h2 id="section-1">Проверка на победу</h2>
-<p>Условием победы в игре является создание линии из *win-len* фишек одного цвета. Будем проверять на победу после каждого хода. Для этого нужно обнаруживать линии, которые получились в результате последнего хода. На следующем рисунке показано как мы будем проверять клетки и подсчитывать количество одинаковых фишек по направлениям (векторам) начиная от клетки последнего хода<sup id="fnref:how-to-make-svg"><a href="#fn:how-to-make-svg" class="footnote">1</a></sup>. <br />
+<h2 id="Проверка-на-победу">Проверка на победу</h2>
+<p>Условием победы в игре является создание линии из *win-len* фишек одного цвета. Будем проверять на победу после каждого хода. Для этого нужно обнаруживать линии, которые получились в результате последнего хода. На следующем рисунке показано как мы будем проверять клетки и подсчитывать количество одинаковых фишек по направлениям (векторам) начиная от клетки последнего хода<sup id="fnref:how-to-make-svg"><a href="#fn:how-to-make-svg" class="footnote">1</a></sup>. 
 <img src="/public/imgs/lisp/win-patterns.svg" alt="Проверка на победу" height="160px" width="100%" /></p>
 
 <p>Для каждой клетки доски будем получать номера клеток и порядок, в котором нужно проверить их на наличие фишек одинакового цвета. В результате формируется список списков<sup id="fnref:list-of-lists"><a href="#fn:list-of-lists" class="footnote">2</a></sup>.</p>
@@ -213,7 +217,7 @@
 
 <p>Далее следует функция, которая собственно и создаёт этот шаблон для прроверки соседей любой клетки на доске. Она мне не нравится, она просто ужасна, слишком велика, запутанна и совсем не-Lisp’овская. Но она не имеет побочных эффектов, зависит только от номера клетки и нескольких констант, так что я надеюсь переписать её попозже не ломая всего остального.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="c1">;; test pattern for win</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="c1">;; test pattern for win</span>
 <span class="c1">;; ((left...) (right...)</span>
 <span class="c1">;;  (up...) (down...)</span>
 <span class="c1">;;  (left-up...) (right-down...)</span>
@@ -282,7 +286,7 @@
 
 <p>Функция <em>test-line</em> просто складывает две половинки линии и собственно центральную клетку. Циклов в функциях не наблюдается поскольку списки и хвостовая рекурсия неплохо дружат.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="c1">;; count cells with player's color in row</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="c1">;; count cells with player's color in row</span>
 <span class="c1">;; pattern is a list of lists</span>
 <span class="c1">;;      first halfline    second halfline</span>
 <span class="c1">;; ((cell cell cell...) (cell cell cell...)</span>
@@ -308,14 +312,14 @@
 </div>
 <p>Проверка на победу игрока получилась до смешного проста:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="c1">;; test for win for player</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="c1">;; test for win for player</span>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">test-for-win</span> <span class="p">(</span><span class="nv">board</span> <span class="nv">cell</span> <span class="nv">player</span><span class="p">)</span>
   <span class="p">(</span><span class="nb">&gt;=</span> <span class="p">(</span><span class="nv">count-player-cells</span> <span class="nv">board</span> <span class="nv">cell</span> <span class="nv">player</span><span class="p">)</span> <span class="vg">*win-len*</span><span class="p">))</span>
 </code></pre>
 </div>
 <p>Можно посмотреть насколько хорошо удаётся формировать шаблон для проверки на победу:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="nb">*</span> <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*board-width*</span> <span class="mi">10</span><span class="p">)</span> <span class="c1">; нужно увеличить размер доски для наглядности</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="nb">*</span> <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*board-width*</span> <span class="mi">10</span><span class="p">)</span> <span class="c1">; нужно увеличить размер доски для наглядности</span>
 
 <span class="vg">*BOARD-WIDTH*</span>
 <span class="nb">*</span> <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*board-height*</span> <span class="mi">10</span><span class="p">)</span>
@@ -334,7 +338,7 @@
 </div>
 <p>Ну это центр доски и функция (всё-таки я её не люблю) сформировала все вектора правильно. Попробуем выбрать клетку ближе к левому верхнему углу. в этом случае часть списков должна быть урезана.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="nb">*</span> <span class="p">(</span><span class="nv">get-test-patterns</span> <span class="mi">32</span><span class="p">)</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="nb">*</span> <span class="p">(</span><span class="nv">get-test-patterns</span> <span class="mi">32</span><span class="p">)</span>
 
 <span class="p">((</span><span class="mi">31</span> <span class="mi">30</span><span class="p">)</span> <span class="p">(</span><span class="mi">33</span> <span class="mi">34</span> <span class="mi">35</span> <span class="mi">36</span><span class="p">)</span> <span class="p">(</span><span class="mi">22</span> <span class="mi">12</span> <span class="mi">2</span><span class="p">)</span> <span class="p">(</span><span class="mi">42</span> <span class="mi">52</span> <span class="mi">62</span> <span class="mi">72</span><span class="p">)</span> <span class="p">(</span><span class="mi">21</span> <span class="mi">10</span><span class="p">)</span> <span class="p">(</span><span class="mi">43</span> <span class="mi">54</span> <span class="mi">65</span> <span class="mi">76</span><span class="p">)</span> <span class="p">(</span><span class="mi">41</span> <span class="mi">50</span><span class="p">)</span>
  <span class="p">(</span><span class="mi">23</span> <span class="mi">14</span> <span class="mi">5</span><span class="p">))</span>
@@ -342,7 +346,7 @@
 </div>
 <p>Неплохо, вектора влево и вверх укорочены. Другая критичная клетка пусть будет вплотную к правому краю доски:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="nb">*</span> <span class="p">(</span><span class="nv">get-test-patterns</span> <span class="mi">29</span><span class="p">)</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="nb">*</span> <span class="p">(</span><span class="nv">get-test-patterns</span> <span class="mi">29</span><span class="p">)</span>
 
 <span class="p">((</span><span class="mi">28</span> <span class="mi">27</span> <span class="mi">26</span> <span class="mi">25</span><span class="p">)</span> <span class="nv">NIL</span> <span class="p">(</span><span class="mi">19</span> <span class="mi">9</span><span class="p">)</span> <span class="p">(</span><span class="mi">39</span> <span class="mi">49</span> <span class="mi">59</span> <span class="mi">69</span><span class="p">)</span> <span class="p">(</span><span class="mi">18</span> <span class="mi">7</span><span class="p">)</span> <span class="nv">NIL</span> <span class="p">(</span><span class="mi">38</span> <span class="mi">47</span> <span class="mi">56</span> <span class="mi">65</span><span class="p">)</span> <span class="nv">NIL</span><span class="p">)</span>
 <span class="nb">*</span>
@@ -353,13 +357,13 @@
 <div class="footnotes">
   <ol>
     <li id="fn:how-to-make-svg">
-      <p>Рисунки были созданы также с помощью крошечной <a href="/public/src/lisp/win-patterns.lisp">Lisp программки</a> и пары <a href="/public/src/lisp/svg.lisp">макросов для работы с SVG</a>. <a href="#fnref:how-to-make-svg" class="reversefootnote">&#8617;</a></p>
+      <p>Рисунки были созданы также с помощью крошечной <a href="/public/src/lisp/win-patterns.lisp">Lisp программки</a> и пары <a href="/public/src/lisp/svg.lisp">макросов для работы с SVG</a>.&nbsp;<a href="#fnref:how-to-make-svg" class="reversefootnote">&#8617;</a></p>
     </li>
     <li id="fn:list-of-lists">
-      <p>А что вы хотели? Язык обработки списков всё таки! :) <a href="#fnref:list-of-lists" class="reversefootnote">&#8617;</a></p>
+      <p>А что вы хотели? Язык обработки списков всё таки! :)&nbsp;<a href="#fnref:list-of-lists" class="reversefootnote">&#8617;</a></p>
     </li>
     <li id="fn:up">
-      <p>Вверх можно и не проверять, но возможно пригодится. <a href="#fnref:up" class="reversefootnote">&#8617;</a></p>
+      <p>Вверх можно и не проверять, но возможно пригодится.&nbsp;<a href="#fnref:up" class="reversefootnote">&#8617;</a></p>
     </li>
   </ol>
 </div>
@@ -369,6 +373,13 @@
 <div class="related">
   <h2>Related Posts</h2>
   <ul class="related-posts">
+    
+      <li>
+          <a href="/ru/2017/07/22/jekyll-seo.html">
+            Jekyll SEO
+            <small>22 Jul 2017</small>
+          </a>
+      </li>
     
       <li>
           <a href="/ru/2016/06/02/html_parsing_part3.html">
@@ -381,13 +392,6 @@
           <a href="/ru/2016/05/31/html-parsing-part2.html">
             HTML parsing (part 2)
             <small>31 May 2016</small>
-          </a>
-      </li>
-    
-      <li>
-          <a href="/ru/2016/05/25/html_parsing_part1.html">
-            HTML parsing (part 1)
-            <small>25 May 2016</small>
           </a>
       </li>
     

@@ -116,13 +116,17 @@
         
       
     
+      
+        
+      
+    
 
     <span class="sidebar-nav-item">Currently v1.0.1</span>
   </nav>
 
   <div class="sidebar-item">
     <p>
-      &copy; 2016. All rights reserved.
+      &copy; 2017. All rights reserved.
     </p>
   </div>
 </div>
@@ -159,7 +163,7 @@
   <h2 id="housekeeping">Housekeeping</h2>
 <p>Ядро META это самостоятельная часть движка, так что можно выделить её в <a href="/public/src/lisp/toy-engine/meta-parser-core.lisp">отдельный файл</a> и навести общий порядок в проекте. Файл <code class="highlighter-rouge">toy-engine.asd</code>, описывающий состав и последовательность компиляции модулей движка:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="c1">;;;; toy-engine.asd</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="c1">;;;; toy-engine.asd</span>
 
 <span class="p">(</span><span class="nv">asdf:defsystem</span> <span class="ss">#:toy-engine</span>
   <span class="ss">:description</span> <span class="s">"Tiny web-engine"</span>
@@ -176,18 +180,18 @@
 
 <p>Файлы <code class="highlighter-rouge">html-grammar.lisp</code> и <code class="highlighter-rouge">toy-engine.lisp</code> пока пустые и состоят из одной строчки каждый:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nb">in-package</span> <span class="ss">#:toy-engine</span><span class="p">)</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nb">in-package</span> <span class="ss">#:toy-engine</span><span class="p">)</span>
 </code></pre>
 </div>
 
-<h2 id="section">Схема грамматики</h2>
-<p>Движок будет понимать простейшее подмножество HTML, вот схема его грамматики:<br />
+<h2 id="Схема-грамматики">Схема грамматики</h2>
+<p>Движок будет понимать простейшее подмножество HTML, вот схема его грамматики:
 <img src="/public/imgs/lisp/grammar.png" alt="Схема грамматики для HTML" style="display:block;margin-left:auto;margin-right:auto;" /></p>
 
-<h2 id="section-1">Функции проверки символов</h2>
+<h2 id="Функции-проверки-символов">Функции проверки символов</h2>
 <p>Эти простые функции, которые нужны для проверки символов в операции META <code class="highlighter-rouge">@</code>, должны быть доступны во время компиляции:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="k">eval-when</span> <span class="p">(</span><span class="ss">:compile-toplevel</span> <span class="ss">:load-toplevel</span> <span class="ss">:execute</span><span class="p">)</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="k">eval-when</span> <span class="p">(</span><span class="ss">:compile-toplevel</span> <span class="ss">:load-toplevel</span> <span class="ss">:execute</span><span class="p">)</span>
   <span class="p">(</span><span class="nb">defun</span> <span class="nv">gen-text-p</span> <span class="p">(</span><span class="nv">ch</span><span class="p">)</span>
     <span class="s">"Text is always between &gt; and &lt;"</span>
     <span class="p">(</span><span class="nb">char/=</span> <span class="nv">ch</span> <span class="sc">#\&lt;</span><span class="p">))</span>
@@ -207,7 +211,7 @@
 </div>
 <p>Функция вызываются не явно, а через проверку принадлежности к типу данных:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nb">deftype</span> <span class="nv">gen-text</span> <span class="p">()</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nb">deftype</span> <span class="nv">gen-text</span> <span class="p">()</span>
   <span class="s">"All except a &lt;"</span>
   <span class="o">'</span><span class="p">(</span><span class="nv">satisfies</span> <span class="nv">gen-text-p</span><span class="p">))</span>
 
@@ -223,15 +227,15 @@
 
 <p>Ещё один полезный тип — пустое место:)</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nb">deftype</span> <span class="nv">whitespace</span> <span class="p">()</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nb">deftype</span> <span class="nv">whitespace</span> <span class="p">()</span>
   <span class="o">'</span><span class="p">(</span><span class="nb">member</span> <span class="sc">#\Space</span> <span class="sc">#\Tab</span> <span class="sc">#\LineFeed</span> <span class="sc">#\Return</span> <span class="sc">#\FormFeed</span> <span class="sc">#\Page</span><span class="p">))</span>
 </code></pre>
 </div>
 
-<h2 id="section-2">Генерация узлов и скелет парсера</h2>
+<h2 id="Генерация-узлов-и-скелет-парсера">Генерация узлов и скелет парсера</h2>
 <p>Парсер будет создавать дерево DOM прямо по ходу разбора. За каждый тип узла отвечает своя функция, для начала будем распознавать один простой элемент: текст. И его функция:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="c1">;; Create nodes</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="c1">;; Create nodes</span>
 <span class="c1">;; Text</span>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">make-text-node</span> <span class="p">(</span><span class="nv">text</span><span class="p">)</span>
   <span class="p">(</span><span class="nb">make-instance</span> <span class="ss">'text-node</span>
@@ -240,7 +244,7 @@
 </div>
 <p>Парсер принимает на входе строку для разбора, возможно номер первого и последнего символов для разбора и возвращает корневой узел получившегося дерева. Пока не знаю как будут присоединяться дочерние узлы, так что скелет парсера имеет вид:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="c1">;;; HTML parser</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="c1">;;; HTML parser</span>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">parse-html</span> <span class="p">(</span><span class="nv">str</span> <span class="k">&amp;optional</span> <span class="p">(</span><span class="nv">index</span> <span class="mi">0</span><span class="p">)</span> <span class="p">(</span><span class="nv">end</span> <span class="p">(</span><span class="nb">length</span> <span class="nv">str</span><span class="p">)))</span>
   <span class="p">(</span><span class="k">declare</span> <span class="p">(</span><span class="k">type</span> <span class="kt">fixnum</span> <span class="nv">index</span> <span class="nv">end</span><span class="p">))</span>
     <span class="p">(</span><span class="k">labels</span>
@@ -258,7 +262,7 @@
 </div>
 <p>Проверяем на дереве из одного текстового узла:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="nb">*</span> <span class="p">(</span><span class="nv">ql:quickload</span> <span class="ss">'toy-engine</span><span class="p">)</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="nb">*</span> <span class="p">(</span><span class="nv">ql:quickload</span> <span class="ss">'toy-engine</span><span class="p">)</span>
 <span class="nv">To</span> <span class="nb">load</span> <span class="s">"toy-engine"</span><span class="err">:</span>
   <span class="nv">Load</span> <span class="mi">1</span> <span class="nv">ASDF</span> <span class="nv">system:</span>
     <span class="nv">toy-engine</span>
@@ -280,7 +284,7 @@
 <span class="nb">*</span>
 </code></pre>
 </div>
-<p>Выглядит неплохо:<br />
+<p>Выглядит неплохо:
 <img src="/public/imgs/lisp/text-node.png" alt="Дерево после разбора" style="display:block;margin-left:auto;margin-right:auto;" /></p>
 
 </div>
@@ -288,6 +292,13 @@
 <div class="related">
   <h2>Related Posts</h2>
   <ul class="related-posts">
+    
+      <li>
+          <a href="/ru/2017/07/22/jekyll-seo.html">
+            Jekyll SEO
+            <small>22 Jul 2017</small>
+          </a>
+      </li>
     
       <li>
           <a href="/ru/2016/06/02/html_parsing_part3.html">
@@ -300,13 +311,6 @@
           <a href="/ru/2016/05/31/html-parsing-part2.html">
             HTML parsing (part 2)
             <small>31 May 2016</small>
-          </a>
-      </li>
-    
-      <li>
-          <a href="/ru/2016/05/22/html_parsing_(meta).html">
-            HTML parsing (META)
-            <small>22 May 2016</small>
           </a>
       </li>
     

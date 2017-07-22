@@ -116,13 +116,17 @@
         
       
     
+      
+        
+      
+    
 
     <span class="sidebar-nav-item">Currently v1.0.1</span>
   </nav>
 
   <div class="sidebar-item">
     <p>
-      &copy; 2016. All rights reserved.
+      &copy; 2017. All rights reserved.
     </p>
   </div>
 </div>
@@ -160,15 +164,15 @@
 	
 	</ul>
     </div>
-  <h2 id="section">Задачка</h2>
-<p>В игре 11th hour попалась головоломка-игрушка, цель которой: выстроить в ряд 4 фишки.  Причём нельзя выбрать горизонталь для новой фишки, можно  выбрать только вертикаль.<br />
-<img src="/public/imgs/lisp/trilobyte.png" alt="former game screen" /> Я не могу победить компьютер в этой мини-игре, так что попробую устроить битву двух AI. Было бы забавно написать соперника для компьютера на Lisp, так как я практически не знаком с этим языком.<br />
+  <h2 id="Задачка">Задачка</h2>
+<p>В игре 11th hour попалась головоломка-игрушка, цель которой: выстроить в ряд 4 фишки.  Причём нельзя выбрать горизонталь для новой фишки, можно  выбрать только вертикаль.
+<img src="/public/imgs/lisp/trilobyte.png" alt="former game screen" /> Я не могу победить компьютер в этой мини-игре, так что попробую устроить битву двух AI. Было бы забавно написать соперника для компьютера на Lisp, так как я практически не знаком с этим языком.
 Для начала я прочёл <a href="http://www.amazon.com/s/ref=nb_sb_noss/179-0107147-8261974?url=search-alias%3Dstripbooks&amp;field-keywords=Land+of+Lisp%3A+Learn+to+Program+in+Lisp%2C+One+Game+at+a+Time%21">Land of Lisp: Learn to Program in Lisp, One Game at a Time!</a> чтобы понять как вообще можно писать игры на этом языке. В качестве компилятора/интерпретатора использую SBCL, ну как один из доступных (/usr/dports/lang/sbcl) для <a href="http://www.dragonflybsd.org/">DragonFly BSD</a>.</p>
 
-<h2 id="section-1">Игровое поле (доска)</h2>
+<h2 id="Игровое-поле-доска">Игровое поле (доска)</h2>
 <p>Из книги стало ясно, что доску нужного мне размера (8х7) мне скорее всего не получится реализовать без опыта оптимизации программ на Lisp. Так что начнём с крошечной доски 3x3, на которой, тем не менее, можно будет отработать логику искусственного интеллекта.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="c1">;; *** Consts</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="c1">;; *** Consts</span>
 <span class="c1">;; board</span>
 <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*board-width*</span>  <span class="mi">3</span><span class="p">)</span>
 <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*board-height*</span> <span class="mi">3</span><span class="p">)</span>
@@ -178,25 +182,27 @@
 </div>
 <p>Условием для победы также будет считаться более короткая линия из фишек:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="c1">;; row length for win</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="c1">;; row length for win</span>
 <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*win-len*</span> <span class="mi">3</span><span class="p">)</span>
 </code></pre>
 </div>
-<p>Каждая клетка доски может находиться в одном из трёх состояний:<br />
-1. быть пустой;<br />
-2. с фишкой противника;<br />
-3. с нашей фишкой.</p>
+<p>Каждая клетка доски может находиться в одном из трёх состояний:</p>
+<ol>
+  <li>быть пустой;</li>
+  <li>с фишкой противника;</li>
+  <li>с нашей фишкой.</li>
+</ol>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="c1">;; cell types</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="c1">;; cell types</span>
 <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*empty-cell*</span> <span class="mi">0</span><span class="p">)</span>
 <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*ai-cell*</span>    <span class="mi">1</span><span class="p">)</span>
 <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*human-cell*</span> <span class="mi">2</span><span class="p">)</span>
 </code></pre>
 </div>
-<p><em>defparameter</em> не совсем то, что мне нужно, тут скорее подошёл бы старый добрый <em>#define</em>, но я пока не обнаружил в Lisp какого-либо подобия <em>настоящих</em> констант.<br />
+<p><em>defparameter</em> не совсем то, что мне нужно, тут скорее подошёл бы старый добрый <em>#define</em>, но я пока не обнаружил в Lisp какого-либо подобия <em>настоящих</em> констант.
 Доска это массив из ячеек. Её можно создать или полностью из пустых клеток, или копированием из списка клеток, а копировать я буду часто поскольку нужно будет очень много досок с различными комбинациями фишек.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="c1">;; *** Board</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="c1">;; *** Board</span>
 <span class="c1">;; two dimentional array of cells</span>
 <span class="c1">;; . X -&gt;</span>
 <span class="c1">;; Y</span>
@@ -213,7 +219,7 @@
 </div>
 <p>Нужно ввести понятия игроков чтобы как-то различать чей сейчас ход и т.д.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="c1">;; players</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="c1">;; players</span>
 <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*ai-player*</span>    <span class="mi">1</span><span class="p">)</span>
 <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*human-player*</span> <span class="mi">2</span><span class="p">)</span>
 
@@ -235,7 +241,7 @@
 </div>
 <p>И возвращаясь к нашей доске опишем пару вспомогательных функция для доступа и проверки ячеек.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="c1">;; get board cell</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="c1">;; get board cell</span>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">get-cell</span> <span class="p">(</span><span class="nv">board</span> <span class="nv">cell</span><span class="p">)</span>
   <span class="p">(</span><span class="nb">aref</span> <span class="nv">board</span> <span class="nv">cell</span><span class="p">))</span>
 
@@ -249,7 +255,7 @@
 </div>
 <p>На данный момент можно немного посмотреть на работу доски:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="gp">% </span>rlwrap sbcl --load trilobyte.lisp
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="gp">% </span>rlwrap sbcl --load trilobyte.lisp
 This is SBCL 1.2.9, an implementation of ANSI Common Lisp.
 More information about SBCL is available at &lt;http://www.sbcl.org/&gt;.
 
@@ -285,6 +291,13 @@ NIL
   <ul class="related-posts">
     
       <li>
+          <a href="/ru/2017/07/22/jekyll-seo.html">
+            Jekyll SEO
+            <small>22 Jul 2017</small>
+          </a>
+      </li>
+    
+      <li>
           <a href="/ru/2016/06/02/html_parsing_part3.html">
             HTML parsing (part 3)
             <small>02 Jun 2016</small>
@@ -295,13 +308,6 @@ NIL
           <a href="/ru/2016/05/31/html-parsing-part2.html">
             HTML parsing (part 2)
             <small>31 May 2016</small>
-          </a>
-      </li>
-    
-      <li>
-          <a href="/ru/2016/05/25/html_parsing_part1.html">
-            HTML parsing (part 1)
-            <small>25 May 2016</small>
           </a>
       </li>
     

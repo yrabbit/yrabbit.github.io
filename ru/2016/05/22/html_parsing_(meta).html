@@ -116,13 +116,17 @@
         
       
     
+      
+        
+      
+    
 
     <span class="sidebar-nav-item">Currently v1.0.1</span>
   </nav>
 
   <div class="sidebar-item">
     <p>
-      &copy; 2016. All rights reserved.
+      &copy; 2017. All rights reserved.
     </p>
   </div>
 </div>
@@ -168,12 +172,12 @@
 
 <p>Для реальных задач <a href="https://kore-nordmann.de/blog/do_NOT_parse_using_regexp.html" title="Почему никогда не стоит использовать регулярные выражения для парсинга">никогда не используйте регулярные выражения для парсинга</a>. Если искушение не пропало, то прочтите <a href="https://kore-nordmann.de/blog/do_NOT_parse_using_regexp.html" title="Почему никогда не стоит использовать регулярные выражения для парсинга">статью</a> ещё раз.</p>
 
-<h2 id="meta-1">Язык META</h2>
+<h2 id="Язык-meta">Язык META</h2>
 <p>Выражения META из символов, строк, последовательности [ ], альтернативы { }, звезды Клини $, проверка символа по условию @ и вычисление выражения !.</p>
 
 <p>Вот как выглядит парсинг целого числа с одновременным вычислением собственно его значения:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nb">deftype</span> <span class="nv">digit</span> <span class="p">()</span> <span class="o">'</span><span class="p">(</span><span class="nb">member</span> <span class="sc">#\0</span> <span class="sc">#\1</span> <span class="sc">#\2</span> <span class="sc">#\3</span> <span class="sc">#\4</span> <span class="sc">#\5</span> <span class="sc">#\6</span> <span class="sc">#\7</span> <span class="sc">#\8</span> <span class="sc">#\9</span><span class="p">))</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nb">deftype</span> <span class="nv">digit</span> <span class="p">()</span> <span class="o">'</span><span class="p">(</span><span class="nb">member</span> <span class="sc">#\0</span> <span class="sc">#\1</span> <span class="sc">#\2</span> <span class="sc">#\3</span> <span class="sc">#\4</span> <span class="sc">#\5</span> <span class="sc">#\6</span> <span class="sc">#\7</span> <span class="sc">#\8</span> <span class="sc">#\9</span><span class="p">))</span>
 
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">ctoi</span> <span class="p">(</span><span class="nv">d</span><span class="p">)</span> <span class="p">(</span><span class="nb">-</span> <span class="p">(</span><span class="nb">char-code</span> <span class="nv">d</span><span class="p">)</span> <span class="o">#.</span><span class="p">(</span><span class="nb">char-code</span> <span class="sc">#\0</span><span class="p">)))</span>
 
@@ -188,10 +192,10 @@
 </div>
 <p>! является мошной конструкцией META, которая позволяет делать интересные вещи, такие как модификация грамматики на ходу.</p>
 
-<h2 id="meta-2">Ядро META</h2>
+<h2 id="Ядро-meta">Ядро META</h2>
 <p>Выражения META преобразуются reader-макросами во внутреннее представление — структуру <code class="highlighter-rouge">meta</code> (функция печати здесь только для отладки):</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nb">defstruct</span> <span class="p">(</span><span class="nv">meta</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nb">defstruct</span> <span class="p">(</span><span class="nv">meta</span>
              <span class="p">(</span><span class="ss">:print-function</span>
                <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">m</span> <span class="nv">s</span> <span class="nv">d</span> <span class="k">&amp;aux</span> <span class="p">(</span><span class="nb">char</span> <span class="p">(</span><span class="nv">meta-char</span> <span class="nv">m</span><span class="p">))</span> <span class="p">(</span><span class="nv">form</span> <span class="p">(</span><span class="nv">meta-form</span> <span class="nv">m</span><span class="p">)))</span>
                  <span class="p">(</span><span class="nb">ecase</span> <span class="nb">char</span>
@@ -205,13 +209,13 @@
 </div>
 <p>Распознаём операторы META, ничего кроме создания структур <code class="highlighter-rouge">meta</code>:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nb">mapc</span> <span class="nf">#'</span><span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">c</span><span class="p">)</span> <span class="p">(</span><span class="nb">set-macro-character</span> <span class="nv">c</span> <span class="nf">#'</span><span class="nv">meta-reader</span><span class="p">))</span> <span class="o">'</span><span class="p">(</span><span class="sc">#\@</span> <span class="sc">#\$</span> <span class="sc">#\!</span><span class="p">))</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nb">mapc</span> <span class="nf">#'</span><span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">c</span><span class="p">)</span> <span class="p">(</span><span class="nb">set-macro-character</span> <span class="nv">c</span> <span class="nf">#'</span><span class="nv">meta-reader</span><span class="p">))</span> <span class="o">'</span><span class="p">(</span><span class="sc">#\@</span> <span class="sc">#\$</span> <span class="sc">#\!</span><span class="p">))</span>
 </code></pre>
 </div>
 
 <p>Распознаём последовательность и альтернативы:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nb">set-macro-character</span> <span class="sc">#\[</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nb">set-macro-character</span> <span class="sc">#\[</span>
   <span class="nf">#'</span><span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">s</span> <span class="nv">c</span><span class="p">)</span> <span class="p">(</span><span class="nv">make-meta</span> <span class="ss">:char</span> <span class="nv">c</span> <span class="ss">:form</span> <span class="p">(</span><span class="nb">read-delimited-list</span> <span class="sc">#\]</span> <span class="nv">s</span> <span class="no">t</span><span class="p">))))</span>
 
 <span class="p">(</span><span class="nb">set-macro-character</span> <span class="sc">#\{</span>
@@ -223,7 +227,7 @@
 </div>
 <p>И, наконец, компилятор META:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nb">defun</span> <span class="nv">compileit</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nb">defun</span> <span class="nv">compileit</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
   <span class="p">(</span><span class="nb">typecase</span> <span class="nv">x</span>
     <span class="p">(</span><span class="nv">meta</span>
       <span class="p">(</span><span class="nb">ecase</span> <span class="p">(</span><span class="nv">meta-char</span> <span class="nv">x</span><span class="p">)</span>
@@ -240,7 +244,7 @@
 
 <p>Осталось определиться с тем, как скармливать парсеру входные данные. <a href="http://home.pipeline.com/~hbaker1/Prag-Parse.html" title="Старая статья о парсинге">Статья</a> предлагает такие варианты как считывание из потока, из строки и из списка. Наш игрушечный движок будет читать из строки хотя бы потому, что так легче “откатываться” на несколько символов назад.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nb">defmacro</span> <span class="nv">match</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nb">defmacro</span> <span class="nv">match</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
   <span class="p">(</span><span class="nb">etypecase</span> <span class="nv">x</span>
     <span class="p">(</span><span class="nb">character</span>
       <span class="o">`</span><span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nb">and</span> <span class="p">(</span><span class="nb">&lt;</span> <span class="nv">index</span> <span class="nv">end</span><span class="p">)</span> <span class="p">(</span><span class="nb">eql</span> <span class="p">(</span><span class="nb">char</span> <span class="nv">str</span> <span class="nv">index</span><span class="p">)</span> <span class="ss">',x</span><span class="p">))</span>
@@ -268,6 +272,13 @@
   <ul class="related-posts">
     
       <li>
+          <a href="/ru/2017/07/22/jekyll-seo.html">
+            Jekyll SEO
+            <small>22 Jul 2017</small>
+          </a>
+      </li>
+    
+      <li>
           <a href="/ru/2016/06/02/html_parsing_part3.html">
             HTML parsing (part 3)
             <small>02 Jun 2016</small>
@@ -278,13 +289,6 @@
           <a href="/ru/2016/05/31/html-parsing-part2.html">
             HTML parsing (part 2)
             <small>31 May 2016</small>
-          </a>
-      </li>
-    
-      <li>
-          <a href="/ru/2016/05/25/html_parsing_part1.html">
-            HTML parsing (part 1)
-            <small>25 May 2016</small>
           </a>
       </li>
     

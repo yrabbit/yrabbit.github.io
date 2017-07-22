@@ -116,13 +116,17 @@
         
       
     
+      
+        
+      
+    
 
     <span class="sidebar-nav-item">Currently v1.0.1</span>
   </nav>
 
   <div class="sidebar-item">
     <p>
-      &copy; 2016. All rights reserved.
+      &copy; 2017. All rights reserved.
     </p>
   </div>
 </div>
@@ -160,11 +164,11 @@
 	
 	</ul>
     </div>
-  <h2 id="section">Немного причёсывания</h2>
+  <h2 id="Немного-причёсывания">Немного причёсывания</h2>
 
 <p>Хотя я проигрываю AI, он не может победить монстра из 11-го часа:( И, пока у меня не появилось идей по улучшению его работы, займусь украшательствами. Для начала чуть-чуть упростим построение шаблонов для проверки соседних ячеек, ну и заодно сделаем её запоминающей.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="c1">;; test pattern for win</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="c1">;; test pattern for win</span>
 <span class="c1">;; ((left...) (right...)</span>
 <span class="c1">;;  (up...) (down...)</span>
 <span class="c1">;;  (left-up...) (right-down...)</span>
@@ -244,10 +248,10 @@
 </code></pre>
 </div>
 
-<h2 id="section-1">Несколько вспомогательных предикатов</h2>
+<h2 id="Несколько-вспомогательных-предикатов">Несколько вспомогательных предикатов</h2>
 <p>Выражения типа (if (eql *ai-player* (game-node-player tree)) смотрятся не очень, поэтому введём несколько предикатов.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="c1">;; which player made the move</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="c1">;; which player made the move</span>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">last-player</span> <span class="p">(</span><span class="nv">tree</span><span class="p">)</span>
   <span class="p">(</span><span class="nv">change-player</span> <span class="p">(</span><span class="nv">game-node-player</span> <span class="nv">tree</span><span class="p">)))</span>
 
@@ -261,10 +265,10 @@
 </code></pre>
 </div>
 
-<h2 id="section-2">Новая эвристика</h2>
+<h2 id="Новая-эвристика">Новая эвристика</h2>
 <p>Отличие её от старой заключается в том, что старая оценивала позицию подсчитывая длины уже построенных линий из фишек, а новая допускает пустые клетки между клетками с фишками AI. Другими словами она принимает в расчёт потенциальные линии из фишек. Сразу скажу, что она всё равно не позволяет победить компьютер из 11-го часа.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="c1">;; count player cells in line</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="c1">;; count player cells in line</span>
 <span class="c1">;; empty cells are allowed but other player cells not</span>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">count-player-cells</span> <span class="p">(</span><span class="nv">board</span> <span class="nv">cell</span> <span class="nv">player</span><span class="p">)</span>
   <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">pattern</span> <span class="p">(</span><span class="nv">get-test-patterns</span> <span class="nv">cell</span><span class="p">)))</span>
@@ -293,6 +297,13 @@
   <ul class="related-posts">
     
       <li>
+          <a href="/ru/2017/07/22/jekyll-seo.html">
+            Jekyll SEO
+            <small>22 Jul 2017</small>
+          </a>
+      </li>
+    
+      <li>
           <a href="/ru/2016/06/02/html_parsing_part3.html">
             HTML parsing (part 3)
             <small>02 Jun 2016</small>
@@ -303,13 +314,6 @@
           <a href="/ru/2016/05/31/html-parsing-part2.html">
             HTML parsing (part 2)
             <small>31 May 2016</small>
-          </a>
-      </li>
-    
-      <li>
-          <a href="/ru/2016/05/25/html_parsing_part1.html">
-            HTML parsing (part 1)
-            <small>25 May 2016</small>
           </a>
       </li>
     

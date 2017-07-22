@@ -116,13 +116,17 @@
         
       
     
+      
+        
+      
+    
 
     <span class="sidebar-nav-item">Currently v1.0.1</span>
   </nav>
 
   <div class="sidebar-item">
     <p>
-      &copy; 2016. All rights reserved.
+      &copy; 2017. All rights reserved.
     </p>
   </div>
 </div>
@@ -160,11 +164,11 @@
 	
 	</ul>
     </div>
-  <h2 id="section">Ленивые списки</h2>
-<p>Программа прилично играет на крошечной доске, пора задуматься об увеличении игрового поля. Поскольку при простом увеличении размеров доски память быстро заканчивается, то придется жульничать: создавать в памяти только те кусочки дерева комбинаций, которые действительно нужны. Здесь нужно заметить, что, не имея возможности проанализировать всё дерево комбинаций, AI придётся немного поднапрячься.<br />
+  <h2 id="Ленивые-списки">Ленивые списки</h2>
+<p>Программа прилично играет на крошечной доске, пора задуматься об увеличении игрового поля. Поскольку при простом увеличении размеров доски память быстро заканчивается, то придется жульничать: создавать в памяти только те кусочки дерева комбинаций, которые действительно нужны. Здесь нужно заметить, что, не имея возможности проанализировать всё дерево комбинаций, AI придётся немного поднапрячься.
 Но вернёмся к ленивому дереву комбинаций. Один замечательный макрос и одна простейшая функция сделают сказку былью.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nb">defmacro</span> <span class="nv">lazy</span> <span class="p">(</span><span class="k">&amp;body</span> <span class="nv">body</span><span class="p">)</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nb">defmacro</span> <span class="nv">lazy</span> <span class="p">(</span><span class="k">&amp;body</span> <span class="nv">body</span><span class="p">)</span>
   <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">forcedp</span> <span class="p">(</span><span class="nb">gensym</span><span class="p">))</span> <span class="c1">; флажок Вычислено?</span>
         <span class="p">(</span><span class="nv">value</span> <span class="p">(</span><span class="nb">gensym</span><span class="p">)))</span>  <span class="c1">; вычисленное значение</span>
     <span class="o">`</span><span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="o">,</span><span class="nv">forcedp</span> <span class="no">nil</span><span class="p">)</span>  <span class="c1">; при первом вызове ничего не вычисляем</span>
@@ -181,7 +185,7 @@
 </div>
 <p>Посмотрим как они работают: сначала сделаем переменную, вычисление значения которой требует значительных затрат, на которые мы не можем пойти прямо сейчас, а затем используем эту переменную когда наступит нужный момент:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="nb">*</span> <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*lazy-var*</span> <span class="p">(</span><span class="nv">lazy</span> <span class="p">(</span><span class="k">progn</span> <span class="p">(</span><span class="nb">princ</span> <span class="s">"Очень жуткий процесс вычисления"</span><span class="p">)</span> <span class="mi">12345</span><span class="p">)))</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="nb">*</span> <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*lazy-var*</span> <span class="p">(</span><span class="nv">lazy</span> <span class="p">(</span><span class="k">progn</span> <span class="p">(</span><span class="nb">princ</span> <span class="s">"Очень жуткий процесс вычисления"</span><span class="p">)</span> <span class="mi">12345</span><span class="p">)))</span>
 
 <span class="vg">*LAZY-VAR*</span>
 <span class="nb">*</span> <span class="p">(</span><span class="nv">force</span> <span class="vg">*lazy-var*</span><span class="p">)</span>
@@ -191,7 +195,7 @@
 </div>
 <p>Теперь можно сделать ленивые списки, которые так важны для ленивого дерева комбинаций.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nb">defmacro</span> <span class="nv">lazy-cons</span> <span class="p">(</span><span class="nv">a</span> <span class="nv">d</span><span class="p">)</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nb">defmacro</span> <span class="nv">lazy-cons</span> <span class="p">(</span><span class="nv">a</span> <span class="nv">d</span><span class="p">)</span>
   <span class="o">`</span><span class="p">(</span><span class="nv">lazy</span> <span class="p">(</span><span class="nb">cons</span> <span class="o">,</span><span class="nv">a</span> <span class="o">,</span><span class="nv">d</span><span class="p">)))</span>
 
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">lazy-car</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
@@ -212,7 +216,7 @@
 </div>
 <p>Проверяем.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="nb">*</span> <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*lst*</span> <span class="p">(</span><span class="nv">lazy-cons</span> <span class="mi">12</span> <span class="mi">34</span><span class="p">))</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="nb">*</span> <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*lst*</span> <span class="p">(</span><span class="nv">lazy-cons</span> <span class="mi">12</span> <span class="mi">34</span><span class="p">))</span>
 
 <span class="vg">*LST*</span>
 <span class="nb">*</span> <span class="vg">*lst*</span>
@@ -231,7 +235,7 @@
 </div>
 <p>Простые функции для преобразования обычных списков в ленивые и обратно:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nb">defun</span> <span class="nv">make-lazy</span> <span class="p">(</span><span class="nv">lst</span><span class="p">)</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nb">defun</span> <span class="nv">make-lazy</span> <span class="p">(</span><span class="nv">lst</span><span class="p">)</span>
   <span class="p">(</span><span class="nv">lazy</span> <span class="p">(</span><span class="nb">when</span> <span class="nv">lst</span>
           <span class="p">(</span><span class="nb">cons</span> <span class="p">(</span><span class="nb">car</span> <span class="nv">lst</span><span class="p">)</span> <span class="p">(</span><span class="nv">make-lazy</span> <span class="p">(</span><span class="nb">cdr</span> <span class="nv">lst</span><span class="p">))))))</span>
 
@@ -246,7 +250,7 @@
 </div>
 <p>И как же без функций оперирующих с функциями и списками:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="c1">; Эти функции возвращают ленивые списки</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="c1">; Эти функции возвращают ленивые списки</span>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">lazy-mapcar</span> <span class="p">(</span><span class="nv">fun</span> <span class="nv">lst</span><span class="p">)</span>
   <span class="p">(</span><span class="nv">lazy</span> <span class="p">(</span><span class="nb">unless</span> <span class="p">(</span><span class="nv">lazy-null</span> <span class="nv">lst</span><span class="p">)</span>
           <span class="p">(</span><span class="nb">cons</span> <span class="p">(</span><span class="nb">funcall</span> <span class="nv">fun</span> <span class="p">(</span><span class="nv">lazy-car</span> <span class="nv">lst</span><span class="p">))</span>
@@ -276,10 +280,10 @@
 </code></pre>
 </div>
 
-<h2 id="section-1">Ленивые ходы</h2>
+<h2 id="Ленивые-ходы">Ленивые ходы</h2>
 <p>Теперь в наличии достаточно инструментов чтобы модифицировать дерево комбинаций. Итак самым затратным в плане памяти является список возможных ходов <em>moves</em>, именно в элементах <em>moves</em> хранится всё дерево. Изменим функцию <em>game-tree</em> следующим образом:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nb">defun</span> <span class="nv">game-tree</span> <span class="p">(</span><span class="nv">board</span> <span class="nv">player</span> <span class="nv">move</span><span class="p">)</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nb">defun</span> <span class="nv">game-tree</span> <span class="p">(</span><span class="nv">board</span> <span class="nv">player</span> <span class="nv">move</span><span class="p">)</span>
   <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">fail</span> <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">eql</span> <span class="mi">-1</span> <span class="nv">move</span><span class="p">)</span>
                 <span class="no">nil</span>
                 <span class="p">(</span><span class="nv">test-for-win</span> <span class="nv">board</span> <span class="nv">move</span>
@@ -310,14 +314,14 @@
 
 <p>Проверяем как это работает, но сначала увеличим размеры доски:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*board-width*</span>  <span class="mi">8</span><span class="p">)</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*board-width*</span>  <span class="mi">8</span><span class="p">)</span>
 <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*board-height*</span> <span class="mi">7</span><span class="p">)</span>
 <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*win-len*</span> <span class="mi">4</span><span class="p">)</span>
 
 </code></pre>
 </div>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="nb">*</span> <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*g*</span> <span class="p">(</span><span class="nv">game-tree</span> <span class="p">(</span><span class="nv">new-board</span><span class="p">)</span> <span class="vg">*ai-player*</span> <span class="mi">-1</span><span class="p">))</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="nb">*</span> <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*g*</span> <span class="p">(</span><span class="nv">game-tree</span> <span class="p">(</span><span class="nv">new-board</span><span class="p">)</span> <span class="vg">*ai-player*</span> <span class="mi">-1</span><span class="p">))</span>
 
 <span class="vg">*G*</span>
 <span class="nb">*</span> <span class="vg">*g*</span>
@@ -330,7 +334,7 @@
 </div>
 <p>Замечательно! Как видно всё дерево сейчас состоит из доски и closure ленивого списка возможных ходов. Попробуем посмотреть какая комбинация будет после хода с номером 6:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="nb">*</span> <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*sixth*</span> <span class="p">(</span><span class="nv">lazy-nth</span> <span class="mi">6</span> <span class="p">(</span><span class="nv">game-node-moves</span> <span class="vg">*g*</span><span class="p">)))</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="nb">*</span> <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*sixth*</span> <span class="p">(</span><span class="nv">lazy-nth</span> <span class="mi">6</span> <span class="p">(</span><span class="nv">game-node-moves</span> <span class="vg">*g*</span><span class="p">)))</span>
 
 <span class="vg">*SIXTH*</span>
 <span class="nb">*</span> <span class="vg">*sixth*</span>
@@ -345,7 +349,7 @@
 </div>
 <p>Великолепно: мы получаем  ветку дерева только тогда, когда она действительно нужна. Осталось ещё одно место, где изменение будет сравнительно небольшим - это вывод возможных ходов в интерфейсе с человеком:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="c1">;; handle human</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="c1">;; handle human</span>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">handle-human</span> <span class="p">(</span><span class="nv">tree</span><span class="p">)</span>
   <span class="p">(</span><span class="nb">fresh-line</span><span class="p">)</span>
   <span class="p">(</span><span class="nb">princ</span> <span class="s">"choose your move:"</span><span class="p">)</span>
@@ -370,7 +374,7 @@
 
 <p>Попробуем:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="nb">*</span> <span class="p">(</span><span class="nv">handle-human</span> <span class="p">(</span><span class="nv">game-tree</span> <span class="p">(</span><span class="nv">new-board</span><span class="p">)</span> <span class="vg">*ai-player*</span> <span class="mi">-1</span><span class="p">))</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="nb">*</span> <span class="p">(</span><span class="nv">handle-human</span> <span class="p">(</span><span class="nv">game-tree</span> <span class="p">(</span><span class="nv">new-board</span><span class="p">)</span> <span class="vg">*ai-player*</span> <span class="mi">-1</span><span class="p">))</span>
 
 <span class="nv">choose</span> <span class="nv">your</span> <span class="nv">move:</span>
 <span class="mi">1.</span> <span class="nv">a</span>
@@ -399,6 +403,13 @@
   <ul class="related-posts">
     
       <li>
+          <a href="/ru/2017/07/22/jekyll-seo.html">
+            Jekyll SEO
+            <small>22 Jul 2017</small>
+          </a>
+      </li>
+    
+      <li>
           <a href="/ru/2016/06/02/html_parsing_part3.html">
             HTML parsing (part 3)
             <small>02 Jun 2016</small>
@@ -409,13 +420,6 @@
           <a href="/ru/2016/05/31/html-parsing-part2.html">
             HTML parsing (part 2)
             <small>31 May 2016</small>
-          </a>
-      </li>
-    
-      <li>
-          <a href="/ru/2016/05/25/html_parsing_part1.html">
-            HTML parsing (part 1)
-            <small>25 May 2016</small>
           </a>
       </li>
     

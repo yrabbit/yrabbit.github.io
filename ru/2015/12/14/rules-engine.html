@@ -116,13 +116,17 @@
         
       
     
+      
+        
+      
+    
 
     <span class="sidebar-nav-item">Currently v1.0.1</span>
   </nav>
 
   <div class="sidebar-item">
     <p>
-      &copy; 2016. All rights reserved.
+      &copy; 2017. All rights reserved.
     </p>
   </div>
 </div>
@@ -160,11 +164,11 @@
 	
 	</ul>
     </div>
-  <h2 id="section">Движок игровых правил</h2>
-<p>Поскольку мы можем просчитать все комбинцаии (пока что для крошечной доски), то движок правил будет представлять из себя просто древовидную структуру данных<sup id="fnref:tree-picture-source"><a href="#fn:tree-picture-source" class="footnote">1</a></sup>.<br />
+  <h2 id="Движок-игровых-правил">Движок игровых правил</h2>
+<p>Поскольку мы можем просчитать все комбинцаии (пока что для крошечной доски), то движок правил будет представлять из себя просто древовидную структуру данных<sup id="fnref:tree-picture-source"><a href="#fn:tree-picture-source" class="footnote">1</a></sup>.
 <img src="/public/imgs/lisp/tree.png" alt="Дерево движка игровых правил" /></p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="c1">;; game rules engine is a tree which elements are lists</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="c1">;; game rules engine is a tree which elements are lists</span>
 <span class="p">(</span><span class="nb">defstruct</span> <span class="p">(</span><span class="nv">game-node</span> <span class="p">(</span><span class="ss">:type</span> <span class="nb">list</span><span class="p">))</span>
   <span class="nv">player</span>  <span class="c1">; *human-player* or *ai-player*</span>
   <span class="nv">board</span>   <span class="c1">; current board situation</span>
@@ -211,12 +215,12 @@
   </tbody>
 </table>
 
-<p>Движок правил будет проверять допустимость ходов для человека, обеспечивать необходимыми данными искусственный инлеллект и обнаруживать победу/поражение.<br />
+<p>Движок правил будет проверять допустимость ходов для человека, обеспечивать необходимыми данными искусственный инлеллект и обнаруживать победу/поражение.
 Листьями дерева движка являются узлы с установленным флажком поражения или пустым списком возможных ходов, последнее означает ничью.</p>
 
 <p>Итак создаём дерево движка правил, это делается одной рекурсивной функцией, и она прекрасно справляется с крошечной доской 3х3, однако очень быстро  исчерпывает стек и ломается на больших досках.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="c1">;; new tree</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="c1">;; new tree</span>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">game-tree</span> <span class="p">(</span><span class="nv">board</span> <span class="nv">player</span> <span class="nv">move</span><span class="p">)</span>
   <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">fail</span> <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">eql</span> <span class="mi">-1</span> <span class="nv">move</span><span class="p">)</span>
                 <span class="no">nil</span>
@@ -240,7 +244,7 @@
 </code></pre>
 </div>
 
-<p>Параметр <em>move</em> у этой функции означает клетку, куда был сделан ход, который привёл к этой ситуации на доске. Если <em>move</em> равен -1, то это значит, что предыдущего хода не было - это самая начальная комбинация и не нужно проверять не проиграл ли кто-нибудь.<br />
+<p>Параметр <em>move</em> у этой функции означает клетку, куда был сделан ход, который привёл к этой ситуации на доске. Если <em>move</em> равен -1, то это значит, что предыдущего хода не было - это самая начальная комбинация и не нужно проверять не проиграл ли кто-нибудь.
 Первым делом проверяем не проиграл ли кто, в этом случае это листовая комбинация на доске и дальше комбинации не строим. Иначе строим узлы дерева для всех возможных ходов на данной доске.</p>
 
 <h2 id="ai">AI</h2>
@@ -251,10 +255,10 @@
   <li>AI считает, что человек выберет ход с минимальной оценкой.</li>
 </ul>
 
-<p>Другими словами AI рассчитывает, что человек будет действовать наихудшим для AI образом.<br />
+<p>Другими словами AI рассчитывает, что человек будет действовать наихудшим для AI образом.
 Оценки, здесь ничья лучше чем проигрыш, но хуже чем победа:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*ai-win*</span>     <span class="mi">1</span><span class="p">)</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*ai-win*</span>     <span class="mi">1</span><span class="p">)</span>
 <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*draw*</span>       <span class="mi">0</span><span class="p">)</span>
 <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*human-win*</span> <span class="mi">-1</span><span class="p">)</span>
 </code></pre>
@@ -262,7 +266,7 @@
 
 <p>Следующие две функции реализуют этот алгоритм.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nb">defun</span> <span class="nv">rate-position</span> <span class="p">(</span><span class="nv">tree</span><span class="p">)</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nb">defun</span> <span class="nv">rate-position</span> <span class="p">(</span><span class="nv">tree</span><span class="p">)</span>
   <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">moves</span> <span class="p">(</span><span class="nv">game-node-moves</span> <span class="nv">tree</span><span class="p">)))</span>
         <span class="p">(</span><span class="k">if</span> <span class="nv">moves</span>
           <span class="p">(</span><span class="nb">apply</span> <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">eq</span> <span class="vg">*ai-player*</span> <span class="p">(</span><span class="nv">game-node-player</span> <span class="nv">tree</span><span class="p">))</span>
@@ -284,7 +288,7 @@
 
 <p>Проверим как работает подсчёт оценок для ходов. Создадим пустую доску, где первым бцдет ходить AI, запомним её для удобства в переменной *game* и посмотрим как он оценивает свои возможные ходы:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="nb">*</span> <span class="p">(</span><span class="nb">defvar</span> <span class="vg">*game*</span> <span class="p">(</span><span class="nv">game-tree</span> <span class="p">(</span><span class="nv">new-board</span><span class="p">)</span> <span class="vg">*ai-player*</span> <span class="mi">-1</span><span class="p">))</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="nb">*</span> <span class="p">(</span><span class="nb">defvar</span> <span class="vg">*game*</span> <span class="p">(</span><span class="nv">game-tree</span> <span class="p">(</span><span class="nv">new-board</span><span class="p">)</span> <span class="vg">*ai-player*</span> <span class="mi">-1</span><span class="p">))</span>
 
 <span class="vg">*GAME*</span>
 <span class="nb">*</span> <span class="p">(</span><span class="nv">game-node-board</span> <span class="vg">*game*</span><span class="p">)</span> <span class="c1">; посмотрим на доску</span>
@@ -295,17 +299,17 @@
 <span class="p">(</span><span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">)</span>
 </code></pre>
 </div>
-<p>Похоже что компьютеру всё равно куда ходить - все ходы оцениваются как ведущие к ничьей. Посмотрим, что будет, если мы съимитируем выбор AI первого хода.<br />
+<p>Похоже что компьютеру всё равно куда ходить - все ходы оцениваются как ведущие к ничьей. Посмотрим, что будет, если мы съимитируем выбор AI первого хода.
 Для этого извлечём второй элемент первого хода (cadar список-ходов) и запомним его в переменной *first-move*:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="nb">*</span> <span class="p">(</span><span class="nb">defvar</span> <span class="vg">*first-move*</span> <span class="p">(</span><span class="nb">cadar</span> <span class="p">(</span><span class="nv">game-node-moves</span> <span class="vg">*game*</span><span class="p">)))</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="nb">*</span> <span class="p">(</span><span class="nb">defvar</span> <span class="vg">*first-move*</span> <span class="p">(</span><span class="nb">cadar</span> <span class="p">(</span><span class="nv">game-node-moves</span> <span class="vg">*game*</span><span class="p">)))</span>
 
 <span class="vg">*FIRST-MOVE*</span>
 </code></pre>
 </div>
 <p>Проверим оценки ситуации:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="nb">*</span> <span class="p">(</span><span class="nv">game-node-board</span> <span class="vg">*first-move*</span><span class="p">)</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="nb">*</span> <span class="p">(</span><span class="nv">game-node-board</span> <span class="vg">*first-move*</span><span class="p">)</span>
 
 <span class="o">#(</span><span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">)</span>
 <span class="nb">*</span> <span class="p">(</span><span class="nv">get-ratings</span> <span class="vg">*first-move*</span><span class="p">)</span>
@@ -314,20 +318,20 @@
 </code></pre>
 </div>
 
-<p>О! Компьютер увидел для себя два возможных пути к победе! Вряд ли у него получится ими воспользоваться, поскольку сейчас ход человека, и он наверняка выберет последний ход, который ведёт к возможной ничье.<br />
+<p>О! Компьютер увидел для себя два возможных пути к победе! Вряд ли у него получится ими воспользоваться, поскольку сейчас ход человека, и он наверняка выберет последний ход, который ведёт к возможной ничье.
 Окончательно оформляем действия компьютера как функцию:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="c1">; ai</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="c1">; ai</span>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">handle-computer</span> <span class="p">(</span><span class="nv">tree</span><span class="p">)</span>
   <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">ratings</span> <span class="p">(</span><span class="nv">get-ratings</span> <span class="nv">tree</span><span class="p">)))</span>
       <span class="p">(</span><span class="nb">cadr</span> <span class="p">(</span><span class="nb">nth</span> <span class="p">(</span><span class="nb">position</span> <span class="p">(</span><span class="nb">apply</span> <span class="nf">#'</span><span class="nb">max</span> <span class="nv">ratings</span><span class="p">)</span> <span class="nv">ratings</span><span class="p">)</span> <span class="p">(</span><span class="nv">game-node-moves</span> <span class="nv">tree</span><span class="p">)))))</span>
 
 </code></pre>
 </div>
-<p>Здесь в две строчки записано: когда компьютеру предоставляется возможность сделать ход, он подсчитывает оценки для возможных ходов и выбирает ход с максимальной оценкой.<br />
+<p>Здесь в две строчки записано: когда компьютеру предоставляется возможность сделать ход, он подсчитывает оценки для возможных ходов и выбирает ход с максимальной оценкой.
 Посмотрим какой ход AI выберет в самом начале, когда все ходы ведут к возможной ничье:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="nb">*</span> <span class="p">(</span><span class="nb">defvar</span> <span class="vg">*game*</span> <span class="p">(</span><span class="nv">game-tree</span> <span class="p">(</span><span class="nv">new-board</span><span class="p">)</span> <span class="vg">*ai-player*</span> <span class="mi">-1</span><span class="p">))</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="nb">*</span> <span class="p">(</span><span class="nb">defvar</span> <span class="vg">*game*</span> <span class="p">(</span><span class="nv">game-tree</span> <span class="p">(</span><span class="nv">new-board</span><span class="p">)</span> <span class="vg">*ai-player*</span> <span class="mi">-1</span><span class="p">))</span>
 
 <span class="vg">*GAME*</span>
 <span class="nb">*</span> <span class="p">(</span><span class="nv">game-node-board</span> <span class="p">(</span><span class="nv">handle-computer</span> <span class="vg">*game*</span><span class="p">))</span>
@@ -338,7 +342,7 @@
 <div class="footnotes">
   <ol>
     <li id="fn:tree-picture-source">
-      <p>Сделано с помощью <a href="/public/src/lisp/tree.dot">маленькой программки для</a> Graphviz. <a href="#fnref:tree-picture-source" class="reversefootnote">&#8617;</a></p>
+      <p>Сделано с помощью <a href="/public/src/lisp/tree.dot">маленькой программки для</a> Graphviz.&nbsp;<a href="#fnref:tree-picture-source" class="reversefootnote">&#8617;</a></p>
     </li>
   </ol>
 </div>
@@ -348,6 +352,13 @@
 <div class="related">
   <h2>Related Posts</h2>
   <ul class="related-posts">
+    
+      <li>
+          <a href="/ru/2017/07/22/jekyll-seo.html">
+            Jekyll SEO
+            <small>22 Jul 2017</small>
+          </a>
+      </li>
     
       <li>
           <a href="/ru/2016/06/02/html_parsing_part3.html">
@@ -360,13 +371,6 @@
           <a href="/ru/2016/05/31/html-parsing-part2.html">
             HTML parsing (part 2)
             <small>31 May 2016</small>
-          </a>
-      </li>
-    
-      <li>
-          <a href="/ru/2016/05/25/html_parsing_part1.html">
-            HTML parsing (part 1)
-            <small>25 May 2016</small>
           </a>
       </li>
     

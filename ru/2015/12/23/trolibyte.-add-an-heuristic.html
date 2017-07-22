@@ -116,13 +116,17 @@
         
       
     
+      
+        
+      
+    
 
     <span class="sidebar-nav-item">Currently v1.0.1</span>
   </nav>
 
   <div class="sidebar-item">
     <p>
-      &copy; 2016. All rights reserved.
+      &copy; 2017. All rights reserved.
     </p>
   </div>
 </div>
@@ -160,7 +164,7 @@
 	
 	</ul>
     </div>
-  <h2 id="section">Чуточку умнее</h2>
+  <h2 id="Чуточку-умнее">Чуточку умнее</h2>
 <p>Итак, AI действует разумно только когда видит чью-нибудь победу через ближашие *ai-level* ходов, иначе просто выбирает первый же ход. Попробуем следующую эвристику:</p>
 
 <ul>
@@ -170,7 +174,7 @@
 
 <p>Отсюда наилучшая позиция — это позиция, где длина линии из фишек нашего цвета равна *win-len*.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*ai-win*</span>     <span class="vg">*win-len*</span><span class="p">)</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*ai-win*</span>     <span class="vg">*win-len*</span><span class="p">)</span>
 <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*draw*</span>       <span class="mi">0</span><span class="p">)</span>
 <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*human-win*</span> <span class="p">(</span><span class="nb">-</span> <span class="vg">*win-len*</span><span class="p">))</span>
 </code></pre>
@@ -178,7 +182,7 @@
 
 <p>Новая функция оценивает позицию исходя из того, какой игрок сделал ход и какой длины линия из фишек получилась.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="c1">;; count longest line</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="c1">;; count longest line</span>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">score-position</span> <span class="p">(</span><span class="nv">tree</span> <span class="nv">move</span><span class="p">)</span>
   <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">cnt</span> <span class="p">(</span><span class="nv">count-player-cells</span> 
                <span class="p">(</span><span class="nv">game-node-board</span> <span class="nv">tree</span><span class="p">)</span> 
@@ -196,7 +200,7 @@
   <li>собственно подсчёт длины линии.</li>
 </ol>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nb">defun</span> <span class="nv">rate-position</span> <span class="p">(</span><span class="nv">tree</span> <span class="nv">move</span><span class="p">)</span>    <span class="c1">; // 1</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nb">defun</span> <span class="nv">rate-position</span> <span class="p">(</span><span class="nv">tree</span> <span class="nv">move</span><span class="p">)</span>    <span class="c1">; // 1</span>
   <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">moves</span> <span class="p">(</span><span class="nv">game-node-moves</span> <span class="nv">tree</span><span class="p">)))</span>
         <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">not</span> <span class="p">(</span><span class="nv">lazy-null</span> <span class="nv">moves</span><span class="p">))</span>
           <span class="p">(</span><span class="nb">apply</span> <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">eq</span> <span class="vg">*ai-player*</span> <span class="p">(</span><span class="nv">game-node-player</span> <span class="nv">tree</span><span class="p">))</span>
@@ -216,9 +220,9 @@
 </code></pre>
 </div>
 
-<h2 id="section-1">Листинг игры</h2>
+<h2 id="Листинг-игры">Листинг игры</h2>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="nv">current</span> <span class="nv">player</span> <span class="nb">=</span> <span class="nv">The</span> <span class="nv">Evil</span> <span class="nv">AI</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="nv">current</span> <span class="nv">player</span> <span class="nb">=</span> <span class="nv">The</span> <span class="nv">Evil</span> <span class="nv">AI</span>
 <span class="o">........</span>
 <span class="o">........</span>
 <span class="o">........</span>
@@ -526,6 +530,13 @@
   <ul class="related-posts">
     
       <li>
+          <a href="/ru/2017/07/22/jekyll-seo.html">
+            Jekyll SEO
+            <small>22 Jul 2017</small>
+          </a>
+      </li>
+    
+      <li>
           <a href="/ru/2016/06/02/html_parsing_part3.html">
             HTML parsing (part 3)
             <small>02 Jun 2016</small>
@@ -536,13 +547,6 @@
           <a href="/ru/2016/05/31/html-parsing-part2.html">
             HTML parsing (part 2)
             <small>31 May 2016</small>
-          </a>
-      </li>
-    
-      <li>
-          <a href="/ru/2016/05/25/html_parsing_part1.html">
-            HTML parsing (part 1)
-            <small>25 May 2016</small>
           </a>
       </li>
     

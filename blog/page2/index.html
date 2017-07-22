@@ -116,13 +116,17 @@
         
       
     
+      
+        
+      
+    
 
     <span class="sidebar-nav-item">Currently v1.0.1</span>
   </nav>
 
   <div class="sidebar-item">
     <p>
-      &copy; 2016. All rights reserved.
+      &copy; 2017. All rights reserved.
     </p>
   </div>
 </div>
@@ -142,6 +146,32 @@
 
       <div class="container content">
           
+  <div class="post">
+    <h2 class="post-title">
+		<a href="/ru/2015/12/26/trilobyte.-a-new-heuristic.html">
+        Trilobyte. A new heuristic.
+      </a>
+    </h2>
+    <div class="post-meta">26 Dec 2015
+	<ul class="tag_list_in_post">
+	
+	<li class="inline tag_list_item">
+		<a class="tag_list_link" href="/tag/lisp"> lisp</a>
+	</li>
+	
+	<li class="inline tag_list_item">
+		<a class="tag_list_link" href="/tag/games"> games</a>
+	</li>
+	
+	<li class="inline tag_list_item">
+		<a class="tag_list_link" href="/tag/trilobyte"> trilobyte</a>
+	</li>
+	
+	</ul>
+    </div>
+    Идея Для начала небольшая парочка функций, которые подсчитывают количество фишек противника в соседних клетках. ;; count enemy neighbors (defun slow-get-neighbors-pattern (cell) (remove-if #'null (list (when (&gt; (mod cell *board-width*) 0) (1- cell)) (when (&gt;= cell *board-width*) (- cell *board-width*)) (when (&lt; (mod cell *board-width*) (1- *board-width*)) (1+ cell)) (when (&lt;...
+  </div>
+  
   <div class="post">
     <h2 class="post-title">
 		<a href="/ru/2015/12/26/trilobyte.-more-lisp-and-misc.html">
@@ -370,32 +400,6 @@
 	</ul>
     </div>
     То, что не случилось Второй способ заключается в создании специального устройства, чтение из которого возвращает текущий уровень подстветки, а запись в которое изменяет уровень подстветки. И такое устройство было создано. Это потребовало гораздо крупных вмешательств в код, включая изменение нескольких Makefile, файла системных настроек (sys/conf/options), добавление каталога с исходными файлами...
-  </div>
-  
-  <div class="post">
-    <h2 class="post-title">
-		<a href="/ru/2014/12/18/2-ways-to-adjust-a-backlight-on-acer-c720.html">
-        2 способа регулировки яркости подсветки на Acer C720 (part 1)
-      </a>
-    </h2>
-    <div class="post-meta">18 Dec 2014
-	<ul class="tag_list_in_post">
-	
-	<li class="inline tag_list_item">
-		<a class="tag_list_link" href="/tag/c720"> c720</a>
-	</li>
-	
-	<li class="inline tag_list_item">
-		<a class="tag_list_link" href="/tag/xorg"> xorg</a>
-	</li>
-	
-	<li class="inline tag_list_item">
-		<a class="tag_list_link" href="/tag/dragonflybsd"> dragonflybsd</a>
-	</li>
-	
-	</ul>
-    </div>
-    Клавиши регулировки подсветки на клавиатуре хромбука Acer C720 являются замаскированными клавишами F6 и F7. Соответственно при замене ChromeOS на DragoFly BSD регулировка подсветки не работает. Не удаётся также использовать xbacklight - он не находит видео-выходов с возможностью регулировки подсветки. xrandr может помочь, но это программное решение, что-то типа приглушения яркости...
   </div>
   
 

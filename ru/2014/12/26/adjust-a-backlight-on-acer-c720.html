@@ -116,13 +116,17 @@
         
       
     
+      
+        
+      
+    
 
     <span class="sidebar-nav-item">Currently v1.0.1</span>
   </nav>
 
   <div class="sidebar-item">
     <p>
-      &copy; 2016. All rights reserved.
+      &copy; 2017. All rights reserved.
     </p>
   </div>
 </div>
@@ -156,14 +160,14 @@
 	
 	</ul>
     </div>
-  <h2 id="section">То, что не случилось</h2>
+  <h2 id="То-что-не-случилось">То, что не случилось</h2>
 <p>Второй способ заключается в создании специального устройства, чтение из которого возвращает текущий уровень подстветки, а запись в которое изменяет уровень подстветки. И такое устройство было создано. Это потребовало гораздо крупных вмешательств в код, включая изменение нескольких Makefile, файла системных настроек (sys/conf/options), добавление каталога с исходными файлами устройства.</p>
 
 <p>Устройство работало, но это нисколько не помогло сторонним утилитам увидеть наличие регулировки подсветки. Дело в том, что для этих утилит критичным указалось наличие каталога /sys/class/backlight/something, в котором располагались специальные файлы actual_brightness, brightness, max_brightness, subsystem/, uevent, bl_power, device/, power/ и тому подобные.</p>
 
 <p>Это так называемая Линукс-sysfs, которой нет (или я не нашёл) в DragonFly BSD. Создавать её аналог для регулирования уровня подсветки… пожалуй overkill.</p>
 
-<h2 id="section-1">Привязка клавиш регулировки подсветки</h2>
+<h2 id="Привязка-клавиш-регулировки-подсветки">Привязка клавиш регулировки подсветки</h2>
 
 <p>Первый скрипт <code class="highlighter-rouge">brightness-inc.sh</code> увеличивает яркость:</p>
 
@@ -194,6 +198,13 @@
   <ul class="related-posts">
     
       <li>
+          <a href="/ru/2017/07/22/jekyll-seo.html">
+            Jekyll SEO
+            <small>22 Jul 2017</small>
+          </a>
+      </li>
+    
+      <li>
           <a href="/ru/2016/06/02/html_parsing_part3.html">
             HTML parsing (part 3)
             <small>02 Jun 2016</small>
@@ -204,13 +215,6 @@
           <a href="/ru/2016/05/31/html-parsing-part2.html">
             HTML parsing (part 2)
             <small>31 May 2016</small>
-          </a>
-      </li>
-    
-      <li>
-          <a href="/ru/2016/05/25/html_parsing_part1.html">
-            HTML parsing (part 1)
-            <small>25 May 2016</small>
           </a>
       </li>
     

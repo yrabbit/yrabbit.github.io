@@ -116,13 +116,17 @@
         
       
     
+      
+        
+      
+    
 
     <span class="sidebar-nav-item">Currently v1.0.1</span>
   </nav>
 
   <div class="sidebar-item">
     <p>
-      &copy; 2016. All rights reserved.
+      &copy; 2017. All rights reserved.
     </p>
   </div>
 </div>
@@ -156,10 +160,10 @@
 	
 	</ul>
     </div>
-  <h2 id="section">Самый сложный элемент</h2>
+  <h2 id="Самый-сложный-элемент">Самый сложный элемент</h2>
 <p>У него даже конструктор сложный:)</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nb">defun</span> <span class="nv">make-element-node</span> <span class="p">(</span><span class="nv">tag</span> <span class="nv">attrs</span> <span class="nv">children</span><span class="p">)</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nb">defun</span> <span class="nv">make-element-node</span> <span class="p">(</span><span class="nv">tag</span> <span class="nv">attrs</span> <span class="nv">children</span><span class="p">)</span>
   <span class="s">"Tag and list of name-value pairs"</span>
   <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">el</span> <span class="p">(</span><span class="nb">make-instance</span> <span class="ss">'element-node</span> <span class="ss">:tag</span> <span class="nv">tag</span> <span class="ss">:children</span> <span class="nv">children</span><span class="p">)))</span>
        <span class="p">(</span><span class="nv">element-set-all-attrs</span> <span class="nv">el</span> <span class="nv">attrs</span><span class="p">)</span>
@@ -168,7 +172,7 @@
 </div>
 <p>Чтобы это работало, нужно добавить функцию в <code class="highlighter-rouge">dom.lisp</code>:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="c1">;; Set all attrs at once</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="c1">;; Set all attrs at once</span>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">element-set-all-attrs</span> <span class="p">(</span><span class="nv">el</span> <span class="nv">vals</span><span class="p">)</span>
   <span class="s">"Set all attrs at once. Vals is name-value pair list."</span>
   <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">attrs</span> <span class="p">(</span><span class="nv">element-node-attrs</span> <span class="nv">el</span><span class="p">)))</span>
@@ -178,7 +182,7 @@
 </div>
 <p>Ещё нам понадобится много маленьких парсеров, начиная с парсера имени тега.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>      <span class="p">(</span><span class="nv">parse-tagname</span> <span class="p">()</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code>      <span class="p">(</span><span class="nv">parse-tagname</span> <span class="p">()</span>
           <span class="s">"Parse tag name"</span>
           <span class="p">(</span><span class="k">let</span> <span class="p">(</span><span class="nv">ch</span><span class="p">)</span>
             <span class="p">(</span><span class="nb">with-output-to-string</span> <span class="p">(</span><span class="nv">s</span><span class="p">)</span>
@@ -187,7 +191,7 @@
 </div>
 <p>Полезная штука — пропуск пробелов, табуляций и пр. Успешна всегда.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>       <span class="p">(</span><span class="nv">skip-whitespace</span> <span class="p">()</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code>       <span class="p">(</span><span class="nv">skip-whitespace</span> <span class="p">()</span>
           <span class="p">(</span><span class="k">let</span> <span class="p">(</span><span class="nv">ch</span><span class="p">)</span>
             <span class="p">(</span><span class="nv">matchit</span> <span class="nv">$[@</span><span class="p">(</span><span class="nv">whitespace</span> <span class="nv">ch</span><span class="p">)</span><span class="nv">]</span><span class="p">)</span>
             <span class="no">t</span><span class="p">))</span>
@@ -195,14 +199,14 @@
 </div>
 <p>Значения атрибутов  могут быть заключены или в двойные или в одинарные кавычки, парсер таким образом должен запомнить с кавычки какого типа началось значение и работать до точно такой же закрывающей кавычки.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>       <span class="p">(</span><span class="nv">parse-value</span> <span class="p">(</span><span class="nv">quo</span><span class="p">)</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code>       <span class="p">(</span><span class="nv">parse-value</span> <span class="p">(</span><span class="nv">quo</span><span class="p">)</span>
           <span class="p">(</span><span class="k">let</span> <span class="p">(</span><span class="nv">ch</span><span class="p">)</span>
             <span class="p">(</span><span class="nb">with-output-to-string</span> <span class="p">(</span><span class="nv">s</span><span class="p">)</span>
               <span class="p">(</span><span class="nv">matchit</span> <span class="nv">$[@</span><span class="p">(</span><span class="nv">any-text</span> <span class="nv">ch</span><span class="p">)</span> <span class="nv">!</span><span class="p">(</span><span class="nb">char/=</span> <span class="nv">ch</span> <span class="nv">quo</span><span class="p">)</span> <span class="nv">!</span><span class="p">(</span><span class="nb">write-char</span> <span class="nv">ch</span> <span class="nv">s</span><span class="p">)</span><span class="nv">]</span><span class="p">))))</span>
 </code></pre>
 </div>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>       <span class="p">(</span><span class="nv">parse-quoted-value</span> <span class="p">()</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code>       <span class="p">(</span><span class="nv">parse-quoted-value</span> <span class="p">()</span>
           <span class="s">"Parse quoted value"</span>
           <span class="p">(</span><span class="k">let</span> <span class="p">(</span><span class="nv">quo</span> <span class="p">(</span><span class="nv">oldindex</span> <span class="nv">index</span><span class="p">))</span>
             <span class="p">(</span><span class="nb">or</span> <span class="p">(</span><span class="nv">matchit</span>
@@ -213,7 +217,7 @@
 </div>
 <p>С такими помощниками сделать парсер одного атрибута легко: сначала выделим имя (не пустое), затем знак <code class="highlighter-rouge">=</code> и значение атрибута в каких-нибудь кавычках. На выходе будет пара (имя . значение).</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>       <span class="p">(</span><span class="nv">parse-attr</span> <span class="p">()</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code>       <span class="p">(</span><span class="nv">parse-attr</span> <span class="p">()</span>
           <span class="s">"name=value"</span>
           <span class="p">(</span><span class="k">let</span> <span class="p">(</span><span class="nv">name</span> <span class="nv">value</span> <span class="p">(</span><span class="nv">oldindex</span> <span class="nv">index</span><span class="p">))</span>
             <span class="p">(</span><span class="k">if</span>
@@ -227,7 +231,7 @@
 </div>
 <p>Распознанные атрибуты заталкиваем в список. Порядок будет обратным.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>       <span class="p">(</span><span class="nv">parse-attrs</span> <span class="p">()</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code>       <span class="p">(</span><span class="nv">parse-attrs</span> <span class="p">()</span>
           <span class="s">"Parse attributes"</span>
           <span class="p">(</span><span class="k">let</span> <span class="p">(</span><span class="nv">attrs</span><span class="p">)</span>
             <span class="p">(</span><span class="nv">matchit</span>
@@ -239,9 +243,9 @@
 </div>
 <p>Закрывающий тег так же требует внимания.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>       <span class="p">(</span><span class="nv">parse-closing-tag</span> <span class="p">(</span><span class="nv">tagname</span><span class="p">)</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code>       <span class="p">(</span><span class="nv">parse-closing-tag</span> <span class="p">(</span><span class="nv">tagname</span><span class="p">)</span>
           <span class="s">"Parse &lt;/tagname&gt;"</span>
-          <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">oldinde</span> <span class="nv">index</span><span class="p">))</span>
+          <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">oldindex</span> <span class="nv">index</span><span class="p">))</span>
             <span class="p">(</span><span class="nb">or</span>
               <span class="p">(</span><span class="nv">matchit</span>
                 <span class="nv">[#\&lt;</span> <span class="sc">#\/</span> <span class="nv">!</span><span class="p">(</span><span class="nb">string=</span> <span class="p">(</span><span class="nv">parse-tagname</span><span class="p">)</span> <span class="nv">tagname</span><span class="p">)</span> <span class="sc">#\&gt;]</span><span class="p">)</span>
@@ -250,7 +254,7 @@
 </div>
 <p>Эскиз парсера элемента:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>       <span class="p">(</span><span class="nv">parse-element</span> <span class="p">()</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code>       <span class="p">(</span><span class="nv">parse-element</span> <span class="p">()</span>
           <span class="s">"&lt;tagname $[attr=value]&gt; ??? &lt;/tagname&gt;"</span>
           <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">oldindex</span> <span class="nv">index</span><span class="p">)</span>
                 <span class="nv">ch</span> <span class="nv">tagname</span> <span class="nv">attrs</span><span class="p">)</span>
@@ -265,7 +269,7 @@
 </div>
 <p>Проблема с этим парсером состоит в том, что он не предусматривает ничего между открывающим и закрывающими тегами. То есть настало время подумать о рекурсии и о том как организовывать потомков. А пока можно проверить как работает парсер элемента.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="nb">*</span> <span class="p">(</span><span class="nv">ql:quickload</span> <span class="ss">'toy-engine</span><span class="p">)</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="nb">*</span> <span class="p">(</span><span class="nv">ql:quickload</span> <span class="ss">'toy-engine</span><span class="p">)</span>
 <span class="nv">To</span> <span class="nb">load</span> <span class="s">"toy-engine"</span><span class="err">:</span>
   <span class="nv">Load</span> <span class="mi">1</span> <span class="nv">ASDF</span> <span class="nv">system:</span>
     <span class="nv">toy-engine</span>
@@ -293,12 +297,12 @@
 </div>
 <p><img src="/public/imgs/lisp/element-node.png" alt="Дерево после разбора" style="display:block;margin-left:auto;margin-right:auto;" /></p>
 
-<h2 id="section-1">Рекурсия</h2>
+<h2 id="Рекурсия">Рекурсия</h2>
 <p>Так как мы создаём узел только после того, как создадим всех его потомков, то логично будем накапливать их в списке и потом просто передавать его в конструктор узла. Самой интересной функцией будет та, что разбирает несколько расположенных друг за другом узлов в список будущих потомков.</p>
 
 <p>Но сначала парсер одного единственного узла:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>       <span class="p">(</span><span class="nv">parse-node</span> <span class="p">()</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code>       <span class="p">(</span><span class="nv">parse-node</span> <span class="p">()</span>
           <span class="s">"Text or node"</span>
           <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">oldindex</span> <span class="nv">index</span><span class="p">))</span>
             <span class="p">(</span><span class="nb">or</span> <span class="p">(</span><span class="nv">matchit</span>
@@ -309,7 +313,7 @@
 </div>
 <p>Он использует маленький вспомогательный парсер, который нужен для отката назад в том случае, если встретиля не комментарий и не элемент. Дело в том, что элементарные совпадения вроде <code class="highlighter-rouge">#\&lt;</code> или <code class="highlighter-rouge">"example"</code> использованные внутри последовательности <code class="highlighter-rouge">[]</code> нельзя откатить, если они сработали.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>       <span class="p">(</span><span class="nv">parse-comment-or-element</span> <span class="p">()</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code>       <span class="p">(</span><span class="nv">parse-comment-or-element</span> <span class="p">()</span>
 	  <span class="s">"&lt; {comment element}"</span>
 	  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">oldindex</span> <span class="nv">index</span><span class="p">))</span>
 	    <span class="p">(</span><span class="nb">or</span> <span class="p">(</span><span class="nv">matchit</span>
@@ -320,7 +324,7 @@
 
 <p>Проверим, что эта функция распознаёт и создаёт разные типы узлов:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="nb">*</span> <span class="p">(</span><span class="nv">ql:quickload</span> <span class="ss">'toy-engine</span><span class="p">)</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="nb">*</span> <span class="p">(</span><span class="nv">ql:quickload</span> <span class="ss">'toy-engine</span><span class="p">)</span>
 <span class="nv">To</span> <span class="nb">load</span> <span class="s">"toy-engine"</span><span class="err">:</span>
   <span class="nv">Load</span> <span class="mi">1</span> <span class="nv">ASDF</span> <span class="nv">system:</span>
     <span class="nv">toy-engine</span>
@@ -362,7 +366,7 @@
 </div>
 <p>Собираем несколько узлов в список:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>       <span class="p">(</span><span class="nv">parse-nodes</span> <span class="p">()</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code>       <span class="p">(</span><span class="nv">parse-nodes</span> <span class="p">()</span>
           <span class="s">"Children"</span>
           <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">oldindex</span> <span class="nv">index</span><span class="p">)</span> <span class="nv">children</span> <span class="nv">node</span><span class="p">)</span>
             <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nv">matchit</span>
@@ -374,7 +378,7 @@
 
 <p>Проверяем насколько успешно эта функция распознает строку с разными составными частями HTML:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="nb">*</span> <span class="p">(</span><span class="nv">ql:quickload</span> <span class="ss">'toy-engine</span><span class="p">)</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="nb">*</span> <span class="p">(</span><span class="nv">ql:quickload</span> <span class="ss">'toy-engine</span><span class="p">)</span>
 <span class="nv">To</span> <span class="nb">load</span> <span class="s">"toy-engine"</span><span class="err">:</span>
   <span class="nv">Load</span> <span class="mi">1</span> <span class="nv">ASDF</span> <span class="nv">system:</span>
     <span class="nv">toy-engine</span>
@@ -399,12 +403,12 @@
 </div>
 <p>Если теперь изменить тело фунции <code class="highlighter-rouge">parse-html</code> на</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>      <span class="p">(</span><span class="nb">make-instance</span> <span class="ss">'node</span> <span class="ss">:children</span> <span class="p">(</span><span class="nv">parse-nodes</span><span class="p">))</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code>      <span class="p">(</span><span class="nb">make-instance</span> <span class="ss">'node</span> <span class="ss">:children</span> <span class="p">(</span><span class="nv">parse-nodes</span><span class="p">))</span>
 </code></pre>
 </div>
 <p>тем самым сделав все разпознанные узлы на верхнем уровне потомками некого узла типа <code class="highlighter-rouge">node</code>.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="nb">*</span> <span class="p">(</span><span class="nv">ql:quickload</span> <span class="ss">'toy-engine</span><span class="p">)</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="nb">*</span> <span class="p">(</span><span class="nv">ql:quickload</span> <span class="ss">'toy-engine</span><span class="p">)</span>
 <span class="nv">To</span> <span class="nb">load</span> <span class="s">"toy-engine"</span><span class="err">:</span>
   <span class="nv">Load</span> <span class="mi">1</span> <span class="nv">ASDF</span> <span class="nv">system:</span>
     <span class="nv">toy-engine</span>
@@ -431,7 +435,7 @@
 
 <p>Окончательно парсер элемента содержит запуск рекурсии:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>       <span class="p">(</span><span class="nv">parse-element</span> <span class="p">()</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code>       <span class="p">(</span><span class="nv">parse-element</span> <span class="p">()</span>
           <span class="s">"&lt;tagname $[attr=value]&gt; ??? &lt;/tagname&gt;"</span>
           <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">oldindex</span> <span class="nv">index</span><span class="p">)</span>
                 <span class="nv">ch</span> <span class="nv">tagname</span> <span class="nv">attrs</span> <span class="nv">children</span><span class="p">)</span>
@@ -447,7 +451,7 @@
 </div>
 <p>Разбор сложного примера:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="nb">*</span> <span class="p">(</span><span class="nv">ql:quickload</span> <span class="ss">'toy-engine</span><span class="p">)</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="nb">*</span> <span class="p">(</span><span class="nv">ql:quickload</span> <span class="ss">'toy-engine</span><span class="p">)</span>
 <span class="nv">To</span> <span class="nb">load</span> <span class="s">"toy-engine"</span><span class="err">:</span>
   <span class="nv">Load</span> <span class="mi">1</span> <span class="nv">ASDF</span> <span class="nv">system:</span>
     <span class="nv">toy-engine</span>
@@ -479,6 +483,13 @@
   <ul class="related-posts">
     
       <li>
+          <a href="/ru/2017/07/22/jekyll-seo.html">
+            Jekyll SEO
+            <small>22 Jul 2017</small>
+          </a>
+      </li>
+    
+      <li>
           <a href="/ru/2016/05/31/html-parsing-part2.html">
             HTML parsing (part 2)
             <small>31 May 2016</small>
@@ -489,13 +500,6 @@
           <a href="/ru/2016/05/25/html_parsing_part1.html">
             HTML parsing (part 1)
             <small>25 May 2016</small>
-          </a>
-      </li>
-    
-      <li>
-          <a href="/ru/2016/05/22/html_parsing_(meta).html">
-            HTML parsing (META)
-            <small>22 May 2016</small>
           </a>
       </li>
     

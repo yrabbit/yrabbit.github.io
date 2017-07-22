@@ -116,13 +116,17 @@
         
       
     
+      
+        
+      
+    
 
     <span class="sidebar-nav-item">Currently v1.0.1</span>
   </nav>
 
   <div class="sidebar-item">
     <p>
-      &copy; 2016. All rights reserved.
+      &copy; 2017. All rights reserved.
     </p>
   </div>
 </div>
@@ -160,10 +164,10 @@
 	
 	</ul>
     </div>
-  <h2 id="section">Идея</h2>
+  <h2 id="Идея">Идея</h2>
 <p>Для начала небольшая парочка функций, которые подсчитывают количество фишек противника в соседних клетках.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="c1">;; count enemy neighbors</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="c1">;; count enemy neighbors</span>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">slow-get-neighbors-pattern</span> <span class="p">(</span><span class="nv">cell</span><span class="p">)</span>
   <span class="p">(</span><span class="nb">remove-if</span> <span class="nf">#'</span><span class="nb">null</span>
   <span class="p">(</span><span class="nb">list</span>
@@ -200,7 +204,7 @@
 </div>
 <p>Процесс экспериментирования с эвристиками стал гораздо легче, когда я ввел несколько констант, которые задавли относительные <em>веса</em> разных эвристик. В частности победа или поражения имеют просто огромный вес.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*enemy-weight*</span>   <span class="mi">4</span><span class="p">)</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*enemy-weight*</span>   <span class="mi">4</span><span class="p">)</span>
 <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*player-weight*</span>  <span class="mi">5</span><span class="p">)</span>
 <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*win-weight*</span>    <span class="p">(</span><span class="nb">*</span> <span class="mi">9</span> <span class="p">(</span><span class="nb">max</span> <span class="vg">*enemy-weight*</span> <span class="vg">*player-weight*</span><span class="p">)))</span>
 
@@ -211,7 +215,7 @@
 </div>
 <p>А вот как теперь оценивается позиция с помощью новых весовых коэффициентов:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="c1">;; count longest line</span>
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="c1">;; count longest line</span>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">score-position</span> <span class="p">(</span><span class="nv">tree</span> <span class="nv">move</span><span class="p">)</span>
   <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">cnt</span> <span class="p">(</span><span class="nv">count-player-cells</span> 
                <span class="p">(</span><span class="nv">game-node-board</span> <span class="nv">tree</span><span class="p">)</span> 
@@ -231,7 +235,7 @@
 
 <p><em>Барабанная дробь</em></p>
 
-<h2 id="section-1">Победа</h2>
+<h2 id="Победа">Победа</h2>
 <p>Новый AI смог победить монстра из 11-го часа! Вот конечная позиция <img src="/public/imgs/lisp/win.png" alt="win screen" /> Следующим ходом лисповский AI поставит светлую фишку в позицию курсора. <a href="/public/src/lisp/win.log.txt">Полный лог стражения</a>.</p>
 
 </div>
@@ -239,6 +243,13 @@
 <div class="related">
   <h2>Related Posts</h2>
   <ul class="related-posts">
+    
+      <li>
+          <a href="/ru/2017/07/22/jekyll-seo.html">
+            Jekyll SEO
+            <small>22 Jul 2017</small>
+          </a>
+      </li>
     
       <li>
           <a href="/ru/2016/06/02/html_parsing_part3.html">
@@ -251,13 +262,6 @@
           <a href="/ru/2016/05/31/html-parsing-part2.html">
             HTML parsing (part 2)
             <small>31 May 2016</small>
-          </a>
-      </li>
-    
-      <li>
-          <a href="/ru/2016/05/25/html_parsing_part1.html">
-            HTML parsing (part 1)
-            <small>25 May 2016</small>
           </a>
       </li>
     
