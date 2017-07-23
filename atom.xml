@@ -4,7 +4,7 @@
  <title>Yellow Rabbit's Den</title>
  <link href="https://yrabbit.github.io/atom.xml" rel="self"/>
  <link href="https://yrabbit.github.io/"/>
- <updated>2017-07-23T12:21:11+10:00</updated>
+ <updated>2017-07-23T13:49:12+10:00</updated>
  <id>https://yrabbit.github.io</id>
  <author>
    <name>Yellow Rabbit</name>
@@ -24,9 +24,9 @@
  
  <entry>
    <title>HTML parsing (part 3)</title>
-   <link href="https://yrabbit.github.io/ru/2016/06/02/html_parsing_part3.html"/>
+   <link href="https://yrabbit.github.io/ru/2016/06/02/html-parsing-part3.html"/>
    <updated>2016-06-02T20:33:32+10:00</updated>
-   <id>https://yrabbit.github.io/ru/2016/06/02/html_parsing_part3</id>
+   <id>https://yrabbit.github.io/ru/2016/06/02/html-parsing-part3</id>
    <content type="html">&lt;h2 id=&quot;Самый-сложный-элемент&quot;&gt;Самый сложный элемент&lt;/h2&gt;
 &lt;p&gt;У него даже конструктор сложный:)&lt;/p&gt;
 
@@ -430,9 +430,9 @@
  
  <entry>
    <title>HTML parsing (part 1)</title>
-   <link href="https://yrabbit.github.io/ru/2016/05/25/html_parsing_part1.html"/>
+   <link href="https://yrabbit.github.io/ru/2016/05/25/html-parsing-part1.html"/>
    <updated>2016-05-25T20:42:10+10:00</updated>
-   <id>https://yrabbit.github.io/ru/2016/05/25/html_parsing_part1</id>
+   <id>https://yrabbit.github.io/ru/2016/05/25/html-parsing-part1</id>
    <content type="html">&lt;h2 id=&quot;housekeeping&quot;&gt;Housekeeping&lt;/h2&gt;
 &lt;p&gt;Ядро META это самостоятельная часть движка, так что можно выделить её в &lt;a href=&quot;/public/src/lisp/toy-engine/meta-parser-core.lisp&quot;&gt;отдельный файл&lt;/a&gt; и навести общий порядок в проекте. Файл &lt;code class=&quot;highlighter-rouge&quot;&gt;toy-engine.asd&lt;/code&gt;, описывающий состав и последовательность компиляции модулей движка:&lt;/p&gt;
 
@@ -564,9 +564,9 @@
  
  <entry>
    <title>HTML parsing (META)</title>
-   <link href="https://yrabbit.github.io/ru/2016/05/22/html_parsing_(meta).html"/>
+   <link href="https://yrabbit.github.io/ru/2016/05/22/html-parsing-(meta).html"/>
    <updated>2016-05-22T10:28:25+10:00</updated>
-   <id>https://yrabbit.github.io/ru/2016/05/22/html_parsing_(meta)</id>
+   <id>https://yrabbit.github.io/ru/2016/05/22/html-parsing-(meta)</id>
    <content type="html">&lt;h2 id=&quot;meta&quot;&gt;META&lt;/h2&gt;
 
 &lt;p&gt;Чтобы строить дерево документа нам нужен парсер HTML. Простой. В январе 1991 года появилась статья Henry G. Baker &lt;a href=&quot;http://home.pipeline.com/~hbaker1/Prag-Parse.html&quot; title=&quot;Старая статья о парсинге&quot;&gt;“Прагматичный парсинг на Common Lisp”&lt;/a&gt;, в которой он описывает META — классическую простую и одновременно эффективную технику построения рекурсивных нисходящих парсеров.&lt;/p&gt;

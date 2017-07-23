@@ -1,0 +1,11 @@
+User-agent: *
+Disallow: /tag
+Disallow: .git
+Disallow: atom.xml
+
+User-agent: Yandex
+Host: https://yrabbit.github.io
+Disallow: /tag
+Disallow: .git
+Disallow: atom.xml
+
