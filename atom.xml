@@ -4,7 +4,7 @@
  <title>Yellow Rabbit's Den</title>
  <link href="https://yrabbit.github.io/atom.xml" rel="self"/>
  <link href="https://yrabbit.github.io/"/>
- <updated>2017-07-23T13:56:39+10:00</updated>
+ <updated>2017-07-23T14:07:29+10:00</updated>
  <id>https://yrabbit.github.io</id>
  <author>
    <name>Yellow Rabbit</name>
@@ -2723,13 +2723,13 @@
  
  <entry>
    <title>Трилобит и Лисп</title>
-   <link href="https://yrabbit.github.io/ru/2015/12/11/figth-with-trilobyte.html"/>
+   <link href="https://yrabbit.github.io/ru/2015/12/11/fight-with-trilobyte.html"/>
    <updated>2015-12-11T21:20:47+10:00</updated>
-   <id>https://yrabbit.github.io/ru/2015/12/11/figth-with-trilobyte</id>
+   <id>https://yrabbit.github.io/ru/2015/12/11/fight-with-trilobyte</id>
    <content type="html">&lt;h2 id=&quot;Задачка&quot;&gt;Задачка&lt;/h2&gt;
 &lt;p&gt;В игре 11th hour попалась головоломка-игрушка, цель которой: выстроить в ряд 4 фишки.  Причём нельзя выбрать горизонталь для новой фишки, можно  выбрать только вертикаль.
 &lt;img src=&quot;/public/imgs/lisp/trilobyte.png&quot; alt=&quot;former game screen&quot; /&gt; Я не могу победить компьютер в этой мини-игре, так что попробую устроить битву двух AI. Было бы забавно написать соперника для компьютера на Lisp, так как я практически не знаком с этим языком.
-Для начала я прочёл &lt;a href=&quot;http://www.amazon.com/s/ref=nb_sb_noss/179-0107147-8261974?url=search-alias%3Dstripbooks&amp;amp;field-keywords=Land+of+Lisp%3A+Learn+to+Program+in+Lisp%2C+One+Game+at+a+Time%21&quot;&gt;Land of Lisp: Learn to Program in Lisp, One Game at a Time!&lt;/a&gt; чтобы понять как вообще можно писать игры на этом языке. В качестве компилятора/интерпретатора использую SBCL, ну как один из доступных (/usr/dports/lang/sbcl) для &lt;a href=&quot;http://www.dragonflybsd.org/&quot;&gt;DragonFly BSD&lt;/a&gt;.&lt;/p&gt;
+Для начала я прочёл &lt;a href=&quot;https://www.amazon.com/s/ref=nb_sb_noss/179-0107147-8261974?url=search-alias%3Dstripbooks&amp;amp;field-keywords=Land+of+Lisp%3A+Learn+to+Program+in+Lisp%2C+One+Game+at+a+Time%21&quot;&gt;Land of Lisp: Learn to Program in Lisp, One Game at a Time!&lt;/a&gt; чтобы понять как вообще можно писать игры на этом языке. В качестве компилятора/интерпретатора использую SBCL, ну как один из доступных (/usr/dports/lang/sbcl) для &lt;a href=&quot;http://www.dragonflybsd.org/&quot;&gt;DragonFly BSD&lt;/a&gt;.&lt;/p&gt;
 
 &lt;h2 id=&quot;Игровое-поле-доска&quot;&gt;Игровое поле (доска)&lt;/h2&gt;
 &lt;p&gt;Из книги стало ясно, что доску нужного мне размера (8х7) мне скорее всего не получится реализовать без опыта оптимизации программ на Lisp. Так что начнём с крошечной доски 3x3, на которой, тем не менее, можно будет отработать логику искусственного интеллекта.&lt;/p&gt;
