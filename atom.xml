@@ -4,7 +4,7 @@
  <title>Yellow Rabbit's Den</title>
  <link href="https://yrabbit.github.io/atom.xml" rel="self"/>
  <link href="https://yrabbit.github.io/"/>
- <updated>2017-07-22T20:49:50+10:00</updated>
+ <updated>2017-07-23T12:21:11+10:00</updated>
  <id>https://yrabbit.github.io</id>
  <author>
    <name>Yellow Rabbit</name>
@@ -13,11 +13,11 @@
 
  
  <entry>
-   <title>Jekyll SEO</title>
+   <title>Перевод на https</title>
    <link href="https://yrabbit.github.io/ru/2017/07/22/jekyll-seo.html"/>
    <updated>2017-07-22T00:00:00+10:00</updated>
    <id>https://yrabbit.github.io/ru/2017/07/22/jekyll-seo</id>
-   <content type="html">&lt;h1 id=&quot;Повышаем-видимость-блока&quot;&gt;Повышаем видимость блока&lt;/h1&gt;
+   <content type="html">&lt;h1 id=&quot;Перевод-на-https&quot;&gt;Перевод на https&lt;/h1&gt;
 
 </content>
  </entry>
