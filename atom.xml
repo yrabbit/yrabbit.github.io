@@ -4,7 +4,7 @@
  <title>Yellow Rabbit's Den</title>
  <link href="https://yrabbit.github.io/atom.xml" rel="self"/>
  <link href="https://yrabbit.github.io/"/>
- <updated>2017-07-23T13:49:12+10:00</updated>
+ <updated>2017-07-23T13:56:39+10:00</updated>
  <id>https://yrabbit.github.io</id>
  <author>
    <name>Yellow Rabbit</name>
@@ -18,7 +18,7 @@
    <updated>2017-07-22T00:00:00+10:00</updated>
    <id>https://yrabbit.github.io/ru/2017/07/22/jekyll-seo</id>
    <content type="html">&lt;h1 id=&quot;Перевод-на-https&quot;&gt;Перевод на https&lt;/h1&gt;
-
+&lt;p&gt;Пример ссылки на свой же пост: &lt;a href=&quot;/ru/2015/12/15/trilobyte-ui.html&quot;&gt;интерфейс трилобита&lt;/a&gt;.&lt;/p&gt;
 </content>
  </entry>
  
