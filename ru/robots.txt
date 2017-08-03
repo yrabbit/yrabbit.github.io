@@ -1,11 +1,9 @@
 User-agent: * 
 Disallow: /contact/thankyou/
-Disallow: /blog/feed.atom
 
 Sitemap: https://yrabbit.github.io/sitemap.xml
 
 User-agent: Yandex
 Host: https://yrabbit.github.io
 Disallow: /contact/thankyou/
-Disallow: /blog/feed.atom
 
