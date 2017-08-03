@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html>
+	<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="chrome=1">
+		<meta http-equiv="Content-Language" content="en">
+<link rel="alternate" hreflang="x-default" href="https://yrabbit.github.io/blog/2015/lisp-trilobite-moves-victory-check/">
+<link rel="alternate" hreflang="en" href="https://yrabbit.github.io/blog/2015/lisp-trilobite-moves-victory-check/">
+
+
+  
+
+<link rel="alternate" hreflang="ru" href="https://yrabbit.github.io/ru/blog/2015/lisp-trilobite-moves-victory-check/">
+
+
+
+		<!-- Begin Jekyll SEO tag v2.2.4 -->
+<meta property="og:title" content="Trilobite Game in Lisp: Moves and Condition of Victory">
+<meta name="author" content="Yellow Rabbit">
+<meta property="og:locale" content="en">
+<meta name="description" content="How to make moves and check the winning condition in Trilobite on Lisp.">
+<meta property="og:description" content="How to make moves and check the winning condition in Trilobite on Lisp.">
+<link rel="canonical" href="https://yrabbit.github.io/blog/2015/lisp-trilobite-moves-victory-check/">
+<meta property="og:url" content="https://yrabbit.github.io/blog/2015/lisp-trilobite-moves-victory-check/">
+<meta property="og:site_name" content="Asm, Lisp, and so on - Programmer’s Blog">
+<meta property="og:image" content="https://yrabbit.github.io/imgs/post-banners/trilobite-moves.jpeg">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2015-12-13T09:42:08+10:00">
+<script type="application/ld+json">
+{"@context":"http://schema.org","@type":"BlogPosting","headline":"Trilobite Game in Lisp: Moves and Condition of Victory","author":{"@type":"Person","name":"Yellow Rabbit"},"image":"https://yrabbit.github.io/imgs/post-banners/trilobite-moves.jpeg","datePublished":"2015-12-13T09:42:08+10:00","dateModified":"2017-07-29T10:35:22+10:00","description":"How to make moves and check the winning condition in Trilobite on Lisp.","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://yrabbit.github.io/imgs/blog-log.png"},"name":"Yellow Rabbit"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://yrabbit.github.io/blog/2015/lisp-trilobite-moves-victory-check/"},"url":"https://yrabbit.github.io/blog/2015/lisp-trilobite-moves-victory-check/"}</script>
+<!-- End Jekyll SEO tag -->
+
+		<title>Trilobite Game in Lisp: Moves and Condition of Victory | Yellow Rabbit
+			
+		</title>
+		
+
+		<link rel="stylesheet" href="/css/main.css">
+		<link rel="stylesheet" href="/css/syntax.css">
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+		<!--[if lt IE 9]>
+		<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+	</head>
+	<body>
+		<div class="wrapper">
+			<header>
+				<h2><a href="https://yrabbit.github.io/blog/"><img src="/imgs/blog-logo.png" title="A programmer's blog about experiments with PDP-11 assembler, Lisp, as well as other fun things." alt="Yellow Rabbit" width="300"></a></h2>
+				<nav><ul>
+						<li><a href="/about/">About</a></li>
+						<li><a href="/projects/">Projects</a></li>
+					<li><a class="active" href="/blog/">Blog</a></li>
+					<li><a href="/contact/">Contact</a></li>
+				</ul></nav>
+			</header>
+			<section>
+				
+
+<h1 class="post-title">Trilobite: Player Moves and a Test for Win</h1>
+<p class="post-meta">
+	13 Dec 2015 •
+	12 min. read •
+	<a href="#disqus_thread" data-disqus-identifier="2015-12-13-lisp-trilobite-moves-victory-check.md">Comments</a>
+</p>
+
+
+	<div class="post-banner" style="background-image: url(/imgs/post-banners/trilobite-moves.jpeg);">
+		<img src="/imgs/post-banners/trilobite-moves.jpeg" alt="Trilobite Game in Lisp: Moves and Condition of Victory">
+	</div>
+
+
+<p>In the <a href="/blog/2015/lisp-trilobite-game-board/">previous post</a>  we have a game board, now it’s time to try to revive it.</p>
+
+<h2 id="moves">Moves</h2>
+
+<p>To make a move means to copy a board, simultaneously changing one of the cells to the desired one.</p>
+
+<div class="language-cl highlighter-rouge">
+<pre class="highlight"><code><span class="c1">;; add move to the board</span>
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">board-add-move</span> <span class="p">(</span><span class="nv">board</span> <span class="nv">move-cell</span> <span class="nv">player</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">board-from-list</span>
+    <span class="p">(</span><span class="nb">loop</span>
+      <span class="nv">for</span> <span class="nv">idx</span> <span class="nv">from</span> <span class="mi">0</span>
+      <span class="nv">for</span> <span class="nv">cell</span> <span class="nv">across</span> <span class="nv">board</span>
+      <span class="nv">collect</span> <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">eql</span> <span class="nv">idx</span> <span class="nv">move-cell</span><span class="p">)</span>
+                <span class="p">(</span><span class="nv">get-player-color</span> <span class="nv">player</span><span class="p">)</span>
+                <span class="nv">cell</span><span class="p">))))</span>
+</code></pre>
+</div>
+<p>Form the list of possible cells for the move. These are empty cells located at the very bottom of each column. Of course, if there are free cells on the column at all.</p>
+
+<div class="language-cl highlighter-rouge">
+<pre class="highlight"><code><span class="c1">;; possible moves</span>
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">possible-moves</span> <span class="p">(</span><span class="nv">board</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">labels</span> <span class="p">((</span><span class="nv">lastlinep</span> <span class="p">(</span><span class="nv">idx</span><span class="p">)</span>
+                <span class="p">(</span><span class="nb">&gt;=</span> <span class="nv">idx</span> <span class="p">(</span><span class="nb">-</span> <span class="vg">*board-size*</span> <span class="vg">*board-width*</span><span class="p">)))</span>
+           <span class="p">(</span><span class="nv">lowest-empty-cellp</span> <span class="p">(</span><span class="nv">idx</span><span class="p">)</span>
+                <span class="p">(</span><span class="nb">and</span> <span class="p">(</span><span class="nv">cell-emptyp</span> <span class="nv">board</span> <span class="nv">idx</span><span class="p">)</span>
+                     <span class="p">(</span><span class="nb">or</span> <span class="p">(</span><span class="nv">lastlinep</span> <span class="nv">idx</span><span class="p">)</span>
+                         <span class="p">(</span><span class="nb">and</span> <span class="p">(</span><span class="nb">not</span> <span class="p">(</span><span class="nv">lastlinep</span> <span class="nv">idx</span><span class="p">))</span>
+                              <span class="p">(</span><span class="nb">not</span> <span class="p">(</span><span class="nv">cell-emptyp</span> <span class="nv">board</span>
+                                     <span class="p">(</span><span class="nb">+</span> <span class="nv">idx</span> <span class="vg">*board-width*</span><span class="p">))))))))</span>
+   <span class="p">(</span><span class="nb">loop</span> 
+      <span class="nv">for</span> <span class="nv">cell</span> <span class="nv">below</span> <span class="vg">*board-size*</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nv">lowest-empty-cellp</span> <span class="nv">cell</span><span class="p">)</span>
+        <span class="nv">collect</span> <span class="nv">cell</span><span class="p">)))</span>
+</code></pre>
+</div>
+<h2 id="checking-for-a-winning-situation">Checking for a winning situation</h2>
+<p>The condition for winning the game is to create a line from the <code class="highlighter-rouge">*win-len*</code> chips of the same color. We will check for victory after each move. To do this, it is necessary to detect the lines that resulted from the last move. The following figure shows how we will check cells and count the number of identical chips in directions (vectors) starting from the last move [^how-to-make-svg] cell.</p>
+
+<p><img src="/imgs/posts/trilobite-win-patterns.svg" alt="Templates for checking the winning situation" title="Trilobite .How to check for a winning situation." class="center-img"></p>
+
+<p>For each square of the board we will get the cell numbers and the order in which we need to check them for the presence of chips of the same color. As a result, a list of lists <sup id="fnref:list-of-lists"><a href="#fn:list-of-lists" class="footnote">1</a></sup> is generated.</p>
+
+<ul>
+  <li>(
+    <ul>
+      <li>(List of cells to the left) (list of cells to the right)</li>
+      <li>(List of cells up) <sup id="fnref:up"><a href="#fn:up" class="footnote">2</a></sup> (list of cells down)</li>
+      <li>(List of cells to the left and up) (list of cells to the right and down)</li>
+      <li>(List of cells to the left and down) (list of cells to the right and up)</li>
+    </ul>
+  </li>
+  <li>)</li>
+</ul>
+
+<p>Next comes a function that actually creates this template for checking the neighbors of any cell on the board. I do not like it, it’s just terrible, too big, confused and completely non-Lisp. But it has no side effects, it depends only on the cell number and several constants, so I hope to rewrite it later without breaking the rest.</p>
+
+<div class="language-cl highlighter-rouge">
+<pre class="highlight"><code><span class="c1">;; test pattern for win</span>
+<span class="c1">;; ((left...) (right...)</span>
+<span class="c1">;;  (up...) (down...)</span>
+<span class="c1">;;  (left-up...) (right-down...)</span>
+<span class="c1">;;  (left-down...) (right-up))</span>
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">get-test-patterns</span> <span class="p">(</span><span class="nv">cell</span><span class="p">)</span>
+  <span class="p">(</span><span class="nb">list</span>
+    <span class="c1">; left</span>
+    <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nb">&gt;</span> <span class="p">(</span><span class="nb">mod</span> <span class="nv">cell</span> <span class="vg">*board-width*</span><span class="p">)</span> <span class="mi">0</span><span class="p">)</span>
+      <span class="p">(</span><span class="nb">loop</span>
+        <span class="nv">for</span> <span class="nv">off</span> <span class="nv">from</span> <span class="mi">1</span> <span class="nv">to</span> <span class="p">(</span><span class="nb">min</span> <span class="p">(</span><span class="nb">1-</span> <span class="vg">*win-len*</span><span class="p">)</span> <span class="p">(</span><span class="nb">mod</span> <span class="nv">cell</span> <span class="vg">*board-width*</span><span class="p">))</span>
+        <span class="nv">collect</span> <span class="p">(</span><span class="nb">-</span> <span class="nv">cell</span> <span class="nv">off</span><span class="p">)))</span>
+    <span class="c1">; right</span>
+    <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nb">&lt;</span> <span class="p">(</span><span class="nb">mod</span> <span class="nv">cell</span> <span class="vg">*board-width*</span><span class="p">)</span> <span class="p">(</span><span class="nb">1-</span> <span class="vg">*board-width*</span><span class="p">))</span>
+      <span class="p">(</span><span class="nb">loop</span>
+        <span class="nv">for</span> <span class="nv">off</span> <span class="nv">from</span> <span class="mi">1</span> <span class="nv">to</span> <span class="p">(</span><span class="nb">min</span> <span class="p">(</span><span class="nb">1-</span> <span class="vg">*win-len*</span><span class="p">)</span> 
+                               <span class="p">(</span><span class="nb">-</span> <span class="vg">*board-width*</span> <span class="p">(</span><span class="nb">mod</span> <span class="nv">cell</span> <span class="vg">*board-width*</span><span class="p">)</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="nv">collect</span> <span class="p">(</span><span class="nb">+</span> <span class="nv">cell</span> <span class="nv">off</span><span class="p">)))</span>
+    <span class="c1">; up</span>
+    <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nb">&gt;</span> <span class="p">(</span><span class="nb">floor</span> <span class="nv">cell</span> <span class="vg">*board-width*</span><span class="p">)</span> <span class="mi">0</span><span class="p">)</span>
+      <span class="p">(</span><span class="nb">loop</span>
+        <span class="nv">for</span> <span class="nv">off</span> <span class="nv">from</span> <span class="mi">1</span> <span class="nv">to</span> <span class="p">(</span><span class="nb">min</span> <span class="p">(</span><span class="nb">1-</span> <span class="vg">*win-len*</span><span class="p">)</span> <span class="p">(</span><span class="nb">floor</span> <span class="nv">cell</span> <span class="vg">*board-width*</span><span class="p">))</span>
+        <span class="nv">collect</span> <span class="p">(</span><span class="nb">-</span> <span class="nv">cell</span> <span class="p">(</span><span class="nb">*</span> <span class="nv">off</span> <span class="vg">*board-width*</span><span class="p">))))</span>
+    <span class="c1">; down</span>
+    <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nb">&lt;</span> <span class="nv">cell</span> <span class="p">(</span><span class="nb">-</span> <span class="vg">*board-size*</span> <span class="vg">*board-width*</span><span class="p">))</span>
+      <span class="p">(</span><span class="nb">loop</span>
+        <span class="nv">for</span> <span class="nv">off</span> <span class="nv">from</span> <span class="mi">1</span> <span class="nv">to</span> <span class="p">(</span><span class="nb">min</span> <span class="p">(</span><span class="nb">1-</span> <span class="vg">*win-len*</span><span class="p">)</span>
+                               <span class="p">(</span><span class="nb">-</span> <span class="vg">*board-height*</span> <span class="p">(</span><span class="nb">floor</span> <span class="nv">cell</span> <span class="vg">*board-width*</span><span class="p">)</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="nv">collect</span> <span class="p">(</span><span class="nb">+</span> <span class="nv">cell</span> <span class="p">(</span><span class="nb">*</span> <span class="nv">off</span> <span class="vg">*board-width*</span><span class="p">))))</span>
+    <span class="c1">; left-up</span>
+    <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nb">and</span> <span class="p">(</span><span class="nb">&gt;</span> <span class="p">(</span><span class="nb">mod</span> <span class="nv">cell</span> <span class="vg">*board-width*</span><span class="p">)</span> <span class="mi">0</span><span class="p">)</span> <span class="p">(</span><span class="nb">&gt;</span> <span class="p">(</span><span class="nb">floor</span> <span class="nv">cell</span> <span class="vg">*board-width*</span><span class="p">)</span> <span class="mi">0</span><span class="p">))</span>
+      <span class="p">(</span><span class="nb">loop</span>
+        <span class="nv">for</span> <span class="nv">xoff</span> <span class="nv">from</span> <span class="mi">1</span> <span class="nv">to</span> <span class="p">(</span><span class="nb">min</span> <span class="p">(</span><span class="nb">1-</span> <span class="vg">*win-len*</span><span class="p">)</span> <span class="p">(</span><span class="nb">mod</span> <span class="nv">cell</span> <span class="vg">*board-width*</span><span class="p">))</span>
+        <span class="nv">for</span> <span class="nv">yoff</span> <span class="nv">from</span> <span class="mi">1</span> <span class="nv">to</span> <span class="p">(</span><span class="nb">min</span> <span class="p">(</span><span class="nb">1-</span> <span class="vg">*win-len*</span><span class="p">)</span> <span class="p">(</span><span class="nb">floor</span> <span class="nv">cell</span> <span class="vg">*board-width*</span><span class="p">))</span>
+        <span class="nv">collect</span> <span class="p">(</span><span class="nb">-</span> <span class="nv">cell</span> <span class="p">(</span><span class="nb">*</span> <span class="nv">yoff</span> <span class="vg">*board-width*</span><span class="p">)</span> <span class="nv">xoff</span><span class="p">)))</span>
+    <span class="c1">; right-down</span>
+    <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nb">and</span> <span class="p">(</span><span class="nb">&lt;</span> <span class="p">(</span><span class="nb">mod</span> <span class="nv">cell</span> <span class="vg">*board-width*</span><span class="p">)</span> <span class="p">(</span><span class="nb">1-</span> <span class="vg">*board-width*</span><span class="p">))</span>
+                  <span class="p">(</span><span class="nb">&lt;</span> <span class="nv">cell</span> <span class="p">(</span><span class="nb">-</span> <span class="vg">*board-size*</span> <span class="vg">*board-width*</span><span class="p">)))</span>
+      <span class="p">(</span><span class="nb">loop</span>
+        <span class="nv">for</span> <span class="nv">xoff</span> <span class="nv">from</span> <span class="mi">1</span> <span class="nv">to</span> <span class="p">(</span><span class="nb">min</span> <span class="p">(</span><span class="nb">1-</span> <span class="vg">*win-len*</span><span class="p">)</span> 
+                               <span class="p">(</span><span class="nb">-</span> <span class="vg">*board-width*</span> <span class="p">(</span><span class="nb">mod</span> <span class="nv">cell</span> <span class="vg">*board-width*</span><span class="p">)</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="nv">for</span> <span class="nv">yoff</span> <span class="nv">from</span> <span class="mi">1</span> <span class="nv">to</span> <span class="p">(</span><span class="nb">min</span> <span class="p">(</span><span class="nb">1-</span> <span class="vg">*win-len*</span><span class="p">)</span>
+                               <span class="p">(</span><span class="nb">-</span> <span class="vg">*board-height*</span> <span class="p">(</span><span class="nb">floor</span> <span class="nv">cell</span> <span class="vg">*board-width*</span><span class="p">)</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="nv">collect</span> <span class="p">(</span><span class="nb">+</span> <span class="nv">cell</span> <span class="p">(</span><span class="nb">*</span> <span class="nv">yoff</span> <span class="vg">*board-width*</span><span class="p">)</span> <span class="nv">xoff</span><span class="p">)))</span>
+    <span class="c1">; left-down</span>
+    <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nb">and</span> <span class="p">(</span><span class="nb">&gt;</span> <span class="p">(</span><span class="nb">mod</span> <span class="nv">cell</span> <span class="vg">*board-width*</span><span class="p">)</span> <span class="mi">0</span><span class="p">)</span>
+               <span class="p">(</span><span class="nb">&lt;</span> <span class="nv">cell</span> <span class="p">(</span><span class="nb">-</span> <span class="vg">*board-size*</span> <span class="vg">*board-width*</span><span class="p">)))</span>
+      <span class="p">(</span><span class="nb">loop</span>
+        <span class="nv">for</span> <span class="nv">xoff</span> <span class="nv">from</span> <span class="mi">1</span> <span class="nv">to</span> <span class="p">(</span><span class="nb">min</span> <span class="p">(</span><span class="nb">1-</span> <span class="vg">*win-len*</span><span class="p">)</span> <span class="p">(</span><span class="nb">mod</span> <span class="nv">cell</span> <span class="vg">*board-width*</span><span class="p">))</span>
+        <span class="nv">for</span> <span class="nv">yoff</span> <span class="nv">from</span> <span class="mi">1</span> <span class="nv">to</span> <span class="p">(</span><span class="nb">min</span> <span class="p">(</span><span class="nb">1-</span> <span class="vg">*win-len*</span><span class="p">)</span>
+                               <span class="p">(</span><span class="nb">-</span> <span class="vg">*board-height*</span> <span class="p">(</span><span class="nb">floor</span> <span class="nv">cell</span> <span class="vg">*board-width*</span><span class="p">)</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="nv">collect</span> <span class="p">(</span><span class="nb">-</span> <span class="nv">cell</span> <span class="p">(</span><span class="nb">-</span> <span class="nv">xoff</span> <span class="p">(</span><span class="nb">*</span> <span class="nv">yoff</span> <span class="vg">*board-width*</span><span class="p">)))))</span>
+    <span class="c1">; right-up</span>
+    <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nb">and</span> <span class="p">(</span><span class="nb">&lt;</span> <span class="p">(</span><span class="nb">mod</span> <span class="nv">cell</span> <span class="vg">*board-width*</span><span class="p">)</span> <span class="p">(</span><span class="nb">1-</span> <span class="vg">*board-width*</span><span class="p">))</span>
+               <span class="p">(</span><span class="nb">&gt;</span> <span class="p">(</span><span class="nb">floor</span> <span class="nv">cell</span> <span class="vg">*board-width*</span><span class="p">)</span> <span class="mi">0</span><span class="p">))</span>
+      <span class="p">(</span><span class="nb">loop</span>
+        <span class="nv">for</span> <span class="nv">xoff</span> <span class="nv">from</span> <span class="mi">1</span> <span class="nv">to</span> <span class="p">(</span><span class="nb">min</span> <span class="p">(</span><span class="nb">1-</span> <span class="vg">*win-len*</span><span class="p">)</span> 
+                               <span class="p">(</span><span class="nb">-</span> <span class="vg">*board-width*</span> <span class="p">(</span><span class="nb">mod</span> <span class="nv">cell</span> <span class="vg">*board-width*</span><span class="p">)</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="nv">for</span> <span class="nv">yoff</span> <span class="nv">from</span> <span class="mi">1</span> <span class="nv">to</span> <span class="p">(</span><span class="nb">min</span> <span class="p">(</span><span class="nb">1-</span> <span class="vg">*win-len*</span><span class="p">)</span> <span class="p">(</span><span class="nb">floor</span> <span class="nv">cell</span> <span class="vg">*board-width*</span><span class="p">))</span>
+        <span class="nv">collect</span> <span class="p">(</span><span class="nb">-</span> <span class="nv">cell</span> <span class="p">(</span><span class="nb">-</span> <span class="p">(</span><span class="nb">*</span> <span class="nv">yoff</span> <span class="vg">*board-width*</span><span class="p">)</span> <span class="nv">xoff</span><span class="p">))))))</span>
+
+</code></pre>
+</div>
+<p>Having received a template for testing cells, one  can proceed with the actual verification. Here one need to take into account that the central cell already contains a chip of the desired color - this is the last move, so the vectors are considered in pairs. That is, if we have two left chips on the left and one desired chip on the right, then in the sum with the central chip we have a line of 2 + 1 + 1 = 4 chips.</p>
+
+<p>The function * test-halfline * is a workhorse: it checks one vector (or half of the line) and counts the number of chips of the desired color in succession.</p>
+
+<p>The function * test-line * simply adds two halves of the line and the central cell itself. Cycles in functions are not observed since lists and tail recursion are not bad friends.</p>
+
+<div class="language-cl highlighter-rouge">
+<pre class="highlight"><code><span class="c1">;; count cells with player's color in row</span>
+<span class="c1">;; pattern is a list of lists</span>
+<span class="c1">;;      first halfline    second halfline</span>
+<span class="c1">;; ((cell cell cell...) (cell cell cell...)</span>
+<span class="c1">;;  other lines</span>
+<span class="c1">;; ...)</span>
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">count-player-cells</span> <span class="p">(</span><span class="nv">board</span> <span class="nv">cell</span> <span class="nv">player</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">pattern</span> <span class="p">(</span><span class="nv">get-test-patterns</span> <span class="nv">cell</span><span class="p">)))</span>
+    <span class="p">(</span><span class="k">labels</span> 
+      <span class="p">((</span><span class="nv">test-halfline</span> <span class="p">(</span><span class="nv">pat</span> <span class="nv">acc1</span><span class="p">)</span>
+                      <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">and</span> <span class="nv">pat</span> <span class="p">(</span><span class="nv">cell-playerp</span> <span class="nv">board</span> <span class="p">(</span><span class="nb">car</span> <span class="nv">pat</span><span class="p">)</span> <span class="nv">player</span><span class="p">))</span>
+                        <span class="p">(</span><span class="nv">test-halfline</span> <span class="p">(</span><span class="nb">cdr</span> <span class="nv">pat</span><span class="p">)</span> <span class="p">(</span><span class="nb">1+</span> <span class="nv">acc1</span><span class="p">))</span>
+                        <span class="nv">acc1</span><span class="p">))</span>
+       <span class="p">(</span><span class="nv">test-line</span> <span class="p">(</span><span class="nv">pat</span> <span class="nv">acc</span><span class="p">)</span>
+                  <span class="p">(</span><span class="k">if</span> <span class="nv">pat</span>
+                    <span class="p">(</span><span class="nv">test-line</span> <span class="p">(</span><span class="nb">cddr</span> <span class="nv">pat</span><span class="p">)</span> 
+                               <span class="p">(</span><span class="nb">max</span> <span class="nv">acc</span> <span class="p">(</span><span class="nb">+</span> <span class="mi">1</span> 
+                                           <span class="p">(</span><span class="nv">test-halfline</span> <span class="p">(</span><span class="nb">car</span> <span class="nv">pat</span><span class="p">)</span> <span class="mi">0</span><span class="p">)</span>
+                                           <span class="p">(</span><span class="nv">test-halfline</span> <span class="p">(</span><span class="nb">cadr</span> <span class="nv">pat</span><span class="p">)</span> <span class="mi">0</span><span class="p">))))</span>
+                    <span class="nv">acc</span><span class="p">)))</span>
+       <span class="p">(</span><span class="nv">test-line</span> <span class="nv">pattern</span> <span class="mi">0</span><span class="p">))))</span>
+
+</code></pre>
+</div>
+<p>Checking for a player’s victory turned out ridiculously simple:</p>
+
+<div class="language-cl highlighter-rouge">
+<pre class="highlight"><code><span class="c1">;; test for win for player</span>
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">test-for-win</span> <span class="p">(</span><span class="nv">board</span> <span class="nv">cell</span> <span class="nv">player</span><span class="p">)</span>
+  <span class="p">(</span><span class="nb">&gt;=</span> <span class="p">(</span><span class="nv">count-player-cells</span> <span class="nv">board</span> <span class="nv">cell</span> <span class="nv">player</span><span class="p">)</span> <span class="vg">*win-len*</span><span class="p">))</span>
+</code></pre>
+</div>
+<p>You can see how well it is possible to create a template for testing for victory:</p>
+
+<div class="language-cl highlighter-rouge">
+<pre class="highlight"><code><span class="nb">*</span> <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*board-width*</span> <span class="mi">10</span><span class="p">)</span> <span class="c1">; one  need to increase the size of the board for clarity</span>
+
+<span class="vg">*BOARD-WIDTH*</span>
+<span class="nb">*</span> <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*board-height*</span> <span class="mi">10</span><span class="p">)</span>
+
+<span class="vg">*BOARD-HEIGHT*</span>
+<span class="nb">*</span> <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*board-size*</span> <span class="p">(</span><span class="nb">*</span> <span class="vg">*board-width*</span> <span class="vg">*board-height*</span><span class="p">))</span>
+
+<span class="vg">*BOARD-SIZE*</span>
+<span class="nb">*</span> <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*win-len*</span> <span class="mi">5</span><span class="p">)</span> <span class="c1">; Also increase the size of the winning line</span>
+
+<span class="vg">*WIN-LEN*</span>
+<span class="nb">*</span> <span class="p">(</span><span class="nv">get-test-patterns</span> <span class="mi">44</span><span class="p">)</span>
+<span class="p">((</span><span class="mi">43</span> <span class="mi">42</span> <span class="mi">41</span> <span class="mi">40</span><span class="p">)</span> <span class="p">(</span><span class="mi">45</span> <span class="mi">46</span> <span class="mi">47</span> <span class="mi">48</span><span class="p">)</span> <span class="p">(</span><span class="mi">34</span> <span class="mi">24</span> <span class="mi">14</span> <span class="mi">4</span><span class="p">)</span> <span class="p">(</span><span class="mi">54</span> <span class="mi">64</span> <span class="mi">74</span> <span class="mi">84</span><span class="p">)</span> <span class="p">(</span><span class="mi">33</span> <span class="mi">22</span> <span class="mi">11</span> <span class="mi">0</span><span class="p">)</span>
+ <span class="p">(</span><span class="mi">55</span> <span class="mi">66</span> <span class="mi">77</span> <span class="mi">88</span><span class="p">)</span> <span class="p">(</span><span class="mi">53</span> <span class="mi">62</span> <span class="mi">71</span> <span class="mi">80</span><span class="p">)</span> <span class="p">(</span><span class="mi">35</span> <span class="mi">26</span> <span class="mi">17</span> <span class="mi">8</span><span class="p">))</span>
+</code></pre>
+</div>
+<p>Well, this is the center of the board and the function (after all, I do not like it) has formed all the vectors correctly. Let’s try to choose a cell closer to the upper left corner. In this case, some of the lists should be trimmed.</p>
+
+<div class="language-cl highlighter-rouge">
+<pre class="highlight"><code><span class="nb">*</span> <span class="p">(</span><span class="nv">get-test-patterns</span> <span class="mi">32</span><span class="p">)</span>
+
+<span class="p">((</span><span class="mi">31</span> <span class="mi">30</span><span class="p">)</span> <span class="p">(</span><span class="mi">33</span> <span class="mi">34</span> <span class="mi">35</span> <span class="mi">36</span><span class="p">)</span> <span class="p">(</span><span class="mi">22</span> <span class="mi">12</span> <span class="mi">2</span><span class="p">)</span> <span class="p">(</span><span class="mi">42</span> <span class="mi">52</span> <span class="mi">62</span> <span class="mi">72</span><span class="p">)</span> <span class="p">(</span><span class="mi">21</span> <span class="mi">10</span><span class="p">)</span> <span class="p">(</span><span class="mi">43</span> <span class="mi">54</span> <span class="mi">65</span> <span class="mi">76</span><span class="p">)</span> <span class="p">(</span><span class="mi">41</span> <span class="mi">50</span><span class="p">)</span>
+ <span class="p">(</span><span class="mi">23</span> <span class="mi">14</span> <span class="mi">5</span><span class="p">))</span>
+</code></pre>
+</div>
+<p>Not bad, the vectors to the left and up are shortened. Another critical cell should be close to the right edge of the board:</p>
+
+<div class="language-cl highlighter-rouge">
+<pre class="highlight"><code><span class="nb">*</span> <span class="p">(</span><span class="nv">get-test-patterns</span> <span class="mi">29</span><span class="p">)</span>
+
+<span class="p">((</span><span class="mi">28</span> <span class="mi">27</span> <span class="mi">26</span> <span class="mi">25</span><span class="p">)</span> <span class="nv">NIL</span> <span class="p">(</span><span class="mi">19</span> <span class="mi">9</span><span class="p">)</span> <span class="p">(</span><span class="mi">39</span> <span class="mi">49</span> <span class="mi">59</span> <span class="mi">69</span><span class="p">)</span> <span class="p">(</span><span class="mi">18</span> <span class="mi">7</span><span class="p">)</span> <span class="nv">NIL</span> <span class="p">(</span><span class="mi">38</span> <span class="mi">47</span> <span class="mi">56</span> <span class="mi">65</span><span class="p">)</span> <span class="nv">NIL</span><span class="p">)</span>
+<span class="nb">*</span>
+</code></pre>
+</div>
+<p>Great! Vectors pointing to the right are empty.</p>
+
+<p>The drawings were also created using a tiny [Lisp program (/pub/lisp/create-win-patterns-svg.lisp) and pairs [macros for work with SVG] (/pub/lisp/svg.lisp).</p>
+
+<div class="footnotes">
+  <ol>
+    <li id="fn:list-of-lists">
+      <p>What did you want? It’s a language of lists processing after all! <img class="emoji" title=":wink:" alt=":wink:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f609.png" height="20" width="20" align="absmiddle"> <a href="#fnref:list-of-lists" class="reversefootnote">↩</a></p>
+    </li>
+    <li id="fn:up">
+      <p>One may do not check up, but it’s probably useful <a href="#fnref:up" class="reversefootnote">↩</a></p>
+    </li>
+  </ol>
+</div>
+
+
+<hr>
+
+
+<div id="disqus_thread"></div>
+
+
+			</section>
+			<footer>
+
+<img class="avatar" src="https://www.gravatar.com/avatar/1d87b9cdbef9dec8e79613e19c601121?s=144" alt="Me">
+
+
+
+				<p>
+					<small>© 2017 Yellow Rabbit</small><br>
+					<small>Made with <a href="http://jekyllrb.com/">Jekyll</a> — Theme by <a href="https://github.com/orderedlist">orderedlist</a></small>
+				</p>
+			</footer>
+		</div>
+		<script src="/js/scale.fix.js"></script>
+	
+
+	<script type="text/javascript">
+	var disqus_shortname = 'yrabbitblog',
+	disqus_identifier = '2015-12-13-lisp-trilobite-moves-victory-check.md-en',
+	disqus_url        = 'https://yrabbit.github.io/blog/2015/lisp-trilobite-moves-victory-check/'
+	;
+	(function() {
+		var load = function(src){
+			var s = document.createElement('script'); s.type = 'text/javascript'; s.async = true; s.src = src;
+			var e = document.getElementsByTagName('script')[0]; e.parentNode.insertBefore(s, e);
+		};
+		load('//' + disqus_shortname + '.disqus.com/count.js');
+		if (document.getElementById('disqus_thread')) {
+			load('//' + disqus_shortname + '.disqus.com/embed.js');
+		}
+	})();
+</script>
+
+
+	</body>
+</html>

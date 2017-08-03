@@ -1,477 +1,218 @@
 <!DOCTYPE html>
 <html>
-  <head>
-	  <link href="http://gmpg.org/xfn/11" rel="profile">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta http-equiv="content-type" content="text/html; charset=utf-8">
-  <meta http-equiv="content-language" content="ru" />
+	<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="chrome=1">
+		<meta http-equiv="Content-Language" content="en">
+<link rel="alternate" hreflang="x-default" href="https://yrabbit.github.io/blog/page2/">
+<link rel="alternate" hreflang="en" href="https://yrabbit.github.io/blog/page2/">
 
-  <!-- Enable responsiveness on mobile devices-->
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 
-  <title>
-    
-      Yellow Rabbit's Den &middot; не забывайте играть
-    
-  </title>
+  
 
-  <!-- CSS -->
-  <link rel="stylesheet" href="/public/css/poole.css">
-  <link rel="stylesheet" href="/public/css/lanyon.css">
-  <link rel="stylesheet" href="/public/css/syntax.css">
+<link rel="alternate" hreflang="ru" href="https://yrabbit.github.io/ru/blog/page2/">
 
-  <!-- Icons -->
-  <link rel="shortcut icon" href="/public/favicon.png">
 
-  <!-- RSS -->
-  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
 
-	<!-- Begin Jekyll SEO tag v2.2.3 -->
-<title>Home | Yellow Rabbit’s Den</title>
-<meta property="og:title" content="Home" />
-<meta name="author" content="Yellow Rabbit" />
-<meta property="og:locale" content="ru_RU" />
-<meta name="description" content="Игры на Lisp и игры с Lisp и не только. Забавы с PDP11 от ассемблера до C" />
-<meta property="og:description" content="Игры на Lisp и игры с Lisp и не только. Забавы с PDP11 от ассемблера до C" />
-<link rel="canonical" href="https://yrabbit.github.io/blog/page2/" />
-<meta property="og:url" content="https://yrabbit.github.io/blog/page2/" />
-<meta property="og:site_name" content="Yellow Rabbit’s Den" />
-<link rel="prev" href="https://yrabbit.github.io/">
+		<!-- Begin Jekyll SEO tag v2.2.4 -->
+<meta property="og:title" content="Asm, Lisp, and so on - Programmer’s Blog">
+<meta name="author" content="Yellow Rabbit">
+<meta property="og:locale" content="en">
+<meta name="description" content="A programmer’s blog about experiments with PDP-11 assembler, Lisp, as well as other fun things.">
+<meta property="og:description" content="A programmer’s blog about experiments with PDP-11 assembler, Lisp, as well as other fun things.">
+<link rel="canonical" href="https://yrabbit.github.io/blog/page2/">
+<meta property="og:url" content="https://yrabbit.github.io/blog/page2/">
+<meta property="og:site_name" content="Asm, Lisp, and so on - Programmer’s Blog">
+<link rel="prev" href="https://yrabbit.github.io/blog/">
 <link rel="next" href="https://yrabbit.github.io/blog/page3/">
 <script type="application/ld+json">
-{"@context":"http://schema.org","@type":"WebPage","headline":"Home","author":{"@type":"Person","name":"Yellow Rabbit"},"description":"Игры на Lisp и игры с Lisp и не только. Забавы с PDP11 от ассемблера до C","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://yrabbit.github.io/public/favicon.png"},"name":"Yellow Rabbit"},"url":"https://yrabbit.github.io/blog/page2/"}</script>
+{"@context":"http://schema.org","@type":"WebPage","headline":"Asm, Lisp, and so on - Programmer’s Blog","author":{"@type":"Person","name":"Yellow Rabbit"},"description":"A programmer’s blog about experiments with PDP-11 assembler, Lisp, as well as other fun things.","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://yrabbit.github.io/imgs/blog-log.png"},"name":"Yellow Rabbit"},"url":"https://yrabbit.github.io/blog/page2/"}</script>
 <!-- End Jekyll SEO tag -->
 
-  </head>
-  <body>
+		<title>Asm, Lisp, and so on - Programmer’s Blog - page 2
+			
+		</title>
+		
 
-    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
-     styles, `#sidebar-checkbox` for behavior. -->
-<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+		<link rel="alternate" type="application/atom+xml" title="Yellow Rabbit — Feed" href="https://yrabbit.github.io/blog/feed.atom">
 
-<!-- Toggleable sidebar -->
-<div class="sidebar" id="sidebar">
-  <div class="sidebar-item">
-    <p>Игры на Lisp и игры с Lisp и не только. Забавы с PDP11 от ассемблера до C</p>
-  </div>
+		<link rel="stylesheet" href="/css/main.css">
+		<link rel="stylesheet" href="/css/syntax.css">
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+		<!--[if lt IE 9]>
+		<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+	</head>
+	<body>
+		<div class="wrapper">
+			<header>
+				<h2><a href="https://yrabbit.github.io/blog/"><img src="/imgs/blog-logo.png" title="A programmer's blog about experiments with PDP-11 assembler, Lisp, as well as other fun things." alt="Yellow Rabbit" width="300"></a></h2>
+				<nav><ul>
+						<li><a href="/about/">About</a></li>
+						<li><a href="/projects/">Projects</a></li>
+					<li><a class="active" href="/blog/">Blog</a></li>
+					<li><a href="/contact/">Contact</a></li>
+				</ul></nav>
+			</header>
+			<section>
+				<h1>Yellow Rabbit Blog</h1>
+<hr>
 
-  <nav class="sidebar-nav">
-    <a class="sidebar-nav-item" href="/">Home</a>
+<div class="articles">
 
-    
+  <div>
+	<h2 class="post-title"><a href="/blog/2016/lisp-standalone-executable/">Lisp: Creating a Standalone  Executable File</a></h2>
+	<p class="post-meta">
+		01 May 2016 •
+		1 min. read •
+		<a href="/blog/2016/lisp-standalone-executable/#disqus_thread" data-disqus-identifier="2016-05-01-lisp-standalone-executable.md">Comments</a>
+	</p>
 
-    
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-          <a class="sidebar-nav-item" href="/about.html">About</a>
-        
-      
-    
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
+	
+	<a href="/blog/2016/lisp-standalone-executable/" class="post-banner" style="background-image: url(/imgs/post-banners/standalone-lisp.jpeg);">
+		<img src="/imgs/post-banners/standalone-lisp.jpeg" alt="Lisp: Creating a Standalone  Executable File">
+	</a>
+	
+	
+	<p class="post-excerpt">The desire to make a separate stanalone executable file, although you can just give the source code, is a little strange, but let’s say that such a need arose.
 
-    <span class="sidebar-nav-item">Currently v1.0.1</span>
-  </nav>
+ [<a href="/blog/2016/lisp-standalone-executable/">more...</a>]</p>
+  </div>	
 
-  <div class="sidebar-item">
-    <p>
-      &copy; 2017. All rights reserved.
-    </p>
-  </div>
+  <div>
+	<h2 class="post-title"><a href="/blog/2016/xiaomi-android-6-watch/">Fix Android 6 Wear on Xiaomi</a></h2>
+	<p class="post-meta">
+		27 Mar 2016 •
+		1 min. read •
+		<a href="/blog/2016/xiaomi-android-6-watch/#disqus_thread" data-disqus-identifier="2016-03-27-xiaomi-android-6-watch.md">Comments</a>
+	</p>
+
+	
+	<a href="/blog/2016/xiaomi-android-6-watch/" class="post-banner" style="background-image: url(/imgs/post-banners/xiaomi-android-wear.jpeg);">
+		<img src="/imgs/post-banners/xiaomi-android-wear.jpeg" alt="Fix Android 6 Wear on Xiaomi">
+	</a>
+	
+	
+	<p class="post-excerpt">After upgrading Xiaomi Mi 4LTE to MIUI 7.2.9.0 (MXDCNDB), the version of the android in the phone changed to 6.0.1. As a side effect, the watch LG G Watch R 1085 has disconnected from the phone, and on the phone itself Google Play Services panicked. Below is the way to restore the phone-to-watch connection.
+
+ [<a href="/blog/2016/xiaomi-android-6-watch/">more...</a>]</p>
+  </div>	
+
+  <div>
+	<h2 class="post-title"><a href="/blog/2016/lisp-trilobite-simple-macros/">Trilobit Game in Lisp: Simple Macros</a></h2>
+	<p class="post-meta">
+		23 Jan 2016 •
+		3 min. read •
+		<a href="/blog/2016/lisp-trilobite-simple-macros/#disqus_thread" data-disqus-identifier="2016-01-23-lisp-trilobite-simple-macros.md">Comments</a>
+	</p>
+
+	
+	<a href="/blog/2016/lisp-trilobite-simple-macros/" class="post-banner" style="background-image: url(/imgs/post-banners/trilobite-macros.jpeg);">
+		<img src="/imgs/post-banners/trilobite-macros.jpeg" alt="Trilobit Game in Lisp: Simple Macros">
+	</a>
+	
+	
+	<p class="post-excerpt">Generally speaking, you can write in Lisp and still not be aware of macros. This is a dark art and it’s hard to master, but simple things can be tried.
+
+ [<a href="/blog/2016/lisp-trilobite-simple-macros/">more...</a>]</p>
+  </div>	
+
+  <div>
+	<h2 class="post-title"><a href="/blog/2015/lisp-trilobite-new-heuristic/">Trilobit Game in Lisp: New heuristics</a></h2>
+	<p class="post-meta">
+		26 Dec 2015 •
+		4 min. read •
+		<a href="/blog/2015/lisp-trilobite-new-heuristic/#disqus_thread" data-disqus-identifier="2015-12-26-lisp-trilobite-new-heuristic.md">Comments</a>
+	</p>
+
+	
+	<a href="/blog/2015/lisp-trilobite-new-heuristic/" class="post-banner" style="background-image: url(/imgs/post-banners/trilobite-modern-lamp.jpeg);">
+		<img src="/imgs/post-banners/trilobite-modern-lamp.jpeg" alt="Trilobit Game in Lisp: New heuristics">
+	</a>
+	
+	
+	<p class="post-excerpt">The computer plays worse of its colleague from the 11th hour. It is necessary to do something with it. Let’s try other heuristics for the computer player.
+
+ [<a href="/blog/2015/lisp-trilobite-new-heuristic/">more...</a>]</p>
+  </div>	
+
+  <div>
+	<h2 class="post-title"><a href="/blog/2015/lisp-trilobite-more-lisp-tips/">Trilobite Game in Lisp: Minor Improvements</a></h2>
+	<p class="post-meta">
+		26 Dec 2015 •
+		7 min. read •
+		<a href="/blog/2015/lisp-trilobite-more-lisp-tips/#disqus_thread" data-disqus-identifier="2015-12-26-lisp-trilobite-more-lisp-tips.md">Comments</a>
+	</p>
+
+	
+	<a href="/blog/2015/lisp-trilobite-more-lisp-tips/" class="post-banner" style="background-image: url(/imgs/post-banners/trilobite-lisp-tricks.jpeg);">
+		<img src="/imgs/post-banners/trilobite-lisp-tricks.jpeg" alt="Trilobite Game in Lisp: Minor Improvements">
+	</a>
+	
+	
+	<p class="post-excerpt">Although I lose to AI, it can not defeat the monster from the 11th hour game <img class="emoji" title=":frowning:" alt=":frowning:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f626.png" height="20" width="20" align="absmiddle"> And, until I have ideas for improving his work, I’ll do the decorations. To begin with, we will simplify the construction of templates for checking neighboring cells, and at the same time we will make it memoized.
+
+ [<a href="/blog/2015/lisp-trilobite-more-lisp-tips/">more...</a>]</p>
+  </div>	
+
 </div>
 
 
-    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
-         content to avoid any CSS collisions with our real content. -->
-    <div class="wrap">
-      <div class="masthead">
-        <div class="container">
-          <h3 class="masthead-title">
-		  <a href="/" title="Home">Yellow Rabbit's Den</a>
-            <small>не забывайте играть</small>
-          </h3>
-        </div>
-      </div>
-
-      <div class="container content">
-          
-  <div class="post">
-    <h2 class="post-title">
-		<a href="/ru/2015/12/26/trilobyte.-a-new-heuristic.html">
-        Trilobyte. A new heuristic.
-      </a>
-    </h2>
-    <div class="post-meta">26 Dec 2015
-	<ul class="tag_list_in_post">
-	
-	<li class="inline tag_list_item">
-		<a class="tag_list_link" href="/tag/lisp"> lisp</a>
-	</li>
-	
-	<li class="inline tag_list_item">
-		<a class="tag_list_link" href="/tag/games"> games</a>
-	</li>
-	
-	<li class="inline tag_list_item">
-		<a class="tag_list_link" href="/tag/trilobyte"> trilobyte</a>
-	</li>
-	
-	</ul>
-    </div>
-    Идея Для начала небольшая парочка функций, которые подсчитывают количество фишек противника в соседних клетках. ;; count enemy neighbors (defun slow-get-neighbors-pattern (cell) (remove-if #'null (list (when (&gt; (mod cell *board-width*) 0) (1- cell)) (when (&gt;= cell *board-width*) (- cell *board-width*)) (when (&lt; (mod cell *board-width*) (1- *board-width*)) (1+ cell)) (when (&lt;...
-  </div>
-  
-  <div class="post">
-    <h2 class="post-title">
-		<a href="/ru/2015/12/26/trilobyte.-more-lisp-and-misc.html">
-        Trilobyte. More Lisp and misc.
-      </a>
-    </h2>
-    <div class="post-meta">26 Dec 2015
-	<ul class="tag_list_in_post">
-	
-	<li class="inline tag_list_item">
-		<a class="tag_list_link" href="/tag/lisp"> lisp</a>
-	</li>
-	
-	<li class="inline tag_list_item">
-		<a class="tag_list_link" href="/tag/games"> games</a>
-	</li>
-	
-	<li class="inline tag_list_item">
-		<a class="tag_list_link" href="/tag/trilobyte"> trilobyte</a>
-	</li>
-	
-	</ul>
-    </div>
-    Немного причёсывания Хотя я проигрываю AI, он не может победить монстра из 11-го часа:( И, пока у меня не появилось идей по улучшению его работы, займусь украшательствами. Для начала чуть-чуть упростим построение шаблонов для проверки соседних ячеек, ну и заодно сделаем её запоминающей. ;; test pattern for win ;; ((left...)...
-  </div>
-  
-  <div class="post">
-    <h2 class="post-title">
-		<a href="/ru/2015/12/23/trolibyte.-add-an-heuristic.html">
-        Trolibyte. Add an heuristic.
-      </a>
-    </h2>
-    <div class="post-meta">23 Dec 2015
-	<ul class="tag_list_in_post">
-	
-	<li class="inline tag_list_item">
-		<a class="tag_list_link" href="/tag/lisp"> lisp</a>
-	</li>
-	
-	<li class="inline tag_list_item">
-		<a class="tag_list_link" href="/tag/trilobyte"> trilobyte</a>
-	</li>
-	
-	<li class="inline tag_list_item">
-		<a class="tag_list_link" href="/tag/games"> games</a>
-	</li>
-	
-	</ul>
-    </div>
-    Чуточку умнее Итак, AI действует разумно только когда видит чью-нибудь победу через ближашие *ai-level* ходов, иначе просто выбирает первый же ход. Попробуем следующую эвристику: лучшей является позиция, где длина линии из фишек нашего цвета максимальна; худшей является позиция, где длина линии из фишек цвета противника максимальна. Отсюда наилучшая позиция —...
-  </div>
-  
-  <div class="post">
-    <h2 class="post-title">
-		<a href="/ru/2015/12/21/trilobyte.-lazy-ai.html">
-        Trilobyte. Lazy AI.
-      </a>
-    </h2>
-    <div class="post-meta">21 Dec 2015
-	<ul class="tag_list_in_post">
-	
-	<li class="inline tag_list_item">
-		<a class="tag_list_link" href="/tag/lisp"> lisp</a>
-	</li>
-	
-	<li class="inline tag_list_item">
-		<a class="tag_list_link" href="/tag/trilobyte"> trilobyte</a>
-	</li>
-	
-	<li class="inline tag_list_item">
-		<a class="tag_list_link" href="/tag/games"> games</a>
-	</li>
-	
-	</ul>
-    </div>
-    Ограничение дерева Итак AI не может искать решения в ленивом дереве, поскольку по мере просчитывания ходов он материализует всё это дерево из небытия. Выходом может быть ограничение количества ходов, на которое AI просчитывает ситуацию. И это можно сделать очень изящно, а именно не подсчитывать глубину по ходу оценки комбинаций, а...
-  </div>
-  
-  <div class="post">
-    <h2 class="post-title">
-		<a href="/ru/2015/12/15/trilobyte-big-lazy-tree.html">
-        Trilobyte. Big Lazy Tree.
-      </a>
-    </h2>
-    <div class="post-meta">15 Dec 2015
-	<ul class="tag_list_in_post">
-	
-	<li class="inline tag_list_item">
-		<a class="tag_list_link" href="/tag/games"> games</a>
-	</li>
-	
-	<li class="inline tag_list_item">
-		<a class="tag_list_link" href="/tag/lisp"> lisp</a>
-	</li>
-	
-	<li class="inline tag_list_item">
-		<a class="tag_list_link" href="/tag/trilobyte"> trilobyte</a>
-	</li>
-	
-	</ul>
-    </div>
-    Ленивые списки Программа прилично играет на крошечной доске, пора задуматься об увеличении игрового поля. Поскольку при простом увеличении размеров доски память быстро заканчивается, то придется жульничать: создавать в памяти только те кусочки дерева комбинаций, которые действительно нужны. Здесь нужно заметить, что, не имея возможности проанализировать всё дерево комбинаций, AI придётся...
-  </div>
-  
-  <div class="post">
-    <h2 class="post-title">
-		<a href="/ru/2015/12/15/trilobyte-ui.html">
-        Trilobyte. An UI.
-      </a>
-    </h2>
-    <div class="post-meta">15 Dec 2015
-	<ul class="tag_list_in_post">
-	
-	<li class="inline tag_list_item">
-		<a class="tag_list_link" href="/tag/lisp"> lisp</a>
-	</li>
-	
-	<li class="inline tag_list_item">
-		<a class="tag_list_link" href="/tag/games"> games</a>
-	</li>
-	
-	<li class="inline tag_list_item">
-		<a class="tag_list_link" href="/tag/trilobyte"> trilobyte</a>
-	</li>
-	
-	</ul>
-    </div>
-    Интерфейс Вот и подошло время обзавестись небольшой системой взаимодействия с человеком. Для начала покажем доску: ;; *** UI ;; show board (defun draw-board (board) (flet ((get-cell-char (cell) (cond ((eql cell *ai-cell*) #\A) ((eql cell *human-cell*) #\H) (t #\.)))) (loop for j below *board-height* for row-idx from 0 by *board-width* do...
-  </div>
-  
-  <div class="post">
-    <h2 class="post-title">
-		<a href="/ru/2015/12/14/rules-engine.html">
-        Trilobyte. Rules engine and AI
-      </a>
-    </h2>
-    <div class="post-meta">14 Dec 2015
-	<ul class="tag_list_in_post">
-	
-	<li class="inline tag_list_item">
-		<a class="tag_list_link" href="/tag/lisp"> lisp</a>
-	</li>
-	
-	<li class="inline tag_list_item">
-		<a class="tag_list_link" href="/tag/games"> games</a>
-	</li>
-	
-	<li class="inline tag_list_item">
-		<a class="tag_list_link" href="/tag/trilobyte"> trilobyte</a>
-	</li>
-	
-	</ul>
-    </div>
-    Движок игровых правил Поскольку мы можем просчитать все комбинцаии (пока что для крошечной доски), то движок правил будет представлять из себя просто древовидную структуру данных1. ;; game rules engine is a tree which elements are lists (defstruct (game-node (:type list)) player ; *human-player* or *ai-player* board ; current board situation...
-  </div>
-  
-  <div class="post">
-    <h2 class="post-title">
-		<a href="/ru/2015/12/13/trilobyte-checking-patterns.html">
-        Trilobyte. Moves & checking patterns.
-      </a>
-    </h2>
-    <div class="post-meta">13 Dec 2015
-	<ul class="tag_list_in_post">
-	
-	<li class="inline tag_list_item">
-		<a class="tag_list_link" href="/tag/lisp"> lisp</a>
-	</li>
-	
-	<li class="inline tag_list_item">
-		<a class="tag_list_link" href="/tag/games"> games</a>
-	</li>
-	
-	<li class="inline tag_list_item">
-		<a class="tag_list_link" href="/tag/trilobyte"> trilobyte</a>
-	</li>
-	
-	</ul>
-    </div>
-    Ходы Сделать ход - значит скопировать доску, попутно заменив одну из клеток на нужную. ;; add move to the board (defun board-add-move (board move-cell player) (board-from-list (loop for idx from 0 for cell across board collect (if (eql idx move-cell) (get-player-color player) cell)))) Формируем список возможных клеток для хода. Это...
-  </div>
-  
-  <div class="post">
-    <h2 class="post-title">
-		<a href="/ru/2015/12/11/fight-with-trilobyte.html">
-        Трилобит и Лисп
-      </a>
-    </h2>
-    <div class="post-meta">11 Dec 2015
-	<ul class="tag_list_in_post">
-	
-	<li class="inline tag_list_item">
-		<a class="tag_list_link" href="/tag/lisp"> lisp</a>
-	</li>
-	
-	<li class="inline tag_list_item">
-		<a class="tag_list_link" href="/tag/games"> games</a>
-	</li>
-	
-	<li class="inline tag_list_item">
-		<a class="tag_list_link" href="/tag/trilobyte"> trilobyte</a>
-	</li>
-	
-	</ul>
-    </div>
-    Задачка В игре 11th hour попалась головоломка-игрушка, цель которой: выстроить в ряд 4 фишки. Причём нельзя выбрать горизонталь для новой фишки, можно выбрать только вертикаль. Я не могу победить компьютер в этой мини-игре, так что попробую устроить битву двух AI. Было бы забавно написать соперника для компьютера на Lisp, так...
-  </div>
-  
-  <div class="post">
-    <h2 class="post-title">
-		<a href="/ru/2014/12/26/adjust-a-backlight-on-acer-c720.html">
-        2 способа регулировки яркости подсветки на Acer C720 (part 2)
-      </a>
-    </h2>
-    <div class="post-meta">26 Dec 2014
-	<ul class="tag_list_in_post">
-	
-	<li class="inline tag_list_item">
-		<a class="tag_list_link" href="/tag/xorg"> xorg</a>
-	</li>
-	
-	<li class="inline tag_list_item">
-		<a class="tag_list_link" href="/tag/c720"> c720</a>
-	</li>
-	
-	</ul>
-    </div>
-    То, что не случилось Второй способ заключается в создании специального устройства, чтение из которого возвращает текущий уровень подстветки, а запись в которое изменяет уровень подстветки. И такое устройство было создано. Это потребовало гораздо крупных вмешательств в код, включая изменение нескольких Makefile, файла системных настроек (sys/conf/options), добавление каталога с исходными файлами...
-  </div>
-  
-
-<!-- Pagination links -->
 <div class="pagination">
-  
-    <a href="/" class="previous">Previous</a>
-  
-  <span class="page_number ">Page: 2 of 3</span>
-  
-    <a href="/blog/page3/" class="next">Next</a>
-  
+	<ul>
+
+<li class="prev"><a href="/blog/">Prev</a></li>
+
+		<li><a href="/blog/">1</a></li>
+
+		<li><a class="active" href="/blog/page2/">2</a></li>
+
+		<li><a href="/blog/page3/">3</a></li>
+
+		<li><a href="/blog/page4/">4</a></li>
+
+
+
+<li class="next"><a href="/blog/page3/">Next</a></li>
+
+	</ul>
 </div>
-<!-- vim:ts=4:sw=4:sts=4
--->
 
-      </div>
-    </div>
 
-    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+			</section>
+			<footer>
 
-    <script>
-      (function(document) {
-        var toggle = document.querySelector('.sidebar-toggle');
-        var sidebar = document.querySelector('#sidebar');
-        var checkbox = document.querySelector('#sidebar-checkbox');
+<img class="avatar" src="https://www.gravatar.com/avatar/1d87b9cdbef9dec8e79613e19c601121?s=144" alt="Me">
 
-        document.addEventListener('click', function(e) {
-          var target = e.target;
 
-          if(!checkbox.checked ||
-             sidebar.contains(target) ||
-             (target === checkbox || target === toggle)) return;
 
-          checkbox.checked = false;
-        }, false);
-      })(document);
-    </script>
-    <script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+				<p>
+					<small>© 2017 Yellow Rabbit</small><br>
+					<small>Made with <a href="http://jekyllrb.com/">Jekyll</a> — Theme by <a href="https://github.com/orderedlist">orderedlist</a></small>
+				</p>
+			</footer>
+		</div>
+		<script src="/js/scale.fix.js"></script>
+	
 
-  ga('create', 'UA-103047949-1', 'auto');
-  ga('send', 'pageview');
-
+	<script type="text/javascript">
+	var disqus_shortname = 'yrabbitblog',
+	disqus_identifier = 'index.html-en',
+	disqus_url        = 'https://yrabbit.github.io/blog/page2/index.html'
+	;
+	(function() {
+		var load = function(src){
+			var s = document.createElement('script'); s.type = 'text/javascript'; s.async = true; s.src = src;
+			var e = document.getElementsByTagName('script')[0]; e.parentNode.insertBefore(s, e);
+		};
+		load('//' + disqus_shortname + '.disqus.com/count.js');
+		if (document.getElementById('disqus_thread')) {
+			load('//' + disqus_shortname + '.disqus.com/embed.js');
+		}
+	})();
 </script>
 
-  </body>
+
+	</body>
 </html>
