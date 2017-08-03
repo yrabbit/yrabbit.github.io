@@ -7,7 +7,7 @@
 	<author>
 		<name>Yellow Rabbit</name>
 	</author>
-	<updated>2017-08-03T17:27:23+10:00</updated>
+	<updated>2017-08-04T09:01:26+10:00</updated>
 
 	<entry>
 		<title type="text">Web-engine in Lisp: Parse the Most Complex Element</title>
@@ -2344,11 +2344,11 @@ To make a move means to copy a board, simultaneously changing one of the cells t
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 &lt;h2 id=&quot;checking-for-a-winning-situation&quot;&gt;Checking for a winning situation&lt;/h2&gt;
-&lt;p&gt;The condition for winning the game is to create a line from the &lt;code class=&quot;highlighter-rouge&quot;&gt;*win-len*&lt;/code&gt; chips of the same color. We will check for victory after each move. To do this, it is necessary to detect the lines that resulted from the last move. The following figure shows how we will check cells and count the number of identical chips in directions (vectors) starting from the last move [^how-to-make-svg] cell.&lt;/p&gt;
+&lt;p&gt;The condition for winning the game is to create a line from the &lt;code class=&quot;highlighter-rouge&quot;&gt;*win-len*&lt;/code&gt; chips of the same color. We will check for victory after each move. To do this, it is necessary to detect the lines that resulted from the last move. The following figure shows how we will check cells and count the number of identical chips in directions (vectors) starting from the last move[^how-to-make-svg] cell.&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/imgs/posts/trilobite-win-patterns.svg&quot; alt=&quot;Templates for checking the winning situation&quot; title=&quot;Trilobite .How to check for a winning situation.&quot; class=&quot;center-img&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;For each square of the board we will get the cell numbers and the order in which we need to check them for the presence of chips of the same color. As a result, a list of lists &lt;sup id=&quot;fnref:list-of-lists&quot;&gt;&lt;a href=&quot;#fn:list-of-lists&quot; class=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt; is generated.&lt;/p&gt;
+&lt;p&gt;For each square of the board we will get the cell numbers and the order in which we need to check them for the presence of chips of the same color. As a result, a list of lists&lt;sup id=&quot;fnref:list-of-lists&quot;&gt;&lt;a href=&quot;#fn:list-of-lists&quot; class=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt; is generated.&lt;/p&gt;
 
 &lt;ul&gt;
   &lt;li&gt;(
