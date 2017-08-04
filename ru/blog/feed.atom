@@ -7,7 +7,7 @@
 	<author>
 		<name>Yellow Rabbit</name>
 	</author>
-	<updated>2017-08-04T09:01:26+10:00</updated>
+	<updated>2017-08-04T10:35:44+10:00</updated>
 
 	<entry>
 		<title type="text">Web-движок на Lisp: разбираем самый сложный элемент</title>
@@ -21,7 +21,7 @@
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners//imgs/post-banners/lisp-webengine-recursion.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners/lisp-webengine-recursion.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;p&gt;Самый сложный элемент. Гораздо сложнее &lt;a href=&quot;/blog/2016/lisp-toy-web-parse-comment/&quot;&gt;комментариев&lt;/a&gt;. У нас есть открывающие и закрывающие теги, атрибуты и их значения, а ко всему прочему, элементы ещё могут быть вложенными.&lt;/p&gt;
 
 &lt;p&gt;У него даже конструктор сложный :smile:&lt;/p&gt;
@@ -351,7 +351,7 @@
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners//imgs/post-banners/lisp-webengine-comment.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners/lisp-webengine-comment.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;p&gt;После того, как удалось &lt;a href=&quot;/blog/2016/lisp-toy-web-parse-text/&quot;&gt;разобрать текстовый элемент HTML&lt;/a&gt;, переходим к более сложному элементу - комментариям.&lt;/p&gt;
 
 &lt;h2 id=&quot;Комментарии&quot;&gt;Комментарии&lt;/h2&gt;
@@ -442,7 +442,7 @@
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners//imgs/post-banners/lisp-webengine-text.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners/lisp-webengine-text.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;p&gt;После знакомства с &lt;a href=&quot;/blog/2016/lisp-toy-web-parsing-meta/&quot;&gt;парсером META&lt;/a&gt; переходим к рассмотрению грамматики HTML. А также посмотрим как разобрать простейший элемент.&lt;/p&gt;
 
 &lt;h2 id=&quot;Наводим-порядок&quot;&gt;Наводим порядок&lt;/h2&gt;
@@ -586,7 +586,7 @@
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners//imgs/post-banners/lisp-webengine-meta.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners/lisp-webengine-meta.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 
 &lt;p&gt;Чтобы строить дерево документа нам нужен парсер HTML. Простой. В январе 1991 года появилась статья Henry G. Baker &lt;a href=&quot;http://home.pipeline.com/~hbaker1/Prag-Parse.html&quot; title=&quot;Старая статья о парсинге&quot;&gt;“Прагматичный парсинг на Common Lisp”&lt;/a&gt;, в которой он описывает META — классическую простую и одновременно эффективную технику построения рекурсивных нисходящих парсеров.&lt;/p&gt;
 
@@ -701,7 +701,7 @@
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners//post-baners/lisp-webengine-dom.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io/post-baners/lisp-webengine-dom.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;p&gt;Что происходит внутри браузеров? Как эта куча тэгов превращается в такие изумительные страницы на экране? 
 Магия. Попробую изобразить что-то примитивное для отображения HTML.&lt;/p&gt;
 
@@ -889,7 +889,7 @@
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners//imgs/post-banners/standalone-lisp.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners/standalone-lisp.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;p&gt;Желание делать отдельный самодостаточный исполняемый файл, хотя можно просто дать исходники, немного станновато, но допустим, что такая необходимость возникла.&lt;/p&gt;
 
 &lt;p&gt;Проект к этому моменту уже приобрёл законченный вид и организован как локальная система quicklisp. &lt;a href=&quot;http://xach.livejournal.com/278047.html&quot;&gt;Здесь&lt;/a&gt; можно прочитать как сразу создать удобную среду для разработки.&lt;/p&gt;
@@ -945,7 +945,7 @@
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners//imgs/post-banners/xiaomi-android-wear.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners/xiaomi-android-wear.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;p&gt;После обновления Xiaomi Mi 4LTE на MIUI 7.2.9.0 (MXDCNDB) версия андроида в телефоне изменилась на 6.0.1. Как побочный эффект часы &lt;a href=&quot;http://www.lg.com/uk/smart-watches/lg-W110&quot;&gt;LG G Watch R 1085&lt;/a&gt; перестали соединяться с телефоном, а на самом телефоне Google Play Services впали в панику. Ниже приведен способ восстановления работоспособности связки телефон – часы.&lt;/p&gt;
 
 &lt;ol&gt;
@@ -990,7 +990,7 @@
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners//imgs/post-banners/trilobite-macros.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners/trilobite-macros.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;p&gt;Вообще говоря можно писать на Lisp и при этом не подозревать о макросах. Это тёмное искусство и освоить его тяжко, однако простые вещи вполне можно попробовать.&lt;/p&gt;
 
 &lt;h2 id=&quot;Делаем-вещи-короче&quot;&gt;Делаем вещи короче&lt;/h2&gt;
@@ -1065,7 +1065,7 @@
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners//imgs/post-banners/trilobite-modern-lamp.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners/trilobite-modern-lamp.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;p&gt;Компьютер &lt;a href=&quot;/blog/2015/lisp-trilobite-heuristic&quot;&gt;играет хуже&lt;/a&gt; своего собрата из &lt;em&gt;11th hour&lt;/em&gt;. С этим надо что-то делать. Попробуем другие эвристики для компьютерного игрока.&lt;/p&gt;
 
 &lt;h2 id=&quot;Идея&quot;&gt;Идея&lt;/h2&gt;
@@ -1152,7 +1152,7 @@
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners//imgs/post-banners/trilobite-lisp-tricks.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners/trilobite-lisp-tricks.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;p&gt;Хотя я проигрываю AI, он не может победить монстра из 11-го часа :frowning: И, пока у меня не появилось идей по улучшению его работы, займусь украшательствами. Для начала чуть-чуть упростим построение шаблонов для проверки соседних ячеек, ну и заодно сделаем её запоминающей.&lt;/p&gt;
 
 &lt;h2 id=&quot;Немного-причёсывания&quot;&gt;Немного причёсывания&lt;/h2&gt;
@@ -1292,7 +1292,7 @@
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners//imgs/post-banners/trilobite-lamp.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners/trilobite-lamp.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;p&gt;Итак противник уже &lt;a href=&quot;/blog/2015/lisp-trilobite-big-lazy-tree/&quot;&gt;играет круче меня&lt;/a&gt;, но это не достижение, меня все обыгрывают.  Будем улучшать искусственный разум.&lt;/p&gt;
 
 &lt;h2 id=&quot;Чуточку-умнее&quot;&gt;Чуточку умнее&lt;/h2&gt;
@@ -1697,7 +1697,7 @@
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners//imgs/post-banners/trilobite-tree.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners/trilobite-tree.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;p&gt;&lt;a href=&quot;/blog/2015/lisp-trilobite-game-ui/&quot;&gt;Программа&lt;/a&gt; прилично играет на крошечной доске, пора задуматься об увеличении игрового поля. Поскольку при простом увеличении размеров доски память быстро заканчивается, то придется жульничать: создавать в памяти только те кусочки дерева комбинаций, которые действительно нужны. Здесь нужно заметить, что, не имея возможности проанализировать всё дерево комбинаций, AI придётся немного поднапрячься.&lt;/p&gt;
 
 &lt;h2 id=&quot;Ленивые-списки&quot;&gt;Ленивые списки&lt;/h2&gt;
@@ -1946,7 +1946,7 @@
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners//imgs/post-banners/trilobite-ui.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners/trilobite-ui.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;p&gt;Продолжаем развивать игру, описанную &lt;a href=&quot;/blog/2015/lisp-trilobite-game-board/&quot;&gt;тут&lt;/a&gt;, &lt;a href=&quot;/blog/2015/lisp-trilobite-moves-victory-check/&quot;&gt;тут&lt;/a&gt; и &lt;a href=&quot;/blog/2015/lisp-trilobite-rules-engine/&quot;&gt;тут&lt;/a&gt;.&lt;/p&gt;
 
 &lt;h2 id=&quot;Интерфейс&quot;&gt;Интерфейс&lt;/h2&gt;
@@ -2134,7 +2134,7 @@
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners//imgs/post-banners/trilobite-ai.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners/trilobite-ai.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;p&gt;Игра, &lt;a href=&quot;/blog/2015/lisp-trilobite-game-board/&quot;&gt;описанная ранее&lt;/a&gt; и &lt;a href=&quot;/blog/2015/lisp-trilobite-moves-victory-check/&quot;&gt;которая почти ожила&lt;/a&gt; пока ещё не &lt;em&gt;разумна&lt;/em&gt;. Попробуем добавить в неё немного интеллекта&lt;/p&gt;
 
 &lt;h2 id=&quot;Движок-игровых-правил&quot;&gt;Движок игровых правил&lt;/h2&gt;
@@ -2338,7 +2338,7 @@
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners//imgs/post-banners/trilobite-moves.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners/trilobite-moves.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;p&gt;В &lt;a href=&quot;/blog/2015/lisp-trilobite-game-board/&quot;&gt;предыдущей заметке&lt;/a&gt; у нас появилась игровая доска, теперь время попробовать её оживить.&lt;/p&gt;
 
 &lt;h2 id=&quot;Ходы&quot;&gt;Ходы&lt;/h2&gt;
@@ -2561,7 +2561,7 @@
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners//imgs/post-banners/trilobite-board.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners/trilobite-board.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;h2 id=&quot;Постановка-задачи&quot;&gt;Постановка задачи&lt;/h2&gt;
 &lt;p&gt;В игре 11th hour попалась головоломка-игрушка, цель которой: выстроить в ряд 4 фишки.  Причём нельзя выбрать горизонталь для новой фишки, можно  выбрать только вертикаль.
 &lt;img src=&quot;/imgs/posts/trilobite-original-screen.png&quot; alt=&quot;Trilobite original game screen&quot; title=&quot;Trilobite original game screen&quot; /&gt; Я не могу победить компьютер в этой мини-игре, так что попробую устроить битву двух AI. Было бы забавно написать соперника для компьютера на Lisp, так как я практически не знаком с этим языком.&lt;/p&gt;
@@ -2696,7 +2696,7 @@ NIL
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners//imgs/post-banners/dfly-lighthouse.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners/dfly-lighthouse.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;p&gt;Второй способ заключается в создании специального устройства, чтение из которого возвращает текущий уровень подсветки, а запись в которое изменяет этот уровень. И такое устройство было создано. Это потребовало гораздо крупных вмешательств в код, включая изменение нескольких Makefile, файла системных настроек (sys/conf/options), добавление каталога с исходными файлами устройства.&lt;/p&gt;
 
 &lt;p&gt;Устройство работало, но это нисколько не помогло сторонним утилитам увидеть наличие регулировки подсветки. Дело в том, что для этих утилит критичным оказалось наличие каталога /sys/class/backlight/something, в котором располагались специальные файлы actual_brightness, brightness, max_brightness, subsystem/, uevent, bl_power, device/, power/ и тому подобные.&lt;/p&gt;
@@ -2739,7 +2739,7 @@ NIL
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners//imgs/post-banners/dfly-lighthouse.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners/dfly-lighthouse.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;p&gt;Клавиши регулировки подсветки на клавиатуре хромбука Acer C720 являются замаскированными клавишами &lt;em&gt;F6&lt;/em&gt; и &lt;em&gt;F7&lt;/em&gt;. Соответственно при замене ChromeOS на DragoFly BSD регулировка подсветки не работает. Не удаётся также использовать &lt;em&gt;xbacklight&lt;/em&gt; - он не находит видео-выходов с возможностью регулировки подсветки. &lt;em&gt;xrandr&lt;/em&gt; может помочь, но это программное решение, что-то типа приглушения яркости выводимых точек. Ясно, что жизнь батарее это никак не продлит.&lt;/p&gt;
 
 &lt;h2 id=&quot;Первый-способ&quot;&gt;Первый способ&lt;/h2&gt;
@@ -2843,7 +2843,7 @@ NIL
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners//imgs/post-banners/speaker-volume.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners/speaker-volume.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;p&gt;У Acer C720 нет обозначенных функциональных клавиш F1-10, вместо этого соответствующие клавиши помечены различными значками. Так F8 обозначена как “выключение звука”, F9 - “уменьшить громкость”, F10 - “увеличить громкость”. Так эти клавиши работают под ChromeOS. Чтобы частично повторить этот функционал воспользуемся &lt;code class=&quot;highlighter-rouge&quot;&gt;xbindkeys&lt;/code&gt;.&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/imgs/posts/acer-c720-keyboard.jpeg&quot; alt=&quot;Мультимедиа клавиши на клавиатуре Acer C720&quot; title=&quot;Мультимедиа клавиши на клавиатуре Acer C720&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
@@ -2873,7 +2873,7 @@ NIL
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners//imgs/post-banners/acer-c720-keyboard-xorg.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners/acer-c720-keyboard-xorg.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;p&gt;Клавиатура хромбука Acer C720 видимо хороша для прогулок по сети и работы в Chrome OS, но мне для написания программ некоторых клавиш не хватает. Это &lt;em&gt;Home&lt;/em&gt;, &lt;em&gt;End&lt;/em&gt;, &lt;em&gt;PageUp&lt;/em&gt;, &lt;em&gt;PageDown&lt;/em&gt;, &lt;em&gt;Insert&lt;/em&gt; и &lt;em&gt;Delete&lt;/em&gt;.&lt;/p&gt;
 
 &lt;p&gt;Можно попробовать использовать клавишу &lt;em&gt;Alt&lt;/em&gt; (генерирует символ Alt) как модификатор для курсорных клавиш. Тогда получаются следующие клавиатурные комбинации:&lt;/p&gt;
