@@ -7,7 +7,7 @@
 	<author>
 		<name>Yellow Rabbit</name>
 	</author>
-	<updated>2017-08-07T12:27:43+10:00</updated>
+	<updated>2017-08-07T12:34:54+10:00</updated>
 
 	<entry>
 		<title type="text">Low-pass Filter for Android Sensors</title>
@@ -108,7 +108,7 @@ kH2lkH4l:makelist(kH4(i / (100 * 500)) + kH2(i / (100 * 500)), i, 0, 100)$
 
 &lt;p&gt;&lt;script type=&quot;math/tex&quot;&gt;\alpha=0.5, f_c=7957.747154&lt;/script&gt; Hz - all passes through the filter practically unchanged.&lt;/p&gt;
 
-&lt;p&gt;&lt;script type=&quot;math/tex&quot;&gt;\alpha=0.9, f_c=884.194128&lt;/script&gt; the filter actively smoothes both our signal in 2kHz and noise in 4kHz.&lt;/p&gt;
+&lt;p&gt;&lt;script type=&quot;math/tex&quot;&gt;\alpha=0.9, f_c=884.194128&lt;/script&gt; Hz the filter actively smoothes both our signal in 2kHz and noise in 4kHz.&lt;/p&gt;
 
 &lt;h2 id=&quot;afterword&quot;&gt;Afterword&lt;/h2&gt;
 &lt;p&gt;It seems that one can already insert this filter as there is somewhere like:&lt;/p&gt;
@@ -118,7 +118,7 @@ kH2lkH4l:makelist(kH4(i / (100 * 500)) + kH2(i / (100 * 500)), i, 0, 100)$
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
-&lt;p&gt;\(\ldots\) and be disappointed.  The reason is in \(\Delta T \) or in the sampling period, which varies from model to model, and during the program operation can vary quite significantly. And for a fixed \(\alpha \) this will change the operating frequency of the filter. So \(\alpha \) must be dynamic,  we’ll discuss it next time.&lt;/p&gt;
+&lt;p&gt;\(\ldots\) and be disappointed.  The reason is in \(\Delta T \) or in the sampling period, which varies from model to model, and during the program operation can vary quite significantly. And for a fixed \(\alpha \) this will change the operating frequency of the filter. So \(\alpha \) must be dynamic,  we’ll discuss it next time. :smile:&lt;/p&gt;
 
 </content>
 	</entry>
