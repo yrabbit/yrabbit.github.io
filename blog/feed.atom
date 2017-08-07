@@ -7,7 +7,121 @@
 	<author>
 		<name>Yellow Rabbit</name>
 	</author>
-	<updated>2017-08-04T13:11:53+10:00</updated>
+	<updated>2017-08-07T12:27:43+10:00</updated>
+
+	<entry>
+		<title type="text">Low-pass Filter for Android Sensors</title>
+		<link href="https://yrabbit.github.io/blog/2017/low-pass-filter-android-sensors/" />
+		<id>https://yrabbit.github.io/blog/2017/low-pass-filter-android-sensors/</id>
+		<published>2017-08-06T00:00:00+10:00</published>
+		<updated>2017-08-06T00:00:00+10:00</updated>
+		<summary type="html">
+
+A  sensors in our mobile phones have, among other things, an imperfect output signal quality. Well, it’s difficult to do something with the hardware, but one can play with software digital signal filters.
+
+</summary>
+		<content type="html">
+&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners/low-pass-filter.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;script type=&quot;text/javascript&quot; async=&quot;&quot; src=&quot;https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML&quot;&gt;
+&lt;/script&gt;
+
+&lt;p&gt;A  sensors in our mobile phones have, among other things, an imperfect output signal quality. Well, it’s difficult to do something with the hardware, but one can play with software digital signal filters.&lt;/p&gt;
+
+&lt;h2 id=&quot;a-bit-of-theory&quot;&gt;A bit of theory&lt;/h2&gt;
+
+&lt;p&gt;Consider the simplest low-pass filter:
+&lt;img src=&quot;/imgs/posts/RCfilter.png&quot; alt=&quot;Schematic diagram of RC filter&quot; title=&quot;RC filter circuit&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The voltage drop across the resistor and the current through it are connected:&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;V_{in}(t) - V_{out}(t)=Ri(t)&lt;/script&gt;
+
+&lt;p&gt;On the other hand, the definition of capacity implies:&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;Q_c(t)=V_{out}(t)&lt;/script&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;i(t)=\frac{dQ(t)}{dt}&lt;/script&gt;
+
+&lt;p&gt;where \(Q_c(t)\) - charge of the capacitor at time \(t\). Then \(i(t)=C\frac{V_{out}(t)}{dt}\) and finally the filter is described by the equation:&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;V_{in}(t) - V_{out}(t)=RC\frac{V_{out}}{dt}&lt;/script&gt;
+
+&lt;p&gt;One  can go to a discrete form. Assume that samples of the input and output signals are taken at regular intervals \( \Delta T\), sequence \(\lbrace x_1, x_2, x_3, \ldots x_n\rbrace\) - input signal \(V_{in}\), \(\lbrace y_1, y_2, y_3, \ldots y_n\rbrace\) - output signal \(V_{out}\), then:&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;x_i - y_i=RC\frac{y_i - y_{i-1}}{\Delta T}&lt;/script&gt;
+
+&lt;p&gt;or&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;y_i=y_{i-1}\left(\frac{RC}{RC+\Delta T}\right)+x_i\left(\frac{\Delta T}{RC + \Delta T}\right)&lt;/script&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;y_i=\alpha y_{i-1} + (1 - \alpha)x_i&lt;/script&gt;
+
+&lt;p&gt;\(\alpha=\frac{RC}{RC+\Delta T}\) - coefficient of smoothing. From \(RC\), the filter smoothing frequency \(f_c = \frac{1}{2\pi RC}\) is determined, that is, the frequency above which the signal begins to smooth out.&lt;/p&gt;
+
+&lt;h2 id=&quot;filter-in-maxima&quot;&gt;Filter in Maxima&lt;/h2&gt;
+&lt;p&gt;Suppose we have at the input a useful signal with a frequency of 2 kHz and noise with a frequency of 4 kHz:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/imgs/posts/2kHz-4kHz.png&quot; alt=&quot;Input signal and noise&quot; title=&quot;Signal and noise separately&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Naturally, the filter input receives a total signal:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/imgs/posts/2kHz+4kHz.png&quot; alt=&quot;Total input signal&quot; title=&quot;Total input signal&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Signal and noise are given by functions:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-maxima&quot;&gt;kH2(t):=sin(2*%pi*2000*t)$
+kH4(t):=sin(2*%pi*4000*t)$
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In Maxima we can describe the input data with two lists of values, &lt;code class=&quot;highlighter-rouge&quot;&gt;tl&lt;/code&gt; - time counts of 100 intervals of 0.00005 seconds,&lt;code class=&quot;highlighter-rouge&quot;&gt; kH2lkH4l&lt;/code&gt; - a list of input values \(x_i\):&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-maxima&quot;&gt;tl:makelist(i / (100 * 500), i, 0, 100)$
+kH2lkH4l:makelist(kH4(i / (100 * 500)) + kH2(i / (100 * 500)), i, 0, 100)$
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The filter function itself consists of a recursive part that literally repeats \(y_i=\alpha y_{i-1} + (1 - \alpha)x_i\):&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-maxima&quot;&gt;lowpass_rec(x, alpha):= 
+  if length(x) = 1 then
+    [(1 - alpha) * first(x)]
+  else block([y],
+    y: lowpass_rec(rest(x), alpha),
+    return(cons(alpha * first(y) + (1 - alpha) * first(x), y)))$
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;and the entry point:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-maxima&quot;&gt;lowpass(x, alpha):=reverse(lowpass_rec(reverse(x), alpha))$
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;\(\Delta T=0.00005\) is fixed and is defined by frequency of data receipt from the sensor. The smoothing frequency is 3kHz: \(f_c=\frac{1}{2\pi RC}=3000\)Hz.&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;RC= \frac{1}{2\pi f_c}=5.305164769729845e-5&lt;/script&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\alpha=\frac{RC}{RC+\Delta T}=0.7262210965743948&lt;/script&gt;
+
+&lt;p&gt;Let’s see how the filter works with this value of \(\alpha\) together with the others.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-maxima&quot;&gt;plot2d([[discrete, tl, kH2lkH4l], [discrete, tl, lowpass(kH2lkH4l, 0.5)],
+        [discrete, tl, lowpass(kH2lkH4l, 0.7262210965743948)],
+        [discrete, tl, lowpass(kH2lkH4l, 0.9)]],
+        [legend, &quot;V_in&quot;, &quot;a=0.5&quot;, &quot;a=0.726&quot;, &quot;a=0.9&quot;])$
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img src=&quot;/imgs/posts/choose-alpha.png&quot; alt=&quot;Low Pass Filter Operation&quot; title=&quot;Low Pass Filter Graph&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;For the other  values of \(\alpha \), the boundary frequencies of this filter are equal, respectively:&lt;/p&gt;
+
+&lt;p&gt;&lt;script type=&quot;math/tex&quot;&gt;\alpha=0.5, f_c=7957.747154&lt;/script&gt; Hz - all passes through the filter practically unchanged.&lt;/p&gt;
+
+&lt;p&gt;&lt;script type=&quot;math/tex&quot;&gt;\alpha=0.9, f_c=884.194128&lt;/script&gt; the filter actively smoothes both our signal in 2kHz and noise in 4kHz.&lt;/p&gt;
+
+&lt;h2 id=&quot;afterword&quot;&gt;Afterword&lt;/h2&gt;
+&lt;p&gt;It seems that one can already insert this filter as there is somewhere like:&lt;/p&gt;
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;nd&quot;&gt;@Override&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;onSensorChanged&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SensorEvent&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;\(\ldots\) and be disappointed.  The reason is in \(\Delta T \) or in the sampling period, which varies from model to model, and during the program operation can vary quite significantly. And for a fixed \(\alpha \) this will change the operating frequency of the filter. So \(\alpha \) must be dynamic,  we’ll discuss it next time.&lt;/p&gt;
+
+</content>
+	</entry>
 
 	<entry>
 		<title type="text">Web-engine in Lisp: Parse the Most Complex Element</title>
@@ -2826,142 +2940,6 @@ NIL
   F10&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;It’s correct for DragonFly BSD, because the /dev/mixer0 device is equal to the hdmi output.&lt;/p&gt;
-</content>
-	</entry>
-
-	<entry>
-		<title type="text">Keyboard Setup in Xorg - Acer C720 Laptop</title>
-		<link href="https://yrabbit.github.io/blog/2014/keyboard-acer-c720/" />
-		<id>https://yrabbit.github.io/blog/2014/keyboard-acer-c720/</id>
-		<published>2014-12-08T07:01:01+10:00</published>
-		<updated>2017-07-23T19:20:54+10:00</updated>
-		<summary type="html">The keyboard of the Chromebook Acer C720 is probably good for walks on the network and work in the Chrome OS, but I do not have enough keys to write the programs. These are Home, End, PageUp, PageDown, Insert and Delete.
-
-You can try using the Alt key (generates the Alt character) as a modifier for the cursor keys. Then the following keyboard combinations are obtained:
-
-</summary>
-		<content type="html">
-&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners/acer-c720-keyboard-xorg.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
-&lt;p&gt;The keyboard of the Chromebook Acer C720 is probably good for walks on the network and work in the Chrome OS, but I do not have enough keys to write the programs. These are &lt;em&gt;Home&lt;/em&gt;, &lt;em&gt;End&lt;/em&gt;, &lt;em&gt;PageUp&lt;/em&gt;, &lt;em&gt;PageDown&lt;/em&gt;, &lt;em&gt;Insert&lt;/em&gt; and &lt;em&gt;Delete&lt;/em&gt;.&lt;/p&gt;
-
-&lt;p&gt;You can try using the &lt;em&gt;Alt&lt;/em&gt; key (generates the Alt character) as a modifier for the cursor keys. Then the following keyboard combinations are obtained:&lt;/p&gt;
-
-&lt;table align=&quot;center&quot; style=&quot;width:60%;align=center&quot;&gt;
-	&lt;tr&gt;
-		&lt;th&gt;Key&lt;/th&gt;&lt;th&gt;Combination&lt;/th&gt;
-	&lt;/tr&gt;
-	&lt;tr&gt;
-		&lt;td&gt;Insert&lt;/td&gt;&lt;td&gt;Alt + \&lt;/td&gt;
-	&lt;/tr&gt;
-	&lt;tr&gt;
-		&lt;td&gt;Delete&lt;/td&gt;&lt;td&gt;Alt + BackSpace&lt;/td&gt;
-	&lt;/tr&gt;
-	&lt;tr&gt;
-		&lt;td&gt;Home&lt;/td&gt;&lt;td&gt;Alt + Left (&amp;larr;)&lt;/td&gt;
-	&lt;/tr&gt;
-	&lt;tr&gt;
-		&lt;td&gt;End&lt;/td&gt;&lt;td&gt;Alt + Right (&amp;rarr;)&lt;/td&gt;
-	&lt;/tr&gt;
-	&lt;tr&gt;
-		&lt;td&gt;PageUp&lt;/td&gt;&lt;td&gt;Alt + Up (&amp;uarr;)&lt;/td&gt;
-	&lt;/tr&gt;
-	&lt;tr&gt;
-		&lt;td&gt;PageDown&lt;/td&gt;&lt;td&gt;Alt + Down (&amp;darr;)&lt;/td&gt;
-	&lt;/tr&gt;
-&lt;/table&gt;
-
-&lt;p&gt;To modify the layout use &lt;em&gt;xkb&lt;/em&gt;. First, create a directory for the configuration files:&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-console&quot; data-lang=&quot;console&quot;&gt;&lt;span class=&quot;err&quot;&gt;	mkdir -p ${HOME}/.config/xkb/types ${HOME}/.config/xkb/symbols&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;In the file &lt;code class=&quot;highlighter-rouge&quot;&gt;${HOME}/.config/xkb/types/c720&lt;/code&gt; we specify how the two modifiers will behave together - &lt;em&gt;Shift&lt;/em&gt; and &lt;em&gt;Alt&lt;/em&gt;. Interest is represented by situations when &lt;em&gt;Alt&lt;/em&gt; is pressed, that is, level 3.&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span class=&quot;n&quot;&gt;xkb_types&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;c720&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-	&lt;span class=&quot;n&quot;&gt;virtual_modifiers&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Alt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-	&lt;span class=&quot;n&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;ARROW&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-		&lt;span class=&quot;n&quot;&gt;modifiers&lt;/span&gt;	&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Shift&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Alt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-		&lt;span class=&quot;n&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Shift&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;	&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Level2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-		&lt;span class=&quot;n&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Alt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;	&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Level3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-		&lt;span class=&quot;n&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Alt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Shift&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;	&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Level3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-		&lt;span class=&quot;n&quot;&gt;level_name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Level1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Base&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-		&lt;span class=&quot;n&quot;&gt;level_name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Level2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Caps&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-		&lt;span class=&quot;n&quot;&gt;level_name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Level3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Alt&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-	&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;In the file &lt;code class=&quot;highlighter-rouge&quot;&gt;${HOME}/.config/xkb/symbols/c720&lt;/code&gt; at level 3, we perform a substitution of the keys for the required keys and do not forget to clear the modifier flag, otherwise the new characters will not be processed correctly.&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span class=&quot;n&quot;&gt;xkb_symbols&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;c720&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-	&lt;span class=&quot;n&quot;&gt;key&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;BKSL&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-		&lt;span class=&quot;n&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;ARROW&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-		&lt;span class=&quot;n&quot;&gt;repeat&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;yes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-		&lt;span class=&quot;n&quot;&gt;symbol&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Group1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;backslash&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;bar&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Insert&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
-		&lt;span class=&quot;n&quot;&gt;symbol&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Group2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;backslash&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;slash&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Insert&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
-		&lt;span class=&quot;n&quot;&gt;actions&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Group1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
-			&lt;span class=&quot;n&quot;&gt;NoAction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
-			&lt;span class=&quot;n&quot;&gt;NoAction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
-			&lt;span class=&quot;n&quot;&gt;RedirectKey&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;INS&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;clearmods&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Alt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-		&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
-		&lt;span class=&quot;n&quot;&gt;actions&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Group2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
-			&lt;span class=&quot;n&quot;&gt;NoAction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
-			&lt;span class=&quot;n&quot;&gt;NoAction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
-			&lt;span class=&quot;n&quot;&gt;RedirectKey&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;INS&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;clearmods&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Alt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-		&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-	&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
-	&lt;span class=&quot;n&quot;&gt;key&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;BKSP&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-		&lt;span class=&quot;n&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;ARROW&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-		&lt;span class=&quot;n&quot;&gt;repeat&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;yes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-		&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;BackSpace&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;BackSpace&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Delete&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
-		&lt;span class=&quot;n&quot;&gt;actions&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Group1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
-			&lt;span class=&quot;n&quot;&gt;NoAction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
-			&lt;span class=&quot;n&quot;&gt;NoAction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
-			&lt;span class=&quot;n&quot;&gt;RedirectKey&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;DELE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;clearmods&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Alt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-		&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-	&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
-	&lt;span class=&quot;n&quot;&gt;key&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;LEFT&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-		&lt;span class=&quot;n&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;ARROW&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-		&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Left&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Left&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Home&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
-		&lt;span class=&quot;n&quot;&gt;actions&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Group1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
-			&lt;span class=&quot;n&quot;&gt;NoAction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
-			&lt;span class=&quot;n&quot;&gt;NoAction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
-			&lt;span class=&quot;n&quot;&gt;RedirectKey&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;HOME&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;clearmods&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Alt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-		&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-	&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
-	&lt;span class=&quot;n&quot;&gt;key&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;RGHT&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-		&lt;span class=&quot;n&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;ARROW&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-		&lt;span class=&quot;n&quot;&gt;repeat&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;yes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-		&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Right&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Right&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;End&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
-		&lt;span class=&quot;n&quot;&gt;actions&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Group1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
-			&lt;span class=&quot;n&quot;&gt;NoAction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
-			&lt;span class=&quot;n&quot;&gt;NoAction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
-			&lt;span class=&quot;n&quot;&gt;RedirectKey&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;END&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;clearmods&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Alt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-		&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-	&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
-	&lt;span class=&quot;n&quot;&gt;key&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;UP&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-		&lt;span class=&quot;n&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;ARROW&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-		&lt;span class=&quot;n&quot;&gt;repeat&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;yes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-		&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Up&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Up&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Prior&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
-		&lt;span class=&quot;n&quot;&gt;actions&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Group1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
-			&lt;span class=&quot;n&quot;&gt;NoAction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
-			&lt;span class=&quot;n&quot;&gt;NoAction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
-			&lt;span class=&quot;n&quot;&gt;RedirectKey&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;PGUP&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;clearmods&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Alt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-		&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-	&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
-	&lt;span class=&quot;n&quot;&gt;key&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;DOWN&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-		&lt;span class=&quot;n&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;ARROW&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-		&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Down&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Down&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Next&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
-		&lt;span class=&quot;n&quot;&gt;actions&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Group1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
-			&lt;span class=&quot;n&quot;&gt;NoAction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
-			&lt;span class=&quot;n&quot;&gt;NoAction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
-			&lt;span class=&quot;n&quot;&gt;RedirectKey&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;PGDN&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;clearmods&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Alt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-		&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-	&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;It remains to write the following command in .xinitrc to load the changed layout:&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-console&quot; data-lang=&quot;console&quot;&gt;&lt;span class=&quot;err&quot;&gt;setxkbmap -layout &quot;us+c720&quot; -types &quot;complete+c720&quot; -print|xkbcomp -I&quot;$HOME/.config/xkb&quot; - &quot;${DISPLAY%%.*}&quot;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
 </content>
 	</entry>
 
