@@ -7,7 +7,7 @@
 	<author>
 		<name>Yellow Rabbit</name>
 	</author>
-	<updated>2017-08-08T15:24:42+10:00</updated>
+	<updated>2017-08-09T08:25:50+10:00</updated>
 
 	<entry>
 		<title type="text">Фильтр нижних частот для датчиков Андроид - практика</title>
@@ -1300,7 +1300,7 @@ kH2lkH4l:makelist(kH4(i / (100 * 500)) + kH2(i / (100 * 500)), i, 0, 100)$
 </summary>
 		<content type="html">
 &lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners/trilobite-modern-lamp.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
-&lt;p&gt;Компьютер &lt;a href=&quot;/blog/2015/lisp-trilobite-heuristic&quot;&gt;играет хуже&lt;/a&gt; своего собрата из &lt;em&gt;11th hour&lt;/em&gt;. С этим надо что-то делать. Попробуем другие эвристики для компьютерного игрока.&lt;/p&gt;
+&lt;p&gt;Компьютер &lt;a href=&quot;/blog/2015/lisp-trilobite-heuristic/&quot;&gt;играет хуже&lt;/a&gt; своего собрата из &lt;em&gt;11th hour&lt;/em&gt;. С этим надо что-то делать. Попробуем другие эвристики для компьютерного игрока.&lt;/p&gt;
 
 &lt;h2 id=&quot;Идея&quot;&gt;Идея&lt;/h2&gt;
 &lt;p&gt;Для начала небольшая парочка функций, которые подсчитывают количество фишек противника в соседних клетках.&lt;/p&gt;

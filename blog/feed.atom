@@ -7,7 +7,7 @@
 	<author>
 		<name>Yellow Rabbit</name>
 	</author>
-	<updated>2017-08-08T15:24:41+10:00</updated>
+	<updated>2017-08-09T08:25:50+10:00</updated>
 
 	<entry>
 		<title type="text">Low-pass Filter for Android Sensors - Practice</title>
@@ -1270,7 +1270,7 @@ We keep the descendants as a simple list. It is clear that the list is very poor
 </summary>
 		<content type="html">
 &lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners/trilobite-modern-lamp.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
-&lt;p&gt;The computer &lt;a href=&quot;/blog/2015/lisp-trilobite-heuristic&quot;&gt;plays worse&lt;/a&gt; of its colleague from the &lt;em&gt;11th hour&lt;/em&gt;. It is necessary to do something with it. Let’s try other heuristics for the computer player.&lt;/p&gt;
+&lt;p&gt;The computer &lt;a href=&quot;/blog/2015/lisp-trilobite-heuristic/&quot;&gt;plays worse&lt;/a&gt; of its colleague from the &lt;em&gt;11th hour&lt;/em&gt;. It is necessary to do something with it. Let’s try other heuristics for the computer player.&lt;/p&gt;
 
 &lt;h2 id=&quot;idea&quot;&gt;Idea&lt;/h2&gt;
 &lt;p&gt;To begin with, a small couple of functions that count the number of enemy chips in neighboring cells.&lt;/p&gt;
