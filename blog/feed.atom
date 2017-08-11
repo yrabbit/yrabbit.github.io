@@ -7,7 +7,46 @@
 	<author>
 		<name>Yellow Rabbit</name>
 	</author>
-	<updated>2017-08-10T13:29:57+10:00</updated>
+	<updated>2017-08-11T18:23:45+10:00</updated>
+
+	<entry>
+		<title type="text">Mobile Game Review Space Mercenary</title>
+		<link href="https://yrabbit.github.io/blog/2017/space-mercenary-review/" />
+		<id>https://yrabbit.github.io/blog/2017/space-mercenary-review/</id>
+		<published>2017-08-10T00:00:00+10:00</published>
+		<updated>2017-08-10T00:00:00+10:00</updated>
+		<summary type="html">It happens that having started a routine cleaning in the attic, you go through old things in boxes and suddenly you find  toy from your childhood, and memories  will overwhelm you and you’ll forget about everything for a minute. That how it was  with the game “Space Mercenary”.
+
+</summary>
+		<content type="html">
+&lt;img src=&quot;https://yrabbit.github.io/blog/imgs/posts/nebula.png&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;p&gt;It happens that having started a routine cleaning in the attic, you go through old things in boxes and suddenly you find  toy from your childhood, and memories  will overwhelm you and you’ll forget about everything for a minute. That how it was  with the game &lt;a href=&quot;https://play.google.com/store/apps/details?id=com.grf.game.SpaceMercenary&quot;&gt;“Space Mercenary”&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;“This time the work is really dangerous: to return the stolen sacred diamonds, which are mounted in the hull of a huge space station.” - the whole introduction  in one sentence, which nevertheless accurately describes the game. We actually have to move in space to search and collect some sparkling things, and their current owners are not the friendliest creatures in the universe.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/imgs/posts/sm-rocket-mini.png&quot; alt=&quot;Rocket launcher&quot; title=&quot;Rocket launcher&quot; class=&quot;right-image&quot; /&gt; 
+We launch it and the eye immediately catch  not the foggy, smoothed and fuzzy outlines a-la “real reality”, but clear and clean graphics in retro style. There are no difficulties in the perception of characters and actions on the screen, so typical of most 3D games of the latest generation. There is exactly as much details as needed: used cartridges fly off, trunks go from the recoil, fragments from explosions scatter, microexplosions when hit. And  the meteors and space in the background, I’m just delighted - in some areas there is even a slight fear of heights :smile:&lt;/p&gt;
+
+&lt;p&gt;Successfully placed service tunnels provide a necessary respite between battles, and also represent a micro-game in which you can replenish ammunition, repair a shield, etc.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/imgs/posts/sm-tower.png&quot; alt=&quot;Twin turret gun&quot; title=&quot;Twin turret gun&quot; class=&quot;left-image&quot; /&gt; A lot of the sense of retro is contributed by music, so well stylized . I even hooked up the headphones to listen and know what was discovered? That all sounds in the game are stereo! That is, if the gun shoots to the left, then it is heard on the left, if the rocket is launched to the right, then the sound will be on the right. Unfortunately the volume of music and effects is not regulated - they can only be turned off or on.&lt;/p&gt;
+
+&lt;p&gt;The game “Space mercenary” is positioned as an arcade game, and in fact for the performance of the task you will need skill. But it’s nice that the tactics are not forgotten - the damage to the defensive structures is permanent and this can be used given the circular surface of the space station.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/imgs/posts/sm-drone-st.png&quot; alt=&quot;Drone&quot; title=&quot;Drone&quot; class=&quot;right-image&quot; /&gt; The game is quite simple and the loss of the ship is not punished too severely: besides three spare ships , Which can be used without losing achievements, there is also a mechanism for returning to the previous level. The game has a clear and understandable indication of how much you have progressed, both at the current level and in the global sense.&lt;/p&gt;
+
+&lt;p&gt;The possibility of using two types of armament of the ship (missiles and nasal cannons) seemed to me superfluous - I never left without a stock of missiles, as already mentioned, the game is not complicated, and the recharging points are placed often enough.&lt;/p&gt;
+
+&lt;p&gt;Control in the game is what it should be - convenient and inconspicuous. The tilt of the phone change the trajectory of the ship, and the symmetrical zones on the screen allow to shoot. I did not really like, though, that after losing the ship, I have to set the convenient speed again.&lt;/p&gt;
+
+&lt;p&gt;Summing up, I would say that I was happy to play a simple, light, but high-quality retro style arcade.&lt;/p&gt;
+
+&lt;p&gt;Link to the game in Google, the game is free:&lt;a href=&quot;https://play.google.com/store/apps/details?id=com.grf.game.SpaceMercenary&quot;&gt;Space Mercenary&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/imgs/posts/SpaceMercenaryQC.png&quot; alt=&quot;Q code for the game&quot; title=&quot;Q code for the game&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+
+</content>
+	</entry>
 
 	<entry>
 		<title type="text">Low-pass Filter for Android Sensors - Practice</title>
@@ -2926,108 +2965,6 @@ NIL
 
 &lt;span class=&quot;s2&quot;&gt;&quot;brightness-inc.sh&quot;&lt;/span&gt;
   F7&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-</content>
-	</entry>
-
-	<entry>
-		<title type="text">Laptop Screen Brightness - Acer C720 Laptop, BSD</title>
-		<link href="https://yrabbit.github.io/blog/2014/notebook-backlight-acer-c720/" />
-		<id>https://yrabbit.github.io/blog/2014/notebook-backlight-acer-c720/</id>
-		<published>2014-12-18T19:35:30+10:00</published>
-		<updated>2017-07-26T10:33:44+10:00</updated>
-		<summary type="html">The backlight adjustment keys on the Acer C720 keyboard are disguised F6 and F7 keys. Accordingly, when you change ChromeOS to DragoFly BSD, the backlight adjustment does not work. Also one can’t use xbacklight - it does not find video outputs with the ability to adjust the backlight. Xrandr can help, but it’s a software solution, something like dim the output pixels. It’s clear that it not will prolong the life of the battery in any way.
-
-</summary>
-		<content type="html">
-&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners/dfly-lighthouse.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
-&lt;p&gt;The backlight adjustment keys on the Acer C720 keyboard are disguised &lt;em&gt;F6&lt;/em&gt; and &lt;em&gt;F7&lt;/em&gt; keys. Accordingly, when you change ChromeOS to DragoFly BSD, the backlight adjustment does not work. Also one can’t use &lt;em&gt;xbacklight&lt;/em&gt; - it does not find video outputs with the ability to adjust the backlight. &lt;em&gt;Xrandr&lt;/em&gt; can help, but it’s a software solution, something like dim the output pixels. It’s clear that it not will prolong the life of the battery in any way.&lt;/p&gt;
-
-&lt;h2 id=&quot;the-first-way&quot;&gt;The first way&lt;/h2&gt;
-&lt;p&gt;Let’s change the i915 driver so that it creates two sysctl’s:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;hw.blacklight_max -  the maximum value of the backlight level,&lt;/li&gt;
-  &lt;li&gt;hw.blacklight_level -  get / set the backlight level.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Pros:&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;A small number of changes that do not affect Xorg.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Cons:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Can only be adjusted by hands, third-party programs do not know anything about these sysctls.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;The i915 driver provides a backlight control mechanism, it is enough to know the pointer to the current drm device: &lt;code class=&quot;highlighter-rouge&quot;&gt;struct drm_device *dev&lt;/code&gt;.&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;get the maximum value of the backlight level: &lt;code class=&quot;highlighter-rouge&quot;&gt;u32 intel_panel_get_max_backlight(dev)&lt;/code&gt;;&lt;/li&gt;
-  &lt;li&gt;read the current value of the backlight level: &lt;code class=&quot;highlighter-rouge&quot;&gt;dev-&amp;gt;dev_private-&amp;gt;backlight_level&lt;/code&gt;;&lt;/li&gt;
-  &lt;li&gt;set a new value for the backlight level: &lt;code class=&quot;highlighter-rouge&quot;&gt;intel_panel_set_backlight(dev, val)&lt;/code&gt;;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;For two sysctl we write two functions for reading/writing:&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span class=&quot;cm&quot;&gt;/*
- * Read max backlight level
- */&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;
-&lt;span class=&quot;nf&quot;&gt;sysctl_backlight_max&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SYSCTL_HANDLER_ARGS&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-	&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;err&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-	&lt;span class=&quot;n&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;intel_panel_get_max_backlight&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;drm_device&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;arg1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-	&lt;span class=&quot;n&quot;&gt;err&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sysctl_handle_int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;oidp&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;req&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-	&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;err&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;cm&quot;&gt;/*
- * Read/write backlight level 
- */&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;
-&lt;span class=&quot;nf&quot;&gt;sysctl_backlight_handler&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SYSCTL_HANDLER_ARGS&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-	&lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;drm_i915_private&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dev_priv&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-	&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;err&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-	&lt;span class=&quot;n&quot;&gt;dev_priv&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;drm_device&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;arg1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dev_private&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-	&lt;span class=&quot;n&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dev_priv&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;backlight_level&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-	&lt;span class=&quot;n&quot;&gt;err&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sysctl_handle_int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;oidp&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;req&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-	&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;err&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;||&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;req&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;newptr&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;NULL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-		&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;err&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-	&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-	&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dev_priv&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;backlight_level&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;
-		&lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;intel_panel_get_max_backlight&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;drm_device&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;arg1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-		&lt;span class=&quot;n&quot;&gt;intel_panel_set_backlight&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;arg1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-	&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-	&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;err&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;dev&lt;/code&gt; can be discovered only at run time, so we use dynamic control of sysctl with the&lt;code class=&quot;highlighter-rouge&quot;&gt;SYSCTL_ADD_PROC&lt;/code&gt; macro.&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span class=&quot;n&quot;&gt;SYSCTL_ADD_PROC&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;connector&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dev&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sysctl&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ctx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sysctl__hw_children&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-			&lt;span class=&quot;n&quot;&gt;OID_AUTO&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;backlight_max&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; 
-			&lt;span class=&quot;n&quot;&gt;CTLTYPE_INT&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CTLFLAG_RD&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CTLFLAG_ANYBODY&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-			&lt;span class=&quot;n&quot;&gt;connector&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dev&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;sizeof&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
-			&lt;span class=&quot;n&quot;&gt;sysctl_backlight_max&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-			&lt;span class=&quot;s&quot;&gt;&quot;I&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Max backlight level&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;SYSCTL_ADD_PROC&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;connector&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dev&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sysctl&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ctx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sysctl__hw_children&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-			&lt;span class=&quot;n&quot;&gt;OID_AUTO&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;backlight_level&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; 
-			&lt;span class=&quot;n&quot;&gt;CTLTYPE_INT&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CTLFLAG_RW&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CTLFLAG_ANYBODY&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-			&lt;span class=&quot;n&quot;&gt;connector&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dev&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;sizeof&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
-			&lt;span class=&quot;n&quot;&gt;sysctl_backlight_handler&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-			&lt;span class=&quot;s&quot;&gt;&quot;I&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Backlight level&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;As a result, it becomes possible to use commands like &lt;code class=&quot;highlighter-rouge&quot;&gt;sysctl hw.backlight_level=370&lt;/code&gt; to set the acceptable backlight level. Actually, now this command is written in my &lt;em&gt;.xinitrc&lt;/em&gt;, I’m not puzzled with the binding of some script to the &lt;em&gt;F6&lt;/em&gt; and &lt;em&gt;F7&lt;/em&gt; keys. It’s not difficult, just ahead is another way that is just to come up :smile:&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/pub/patch/dfly-screen-backlight.patch&quot;&gt;Full patch text&lt;/a&gt; applied to DragonFly BSD from 12/19/2014.&lt;/p&gt;
 
 </content>
 	</entry>

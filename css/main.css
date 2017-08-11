@@ -709,8 +709,21 @@ form {
     display: block;
 }
 
+.left-image
+{
+	float: left;
+	margin: 7px 7px 7px 0px;
+}
+
+.right-image
+{
+	float: right;
+	margin: 7px 0px 7px 7px;
+}
+
 .share-buttons
 {
 	align: center;
 }
+
 
