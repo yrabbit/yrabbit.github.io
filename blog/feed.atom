@@ -7,7 +7,7 @@
 	<author>
 		<name>Yellow Rabbit</name>
 	</author>
-	<updated>2017-08-12T19:08:33+10:00</updated>
+	<updated>2017-08-12T19:19:36+10:00</updated>
 
 	<entry>
 		<title type="text">Mobile Game Review Space Mercenary</title>
@@ -637,7 +637,7 @@ It even has a complex constructor :smile:
   &lt;/div&gt;
 &lt;/div&gt;
 
-&lt;p&gt;So to parse the comment first thing, what’s the first thing? The piano! Joke. First of all, remember the position of &lt;code class=&quot;highlighter-rouge&quot;&gt;index&lt;/code&gt; in the string to be rolled back (&lt;code class=&quot;highlighter-rouge&quot;&gt;oldindex&lt;/code&gt;).&lt;/p&gt;
+&lt;p&gt;So to parse the comment first thing, what’s the first thing? The piano! Just kidding:smile: First of all, remember the position of &lt;code class=&quot;highlighter-rouge&quot;&gt;index&lt;/code&gt; in the string to be rolled back (&lt;code class=&quot;highlighter-rouge&quot;&gt;oldindex&lt;/code&gt;).&lt;/p&gt;
 
 &lt;p&gt;The beginning of the comment is easy to define — just the sequence: &lt;code class=&quot;highlighter-rouge&quot;&gt;[&quot;!--&quot; something]&lt;/code&gt;&lt;sup id=&quot;fnref:why-where-is-no&quot;&gt;&lt;a href=&quot;#fn:why-where-is-no&quot; class=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt;, but with the final &lt;code class=&quot;highlighter-rouge&quot;&gt;-&amp;gt;&lt;/code&gt; it’s not so good.&lt;/p&gt;
 
@@ -647,7 +647,12 @@ It even has a complex constructor :smile:
 
 &lt;p&gt;To work the comparison with &lt;code class=&quot;highlighter-rouge&quot;&gt;--&amp;gt;&lt;/code&gt;  should not work :smile: That is, by finding &lt;code class=&quot;highlighter-rouge&quot;&gt;--&amp;gt;&lt;/code&gt; we remember the fact of detection in the variable &lt;code class=&quot;highlighter-rouge&quot;&gt;eoc-found&lt;/code&gt;&lt;sup id=&quot;fnref:eoc&quot;&gt;&lt;a href=&quot;#fn:eoc&quot; class=&quot;footnote&quot;&gt;2&lt;/a&gt;&lt;/sup&gt; and say that the comparison failed &lt;code class=&quot;highlighter-rouge&quot;&gt;!nil&lt;/code&gt;. Next, we will consume all the characters in a row only if &lt;code class=&quot;highlighter-rouge&quot;&gt;--&amp;gt;&lt;/code&gt; has not been found.&lt;/p&gt;
 
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;parse-comment&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;
+  &lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;
+
+  &lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;Lisp&quot; /&gt;
+
+  &lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;parse-comment&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
           &lt;span class=&quot;s&quot;&gt;&quot;&amp;lt;!-- ??? --&amp;gt;&quot;&lt;/span&gt;
           &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ch&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;eoc-found&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;oldindex&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;index&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
             &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;or&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;and&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;matchit&lt;/span&gt;
@@ -658,10 +663,16 @@ It even has a complex constructor :smile:
 		     &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;make-comment-node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
                 &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;progn&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;setf&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;index&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;oldindex&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;
+  &lt;/div&gt;
 &lt;/div&gt;
 &lt;p&gt;Let’s check, replacing the call to &lt;code class=&quot;highlighter-rouge&quot;&gt;parse-tex&lt;/code&gt; in &lt;code class=&quot;highlighter-rouge&quot;&gt;parse-html&lt;/code&gt; with call to &lt;code class=&quot;highlighter-rouge&quot;&gt;(cons (parse-comment) (princ index)))&lt;/code&gt;:&lt;/p&gt;
 
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ql:quickload&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;'toy-engine&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;
+  &lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;
+
+  &lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;Lisp&quot; /&gt;
+
+  &lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ql:quickload&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;'toy-engine&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;span class=&quot;nv&quot;&gt;To&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;load&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;toy-engine&quot;&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;:&lt;/span&gt;
   &lt;span class=&quot;nv&quot;&gt;Load&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ASDF&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;system:&lt;/span&gt;
     &lt;span class=&quot;nv&quot;&gt;toy-engine&lt;/span&gt;
@@ -685,6 +696,7 @@ It even has a complex constructor :smile:
 &lt;span class=&quot;s&quot;&gt;&quot;}&quot;&lt;/span&gt;
 &lt;span class=&quot;nb&quot;&gt;*&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;
+  &lt;/div&gt;
 &lt;/div&gt;
 &lt;p&gt;As you can see from &lt;code class=&quot;highlighter-rouge&quot;&gt;index = 38&lt;/code&gt;, the parser correctly absorbed the entire inside of the comment.&lt;/p&gt;
 
