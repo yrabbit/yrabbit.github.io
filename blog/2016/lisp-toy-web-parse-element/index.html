@@ -66,7 +66,7 @@
 <h1 class="post-title" itemprop="name">Parse the Complex Element</h1>
 <p class="post-meta">
 	02 Jun 2016 •
-	11 min. read •
+	13 min. read •
 	<a href="#disqus_thread" data-disqus-identifier="2016-06-02-lisp-toy-web-parse-element.md">Comments</a> • 
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 <a href="https://feedburner.google.com/fb/a/mailverify?uri=YellowRabbit&amp;loc=en_US" onclick="window.open(this.href, 'mywin',
@@ -86,17 +86,28 @@
 
 <p>It even has a complex constructor <img class="emoji" title=":smile:" alt=":smile:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f604.png" height="20" width="20" align="absmiddle"></p>
 
-<div class="language-cl highlighter-rouge">
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+  <meta itemprop="codeSampleType" content="code snippet">
+
+  <meta itemprop="programmingLanguage" content="Lisp">
+
+  <div class="language-cl highlighter-rouge">
 <pre class="highlight"><code><span class="p">(</span><span class="nb">defun</span> <span class="nv">make-element-node</span> <span class="p">(</span><span class="nv">tag</span> <span class="nv">attrs</span> <span class="nv">children</span><span class="p">)</span>
   <span class="s">"Tag and list of name-value pairs"</span>
   <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">el</span> <span class="p">(</span><span class="nb">make-instance</span> <span class="ss">'element-node</span> <span class="ss">:tag</span> <span class="nv">tag</span> <span class="ss">:children</span> <span class="nv">children</span><span class="p">)))</span>
        <span class="p">(</span><span class="nv">element-set-all-attrs</span> <span class="nv">el</span> <span class="nv">attrs</span><span class="p">)</span>
        <span class="nv">el</span><span class="p">))</span>
 </code></pre>
+  </div>
 </div>
 <p>For this to work, you need to add a function to the <code class="highlighter-rouge">dom.lisp</code>:</p>
 
-<div class="language-cl highlighter-rouge">
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+  <meta itemprop="codeSampleType" content="code snippet">
+
+  <meta itemprop="programmingLanguage" content="Lisp">
+
+  <div class="language-cl highlighter-rouge">
 <pre class="highlight"><code><span class="c1">;; Set all attrs at once</span>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">element-set-all-attrs</span> <span class="p">(</span><span class="nv">el</span> <span class="nv">vals</span><span class="p">)</span>
   <span class="s">"Set all attrs at once. Vals is name-value pair list."</span>
@@ -104,37 +115,55 @@
     <span class="p">(</span><span class="nb">mapc</span> <span class="nf">#'</span><span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">nv</span><span class="p">)</span>
 	      <span class="p">(</span><span class="nb">setf</span> <span class="p">(</span><span class="nb">gethash</span> <span class="p">(</span><span class="nb">car</span> <span class="nv">nv</span><span class="p">)</span> <span class="nv">attrs</span><span class="p">)</span> <span class="p">(</span><span class="nb">cdr</span> <span class="nv">nv</span><span class="p">)))</span> <span class="nv">vals</span><span class="p">)))</span>
 </code></pre>
+  </div>
 </div>
 <p>We also need a lot of small parsers, starting with the parser of the tag name.</p>
 
-<div class="language-cl highlighter-rouge">
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+  <meta itemprop="codeSampleType" content="code snippet">
+
+  <meta itemprop="programmingLanguage" content="Lisp">
+
+  <div class="language-cl highlighter-rouge">
 <pre class="highlight"><code>      <span class="p">(</span><span class="nv">parse-tagname</span> <span class="p">()</span>
           <span class="s">"Parse tag name"</span>
           <span class="p">(</span><span class="k">let</span> <span class="p">(</span><span class="nv">ch</span><span class="p">)</span>
             <span class="p">(</span><span class="nb">with-output-to-string</span> <span class="p">(</span><span class="nv">s</span><span class="p">)</span>
               <span class="p">(</span><span class="nv">matchit</span> <span class="nv">$[@</span><span class="p">(</span><span class="nv">tag-text</span> <span class="nv">ch</span><span class="p">)</span> <span class="nv">!</span><span class="p">(</span><span class="nb">write-char</span> <span class="nv">ch</span> <span class="nv">s</span><span class="p">)</span><span class="nv">]</span><span class="p">))))</span>
 </code></pre>
+  </div>
 </div>
 <p>Useful thing — skipping spaces, tabs, etc. It’s always successful.</p>
 
-<div class="language-cl highlighter-rouge">
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+  <meta itemprop="codeSampleType" content="code snippet">
+
+  <meta itemprop="programmingLanguage" content="Lisp">
+
+  <div class="language-cl highlighter-rouge">
 <pre class="highlight"><code>       <span class="p">(</span><span class="nv">skip-whitespace</span> <span class="p">()</span>
           <span class="p">(</span><span class="k">let</span> <span class="p">(</span><span class="nv">ch</span><span class="p">)</span>
             <span class="p">(</span><span class="nv">matchit</span> <span class="nv">$[@</span><span class="p">(</span><span class="nv">whitespace</span> <span class="nv">ch</span><span class="p">)</span><span class="nv">]</span><span class="p">)</span>
             <span class="no">t</span><span class="p">))</span>
 </code></pre>
+  </div>
 </div>
 <p>Attribute values can be enclosed in either double or single quotes, so the parser must remember from what type of quotation the value began and work up to exactly the same closing quotation mark.</p>
 
-<div class="language-cl highlighter-rouge">
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+  <meta itemprop="codeSampleType" content="code snippet">
+
+  <meta itemprop="programmingLanguage" content="Lisp">
+
+  <div class="language-cl highlighter-rouge">
 <pre class="highlight"><code>       <span class="p">(</span><span class="nv">parse-value</span> <span class="p">(</span><span class="nv">quo</span><span class="p">)</span>
           <span class="p">(</span><span class="k">let</span> <span class="p">(</span><span class="nv">ch</span><span class="p">)</span>
             <span class="p">(</span><span class="nb">with-output-to-string</span> <span class="p">(</span><span class="nv">s</span><span class="p">)</span>
               <span class="p">(</span><span class="nv">matchit</span> <span class="nv">$[@</span><span class="p">(</span><span class="nv">any-text</span> <span class="nv">ch</span><span class="p">)</span> <span class="nv">!</span><span class="p">(</span><span class="nb">char/=</span> <span class="nv">ch</span> <span class="nv">quo</span><span class="p">)</span> <span class="nv">!</span><span class="p">(</span><span class="nb">write-char</span> <span class="nv">ch</span> <span class="nv">s</span><span class="p">)</span><span class="nv">]</span><span class="p">))))</span>
 </code></pre>
-</div>
+  </div>
 
-<div class="language-cl highlighter-rouge">
+  <div class="language-cl highlighter-rouge">
 <pre class="highlight"><code>       <span class="p">(</span><span class="nv">parse-quoted-value</span> <span class="p">()</span>
           <span class="s">"Parse quoted value"</span>
           <span class="p">(</span><span class="k">let</span> <span class="p">(</span><span class="nv">quo</span> <span class="p">(</span><span class="nv">oldindex</span> <span class="nv">index</span><span class="p">))</span>
@@ -143,10 +172,16 @@
                     <span class="nv">!</span><span class="p">(</span><span class="nv">parse-value</span> <span class="nv">quo</span><span class="p">)</span><span class="nv">]</span><span class="p">)</span>
                 <span class="p">(</span><span class="k">progn</span> <span class="p">(</span><span class="nb">setf</span> <span class="nv">index</span> <span class="nv">oldindex</span><span class="p">)</span> <span class="no">nil</span><span class="p">))))</span>
 </code></pre>
+  </div>
 </div>
 <p>With these helpers, it’s easy to make the parser of the same attribute: first select the name (not empty), then the <code class="highlighter-rouge">=</code> and the value of the attribute in any quotes. The output will be a pair (name, value).</p>
 
-<div class="language-cl highlighter-rouge">
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+  <meta itemprop="codeSampleType" content="code snippet">
+
+  <meta itemprop="programmingLanguage" content="Lisp">
+
+  <div class="language-cl highlighter-rouge">
 <pre class="highlight"><code>       <span class="p">(</span><span class="nv">parse-attr</span> <span class="p">()</span>
           <span class="s">"name=value"</span>
           <span class="p">(</span><span class="k">let</span> <span class="p">(</span><span class="nv">name</span> <span class="nv">value</span> <span class="p">(</span><span class="nv">oldindex</span> <span class="nv">index</span><span class="p">))</span>
@@ -158,10 +193,16 @@
               <span class="p">(</span><span class="nb">cons</span> <span class="nv">name</span> <span class="nv">value</span><span class="p">)</span>
               <span class="p">(</span><span class="k">progn</span> <span class="p">(</span><span class="nb">setf</span> <span class="nv">index</span> <span class="nv">oldindex</span><span class="p">)</span> <span class="no">nil</span><span class="p">))))</span>
 </code></pre>
+  </div>
 </div>
 <p>Recognized attributes are pushed into the list. The order will be reversed.</p>
 
-<div class="language-cl highlighter-rouge">
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+  <meta itemprop="codeSampleType" content="code snippet">
+
+  <meta itemprop="programmingLanguage" content="Lisp">
+
+  <div class="language-cl highlighter-rouge">
 <pre class="highlight"><code>       <span class="p">(</span><span class="nv">parse-attrs</span> <span class="p">()</span>
           <span class="s">"Parse attributes"</span>
           <span class="p">(</span><span class="k">let</span> <span class="p">(</span><span class="nv">attrs</span><span class="p">)</span>
@@ -171,10 +212,16 @@
                  <span class="nv">!</span><span class="p">(</span><span class="nb">push</span> <span class="nv">attr</span> <span class="nv">attrs</span><span class="p">)</span><span class="nv">]</span><span class="p">)</span>
             <span class="nv">attrs</span><span class="p">))</span>
 </code></pre>
+  </div>
 </div>
 <p>The closing tag also requires attention.</p>
 
-<div class="language-cl highlighter-rouge">
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+  <meta itemprop="codeSampleType" content="code snippet">
+
+  <meta itemprop="programmingLanguage" content="Lisp">
+
+  <div class="language-cl highlighter-rouge">
 <pre class="highlight"><code>       <span class="p">(</span><span class="nv">parse-closing-tag</span> <span class="p">(</span><span class="nv">tagname</span><span class="p">)</span>
           <span class="s">"Parse &lt;/tagname&gt;"</span>
           <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">oldindex</span> <span class="nv">index</span><span class="p">))</span>
@@ -183,10 +230,16 @@
                 <span class="nv">[#\&lt;</span> <span class="sc">#\/</span> <span class="nv">!</span><span class="p">(</span><span class="nb">string=</span> <span class="p">(</span><span class="nv">parse-tagname</span><span class="p">)</span> <span class="nv">tagname</span><span class="p">)</span> <span class="sc">#\&gt;]</span><span class="p">)</span>
               <span class="p">(</span><span class="k">progn</span> <span class="p">(</span><span class="nb">setf</span> <span class="nv">index</span> <span class="nv">oldindex</span><span class="p">)</span> <span class="no">nil</span><span class="p">))))</span>
 </code></pre>
+  </div>
 </div>
 <p>Element parser sketch:</p>
 
-<div class="language-cl highlighter-rouge">
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+  <meta itemprop="codeSampleType" content="code snippet">
+
+  <meta itemprop="programmingLanguage" content="Lisp">
+
+  <div class="language-cl highlighter-rouge">
 <pre class="highlight"><code>       <span class="p">(</span><span class="nv">parse-element</span> <span class="p">()</span>
           <span class="s">"&lt;tagname $[attr=value]&gt; ??? &lt;/tagname&gt;"</span>
           <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">oldindex</span> <span class="nv">index</span><span class="p">)</span>
@@ -199,10 +252,16 @@
                    <span class="nv">!</span><span class="p">(</span><span class="nv">make-element-node</span> <span class="nv">tagname</span> <span class="nv">attrs</span> <span class="no">nil</span><span class="p">)</span><span class="nv">]</span><span class="p">)</span>
                 <span class="p">(</span><span class="k">progn</span> <span class="p">(</span><span class="nb">setf</span> <span class="nv">index</span> <span class="nv">oldindex</span><span class="p">)</span> <span class="no">nil</span><span class="p">))))</span>
 </code></pre>
+  </div>
 </div>
 <p>The problem with this parser is that it does not provide anything between opening and closing tags. That is, it is time to think about recursion and how to organize descendants. In the meantime, you can check how the element parser works.</p>
 
-<div class="language-cl highlighter-rouge">
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+  <meta itemprop="codeSampleType" content="code snippet">
+
+  <meta itemprop="programmingLanguage" content="Lisp">
+
+  <div class="language-cl highlighter-rouge">
 <pre class="highlight"><code><span class="nb">*</span> <span class="p">(</span><span class="nv">ql:quickload</span> <span class="ss">'toy-engine</span><span class="p">)</span>
 <span class="nv">To</span> <span class="nb">load</span> <span class="s">"toy-engine"</span><span class="err">:</span>
   <span class="nv">Load</span> <span class="mi">1</span> <span class="nv">ASDF</span> <span class="nv">system:</span>
@@ -228,6 +287,7 @@
 <span class="s">"}"</span>
 <span class="nb">*</span> 
 </code></pre>
+  </div>
 </div>
 <p><img src="/imgs/posts/lisp-webengine-element-node.png" alt="The tree after parsing the element" title="The tree after parsing the element" class="center-image"></p>
 
@@ -236,7 +296,12 @@
 
 <p>But first the parser of a single node:</p>
 
-<div class="language-cl highlighter-rouge">
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+  <meta itemprop="codeSampleType" content="code snippet">
+
+  <meta itemprop="programmingLanguage" content="Lisp">
+
+  <div class="language-cl highlighter-rouge">
 <pre class="highlight"><code>       <span class="p">(</span><span class="nv">parse-node</span> <span class="p">()</span>
           <span class="s">"Text or node"</span>
           <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">oldindex</span> <span class="nv">index</span><span class="p">))</span>
@@ -245,10 +310,16 @@
                     <span class="nv">!</span><span class="p">(</span><span class="nv">parse-text</span><span class="p">)</span><span class="nv">}</span><span class="p">)</span>
                 <span class="p">(</span><span class="k">progn</span> <span class="p">(</span><span class="nb">setf</span> <span class="nv">index</span> <span class="nv">oldindex</span><span class="p">)</span> <span class="no">nil</span><span class="p">))))</span>
 </code></pre>
+  </div>
 </div>
 <p>It uses a small helper parser, which is needed to roll back if there is not a comment or an element. The fact is that elementary matches like <code class="highlighter-rouge">#\&lt;</code> or <code class="highlighter-rouge">"example"</code> used inside the sequence <code class="highlighter-rouge">[]</code> can not be rolled back if they worked.</p>
 
-<div class="language-cl highlighter-rouge">
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+  <meta itemprop="codeSampleType" content="code snippet">
+
+  <meta itemprop="programmingLanguage" content="Lisp">
+
+  <div class="language-cl highlighter-rouge">
 <pre class="highlight"><code>       <span class="p">(</span><span class="nv">parse-comment-or-element</span> <span class="p">()</span>
 	  <span class="s">"&lt; {comment element}"</span>
 	  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">oldindex</span> <span class="nv">index</span><span class="p">))</span>
@@ -256,9 +327,15 @@
 		  <span class="nv">[#\&lt;</span> <span class="nv">{!</span><span class="p">(</span><span class="nv">parse-comment</span><span class="p">)</span> <span class="nv">!</span><span class="p">(</span><span class="nv">parse-element</span><span class="p">)</span><span class="nv">}]</span><span class="p">)</span>
 		<span class="p">(</span><span class="k">progn</span> <span class="p">(</span><span class="nb">setf</span> <span class="nv">index</span> <span class="nv">oldindex</span><span class="p">)</span> <span class="no">nil</span><span class="p">))))</span>
 </code></pre>
+  </div>
 </div>
 <p>Let’s check that this function recognizes and creates different types of nodes:</p>
-<div class="language-cl highlighter-rouge">
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+  <meta itemprop="codeSampleType" content="code snippet">
+
+  <meta itemprop="programmingLanguage" content="Lisp">
+
+  <div class="language-cl highlighter-rouge">
 <pre class="highlight"><code><span class="nb">*</span> <span class="p">(</span><span class="nv">ql:quickload</span> <span class="ss">'toy-engine</span><span class="p">)</span>
 <span class="nv">To</span> <span class="nb">load</span> <span class="s">"toy-engine"</span><span class="err">:</span>
   <span class="nv">Load</span> <span class="mi">1</span> <span class="nv">ASDF</span> <span class="nv">system:</span>
@@ -298,10 +375,16 @@
 <span class="err">#</span><span class="nv">&lt;COMMENT-NODE</span> <span class="nv">{10050C6A93}&gt;</span>
 <span class="nb">*</span>
 </code></pre>
+  </div>
 </div>
 <p>We collect several nodes in the list:</p>
 
-<div class="language-cl highlighter-rouge">
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+  <meta itemprop="codeSampleType" content="code snippet">
+
+  <meta itemprop="programmingLanguage" content="Lisp">
+
+  <div class="language-cl highlighter-rouge">
 <pre class="highlight"><code>       <span class="p">(</span><span class="nv">parse-nodes</span> <span class="p">()</span>
           <span class="s">"Children"</span>
           <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">oldindex</span> <span class="nv">index</span><span class="p">)</span> <span class="nv">children</span> <span class="nv">node</span><span class="p">)</span>
@@ -310,10 +393,16 @@
 	        <span class="p">(</span><span class="nb">reverse</span> <span class="nv">children</span><span class="p">)</span>
                 <span class="p">(</span><span class="k">progn</span> <span class="p">(</span><span class="nb">setf</span> <span class="nv">index</span> <span class="nv">oldindex</span><span class="p">)</span> <span class="no">nil</span><span class="p">))))</span>
 </code></pre>
+  </div>
 </div>
 <p>We check how well this function recognizes a string with different parts of HTML:</p>
 
-<div class="language-cl highlighter-rouge">
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+  <meta itemprop="codeSampleType" content="code snippet">
+
+  <meta itemprop="programmingLanguage" content="Lisp">
+
+  <div class="language-cl highlighter-rouge">
 <pre class="highlight"><code><span class="nb">*</span> <span class="p">(</span><span class="nv">ql:quickload</span> <span class="ss">'toy-engine</span><span class="p">)</span>
 <span class="nv">To</span> <span class="nb">load</span> <span class="s">"toy-engine"</span><span class="err">:</span>
   <span class="nv">Load</span> <span class="mi">1</span> <span class="nv">ASDF</span> <span class="nv">system:</span>
@@ -336,16 +425,28 @@
  <span class="err">#</span><span class="nv">&lt;TEXT-NODE</span> <span class="nv">{1005AD9EE3}&gt;</span> <span class="err">#</span><span class="nv">&lt;ELEMENT-NODE</span> <span class="nv">{1005ADA5E3}&gt;</span><span class="p">)</span>
 <span class="nb">*</span>
 </code></pre>
+  </div>
 </div>
 <p>If you now change the body of the <code class="highlighter-rouge">parse-html</code> function to</p>
 
-<div class="language-cl highlighter-rouge">
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+  <meta itemprop="codeSampleType" content="code snippet">
+
+  <meta itemprop="programmingLanguage" content="Lisp">
+
+  <div class="language-cl highlighter-rouge">
 <pre class="highlight"><code>      <span class="p">(</span><span class="nb">make-instance</span> <span class="ss">'node</span> <span class="ss">:children</span> <span class="p">(</span><span class="nv">parse-nodes</span><span class="p">))</span>
 </code></pre>
+  </div>
 </div>
 <p>thereby making all recognized nodes on the upper level descendants of some node of type <code class="highlighter-rouge">node</code>.</p>
 
-<div class="language-cl highlighter-rouge">
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+  <meta itemprop="codeSampleType" content="code snippet">
+
+  <meta itemprop="programmingLanguage" content="Lisp">
+
+  <div class="language-cl highlighter-rouge">
 <pre class="highlight"><code><span class="nb">*</span> <span class="p">(</span><span class="nv">ql:quickload</span> <span class="ss">'toy-engine</span><span class="p">)</span>
 <span class="nv">To</span> <span class="nb">load</span> <span class="s">"toy-engine"</span><span class="err">:</span>
   <span class="nv">Load</span> <span class="mi">1</span> <span class="nv">ASDF</span> <span class="nv">system:</span>
@@ -367,13 +468,19 @@
 <span class="s">"}"</span>
 <span class="nb">*</span>
 </code></pre>
+  </div>
 </div>
 
 <p><img src="/imgs/posts/lisp-webengine-parse-children.png" alt="A tree after parsing several elements" title="A tree after parsing several elements" class="center-image"></p>
 
 <p>Finally, the element parser contains the start of recursion:</p>
 
-<div class="language-cl highlighter-rouge">
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+  <meta itemprop="codeSampleType" content="code snippet">
+
+  <meta itemprop="programmingLanguage" content="Lisp">
+
+  <div class="language-cl highlighter-rouge">
 <pre class="highlight"><code>       <span class="p">(</span><span class="nv">parse-element</span> <span class="p">()</span>
           <span class="s">"&lt;tagname $[attr=value]&gt; ??? &lt;/tagname&gt;"</span>
           <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">oldindex</span> <span class="nv">index</span><span class="p">)</span>
@@ -387,10 +494,16 @@
                    <span class="nv">!</span><span class="p">(</span><span class="nv">make-element-node</span> <span class="nv">tagname</span> <span class="nv">attrs</span> <span class="nv">children</span><span class="p">)</span><span class="nv">]</span><span class="p">)</span>
                 <span class="p">(</span><span class="k">progn</span> <span class="p">(</span><span class="nb">setf</span> <span class="nv">index</span> <span class="nv">oldindex</span><span class="p">)</span> <span class="no">nil</span><span class="p">))))</span>
 </code></pre>
+  </div>
 </div>
 <p>A case study of a complex example:</p>
 
-<div class="language-cl highlighter-rouge">
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+  <meta itemprop="codeSampleType" content="code snippet">
+
+  <meta itemprop="programmingLanguage" content="Lisp">
+
+  <div class="language-cl highlighter-rouge">
 <pre class="highlight"><code><span class="nb">*</span> <span class="p">(</span><span class="nv">ql:quickload</span> <span class="ss">'toy-engine</span><span class="p">)</span>
 <span class="nv">To</span> <span class="nb">load</span> <span class="s">"toy-engine"</span><span class="err">:</span>
   <span class="nv">Load</span> <span class="mi">1</span> <span class="nv">ASDF</span> <span class="nv">system:</span>
@@ -412,6 +525,7 @@
 <span class="s">"}"</span>
 <span class="nb">*</span>
 </code></pre>
+  </div>
 </div>
 
 <p><img src="/imgs/posts/lisp-webengine-parse-tiny-html.png" alt="Tree after parsing tiny HTML" title="Tree after parsing tiny HTML" class="center-image"></p>

@@ -96,7 +96,12 @@
 
 <p>The raw data is accumulated in <code class="highlighter-rouge">rawAccData</code>, processed by the filter - in<code class="highlighter-rouge"> lpfAccData</code>. The variables <code class="highlighter-rouge">count</code> and<code class="highlighter-rouge"> beginTime</code> are needed to calculate the average sampling period. In this simple program, the sensors are polled constantly so these variables can be initialized at startup. In real programs, you need to consider stopping the poll while in pause state, and so on.</p>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code>    <span class="kd">private</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">MAX_TESTS_NUM</span> <span class="o">=</span> <span class="mi">200</span> <span class="o">*</span> <span class="mi">60</span><span class="o">;</span> <span class="c1">// One minute measurement with a frequency of 200Hz</span>
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+  <meta itemprop="codeSampleType" content="code snippet" />
+
+  <meta itemprop="programmingLanguage" content="java" />
+
+  <div class="language-java highlighter-rouge"><pre class="highlight"><code>    <span class="kd">private</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">MAX_TESTS_NUM</span> <span class="o">=</span> <span class="mi">200</span> <span class="o">*</span> <span class="mi">60</span><span class="o">;</span> <span class="c1">// One minute measurement with a frequency of 200Hz</span>
     <span class="kd">private</span> <span class="kd">final</span> <span class="kt">float</span><span class="o">[]</span> <span class="n">rawAccData</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">float</span><span class="o">[</span><span class="n">MAX_TESTS_NUM</span> <span class="o">*</span> <span class="mi">3</span><span class="o">];</span>
     <span class="kd">private</span> <span class="kt">int</span> <span class="n">rawAccDataIdx</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
 
@@ -107,16 +112,28 @@
     <span class="kd">private</span> <span class="kt">float</span> <span class="n">beginTime</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">nanoTime</span><span class="o">();</span>
     <span class="kd">private</span> <span class="kt">float</span> <span class="n">rc</span> <span class="o">=</span> <span class="mf">0.002f</span><span class="o">;</span>
 </code></pre>
+  </div>
 </div>
 <p>Somewhere in the event handler from the sensors, let’s write the call to read the data:</p>
-<div class="language-java highlighter-rouge"><pre class="highlight"><code>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onSensorChanged</span><span class="o">(</span><span class="n">SensorEvent</span> <span class="n">event</span><span class="o">)</span> <span class="o">{</span>
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+  <meta itemprop="codeSampleType" content="code snippet" />
+
+  <meta itemprop="programmingLanguage" content="java" />
+
+  <div class="language-java highlighter-rouge"><pre class="highlight"><code>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onSensorChanged</span><span class="o">(</span><span class="n">SensorEvent</span> <span class="n">event</span><span class="o">)</span> <span class="o">{</span>
         <span class="c1">// ...</span>
             <span class="n">readSensorData</span><span class="o">(</span><span class="n">event</span><span class="o">);</span>
         <span class="c1">// ...</span>
 </code></pre>
+  </div>
 </div>
 <p>Read the data and apply the filter:</p>
-<div class="language-java highlighter-rouge"><pre class="highlight"><code>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">readSensorData</span><span class="o">(</span><span class="n">SensorEvent</span> <span class="n">event</span><span class="o">)</span> <span class="o">{</span>
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+  <meta itemprop="codeSampleType" content="code snippet" />
+
+  <meta itemprop="programmingLanguage" content="java" />
+
+  <div class="language-java highlighter-rouge"><pre class="highlight"><code>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">readSensorData</span><span class="o">(</span><span class="n">SensorEvent</span> <span class="n">event</span><span class="o">)</span> <span class="o">{</span>
         <span class="kd">final</span> <span class="kt">int</span> <span class="n">type</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="na">sensor</span><span class="o">.</span><span class="na">getType</span><span class="o">();</span>
         <span class="k">if</span> <span class="o">(</span><span class="n">type</span> <span class="o">==</span> <span class="n">Sensor</span><span class="o">.</span><span class="na">TYPE_ACCELEROMETER</span><span class="o">)</span> <span class="o">{</span>
             <span class="n">System</span><span class="o">.</span><span class="na">arraycopy</span><span class="o">(</span><span class="n">event</span><span class="o">.</span><span class="na">values</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">rawAccData</span><span class="o">,</span> <span class="n">rawAccDataIdx</span><span class="o">,</span> <span class="mi">3</span><span class="o">);</span>
@@ -129,12 +146,18 @@
     <span class="o">}</span>
 
 </code></pre>
+  </div>
 </div>
 <p>Actually the filter itself: calculate the average sampling period, determine \(\alpha\) and use the formula:</p>
 
 <script type="math/tex; mode=display">y_i=\alpha y_{i-1}+(1-\alpha)x_i</script>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">applyLPF</span><span class="o">()</span> <span class="o">{</span>
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+  <meta itemprop="codeSampleType" content="code snippet" />
+
+  <meta itemprop="programmingLanguage" content="java" />
+
+  <div class="language-java highlighter-rouge"><pre class="highlight"><code>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">applyLPF</span><span class="o">()</span> <span class="o">{</span>
         <span class="kd">final</span> <span class="kt">float</span> <span class="n">tm</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">nanoTime</span><span class="o">();</span>
         <span class="kd">final</span> <span class="kt">float</span> <span class="n">dt</span> <span class="o">=</span> <span class="o">((</span><span class="n">tm</span> <span class="o">-</span> <span class="n">beginTime</span><span class="o">)</span> <span class="o">/</span> <span class="mf">1000000000.0f</span><span class="o">)</span> <span class="o">/</span> <span class="n">count</span><span class="o">;</span>
 
@@ -157,6 +180,7 @@
         <span class="o">++</span><span class="n">count</span><span class="o">;</span>
     <span class="o">}</span>
 </code></pre>
+  </div>
 </div>
 
 <h2 id="practice">Practice</h2>

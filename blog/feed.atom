@@ -7,7 +7,7 @@
 	<author>
 		<name>Yellow Rabbit</name>
 	</author>
-	<updated>2017-08-12T20:20:50+10:00</updated>
+	<updated>2017-08-12T20:33:38+10:00</updated>
 
 	<entry>
 		<title type="text">Mobile Game Review Space Mercenary</title>
@@ -70,7 +70,12 @@ As was promised we move from the static smoothing to dynamic one in order to tak
 
 &lt;p&gt;The raw data is accumulated in &lt;code class=&quot;highlighter-rouge&quot;&gt;rawAccData&lt;/code&gt;, processed by the filter - in&lt;code class=&quot;highlighter-rouge&quot;&gt; lpfAccData&lt;/code&gt;. The variables &lt;code class=&quot;highlighter-rouge&quot;&gt;count&lt;/code&gt; and&lt;code class=&quot;highlighter-rouge&quot;&gt; beginTime&lt;/code&gt; are needed to calculate the average sampling period. In this simple program, the sensors are polled constantly so these variables can be initialized at startup. In real programs, you need to consider stopping the poll while in pause state, and so on.&lt;/p&gt;
 
-&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;MAX_TESTS_NUM&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;200&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;60&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// One minute measurement with a frequency of 200Hz&lt;/span&gt;
+&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;
+  &lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;
+
+  &lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;java&quot; /&gt;
+
+  &lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;MAX_TESTS_NUM&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;200&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;60&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// One minute measurement with a frequency of 200Hz&lt;/span&gt;
     &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;float&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rawAccData&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;float&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;MAX_TESTS_NUM&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;];&lt;/span&gt;
     &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rawAccDataIdx&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
 
@@ -81,16 +86,28 @@ As was promised we move from the static smoothing to dynamic one in order to tak
     &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;float&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;beginTime&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;nanoTime&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
     &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;float&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rc&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.002f&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;
+  &lt;/div&gt;
 &lt;/div&gt;
 &lt;p&gt;Somewhere in the event handler from the sensors, let’s write the call to read the data:&lt;/p&gt;
-&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;onSensorChanged&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SensorEvent&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;
+  &lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;
+
+  &lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;java&quot; /&gt;
+
+  &lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;onSensorChanged&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SensorEvent&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
         &lt;span class=&quot;c1&quot;&gt;// ...&lt;/span&gt;
             &lt;span class=&quot;n&quot;&gt;readSensorData&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
         &lt;span class=&quot;c1&quot;&gt;// ...&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;
+  &lt;/div&gt;
 &lt;/div&gt;
 &lt;p&gt;Read the data and apply the filter:&lt;/p&gt;
-&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;readSensorData&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SensorEvent&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;
+  &lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;
+
+  &lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;java&quot; /&gt;
+
+  &lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;readSensorData&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SensorEvent&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
         &lt;span class=&quot;kd&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;sensor&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getType&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
         &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Sensor&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;TYPE_ACCELEROMETER&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
             &lt;span class=&quot;n&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;arraycopy&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;values&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rawAccData&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rawAccDataIdx&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
@@ -103,12 +120,18 @@ As was promised we move from the static smoothing to dynamic one in order to tak
     &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
 
 &lt;/code&gt;&lt;/pre&gt;
+  &lt;/div&gt;
 &lt;/div&gt;
 &lt;p&gt;Actually the filter itself: calculate the average sampling period, determine \(\alpha\) and use the formula:&lt;/p&gt;
 
 &lt;script type=&quot;math/tex; mode=display&quot;&gt;y_i=\alpha y_{i-1}+(1-\alpha)x_i&lt;/script&gt;
 
-&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;applyLPF&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;
+  &lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;
+
+  &lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;java&quot; /&gt;
+
+  &lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;applyLPF&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
         &lt;span class=&quot;kd&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;float&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tm&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;nanoTime&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
         &lt;span class=&quot;kd&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;float&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dt&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tm&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;beginTime&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;1000000000.0f&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
 
@@ -131,6 +154,7 @@ As was promised we move from the static smoothing to dynamic one in order to tak
         &lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
     &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;
+  &lt;/div&gt;
 &lt;/div&gt;
 
 &lt;h2 id=&quot;practice&quot;&gt;Practice&lt;/h2&gt;
@@ -224,26 +248,50 @@ A  sensors in our mobile phones have, among other things, an imperfect output si
 &lt;p&gt;&lt;img src=&quot;/imgs/posts/2kHz+4kHz.png&quot; alt=&quot;Total input signal&quot; title=&quot;Total input signal&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Signal and noise are given by functions:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&quot;language-maxima&quot;&gt;kH2(t):=sin(2*%pi*2000*t)$
+&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;
+  &lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;
+
+  &lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;maxima&quot; /&gt;
+
+  &lt;pre&gt;&lt;code class=&quot;language-maxima&quot;&gt;kH2(t):=sin(2*%pi*2000*t)$
 kH4(t):=sin(2*%pi*4000*t)$
 &lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;p&gt;In Maxima we can describe the input data with two lists of values, &lt;code class=&quot;highlighter-rouge&quot;&gt;tl&lt;/code&gt; - time counts of 100 intervals of 0.00005 seconds,&lt;code class=&quot;highlighter-rouge&quot;&gt; kH2lkH4l&lt;/code&gt; - a list of input values \(x_i\):&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&quot;language-maxima&quot;&gt;tl:makelist(i / (100 * 500), i, 0, 100)$
+&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;
+  &lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;
+
+  &lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;Maxima&quot; /&gt;
+
+  &lt;pre&gt;&lt;code class=&quot;language-maxima&quot;&gt;tl:makelist(i / (100 * 500), i, 0, 100)$
 kH2lkH4l:makelist(kH4(i / (100 * 500)) + kH2(i / (100 * 500)), i, 0, 100)$
 &lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;p&gt;The filter function itself consists of a recursive part that literally repeats \(y_i=\alpha y_{i-1} + (1 - \alpha)x_i\):&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&quot;language-maxima&quot;&gt;lowpass_rec(x, alpha):= 
+&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;
+  &lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;
+
+  &lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;maxima&quot; /&gt;
+
+  &lt;pre&gt;&lt;code class=&quot;language-maxima&quot;&gt;lowpass_rec(x, alpha):= 
   if length(x) = 1 then
     [(1 - alpha) * first(x)]
   else block([y],
     y: lowpass_rec(rest(x), alpha),
     return(cons(alpha * first(y) + (1 - alpha) * first(x), y)))$
 &lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 &lt;p&gt;and the entry point:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&quot;language-maxima&quot;&gt;lowpass(x, alpha):=reverse(lowpass_rec(reverse(x), alpha))$
+&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;
+  &lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;
+
+  &lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;maxima&quot; /&gt;
+
+  &lt;pre&gt;&lt;code class=&quot;language-maxima&quot;&gt;lowpass(x, alpha):=reverse(lowpass_rec(reverse(x), alpha))$
 &lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;p&gt;\(\Delta T=0.00005\) is fixed and is defined by frequency of data receipt from the sensor. The smoothing frequency is 3kHz: \(f_c=\frac{1}{2\pi RC}=3000\)Hz.&lt;/p&gt;
 
@@ -252,11 +300,17 @@ kH2lkH4l:makelist(kH4(i / (100 * 500)) + kH2(i / (100 * 500)), i, 0, 100)$
 &lt;script type=&quot;math/tex; mode=display&quot;&gt;\alpha=\frac{RC}{RC+\Delta T}=0.7262210965743948&lt;/script&gt;
 
 &lt;p&gt;Let’s see how the filter works with this value of \(\alpha\) together with the others.&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&quot;language-maxima&quot;&gt;plot2d([[discrete, tl, kH2lkH4l], [discrete, tl, lowpass(kH2lkH4l, 0.5)],
+&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;
+  &lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;
+
+  &lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;maxima&quot; /&gt;
+
+  &lt;pre&gt;&lt;code class=&quot;language-maxima&quot;&gt;plot2d([[discrete, tl, kH2lkH4l], [discrete, tl, lowpass(kH2lkH4l, 0.5)],
         [discrete, tl, lowpass(kH2lkH4l, 0.7262210965743948)],
         [discrete, tl, lowpass(kH2lkH4l, 0.9)]],
         [legend, &quot;V_in&quot;, &quot;a=0.5&quot;, &quot;a=0.726&quot;, &quot;a=0.9&quot;])$
 &lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;p&gt;&lt;img src=&quot;/imgs/posts/choose-alpha.png&quot; alt=&quot;Low Pass Filter Operation&quot; title=&quot;Low Pass Filter Graph&quot; /&gt;&lt;/p&gt;
 
@@ -268,10 +322,16 @@ kH2lkH4l:makelist(kH4(i / (100 * 500)) + kH2(i / (100 * 500)), i, 0, 100)$
 
 &lt;h2 id=&quot;afterword&quot;&gt;Afterword&lt;/h2&gt;
 &lt;p&gt;It seems that one can already insert this filter as there is somewhere like:&lt;/p&gt;
-&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;nd&quot;&gt;@Override&lt;/span&gt;
+&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;
+  &lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;
+
+  &lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;java&quot; /&gt;
+
+  &lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;nd&quot;&gt;@Override&lt;/span&gt;
     &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;onSensorChanged&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SensorEvent&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
     &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;
+  &lt;/div&gt;
 &lt;/div&gt;
 
 &lt;p&gt;\(\ldots\) and be disappointed.  The reason is in \(\Delta T \) or in the sampling period, which varies from model to model, and during the program operation can vary quite significantly. And for a fixed \(\alpha \) this will change the operating frequency of the filter. So \(\alpha \) must be dynamic,  we’ll discuss it next time. :smile:&lt;/p&gt;
@@ -296,50 +356,79 @@ It even has a complex constructor :smile:
 
 &lt;p&gt;It even has a complex constructor :smile:&lt;/p&gt;
 
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;make-element-node&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;tag&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;attrs&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;children&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;
+  &lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;
+
+  &lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;Lisp&quot; /&gt;
+
+  &lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;make-element-node&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;tag&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;attrs&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;children&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
   &lt;span class=&quot;s&quot;&gt;&quot;Tag and list of name-value pairs&quot;&lt;/span&gt;
   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;el&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;make-instance&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;'element-node&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:tag&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tag&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:children&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;children&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;element-set-all-attrs&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;el&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;attrs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
        &lt;span class=&quot;nv&quot;&gt;el&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;
+  &lt;/div&gt;
 &lt;/div&gt;
 &lt;p&gt;For this to work, you need to add a function to the &lt;code class=&quot;highlighter-rouge&quot;&gt;dom.lisp&lt;/code&gt;:&lt;/p&gt;
 
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;;; Set all attrs at once&lt;/span&gt;
+&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;
+  &lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;
+
+  &lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;Lisp&quot; /&gt;
+
+  &lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;;; Set all attrs at once&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;element-set-all-attrs&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;el&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;vals&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
   &lt;span class=&quot;s&quot;&gt;&quot;Set all attrs at once. Vals is name-value pair list.&quot;&lt;/span&gt;
   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;attrs&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;element-node-attrs&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;el&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
     &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;mapc&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;#'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;nv&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 	      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;setf&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;gethash&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;car&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;nv&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;attrs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cdr&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;nv&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;vals&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;
+  &lt;/div&gt;
 &lt;/div&gt;
 &lt;p&gt;We also need a lot of small parsers, starting with the parser of the tag name.&lt;/p&gt;
 
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;parse-tagname&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;
+  &lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;
+
+  &lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;Lisp&quot; /&gt;
+
+  &lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;parse-tagname&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
           &lt;span class=&quot;s&quot;&gt;&quot;Parse tag name&quot;&lt;/span&gt;
           &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
             &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;with-output-to-string&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
               &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;matchit&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$[@&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;tag-text&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;write-char&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ch&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;
+  &lt;/div&gt;
 &lt;/div&gt;
 &lt;p&gt;Useful thing — skipping spaces, tabs, etc. It’s always successful.&lt;/p&gt;
 
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;skip-whitespace&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;
+  &lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;
+
+  &lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;Lisp&quot; /&gt;
+
+  &lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;skip-whitespace&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
           &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
             &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;matchit&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$[@&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;whitespace&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
             &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;
+  &lt;/div&gt;
 &lt;/div&gt;
 &lt;p&gt;Attribute values can be enclosed in either double or single quotes, so the parser must remember from what type of quotation the value began and work up to exactly the same closing quotation mark.&lt;/p&gt;
 
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;parse-value&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;quo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;
+  &lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;
+
+  &lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;Lisp&quot; /&gt;
+
+  &lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;parse-value&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;quo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
           &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
             &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;with-output-to-string&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
               &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;matchit&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$[@&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;any-text&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;char/=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ch&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;quo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;write-char&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ch&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+  &lt;/div&gt;
 
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;parse-quoted-value&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;parse-quoted-value&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
           &lt;span class=&quot;s&quot;&gt;&quot;Parse quoted value&quot;&lt;/span&gt;
           &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;quo&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;oldindex&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;index&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
             &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;or&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;matchit&lt;/span&gt;
@@ -347,10 +436,16 @@ It even has a complex constructor :smile:
                     &lt;span class=&quot;nv&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;parse-value&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;quo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
                 &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;progn&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;setf&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;index&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;oldindex&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;
+  &lt;/div&gt;
 &lt;/div&gt;
 &lt;p&gt;With these helpers, it’s easy to make the parser of the same attribute: first select the name (not empty), then the &lt;code class=&quot;highlighter-rouge&quot;&gt;=&lt;/code&gt; and the value of the attribute in any quotes. The output will be a pair (name, value).&lt;/p&gt;
 
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;parse-attr&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;
+  &lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;
+
+  &lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;Lisp&quot; /&gt;
+
+  &lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;parse-attr&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
           &lt;span class=&quot;s&quot;&gt;&quot;name=value&quot;&lt;/span&gt;
           &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;value&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;oldindex&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;index&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
             &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;
@@ -361,10 +456,16 @@ It even has a complex constructor :smile:
               &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cons&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
               &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;progn&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;setf&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;index&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;oldindex&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;
+  &lt;/div&gt;
 &lt;/div&gt;
 &lt;p&gt;Recognized attributes are pushed into the list. The order will be reversed.&lt;/p&gt;
 
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;parse-attrs&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;
+  &lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;
+
+  &lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;Lisp&quot; /&gt;
+
+  &lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;parse-attrs&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
           &lt;span class=&quot;s&quot;&gt;&quot;Parse attributes&quot;&lt;/span&gt;
           &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;attrs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
             &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;matchit&lt;/span&gt;
@@ -373,10 +474,16 @@ It even has a complex constructor :smile:
                  &lt;span class=&quot;nv&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;push&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;attr&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;attrs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
             &lt;span class=&quot;nv&quot;&gt;attrs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;
+  &lt;/div&gt;
 &lt;/div&gt;
 &lt;p&gt;The closing tag also requires attention.&lt;/p&gt;
 
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;parse-closing-tag&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;tagname&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;
+  &lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;
+
+  &lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;Lisp&quot; /&gt;
+
+  &lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;parse-closing-tag&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;tagname&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
           &lt;span class=&quot;s&quot;&gt;&quot;Parse &amp;lt;/tagname&amp;gt;&quot;&lt;/span&gt;
           &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;oldindex&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;index&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
             &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;or&lt;/span&gt;
@@ -384,10 +491,16 @@ It even has a complex constructor :smile:
                 &lt;span class=&quot;nv&quot;&gt;[#\&amp;lt;&lt;/span&gt; &lt;span class=&quot;sc&quot;&gt;#\/&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;string=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;parse-tagname&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tagname&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;sc&quot;&gt;#\&amp;gt;]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
               &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;progn&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;setf&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;index&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;oldindex&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;
+  &lt;/div&gt;
 &lt;/div&gt;
 &lt;p&gt;Element parser sketch:&lt;/p&gt;
 
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;parse-element&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;
+  &lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;
+
+  &lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;Lisp&quot; /&gt;
+
+  &lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;parse-element&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
           &lt;span class=&quot;s&quot;&gt;&quot;&amp;lt;tagname $[attr=value]&amp;gt; ??? &amp;lt;/tagname&amp;gt;&quot;&lt;/span&gt;
           &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;oldindex&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;index&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
                 &lt;span class=&quot;nv&quot;&gt;ch&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tagname&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;attrs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
@@ -399,10 +512,16 @@ It even has a complex constructor :smile:
                    &lt;span class=&quot;nv&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;make-element-node&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tagname&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;attrs&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
                 &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;progn&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;setf&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;index&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;oldindex&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;
+  &lt;/div&gt;
 &lt;/div&gt;
 &lt;p&gt;The problem with this parser is that it does not provide anything between opening and closing tags. That is, it is time to think about recursion and how to organize descendants. In the meantime, you can check how the element parser works.&lt;/p&gt;
 
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ql:quickload&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;'toy-engine&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;
+  &lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;
+
+  &lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;Lisp&quot; /&gt;
+
+  &lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ql:quickload&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;'toy-engine&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;span class=&quot;nv&quot;&gt;To&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;load&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;toy-engine&quot;&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;:&lt;/span&gt;
   &lt;span class=&quot;nv&quot;&gt;Load&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ASDF&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;system:&lt;/span&gt;
     &lt;span class=&quot;nv&quot;&gt;toy-engine&lt;/span&gt;
@@ -427,6 +546,7 @@ It even has a complex constructor :smile:
 &lt;span class=&quot;s&quot;&gt;&quot;}&quot;&lt;/span&gt;
 &lt;span class=&quot;nb&quot;&gt;*&lt;/span&gt; 
 &lt;/code&gt;&lt;/pre&gt;
+  &lt;/div&gt;
 &lt;/div&gt;
 &lt;p&gt;&lt;img src=&quot;/imgs/posts/lisp-webengine-element-node.png&quot; alt=&quot;The tree after parsing the element&quot; title=&quot;The tree after parsing the element&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
 
@@ -435,7 +555,12 @@ It even has a complex constructor :smile:
 
 &lt;p&gt;But first the parser of a single node:&lt;/p&gt;
 
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;parse-node&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;
+  &lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;
+
+  &lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;Lisp&quot; /&gt;
+
+  &lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;parse-node&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
           &lt;span class=&quot;s&quot;&gt;&quot;Text or node&quot;&lt;/span&gt;
           &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;oldindex&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;index&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
             &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;or&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;matchit&lt;/span&gt;
@@ -443,19 +568,31 @@ It even has a complex constructor :smile:
                     &lt;span class=&quot;nv&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;parse-text&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
                 &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;progn&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;setf&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;index&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;oldindex&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;
+  &lt;/div&gt;
 &lt;/div&gt;
 &lt;p&gt;It uses a small helper parser, which is needed to roll back if there is not a comment or an element. The fact is that elementary matches like &lt;code class=&quot;highlighter-rouge&quot;&gt;#\&amp;lt;&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;&quot;example&quot;&lt;/code&gt; used inside the sequence &lt;code class=&quot;highlighter-rouge&quot;&gt;[]&lt;/code&gt; can not be rolled back if they worked.&lt;/p&gt;
 
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;parse-comment-or-element&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;
+  &lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;
+
+  &lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;Lisp&quot; /&gt;
+
+  &lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;parse-comment-or-element&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
 	  &lt;span class=&quot;s&quot;&gt;&quot;&amp;lt; {comment element}&quot;&lt;/span&gt;
 	  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;oldindex&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;index&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
 	    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;or&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;matchit&lt;/span&gt;
 		  &lt;span class=&quot;nv&quot;&gt;[#\&amp;lt;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;{!&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;parse-comment&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;parse-element&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;}]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 		&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;progn&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;setf&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;index&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;oldindex&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;
+  &lt;/div&gt;
 &lt;/div&gt;
 &lt;p&gt;Let’s check that this function recognizes and creates different types of nodes:&lt;/p&gt;
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ql:quickload&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;'toy-engine&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;
+  &lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;
+
+  &lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;Lisp&quot; /&gt;
+
+  &lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ql:quickload&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;'toy-engine&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;span class=&quot;nv&quot;&gt;To&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;load&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;toy-engine&quot;&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;:&lt;/span&gt;
   &lt;span class=&quot;nv&quot;&gt;Load&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ASDF&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;system:&lt;/span&gt;
     &lt;span class=&quot;nv&quot;&gt;toy-engine&lt;/span&gt;
@@ -494,10 +631,16 @@ It even has a complex constructor :smile:
 &lt;span class=&quot;err&quot;&gt;#&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;&amp;lt;COMMENT-NODE&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;{10050C6A93}&amp;gt;&lt;/span&gt;
 &lt;span class=&quot;nb&quot;&gt;*&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;
+  &lt;/div&gt;
 &lt;/div&gt;
 &lt;p&gt;We collect several nodes in the list:&lt;/p&gt;
 
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;parse-nodes&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;
+  &lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;
+
+  &lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;Lisp&quot; /&gt;
+
+  &lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;parse-nodes&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
           &lt;span class=&quot;s&quot;&gt;&quot;Children&quot;&lt;/span&gt;
           &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;oldindex&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;index&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;children&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
             &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;matchit&lt;/span&gt;
@@ -505,10 +648,16 @@ It even has a complex constructor :smile:
 	        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;reverse&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;children&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
                 &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;progn&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;setf&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;index&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;oldindex&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;
+  &lt;/div&gt;
 &lt;/div&gt;
 &lt;p&gt;We check how well this function recognizes a string with different parts of HTML:&lt;/p&gt;
 
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ql:quickload&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;'toy-engine&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;
+  &lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;
+
+  &lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;Lisp&quot; /&gt;
+
+  &lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ql:quickload&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;'toy-engine&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;span class=&quot;nv&quot;&gt;To&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;load&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;toy-engine&quot;&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;:&lt;/span&gt;
   &lt;span class=&quot;nv&quot;&gt;Load&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ASDF&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;system:&lt;/span&gt;
     &lt;span class=&quot;nv&quot;&gt;toy-engine&lt;/span&gt;
@@ -530,15 +679,27 @@ It even has a complex constructor :smile:
  &lt;span class=&quot;err&quot;&gt;#&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;&amp;lt;TEXT-NODE&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;{1005AD9EE3}&amp;gt;&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;#&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;&amp;lt;ELEMENT-NODE&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;{1005ADA5E3}&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;span class=&quot;nb&quot;&gt;*&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;
+  &lt;/div&gt;
 &lt;/div&gt;
 &lt;p&gt;If you now change the body of the &lt;code class=&quot;highlighter-rouge&quot;&gt;parse-html&lt;/code&gt; function to&lt;/p&gt;
 
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;make-instance&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;'node&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:children&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;parse-nodes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;
+  &lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;
+
+  &lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;Lisp&quot; /&gt;
+
+  &lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;make-instance&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;'node&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:children&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;parse-nodes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;
+  &lt;/div&gt;
 &lt;/div&gt;
 &lt;p&gt;thereby making all recognized nodes on the upper level descendants of some node of type &lt;code class=&quot;highlighter-rouge&quot;&gt;node&lt;/code&gt;.&lt;/p&gt;
 
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ql:quickload&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;'toy-engine&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;
+  &lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;
+
+  &lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;Lisp&quot; /&gt;
+
+  &lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ql:quickload&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;'toy-engine&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;span class=&quot;nv&quot;&gt;To&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;load&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;toy-engine&quot;&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;:&lt;/span&gt;
   &lt;span class=&quot;nv&quot;&gt;Load&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ASDF&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;system:&lt;/span&gt;
     &lt;span class=&quot;nv&quot;&gt;toy-engine&lt;/span&gt;
@@ -559,13 +720,19 @@ It even has a complex constructor :smile:
 &lt;span class=&quot;s&quot;&gt;&quot;}&quot;&lt;/span&gt;
 &lt;span class=&quot;nb&quot;&gt;*&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;
+  &lt;/div&gt;
 &lt;/div&gt;
 
 &lt;p&gt;&lt;img src=&quot;/imgs/posts/lisp-webengine-parse-children.png&quot; alt=&quot;A tree after parsing several elements&quot; title=&quot;A tree after parsing several elements&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Finally, the element parser contains the start of recursion:&lt;/p&gt;
 
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;parse-element&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;
+  &lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;
+
+  &lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;Lisp&quot; /&gt;
+
+  &lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;parse-element&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
           &lt;span class=&quot;s&quot;&gt;&quot;&amp;lt;tagname $[attr=value]&amp;gt; ??? &amp;lt;/tagname&amp;gt;&quot;&lt;/span&gt;
           &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;oldindex&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;index&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
                 &lt;span class=&quot;nv&quot;&gt;ch&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tagname&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;attrs&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;children&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
@@ -578,10 +745,16 @@ It even has a complex constructor :smile:
                    &lt;span class=&quot;nv&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;make-element-node&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tagname&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;attrs&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;children&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
                 &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;progn&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;setf&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;index&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;oldindex&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;
+  &lt;/div&gt;
 &lt;/div&gt;
 &lt;p&gt;A case study of a complex example:&lt;/p&gt;
 
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ql:quickload&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;'toy-engine&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;
+  &lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;
+
+  &lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;Lisp&quot; /&gt;
+
+  &lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ql:quickload&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;'toy-engine&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;span class=&quot;nv&quot;&gt;To&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;load&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;toy-engine&quot;&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;:&lt;/span&gt;
   &lt;span class=&quot;nv&quot;&gt;Load&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ASDF&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;system:&lt;/span&gt;
     &lt;span class=&quot;nv&quot;&gt;toy-engine&lt;/span&gt;
@@ -602,6 +775,7 @@ It even has a complex constructor :smile:
 &lt;span class=&quot;s&quot;&gt;&quot;}&quot;&lt;/span&gt;
 &lt;span class=&quot;nb&quot;&gt;*&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;
+  &lt;/div&gt;
 &lt;/div&gt;
 
 &lt;p&gt;&lt;img src=&quot;/imgs/posts/lisp-webengine-parse-tiny-html.png&quot; alt=&quot;Tree after parsing tiny HTML&quot; title=&quot;Tree after parsing tiny HTML&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
