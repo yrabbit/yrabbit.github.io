@@ -87,15 +87,17 @@
 <h2 id="comments">Comments</h2>
 <p>Comments in HTML are interesting because they end with three characters: <code class="highlighter-rouge">--&gt;</code>. That is, if we read  from the stream char-by-char instead of a line, then we would have a rare fun with looking forward two characters. Now we can just restore the pointer to the current character.</p>
 
-<p>Creating a comment node is very simple:
-<span itemscope="" itemtype="http://schema.org/SoftwareSourceCode"></span></p>
-<div class="language-cl highlighter-rouge">
+<p>Creating a comment node is very simple:</p>
+
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+  <div class="language-cl highlighter-rouge">
 <pre class="highlight"><code><span class="p">(</span><span class="nb">defun</span> <span class="nv">make-comment-node</span> <span class="p">()</span>
   <span class="p">(</span><span class="nb">make-instance</span> <span class="ss">'comment-node</span><span class="p">))</span>
 </code></pre>
+  </div>
 </div>
-<p>&lt;/span&gt;
-So to parse the comment first thing, what’s the first thing? The piano! Joke. First of all, remember the position of <code class="highlighter-rouge">index</code> in the string to be rolled back (<code class="highlighter-rouge">oldindex</code>).</p>
+
+<p>So to parse the comment first thing, what’s the first thing? The piano! Joke. First of all, remember the position of <code class="highlighter-rouge">index</code> in the string to be rolled back (<code class="highlighter-rouge">oldindex</code>).</p>
 
 <p>The beginning of the comment is easy to define — just the sequence: <code class="highlighter-rouge">["!--" something]</code><sup id="fnref:why-where-is-no"><a href="#fn:why-where-is-no" class="footnote">1</a></sup>, but with the final <code class="highlighter-rouge">-&gt;</code> it’s not so good.</p>
 

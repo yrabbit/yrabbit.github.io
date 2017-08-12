@@ -7,7 +7,7 @@
 	<author>
 		<name>Yellow Rabbit</name>
 	</author>
-	<updated>2017-08-12T16:28:24+10:00</updated>
+	<updated>2017-08-12T18:48:46+10:00</updated>
 
 	<entry>
 		<title type="text">Mobile Game Review Space Mercenary</title>
@@ -624,14 +624,16 @@ It even has a complex constructor :smile:
 &lt;h2 id=&quot;comments&quot;&gt;Comments&lt;/h2&gt;
 &lt;p&gt;Comments in HTML are interesting because they end with three characters: &lt;code class=&quot;highlighter-rouge&quot;&gt;--&amp;gt;&lt;/code&gt;. That is, if we read  from the stream char-by-char instead of a line, then we would have a rare fun with looking forward two characters. Now we can just restore the pointer to the current character.&lt;/p&gt;
 
-&lt;p&gt;Creating a comment node is very simple:
-&lt;span itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;&lt;/span&gt;&lt;/p&gt;
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;make-comment-node&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;p&gt;Creating a comment node is very simple:&lt;/p&gt;
+
+&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;
+  &lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;make-comment-node&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;make-instance&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;'comment-node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;
+  &lt;/div&gt;
 &lt;/div&gt;
-&lt;p&gt;&amp;lt;/span&amp;gt;
-So to parse the comment first thing, what’s the first thing? The piano! Joke. First of all, remember the position of &lt;code class=&quot;highlighter-rouge&quot;&gt;index&lt;/code&gt; in the string to be rolled back (&lt;code class=&quot;highlighter-rouge&quot;&gt;oldindex&lt;/code&gt;).&lt;/p&gt;
+
+&lt;p&gt;So to parse the comment first thing, what’s the first thing? The piano! Joke. First of all, remember the position of &lt;code class=&quot;highlighter-rouge&quot;&gt;index&lt;/code&gt; in the string to be rolled back (&lt;code class=&quot;highlighter-rouge&quot;&gt;oldindex&lt;/code&gt;).&lt;/p&gt;
 
 &lt;p&gt;The beginning of the comment is easy to define — just the sequence: &lt;code class=&quot;highlighter-rouge&quot;&gt;[&quot;!--&quot; something]&lt;/code&gt;&lt;sup id=&quot;fnref:why-where-is-no&quot;&gt;&lt;a href=&quot;#fn:why-where-is-no&quot; class=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt;, but with the final &lt;code class=&quot;highlighter-rouge&quot;&gt;-&amp;gt;&lt;/code&gt; it’s not so good.&lt;/p&gt;
 
