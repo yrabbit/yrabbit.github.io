@@ -87,7 +87,7 @@
 		<img src="/imgs/post-banners/lisp-webengine-meta.jpeg" alt="Web-движок на Lisp: язык META как основа для разбора" />
 	</div>
 
-
+<article itemprop="articleBody">
 
 <p>Чтобы строить дерево документа нам нужен парсер HTML. Простой. В январе 1991 года появилась статья Henry G. Baker <a href="http://home.pipeline.com/~hbaker1/Prag-Parse.html" title="Старая статья о парсинге">“Прагматичный парсинг на Common Lisp”</a>, в которой он описывает META — классическую простую и одновременно эффективную технику построения рекурсивных нисходящих парсеров.</p>
 
@@ -189,6 +189,7 @@
 <p>И одно замечание на прощание: ядро использует reader-макросы, так что нужно следить чтобы всё функции, которые вызываются при работе компилятора META, были доступны на этапе компиляции. Следует использовать <code class="highlighter-rouge">(eval-when (:compile-toplevel) ...)</code> в таких случаях.</p>
 
 
+</article>
 <hr />
 <div align="center">
 <div class="g-plus" data-action="share"></div>
