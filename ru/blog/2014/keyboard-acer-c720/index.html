@@ -115,7 +115,14 @@
 
 <p>Для модификации раскладки используем <em>xkb</em>. Сначала создадим каталог для конфигурационных файлов:</p>
 
-<figure class="highlight"><pre><code class="language-console" data-lang="console"><span class="err">	mkdir -p ${HOME}/.config/xkb/types ${HOME}/.config/xkb/symbols</span></code></pre></figure>
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+  <meta itemprop="codeSampleType" content="code snippet" />
+
+  <meta itemprop="programmingLanguage" content="bash" />
+
+  <figure class="highlight"><pre><code class="language-console" data-lang="console"><span class="err">	mkdir -p ${HOME}/.config/xkb/types ${HOME}/.config/xkb/symbols</span></code></pre></figure>
+
+</div>
 
 <p>В файле <code class="highlighter-rouge">${HOME}/.config/xkb/types/c720</code>  указываем как будут себя вести совместно два модификатора - <em>Shift</em> и <em>Alt</em>. Интерес представляют ситуации, когда нажат <em>Alt</em>, то есть уровень 3.</p>
 

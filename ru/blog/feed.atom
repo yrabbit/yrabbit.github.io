@@ -7,7 +7,7 @@
 	<author>
 		<name>Yellow Rabbit</name>
 	</author>
-	<updated>2017-08-12T20:33:38+10:00</updated>
+	<updated>2017-08-12T20:39:06+10:00</updated>
 
 	<entry>
 		<title type="text">Обзор игры Космический Наёмник (Space Mercenary)</title>
@@ -973,7 +973,7 @@ kH2lkH4l:makelist(kH4(i / (100 * 500)) + kH2(i / (100 * 500)), i, 0, 100)$
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;https://yrabbit.github.io/post-baners/lisp-webengine-dom.jpeg&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;https://yrabbit.github.io/imgs/post-baners/lisp-webengine-dom.jpeg&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;p&gt;Что происходит внутри браузеров? Как эта куча тэгов превращается в такие изумительные страницы на экране? 
 Магия. Попробую изобразить что-то примитивное для отображения HTML.&lt;/p&gt;
 
