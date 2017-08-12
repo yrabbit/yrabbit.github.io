@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 	<title>Yellow Rabbit</title>
-	<link href="http://192.168.1.40:4000/ru/blog/feed.atom" rel="self" />
-	<link href="http://192.168.1.40:4000/ru/" />
-	<id>http://192.168.1.40:4000/</id>
+	<link href="https://yrabbit.github.io/ru/blog/feed.atom" rel="self" />
+	<link href="https://yrabbit.github.io/ru/" />
+	<id>https://yrabbit.github.io/</id>
 	<author>
 		<name>Yellow Rabbit</name>
 	</author>
-	<updated>2017-08-12T13:17:56+10:00</updated>
+	<updated>2017-08-12T13:25:53+10:00</updated>
 
 	<entry>
 		<title type="text">Обзор игры Космический Наёмник (Space Mercenary)</title>
-		<link href="http://192.168.1.40:4000/ru/blog/2017/space-mercenary-review/" />
-		<id>http://192.168.1.40:4000/blog/2017/space-mercenary-review/</id>
+		<link href="https://yrabbit.github.io/ru/blog/2017/space-mercenary-review/" />
+		<id>https://yrabbit.github.io/blog/2017/space-mercenary-review/</id>
 		<published>2017-08-10T00:00:00+10:00</published>
 		<updated>2017-08-10T00:00:00+10:00</updated>
 		<summary type="html">Бывает, что затеяв рутинную уборку на чердаке, перебираешь старые штуковины в коробках и вдруг попадётся тебе детская твоя машинка, и нахлынут воспоминания и застынешь, позабыв обо всём. Вот так и с игрой “Космический наёмник”. Среди бесплатных мобильных игр так много мусора, что Космический Наемник (aka Space Mercenary) оказался приятным сюрпризом.
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;http://192.168.1.40:4000/blog/imgs/posts/nebula.png&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io/blog/imgs/posts/nebula.png&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;p&gt;Бывает, что затеяв рутинную уборку на чердаке, перебираешь старые штуковины в коробках и вдруг попадётся тебе детская твоя машинка, и нахлынут воспоминания и застынешь, позабыв обо всём. Вот так и с игрой &lt;a href=&quot;https://play.google.com/store/apps/details?id=com.grf.game.SpaceMercenary&quot;&gt;“Космический наёмник”&lt;/a&gt;. Среди бесплатных мобильных игр так много мусора, что Космический Наемник (aka Space Mercenary) оказался приятным сюрпризом.&lt;/p&gt;
 
 &lt;p&gt;“На этот раз работёнка по-настоящему опасная: вернуть похищенные священные алмазы, которые вмонтированы в обшивку огромной космической станции.” - вся завязка в одном предложении, которое тем не менее точно описывает игру. Нам на самом деле предстоит перемещаться в космосе, на самом деле искать и собирать некие сверкающие штуковины, и нынешние их владельцы вовсе не самые дружелюбные создания во вселенной.&lt;/p&gt;
@@ -49,8 +49,8 @@
 
 	<entry>
 		<title type="text">Фильтр нижних частот для датчиков Андроид - практика</title>
-		<link href="http://192.168.1.40:4000/ru/blog/2017/low-pass-filter-android-practice/" />
-		<id>http://192.168.1.40:4000/blog/2017/low-pass-filter-android-practice/</id>
+		<link href="https://yrabbit.github.io/ru/blog/2017/low-pass-filter-android-practice/" />
+		<id>https://yrabbit.github.io/blog/2017/low-pass-filter-android-practice/</id>
 		<published>2017-08-07T00:00:00+10:00</published>
 		<updated>2017-08-07T00:00:00+10:00</updated>
 		<summary type="html">
@@ -59,7 +59,7 @@
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;http://192.168.1.40:4000/imgs/post-banners/radio-android.png&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners/radio-android.png&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;script type=&quot;text/javascript&quot; async=&quot;&quot; src=&quot;https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML&quot;&gt;
 &lt;/script&gt;
 
@@ -170,8 +170,8 @@
 
 	<entry>
 		<title type="text">Фильтр нижних частот для датчиков Android</title>
-		<link href="http://192.168.1.40:4000/ru/blog/2017/low-pass-filter-android-sensors/" />
-		<id>http://192.168.1.40:4000/blog/2017/low-pass-filter-android-sensors/</id>
+		<link href="https://yrabbit.github.io/ru/blog/2017/low-pass-filter-android-sensors/" />
+		<id>https://yrabbit.github.io/blog/2017/low-pass-filter-android-sensors/</id>
 		<published>2017-08-06T00:00:00+10:00</published>
 		<updated>2017-08-06T00:00:00+10:00</updated>
 		<summary type="html">
@@ -180,7 +180,7 @@
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;http://192.168.1.40:4000/imgs/post-banners/low-pass-filter.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners/low-pass-filter.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;script type=&quot;text/javascript&quot; async=&quot;&quot; src=&quot;https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML&quot;&gt;
 &lt;/script&gt;
 
@@ -283,8 +283,8 @@ kH2lkH4l:makelist(kH4(i / (100 * 500)) + kH2(i / (100 * 500)), i, 0, 100)$
 
 	<entry>
 		<title type="text">Web-движок на Lisp: разбираем самый сложный элемент</title>
-		<link href="http://192.168.1.40:4000/ru/blog/2016/lisp-toy-web-parse-element/" />
-		<id>http://192.168.1.40:4000/blog/2016/lisp-toy-web-parse-element/</id>
+		<link href="https://yrabbit.github.io/ru/blog/2016/lisp-toy-web-parse-element/" />
+		<id>https://yrabbit.github.io/blog/2016/lisp-toy-web-parse-element/</id>
 		<published>2016-06-02T20:33:32+10:00</published>
 		<updated>2017-07-31T19:05:24+10:00</updated>
 		<summary type="html">Самый сложный элемент. Гораздо сложнее комментариев. У нас есть открывающие и закрывающие теги, атрибуты и их значения, а ко всему прочему, элементы ещё могут быть вложенными.
@@ -293,7 +293,7 @@ kH2lkH4l:makelist(kH4(i / (100 * 500)) + kH2(i / (100 * 500)), i, 0, 100)$
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;http://192.168.1.40:4000/imgs/post-banners/lisp-webengine-recursion.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners/lisp-webengine-recursion.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;p&gt;Самый сложный элемент. Гораздо сложнее &lt;a href=&quot;/blog/2016/lisp-toy-web-parse-comment/&quot;&gt;комментариев&lt;/a&gt;. У нас есть открывающие и закрывающие теги, атрибуты и их значения, а ко всему прочему, элементы ещё могут быть вложенными.&lt;/p&gt;
 
 &lt;p&gt;У него даже конструктор сложный :smile:&lt;/p&gt;
@@ -615,15 +615,15 @@ kH2lkH4l:makelist(kH4(i / (100 * 500)) + kH2(i / (100 * 500)), i, 0, 100)$
 
 	<entry>
 		<title type="text">Web-движок на Lisp: разбираем комментарии</title>
-		<link href="http://192.168.1.40:4000/ru/blog/2016/lisp-toy-web-parse-comment/" />
-		<id>http://192.168.1.40:4000/blog/2016/lisp-toy-web-parse-comment/</id>
+		<link href="https://yrabbit.github.io/ru/blog/2016/lisp-toy-web-parse-comment/" />
+		<id>https://yrabbit.github.io/blog/2016/lisp-toy-web-parse-comment/</id>
 		<published>2016-05-31T20:03:19+10:00</published>
 		<updated>2017-07-31T18:45:01+10:00</updated>
 		<summary type="html">После того, как удалось разобрать текстовый элемент HTML, переходим к более сложному элементу - комментариям.
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;http://192.168.1.40:4000/imgs/post-banners/lisp-webengine-comment.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners/lisp-webengine-comment.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;p&gt;После того, как удалось &lt;a href=&quot;/blog/2016/lisp-toy-web-parse-text/&quot;&gt;разобрать текстовый элемент HTML&lt;/a&gt;, переходим к более сложному элементу - комментариям.&lt;/p&gt;
 
 &lt;h2 id=&quot;Комментарии&quot;&gt;Комментарии&lt;/h2&gt;
@@ -706,15 +706,15 @@ kH2lkH4l:makelist(kH4(i / (100 * 500)) + kH2(i / (100 * 500)), i, 0, 100)$
 
 	<entry>
 		<title type="text">Web-движок на Lisp: грамматика и элемент text</title>
-		<link href="http://192.168.1.40:4000/ru/blog/2016/lisp-toy-web-parse-text/" />
-		<id>http://192.168.1.40:4000/blog/2016/lisp-toy-web-parse-text/</id>
+		<link href="https://yrabbit.github.io/ru/blog/2016/lisp-toy-web-parse-text/" />
+		<id>https://yrabbit.github.io/blog/2016/lisp-toy-web-parse-text/</id>
 		<published>2016-05-25T20:42:10+10:00</published>
 		<updated>2017-07-31T18:10:40+10:00</updated>
 		<summary type="html">После знакомства с парсером META переходим к рассмотрению грамматики HTML. А также посмотрим как разобрать простейший элемент.
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;http://192.168.1.40:4000/imgs/post-banners/lisp-webengine-text.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners/lisp-webengine-text.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;p&gt;После знакомства с &lt;a href=&quot;/blog/2016/lisp-toy-web-parsing-meta/&quot;&gt;парсером META&lt;/a&gt; переходим к рассмотрению грамматики HTML. А также посмотрим как разобрать простейший элемент.&lt;/p&gt;
 
 &lt;h2 id=&quot;Наводим-порядок&quot;&gt;Наводим порядок&lt;/h2&gt;
@@ -849,8 +849,8 @@ kH2lkH4l:makelist(kH4(i / (100 * 500)) + kH2(i / (100 * 500)), i, 0, 100)$
 
 	<entry>
 		<title type="text">Web-движок на Lisp: язык META как основа для разбора</title>
-		<link href="http://192.168.1.40:4000/ru/blog/2016/lisp-toy-web-parsing-meta/" />
-		<id>http://192.168.1.40:4000/blog/2016/lisp-toy-web-parsing-meta/</id>
+		<link href="https://yrabbit.github.io/ru/blog/2016/lisp-toy-web-parsing-meta/" />
+		<id>https://yrabbit.github.io/blog/2016/lisp-toy-web-parsing-meta/</id>
 		<published>2016-05-22T10:28:25+10:00</published>
 		<updated>2017-07-31T17:17:18+10:00</updated>
 		<summary type="html">
@@ -858,7 +858,7 @@ kH2lkH4l:makelist(kH4(i / (100 * 500)) + kH2(i / (100 * 500)), i, 0, 100)$
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;http://192.168.1.40:4000/imgs/post-banners/lisp-webengine-meta.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners/lisp-webengine-meta.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 
 &lt;p&gt;Чтобы строить дерево документа нам нужен парсер HTML. Простой. В январе 1991 года появилась статья Henry G. Baker &lt;a href=&quot;http://home.pipeline.com/~hbaker1/Prag-Parse.html&quot; title=&quot;Старая статья о парсинге&quot;&gt;“Прагматичный парсинг на Common Lisp”&lt;/a&gt;, в которой он описывает META — классическую простую и одновременно эффективную технику построения рекурсивных нисходящих парсеров.&lt;/p&gt;
 
@@ -964,8 +964,8 @@ kH2lkH4l:makelist(kH4(i / (100 * 500)) + kH2(i / (100 * 500)), i, 0, 100)$
 
 	<entry>
 		<title type="text">Web-движок на Lisp: игрушечная реализация</title>
-		<link href="http://192.168.1.40:4000/ru/blog/2016/lisp-toy-web-engine/" />
-		<id>http://192.168.1.40:4000/blog/2016/lisp-toy-web-engine/</id>
+		<link href="https://yrabbit.github.io/ru/blog/2016/lisp-toy-web-engine/" />
+		<id>https://yrabbit.github.io/blog/2016/lisp-toy-web-engine/</id>
 		<published>2016-05-07T20:22:42+10:00</published>
 		<updated>2017-07-30T19:03:00+10:00</updated>
 		<summary type="html">Что происходит внутри браузеров? Как эта куча тэгов превращается в такие изумительные страницы на экране? 
@@ -973,7 +973,7 @@ kH2lkH4l:makelist(kH4(i / (100 * 500)) + kH2(i / (100 * 500)), i, 0, 100)$
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;http://192.168.1.40:4000/post-baners/lisp-webengine-dom.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io/post-baners/lisp-webengine-dom.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;p&gt;Что происходит внутри браузеров? Как эта куча тэгов превращается в такие изумительные страницы на экране? 
 Магия. Попробую изобразить что-то примитивное для отображения HTML.&lt;/p&gt;
 
@@ -1153,15 +1153,15 @@ kH2lkH4l:makelist(kH4(i / (100 * 500)) + kH2(i / (100 * 500)), i, 0, 100)$
 
 	<entry>
 		<title type="text">Lisp: создание самодостаточного исполняемого файла </title>
-		<link href="http://192.168.1.40:4000/ru/blog/2016/lisp-standalone-executable/" />
-		<id>http://192.168.1.40:4000/blog/2016/lisp-standalone-executable/</id>
+		<link href="https://yrabbit.github.io/ru/blog/2016/lisp-standalone-executable/" />
+		<id>https://yrabbit.github.io/blog/2016/lisp-standalone-executable/</id>
 		<published>2016-05-01T21:09:39+10:00</published>
 		<updated>2017-07-30T18:27:21+10:00</updated>
 		<summary type="html">Желание делать отдельный самодостаточный исполняемый файл, хотя можно просто дать исходники, немного станновато, но допустим, что такая необходимость возникла.
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;http://192.168.1.40:4000/imgs/post-banners/standalone-lisp.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners/standalone-lisp.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;p&gt;Желание делать отдельный самодостаточный исполняемый файл, хотя можно просто дать исходники, немного станновато, но допустим, что такая необходимость возникла.&lt;/p&gt;
 
 &lt;p&gt;Проект к этому моменту уже приобрёл законченный вид и организован как локальная система quicklisp. &lt;a href=&quot;http://xach.livejournal.com/278047.html&quot;&gt;Здесь&lt;/a&gt; можно прочитать как сразу создать удобную среду для разработки.&lt;/p&gt;
@@ -1209,15 +1209,15 @@ kH2lkH4l:makelist(kH4(i / (100 * 500)) + kH2(i / (100 * 500)), i, 0, 100)$
 
 	<entry>
 		<title type="text">Исправление Android 6 Wear на Xiaomi</title>
-		<link href="http://192.168.1.40:4000/ru/blog/2016/xiaomi-android-6-watch/" />
-		<id>http://192.168.1.40:4000/blog/2016/xiaomi-android-6-watch/</id>
+		<link href="https://yrabbit.github.io/ru/blog/2016/xiaomi-android-6-watch/" />
+		<id>https://yrabbit.github.io/blog/2016/xiaomi-android-6-watch/</id>
 		<published>2016-03-27T16:33:00+10:00</published>
 		<updated>2017-07-30T15:45:46+10:00</updated>
 		<summary type="html">После обновления Xiaomi Mi 4LTE на MIUI 7.2.9.0 (MXDCNDB) версия андроида в телефоне изменилась на 6.0.1. Как побочный эффект часы LG G Watch R 1085 перестали соединяться с телефоном, а на самом телефоне Google Play Services впали в панику. Ниже приведен способ восстановления работоспособности связки телефон – часы.
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;http://192.168.1.40:4000/imgs/post-banners/xiaomi-android-wear.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners/xiaomi-android-wear.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;p&gt;После обновления Xiaomi Mi 4LTE на MIUI 7.2.9.0 (MXDCNDB) версия андроида в телефоне изменилась на 6.0.1. Как побочный эффект часы &lt;a href=&quot;http://www.lg.com/uk/smart-watches/lg-W110&quot;&gt;LG G Watch R 1085&lt;/a&gt; перестали соединяться с телефоном, а на самом телефоне Google Play Services впали в панику. Ниже приведен способ восстановления работоспособности связки телефон – часы.&lt;/p&gt;
 
 &lt;ol&gt;
@@ -1254,15 +1254,15 @@ kH2lkH4l:makelist(kH4(i / (100 * 500)) + kH2(i / (100 * 500)), i, 0, 100)$
 
 	<entry>
 		<title type="text">Игра Трилобит на Lisp: простейшие макросы</title>
-		<link href="http://192.168.1.40:4000/ru/blog/2016/lisp-trilobite-simple-macros/" />
-		<id>http://192.168.1.40:4000/blog/2016/lisp-trilobite-simple-macros/</id>
+		<link href="https://yrabbit.github.io/ru/blog/2016/lisp-trilobite-simple-macros/" />
+		<id>https://yrabbit.github.io/blog/2016/lisp-trilobite-simple-macros/</id>
 		<published>2016-01-23T16:49:28+10:00</published>
 		<updated>2017-07-30T15:12:56+10:00</updated>
 		<summary type="html">Вообще говоря можно писать на Lisp и при этом не подозревать о макросах. Это тёмное искусство и освоить его тяжко, однако простые вещи вполне можно попробовать.
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;http://192.168.1.40:4000/imgs/post-banners/trilobite-macros.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners/trilobite-macros.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;p&gt;Вообще говоря можно писать на Lisp и при этом не подозревать о макросах. Это тёмное искусство и освоить его тяжко, однако простые вещи вполне можно попробовать.&lt;/p&gt;
 
 &lt;h2 id=&quot;Делаем-вещи-короче&quot;&gt;Делаем вещи короче&lt;/h2&gt;
@@ -1329,15 +1329,15 @@ kH2lkH4l:makelist(kH4(i / (100 * 500)) + kH2(i / (100 * 500)), i, 0, 100)$
 
 	<entry>
 		<title type="text">Игра Трилобит на Lisp: новая эвристика</title>
-		<link href="http://192.168.1.40:4000/ru/blog/2015/lisp-trilobite-new-heuristic/" />
-		<id>http://192.168.1.40:4000/blog/2015/lisp-trilobite-new-heuristic/</id>
+		<link href="https://yrabbit.github.io/ru/blog/2015/lisp-trilobite-new-heuristic/" />
+		<id>https://yrabbit.github.io/blog/2015/lisp-trilobite-new-heuristic/</id>
 		<published>2015-12-26T21:43:48+10:00</published>
 		<updated>2017-07-30T11:44:33+10:00</updated>
 		<summary type="html">Компьютер играет хуже своего собрата из 11th hour. С этим надо что-то делать. Попробуем другие эвристики для компьютерного игрока.
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;http://192.168.1.40:4000/imgs/post-banners/trilobite-modern-lamp.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners/trilobite-modern-lamp.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;p&gt;Компьютер &lt;a href=&quot;/blog/2015/lisp-trilobite-heuristic/&quot;&gt;играет хуже&lt;/a&gt; своего собрата из &lt;em&gt;11th hour&lt;/em&gt;. С этим надо что-то делать. Попробуем другие эвристики для компьютерного игрока.&lt;/p&gt;
 
 &lt;h2 id=&quot;Идея&quot;&gt;Идея&lt;/h2&gt;
@@ -1416,15 +1416,15 @@ kH2lkH4l:makelist(kH4(i / (100 * 500)) + kH2(i / (100 * 500)), i, 0, 100)$
 
 	<entry>
 		<title type="text">Игра Трилобит на Lisp: мелкие усовершенствования</title>
-		<link href="http://192.168.1.40:4000/ru/blog/2015/lisp-trilobite-more-lisp-tips/" />
-		<id>http://192.168.1.40:4000/blog/2015/lisp-trilobite-more-lisp-tips/</id>
+		<link href="https://yrabbit.github.io/ru/blog/2015/lisp-trilobite-more-lisp-tips/" />
+		<id>https://yrabbit.github.io/blog/2015/lisp-trilobite-more-lisp-tips/</id>
 		<published>2015-12-26T14:12:08+10:00</published>
 		<updated>2017-07-30T13:50:25+10:00</updated>
 		<summary type="html">Хотя я проигрываю AI, он не может победить монстра из 11-го часа :frowning: И, пока у меня не появилось идей по улучшению его работы, займусь украшательствами. Для начала чуть-чуть упростим построение шаблонов для проверки соседних ячеек, ну и заодно сделаем её запоминающей.
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;http://192.168.1.40:4000/imgs/post-banners/trilobite-lisp-tricks.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners/trilobite-lisp-tricks.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;p&gt;Хотя я проигрываю AI, он не может победить монстра из 11-го часа :frowning: И, пока у меня не появилось идей по улучшению его работы, займусь украшательствами. Для начала чуть-чуть упростим построение шаблонов для проверки соседних ячеек, ну и заодно сделаем её запоминающей.&lt;/p&gt;
 
 &lt;h2 id=&quot;Немного-причёсывания&quot;&gt;Немного причёсывания&lt;/h2&gt;
@@ -1556,15 +1556,15 @@ kH2lkH4l:makelist(kH4(i / (100 * 500)) + kH2(i / (100 * 500)), i, 0, 100)$
 
 	<entry>
 		<title type="text">Игра Трилобит на Lisp: совершенствуем AI</title>
-		<link href="http://192.168.1.40:4000/ru/blog/2015/lisp-trilobite-heuristic/" />
-		<id>http://192.168.1.40:4000/blog/2015/lisp-trilobite-heuristic/</id>
+		<link href="https://yrabbit.github.io/ru/blog/2015/lisp-trilobite-heuristic/" />
+		<id>https://yrabbit.github.io/blog/2015/lisp-trilobite-heuristic/</id>
 		<published>2015-12-23T19:30:09+10:00</published>
 		<updated>2017-07-29T19:19:37+10:00</updated>
 		<summary type="html">Итак противник уже играет круче меня, но это не достижение, меня все обыгрывают.  Будем улучшать искусственный разум.
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;http://192.168.1.40:4000/imgs/post-banners/trilobite-lamp.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners/trilobite-lamp.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;p&gt;Итак противник уже &lt;a href=&quot;/blog/2015/lisp-trilobite-big-lazy-tree/&quot;&gt;играет круче меня&lt;/a&gt;, но это не достижение, меня все обыгрывают.  Будем улучшать искусственный разум.&lt;/p&gt;
 
 &lt;h2 id=&quot;Чуточку-умнее&quot;&gt;Чуточку умнее&lt;/h2&gt;
@@ -1961,15 +1961,15 @@ kH2lkH4l:makelist(kH4(i / (100 * 500)) + kH2(i / (100 * 500)), i, 0, 100)$
 
 	<entry>
 		<title type="text">Игра Трилобит на Lisp: ленивые вычисления</title>
-		<link href="http://192.168.1.40:4000/ru/blog/2015/lisp-trilobite-big-lazy-tree/" />
-		<id>http://192.168.1.40:4000/blog/2015/lisp-trilobite-big-lazy-tree/</id>
+		<link href="https://yrabbit.github.io/ru/blog/2015/lisp-trilobite-big-lazy-tree/" />
+		<id>https://yrabbit.github.io/blog/2015/lisp-trilobite-big-lazy-tree/</id>
 		<published>2015-12-15T18:59:21+10:00</published>
 		<updated>2017-07-29T17:55:57+10:00</updated>
 		<summary type="html">Программа прилично играет на крошечной доске, пора задуматься об увеличении игрового поля. Поскольку при простом увеличении размеров доски память быстро заканчивается, то придется жульничать: создавать в памяти только те кусочки дерева комбинаций, которые действительно нужны. Здесь нужно заметить, что, не имея возможности проанализировать всё дерево комбинаций, AI придётся немного поднапрячься.
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;http://192.168.1.40:4000/imgs/post-banners/trilobite-tree.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners/trilobite-tree.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;p&gt;&lt;a href=&quot;/blog/2015/lisp-trilobite-game-ui/&quot;&gt;Программа&lt;/a&gt; прилично играет на крошечной доске, пора задуматься об увеличении игрового поля. Поскольку при простом увеличении размеров доски память быстро заканчивается, то придется жульничать: создавать в памяти только те кусочки дерева комбинаций, которые действительно нужны. Здесь нужно заметить, что, не имея возможности проанализировать всё дерево комбинаций, AI придётся немного поднапрячься.&lt;/p&gt;
 
 &lt;h2 id=&quot;Ленивые-списки&quot;&gt;Ленивые списки&lt;/h2&gt;
@@ -2207,8 +2207,8 @@ kH2lkH4l:makelist(kH4(i / (100 * 500)) + kH2(i / (100 * 500)), i, 0, 100)$
 
 	<entry>
 		<title type="text">Игра Трилобит на Lisp: взаимодействие с игроком</title>
-		<link href="http://192.168.1.40:4000/ru/blog/2015/lisp-trilobite-game-ui/" />
-		<id>http://192.168.1.40:4000/blog/2015/lisp-trilobite-game-ui/</id>
+		<link href="https://yrabbit.github.io/ru/blog/2015/lisp-trilobite-game-ui/" />
+		<id>https://yrabbit.github.io/blog/2015/lisp-trilobite-game-ui/</id>
 		<published>2015-12-15T13:22:42+10:00</published>
 		<updated>2017-07-29T16:08:52+10:00</updated>
 		<summary type="html">Продолжаем развивать игру, описанную тут, тут и тут.
@@ -2218,7 +2218,7 @@ kH2lkH4l:makelist(kH4(i / (100 * 500)) + kH2(i / (100 * 500)), i, 0, 100)$
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;http://192.168.1.40:4000/imgs/post-banners/trilobite-ui.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners/trilobite-ui.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;p&gt;Продолжаем развивать игру, описанную &lt;a href=&quot;/blog/2015/lisp-trilobite-game-board/&quot;&gt;тут&lt;/a&gt;, &lt;a href=&quot;/blog/2015/lisp-trilobite-moves-victory-check/&quot;&gt;тут&lt;/a&gt; и &lt;a href=&quot;/blog/2015/lisp-trilobite-rules-engine/&quot;&gt;тут&lt;/a&gt;.&lt;/p&gt;
 
 &lt;h2 id=&quot;Интерфейс&quot;&gt;Интерфейс&lt;/h2&gt;
@@ -2395,8 +2395,8 @@ kH2lkH4l:makelist(kH4(i / (100 * 500)) + kH2(i / (100 * 500)), i, 0, 100)$
 
 	<entry>
 		<title type="text">Игра Трилобит на Lisp: Правила и AI</title>
-		<link href="http://192.168.1.40:4000/ru/blog/2015/lisp-trilobite-rules-engine/" />
-		<id>http://192.168.1.40:4000/blog/2015/lisp-trilobite-rules-engine/</id>
+		<link href="https://yrabbit.github.io/ru/blog/2015/lisp-trilobite-rules-engine/" />
+		<id>https://yrabbit.github.io/blog/2015/lisp-trilobite-rules-engine/</id>
 		<published>2015-12-14T17:39:13+10:00</published>
 		<updated>2017-07-29T14:55:40+10:00</updated>
 		<summary type="html">Игра, описанная ранее и которая почти ожила пока ещё не разумна. Попробуем добавить в неё немного интеллекта
@@ -2406,7 +2406,7 @@ kH2lkH4l:makelist(kH4(i / (100 * 500)) + kH2(i / (100 * 500)), i, 0, 100)$
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;http://192.168.1.40:4000/imgs/post-banners/trilobite-ai.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners/trilobite-ai.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;p&gt;Игра, &lt;a href=&quot;/blog/2015/lisp-trilobite-game-board/&quot;&gt;описанная ранее&lt;/a&gt; и &lt;a href=&quot;/blog/2015/lisp-trilobite-moves-victory-check/&quot;&gt;которая почти ожила&lt;/a&gt; пока ещё не &lt;em&gt;разумна&lt;/em&gt;. Попробуем добавить в неё немного интеллекта&lt;/p&gt;
 
 &lt;h2 id=&quot;Движок-игровых-правил&quot;&gt;Движок игровых правил&lt;/h2&gt;
@@ -2598,8 +2598,8 @@ kH2lkH4l:makelist(kH4(i / (100 * 500)) + kH2(i / (100 * 500)), i, 0, 100)$
 
 	<entry>
 		<title type="text">Игра Трилобит на Lisp: ходы и условие победы</title>
-		<link href="http://192.168.1.40:4000/ru/blog/2015/lisp-trilobite-moves-victory-check/" />
-		<id>http://192.168.1.40:4000/blog/2015/lisp-trilobite-moves-victory-check/</id>
+		<link href="https://yrabbit.github.io/ru/blog/2015/lisp-trilobite-moves-victory-check/" />
+		<id>https://yrabbit.github.io/blog/2015/lisp-trilobite-moves-victory-check/</id>
 		<published>2015-12-13T09:42:08+10:00</published>
 		<updated>2017-07-29T10:35:22+10:00</updated>
 		<summary type="html">В предыдущей заметке у нас появилась игровая доска, теперь время попробовать её оживить.
@@ -2610,7 +2610,7 @@ kH2lkH4l:makelist(kH4(i / (100 * 500)) + kH2(i / (100 * 500)), i, 0, 100)$
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;http://192.168.1.40:4000/imgs/post-banners/trilobite-moves.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners/trilobite-moves.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;p&gt;В &lt;a href=&quot;/blog/2015/lisp-trilobite-game-board/&quot;&gt;предыдущей заметке&lt;/a&gt; у нас появилась игровая доска, теперь время попробовать её оживить.&lt;/p&gt;
 
 &lt;h2 id=&quot;Ходы&quot;&gt;Ходы&lt;/h2&gt;
@@ -2823,8 +2823,8 @@ kH2lkH4l:makelist(kH4(i / (100 * 500)) + kH2(i / (100 * 500)), i, 0, 100)$
 
 	<entry>
 		<title type="text">Игра Трилобит на Lisp:  постановка задачи</title>
-		<link href="http://192.168.1.40:4000/ru/blog/2015/lisp-trilobite-game-board/" />
-		<id>http://192.168.1.40:4000/blog/2015/lisp-trilobite-game-board/</id>
+		<link href="https://yrabbit.github.io/ru/blog/2015/lisp-trilobite-game-board/" />
+		<id>https://yrabbit.github.io/blog/2015/lisp-trilobite-game-board/</id>
 		<published>2015-12-11T21:20:47+10:00</published>
 		<updated>2017-07-28T17:23:26+10:00</updated>
 		<summary type="html">Постановка задачи
@@ -2833,7 +2833,7 @@ kH2lkH4l:makelist(kH4(i / (100 * 500)) + kH2(i / (100 * 500)), i, 0, 100)$
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;http://192.168.1.40:4000/imgs/post-banners/trilobite-board.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners/trilobite-board.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;h2 id=&quot;Постановка-задачи&quot;&gt;Постановка задачи&lt;/h2&gt;
 &lt;p&gt;В игре 11th hour попалась головоломка-игрушка, цель которой: выстроить в ряд 4 фишки.  Причём нельзя выбрать горизонталь для новой фишки, можно  выбрать только вертикаль.
 &lt;img src=&quot;/imgs/posts/trilobite-original-screen.png&quot; alt=&quot;Trilobite original game screen&quot; title=&quot;Trilobite original game screen&quot; /&gt; Я не могу победить компьютер в этой мини-игре, так что попробую устроить битву двух AI. Было бы забавно написать соперника для компьютера на Lisp, так как я практически не знаком с этим языком.&lt;/p&gt;
@@ -2960,15 +2960,15 @@ NIL
 
 	<entry>
 		<title type="text">Клавиши регулировки яркости экрана - ноутбук Acer C720, BSD</title>
-		<link href="http://192.168.1.40:4000/ru/blog/2014/notebook-backlight-adjust-acer-c720/" />
-		<id>http://192.168.1.40:4000/blog/2014/notebook-backlight-adjust-acer-c720/</id>
+		<link href="https://yrabbit.github.io/ru/blog/2014/notebook-backlight-adjust-acer-c720/" />
+		<id>https://yrabbit.github.io/blog/2014/notebook-backlight-adjust-acer-c720/</id>
 		<published>2014-12-26T06:03:28+10:00</published>
 		<updated>2017-07-27T18:04:49+10:00</updated>
 		<summary type="html">Второй способ заключается в создании специального устройства, чтение из которого возвращает текущий уровень подсветки, а запись в которое изменяет этот уровень. И такое устройство было создано. Это потребовало гораздо крупных вмешательств в код, включая изменение нескольких Makefile, файла системных настроек (sys/conf/options), добавление каталога с исходными файлами устройства.
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;http://192.168.1.40:4000/imgs/post-banners/dfly-lighthouse.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners/dfly-lighthouse.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;p&gt;Второй способ заключается в создании специального устройства, чтение из которого возвращает текущий уровень подсветки, а запись в которое изменяет этот уровень. И такое устройство было создано. Это потребовало гораздо крупных вмешательств в код, включая изменение нескольких Makefile, файла системных настроек (sys/conf/options), добавление каталога с исходными файлами устройства.&lt;/p&gt;
 
 &lt;p&gt;Устройство работало, но это нисколько не помогло сторонним утилитам увидеть наличие регулировки подсветки. Дело в том, что для этих утилит критичным оказалось наличие каталога /sys/class/backlight/something, в котором располагались специальные файлы actual_brightness, brightness, max_brightness, subsystem/, uevent, bl_power, device/, power/ и тому подобные.&lt;/p&gt;
