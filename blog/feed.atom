@@ -7,7 +7,7 @@
 	<author>
 		<name>Yellow Rabbit</name>
 	</author>
-	<updated>2017-08-12T18:48:46+10:00</updated>
+	<updated>2017-08-12T19:08:33+10:00</updated>
 
 	<entry>
 		<title type="text">Mobile Game Review Space Mercenary</title>
@@ -627,6 +627,10 @@ It even has a complex constructor :smile:
 &lt;p&gt;Creating a comment node is very simple:&lt;/p&gt;
 
 &lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;
+  &lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;
+
+  &lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;Lisp&quot; /&gt;
+
   &lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;make-comment-node&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;make-instance&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;'comment-node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;
