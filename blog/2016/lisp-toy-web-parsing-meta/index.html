@@ -68,7 +68,6 @@
 			</header>
 			<section>
 				
-<div class="post" itemscope itemtype="http://schema.org/BlogPosting">
 <h1 class="post-title" itemprop="name">META Parser - Classical Parsing System</h1>
 <p class="post-meta">
 	22 May 2016 &bull;
@@ -88,7 +87,6 @@
 		<img src="/imgs/post-banners/lisp-webengine-meta.jpeg" alt="Web-engine in Lisp: META as the Basis for Parsing" />
 	</div>
 
-<article itemprop="articleBody">
 
 <p>To build a document tree, we need the HTML parser. Plain. In January 1991, an article by Henry G. Baker appeared <a href="http://home.pipeline.com/~hbaker1/Prag-Parse.html" title="Old article about parsing">“Pragmatic parsing on Common Lisp”</a>, in which he describes META - a classic simple yet effective technique for constructing recursive descending parsers.</p>
 
@@ -184,8 +182,6 @@
 
 <p>And one note of farewell: the kernel uses reader-macros, so you need to make sure that all the functions that are called when the META compiler is running are available at compile time. You should use <code class="highlighter-rouge">(eval-when (: compile-toplevel) ...)</code> in such cases.</p>
 
-</article>
-</div>
 <hr />
 <div align="center">
 <div class="g-plus" data-action="share"></div>

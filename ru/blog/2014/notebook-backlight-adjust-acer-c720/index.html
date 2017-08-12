@@ -68,7 +68,6 @@
 			</header>
 			<section>
 				
-<div class="post" itemscope itemtype="http://schema.org/BlogPosting">
 <h1 class="post-title" itemprop="name">Не свершилось</h1>
 <p class="post-meta">
 	26 Dec 2014 &bull;
@@ -88,7 +87,6 @@
 		<img src="/imgs/post-banners/dfly-lighthouse.jpeg" alt="Клавиши регулировки яркости экрана - ноутбук Acer C720, BSD" />
 	</div>
 
-<article itemprop="articleBody">
 <p>Второй способ заключается в создании специального устройства, чтение из которого возвращает текущий уровень подсветки, а запись в которое изменяет этот уровень. И такое устройство было создано. Это потребовало гораздо крупных вмешательств в код, включая изменение нескольких Makefile, файла системных настроек (sys/conf/options), добавление каталога с исходными файлами устройства.</p>
 
 <p>Устройство работало, но это нисколько не помогло сторонним утилитам увидеть наличие регулировки подсветки. Дело в том, что для этих утилит критичным оказалось наличие каталога /sys/class/backlight/something, в котором располагались специальные файлы actual_brightness, brightness, max_brightness, subsystem/, uevent, bl_power, device/, power/ и тому подобные.</p>
@@ -119,8 +117,6 @@
   F7</code></pre></figure>
 
 
-</article>
-</div>
 <hr />
 <div align="center">
 <div class="g-plus" data-action="share"></div>

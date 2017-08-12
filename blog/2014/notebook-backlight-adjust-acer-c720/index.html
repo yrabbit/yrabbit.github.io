@@ -68,7 +68,6 @@
 			</header>
 			<section>
 				
-<div class="post" itemscope itemtype="http://schema.org/BlogPosting">
 <h1 class="post-title" itemprop="name">Adjusting the Brightness, What Did Not Happen</h1>
 <p class="post-meta">
 	26 Dec 2014 &bull;
@@ -88,7 +87,6 @@
 		<img src="/imgs/post-banners/dfly-lighthouse.jpeg" alt="The Keys for Adjusting the Screen Brightness - Acer C720 Laptop, BSD" />
 	</div>
 
-<article itemprop="articleBody">
 <p>The second way is to create a special device, reading from it returns the current backlight level, and writing into it changes this level. And such a device was created. This required much more intervention in the code, including changing several Makefile, the system configuration file (sys/conf/options), adding a directory to the source files of the device.</p>
 
 <p>The device worked, but it did not help third-party utilities to see the presence of the backlight adjustment. The fact is that for these utilities, the presence of the /sys/class/backlight /something directory was critical, which contained special files of actual_brightness, brightness, max_brightness, subsystem/, uevent, bl_power, device/, power/ and the like.</p>
@@ -119,8 +117,6 @@
   F7</code></pre></figure>
 
 
-</article>
-</div>
 <hr />
 <div align="center">
 <div class="g-plus" data-action="share"></div>
