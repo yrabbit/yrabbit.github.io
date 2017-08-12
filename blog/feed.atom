@@ -7,7 +7,7 @@
 	<author>
 		<name>Yellow Rabbit</name>
 	</author>
-	<updated>2017-08-12T15:16:47+10:00</updated>
+	<updated>2017-08-12T15:46:35+10:00</updated>
 
 	<entry>
 		<title type="text">Mobile Game Review Space Mercenary</title>
@@ -19,7 +19,7 @@
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners/nebula.png&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;https://yrabbit.github.io/imgs/post-banners/nebula.png&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;p&gt;It happens that having started a routine cleaning in the attic, you go through old things in boxes and suddenly you find  toy from your childhood, and memories  will overwhelm you and you’ll forget about everything for a minute. That how it was  with the game &lt;a href=&quot;https://play.google.com/store/apps/details?id=com.grf.game.SpaceMercenary&quot;&gt;“Space Mercenary”&lt;/a&gt;.&lt;/p&gt;
 
 &lt;p&gt;“This time the work is really dangerous: to return the stolen sacred diamonds, which are mounted in the hull of a huge space station.” - the whole introduction  in one sentence, which nevertheless accurately describes the game. We actually have to move in space to search and collect some sparkling things, and their current owners are not the friendliest creatures in the universe.&lt;/p&gt;
@@ -60,7 +60,7 @@ As was promised we move from the static smoothing to dynamic one in order to tak
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners/radio-android.png&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;https://yrabbit.github.io/imgs/post-banners/radio-android.png&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;script type=&quot;text/javascript&quot; async=&quot;&quot; src=&quot;https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML&quot;&gt;
 &lt;/script&gt;
 
@@ -177,7 +177,7 @@ A  sensors in our mobile phones have, among other things, an imperfect output si
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners/low-pass-filter.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;https://yrabbit.github.io/imgs/post-banners/low-pass-filter.jpeg&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;script type=&quot;text/javascript&quot; async=&quot;&quot; src=&quot;https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML&quot;&gt;
 &lt;/script&gt;
 
@@ -291,7 +291,7 @@ It even has a complex constructor :smile:
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners/lisp-webengine-recursion.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;https://yrabbit.github.io/imgs/post-banners/lisp-webengine-recursion.jpeg&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;p&gt;The most complicated element. Much more complicated than &lt;a href=&quot;/blog/2016/lisp-toy-web-parse-comment/&quot;&gt;comments&lt;/a&gt;. We have opening and closing tags, attributes and their meanings, and everything else, the elements can still be nested.&lt;/p&gt;
 
 &lt;p&gt;It even has a complex constructor :smile:&lt;/p&gt;
@@ -705,7 +705,7 @@ It even has a complex constructor :smile:
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners/lisp-webengine-text.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;https://yrabbit.github.io/imgs/post-banners/lisp-webengine-text.jpeg&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;p&gt;After getting acquainted with &lt;a href=&quot;/blog/2016/lisp-toy-web-parsing-meta/&quot;&gt;META parser&lt;/a&gt;  we turn to the grammar of HTML. And also see how to parse the simplest element.&lt;/p&gt;
 
 &lt;h2 id=&quot;making-order&quot;&gt;Making Order&lt;/h2&gt;
@@ -846,7 +846,7 @@ To build a document tree, we need the HTML parser. Plain. In January 1991, an ar
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners/lisp-webengine-meta.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;https://yrabbit.github.io/imgs/post-banners/lisp-webengine-meta.jpeg&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 
 &lt;p&gt;To build a document tree, we need the HTML parser. Plain. In January 1991, an article by Henry G. Baker appeared &lt;a href=&quot;http://home.pipeline.com/~hbaker1/Prag-Parse.html&quot; title=&quot;Old article about parsing&quot;&gt;“Pragmatic parsing on Common Lisp”&lt;/a&gt;, in which he describes META - a classic simple yet effective technique for constructing recursive descending parsers.&lt;/p&gt;
 
@@ -955,7 +955,7 @@ Magic. I’ll try to depict something primitive to display HTML.
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;https://yrabbit.github.io/post-baners/lisp-webengine-dom.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;https://yrabbit.github.io/post-baners/lisp-webengine-dom.jpeg&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;p&gt;What happens inside browsers? How does this heap of tags turn into such amazing pages on the screen?
 Magic. I’ll try to depict something primitive to display HTML.&lt;/p&gt;
 
@@ -1136,7 +1136,7 @@ We keep the descendants as a simple list. It is clear that the list is very poor
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners/standalone-lisp.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;https://yrabbit.github.io/imgs/post-banners/standalone-lisp.jpeg&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;p&gt;The desire to make a separate stanalone executable file, although you can just give the source code, is a little strange, but let’s say that such a need arose.&lt;/p&gt;
 
 &lt;p&gt;The project by this time has already acquired a finished look and is organized as a local quicklisp system. &lt;a href=&quot;http://xach.livejournal.com/278047.html&quot;&gt;Here&lt;/a&gt; you can read how to create a convenient development environment immediately.&lt;/p&gt;
@@ -1188,7 +1188,7 @@ We keep the descendants as a simple list. It is clear that the list is very poor
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners/xiaomi-android-wear.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;https://yrabbit.github.io/imgs/post-banners/xiaomi-android-wear.jpeg&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;p&gt;After upgrading Xiaomi Mi 4LTE to MIUI 7.2.9.0 (MXDCNDB), the version of the android in the phone changed to 6.0.1. As a side effect, the watch &lt;a href=&quot;http://www.lg.com/uk/smart-watches/lg-W110&quot;&gt;LG G Watch R 1085&lt;/a&gt; has disconnected from the phone, and on the phone itself Google Play Services panicked. Below is the way to restore the phone-to-watch connection.&lt;/p&gt;
 
 &lt;ol&gt;
@@ -1233,7 +1233,7 @@ We keep the descendants as a simple list. It is clear that the list is very poor
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners/trilobite-macros.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;https://yrabbit.github.io/imgs/post-banners/trilobite-macros.jpeg&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;p&gt;Generally speaking, you can write in Lisp and still not be aware of macros. This is a dark art and it’s hard to master, but simple things can be tried.&lt;/p&gt;
 
 &lt;h2 id=&quot;making-things-shorter&quot;&gt;Making things shorter&lt;/h2&gt;
@@ -1308,7 +1308,7 @@ We keep the descendants as a simple list. It is clear that the list is very poor
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners/trilobite-modern-lamp.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;https://yrabbit.github.io/imgs/post-banners/trilobite-modern-lamp.jpeg&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;p&gt;The computer &lt;a href=&quot;/blog/2015/lisp-trilobite-heuristic/&quot;&gt;plays worse&lt;/a&gt; of its colleague from the &lt;em&gt;11th hour&lt;/em&gt;. It is necessary to do something with it. Let’s try other heuristics for the computer player.&lt;/p&gt;
 
 &lt;h2 id=&quot;idea&quot;&gt;Idea&lt;/h2&gt;
@@ -1394,7 +1394,7 @@ We keep the descendants as a simple list. It is clear that the list is very poor
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners/trilobite-lisp-tricks.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;https://yrabbit.github.io/imgs/post-banners/trilobite-lisp-tricks.jpeg&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;p&gt;Although I lose to AI, it can not defeat the monster from the 11th hour game :frowning: And, until I have ideas for improving his work, I’ll do the decorations. To begin with, we will simplify the construction of templates for checking neighboring cells, and at the same time we will make it memoized.&lt;/p&gt;
 
 &lt;h2 id=&quot;a-little-combing&quot;&gt;A little combing&lt;/h2&gt;
@@ -1533,7 +1533,7 @@ We keep the descendants as a simple list. It is clear that the list is very poor
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners/trilobite-lamp.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;https://yrabbit.github.io/imgs/post-banners/trilobite-lamp.jpeg&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;p&gt;So the enemy already &lt;a href=&quot;/blog/2015/lisp-trilobite-big-lazy-tree/&quot;&gt;plays better than me&lt;/a&gt;, but this is not an achievement, I’m all overplayed. We will improve the artificial mind.&lt;/p&gt;
 
 &lt;h2 id=&quot;a-little-smarter&quot;&gt;A little smarter&lt;/h2&gt;
@@ -1936,7 +1936,7 @@ We keep the descendants as a simple list. It is clear that the list is very poor
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners/trilobite-tree.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;https://yrabbit.github.io/imgs/post-banners/trilobite-tree.jpeg&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;p&gt;&lt;a href=&quot;/blog/2015/lisp-trilobite-game-ui/&quot;&gt;Program&lt;/a&gt; decently plays on a tiny board, it’s time to think about increasing the playing field. Since with a simple increase in the size of the board, memory quickly ends, you have to cheat: create in memory only those pieces of tree of combinations that are really needed. Here it should be noted that, without having the opportunity to analyze the whole tree of combinations, AI will have to think better.&lt;/p&gt;
 
 &lt;h2 id=&quot;lazy-lists&quot;&gt;Lazy Lists&lt;/h2&gt;
@@ -2181,7 +2181,7 @@ Now the time has come to acquire a small system of interaction with player. Firs
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners/trilobite-ui.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;https://yrabbit.github.io/imgs/post-banners/trilobite-ui.jpeg&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;p&gt;We continue to develop the game described &lt;a href=&quot;/blog/2015/lisp-trilobite-game-board/&quot;&gt;here&lt;/a&gt;, &lt;a href=&quot;/blog/2015/lisp-trilobite-moves-victory-check/&quot;&gt;here&lt;/a&gt; and &lt;a href=&quot;/blog/2015/lisp-trilobite-rules-engine/&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
 
 &lt;h2 id=&quot;interface&quot;&gt;Interface&lt;/h2&gt;
@@ -2372,7 +2372,7 @@ Now the time has come to acquire a small system of interaction with player. Firs
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners/trilobite-ai.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;https://yrabbit.github.io/imgs/post-banners/trilobite-ai.jpeg&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;p&gt;The game, &lt;a href=&quot;/blog/2015/lisp-trilobite-game-board/&quot;&gt;described earlier&lt;/a&gt; and &lt;a href=&quot;/blog/2015/lisp-trilobite-moves-victory-check/&quot;&gt;which was almost alive&lt;/a&gt; is not yet &lt;em&gt;clever&lt;/em&gt;. Let’s try to add a bit of intelligence to it.&lt;/p&gt;
 
 &lt;h2 id=&quot;game-rules-engine&quot;&gt;Game Rules Engine&lt;/h2&gt;
@@ -2577,7 +2577,7 @@ To make a move means to copy a board, simultaneously changing one of the cells t
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners/trilobite-moves.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;https://yrabbit.github.io/imgs/post-banners/trilobite-moves.jpeg&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;p&gt;In the &lt;a href=&quot;/blog/2015/lisp-trilobite-game-board/&quot;&gt;previous post&lt;/a&gt;  we have a game board, now it’s time to try to revive it.&lt;/p&gt;
 
 &lt;h2 id=&quot;moves&quot;&gt;Moves&lt;/h2&gt;
@@ -2799,7 +2799,7 @@ In the 11th hour game a puzzle came into play, the purpose of which is to build 
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners/trilobite-board.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;https://yrabbit.github.io/imgs/post-banners/trilobite-board.jpeg&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;h2 id=&quot;formulation-of-the-problem&quot;&gt;Formulation of the problem&lt;/h2&gt;
 &lt;p&gt;In the 11th hour game a puzzle came into play, the purpose of which is to build 4 chips in a row. And you can not select the row for the new chip, you can select only the column.&lt;/p&gt;
 
@@ -2936,7 +2936,7 @@ NIL
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners/dfly-lighthouse.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;https://yrabbit.github.io/imgs/post-banners/dfly-lighthouse.jpeg&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;p&gt;The second way is to create a special device, reading from it returns the current backlight level, and writing into it changes this level. And such a device was created. This required much more intervention in the code, including changing several Makefile, the system configuration file (sys/conf/options), adding a directory to the source files of the device.&lt;/p&gt;
 
 &lt;p&gt;The device worked, but it did not help third-party utilities to see the presence of the backlight adjustment. The fact is that for these utilities, the presence of the /sys/class/backlight /something directory was critical, which contained special files of actual_brightness, brightness, max_brightness, subsystem/, uevent, bl_power, device/, power/ and the like.&lt;/p&gt;
