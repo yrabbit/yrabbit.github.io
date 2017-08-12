@@ -7,7 +7,7 @@
 	<author>
 		<name>Yellow Rabbit</name>
 	</author>
-	<updated>2017-08-12T20:39:06+10:00</updated>
+	<updated>2017-08-12T20:56:18+10:00</updated>
 
 	<entry>
 		<title type="text">Обзор игры Космический Наёмник (Space Mercenary)</title>
@@ -614,11 +614,11 @@ kH2lkH4l:makelist(kH4(i / (100 * 500)) + kH2(i / (100 * 500)), i, 0, 100)$
 	</entry>
 
 	<entry>
-		<title type="text">Web-движок на Lisp: разбираем комментарии</title>
+		<title type="text">Браузер на Lisp: разбираем комментарии</title>
 		<link href="https://yrabbit.github.io/ru/blog/2016/lisp-toy-web-parse-comment/" />
 		<id>https://yrabbit.github.io/blog/2016/lisp-toy-web-parse-comment/</id>
 		<published>2016-05-31T20:03:19+10:00</published>
-		<updated>2017-07-31T18:45:01+10:00</updated>
+		<updated>2017-08-12T20:55:28+10:00</updated>
 		<summary type="html">После того, как удалось разобрать текстовый элемент HTML, переходим к более сложному элементу - комментариям.
 
 </summary>
