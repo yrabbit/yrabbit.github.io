@@ -71,7 +71,7 @@
 <h1 class="post-title" itemprop="name">META Parser - Classical Parsing System</h1>
 <p class="post-meta">
 	22 May 2016 &bull;
-	6 min. read &bull;
+	7 min. read &bull;
 	<a href="#disqus_thread" data-disqus-identifier="2016-05-22-lisp-toy-web-parsing-meta.md">Comments</a> &bull; 
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 <a href="https://feedburner.google.com/fb/a/mailverify?uri=YellowRabbit&amp;loc=en_US" onclick="window.open(this.href, 'mywin',
@@ -100,7 +100,12 @@
 
 <p>This is how the parsing of an integer looks like, with the simultaneous calculation of its actual value:</p>
 
-<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nb">deftype</span> <span class="nv">digit</span> <span class="p">()</span> <span class="o">'</span><span class="p">(</span><span class="nb">member</span> <span class="sc">#\0</span> <span class="sc">#\1</span> <span class="sc">#\2</span> <span class="sc">#\3</span> <span class="sc">#\4</span> <span class="sc">#\5</span> <span class="sc">#\6</span> <span class="sc">#\7</span> <span class="sc">#\8</span> <span class="sc">#\9</span><span class="p">))</span>
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+  <meta itemprop="codeSampleType" content="code snippet" />
+
+  <meta itemprop="programmingLanguage" content="Lisp" />
+
+  <div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nb">deftype</span> <span class="nv">digit</span> <span class="p">()</span> <span class="o">'</span><span class="p">(</span><span class="nb">member</span> <span class="sc">#\0</span> <span class="sc">#\1</span> <span class="sc">#\2</span> <span class="sc">#\3</span> <span class="sc">#\4</span> <span class="sc">#\5</span> <span class="sc">#\6</span> <span class="sc">#\7</span> <span class="sc">#\8</span> <span class="sc">#\9</span><span class="p">))</span>
 
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">ctoi</span> <span class="p">(</span><span class="nv">d</span><span class="p">)</span> <span class="p">(</span><span class="nb">-</span> <span class="p">(</span><span class="nb">char-code</span> <span class="nv">d</span><span class="p">)</span> <span class="o">#.</span><span class="p">(</span><span class="nb">char-code</span> <span class="sc">#\0</span><span class="p">)))</span>
 
@@ -112,12 +117,18 @@
     <span class="nv">$[@</span><span class="p">(</span><span class="nv">digit</span> <span class="nv">d</span><span class="p">)</span> <span class="nv">!</span><span class="p">(</span><span class="k">setq</span> <span class="nv">n</span> <span class="p">(</span><span class="nb">+</span> <span class="p">(</span><span class="nb">*</span> <span class="nv">n</span> <span class="mi">10</span><span class="p">)</span> <span class="p">(</span><span class="nv">ctoi</span> <span class="nv">d</span><span class="p">)))</span><span class="nv">]]</span><span class="p">)</span>
   <span class="p">(</span><span class="nb">*</span> <span class="nv">s</span> <span class="nv">n</span><span class="p">)))</span>
 </code></pre>
+  </div>
 </div>
 <p><code class="highlighter-rouge">!</code> Is a powerful META construct that allows you to do interesting things, such as modifying grammar on the flight.</p>
 
 <h2 id="meta-core">META Core</h2>
 <p>META expressions are converted by reader-macros into an internal representation - the <code class="highlighter-rouge">meta</code> structure (the print function is only for debugging):</p>
-<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nb">defstruct</span> <span class="p">(</span><span class="nv">meta</span>
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+  <meta itemprop="codeSampleType" content="code snippet" />
+
+  <meta itemprop="programmingLanguage" content="Lisp" />
+
+  <div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nb">defstruct</span> <span class="p">(</span><span class="nv">meta</span>
              <span class="p">(</span><span class="ss">:print-function</span>
                <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">m</span> <span class="nv">s</span> <span class="nv">d</span> <span class="k">&amp;aux</span> <span class="p">(</span><span class="nb">char</span> <span class="p">(</span><span class="nv">meta-char</span> <span class="nv">m</span><span class="p">))</span> <span class="p">(</span><span class="nv">form</span> <span class="p">(</span><span class="nv">meta-form</span> <span class="nv">m</span><span class="p">)))</span>
                  <span class="p">(</span><span class="nb">ecase</span> <span class="nb">char</span>
@@ -128,14 +139,26 @@
   <span class="nv">form</span><span class="p">)</span>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">meta-reader</span> <span class="p">(</span><span class="nv">s</span> <span class="nv">c</span><span class="p">)</span> <span class="p">(</span><span class="nv">make-meta</span> <span class="ss">:char</span> <span class="nv">c</span> <span class="ss">:form</span> <span class="p">(</span><span class="nb">read</span> <span class="nv">s</span><span class="p">)))</span>
 </code></pre>
+  </div>
 </div>
 <p>Recognize META statements, nothing but the creation of <code class="highlighter-rouge">meta</code> structures:</p>
 
-<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nb">mapc</span> <span class="nf">#'</span><span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">c</span><span class="p">)</span> <span class="p">(</span><span class="nb">set-macro-character</span> <span class="nv">c</span> <span class="nf">#'</span><span class="nv">meta-reader</span><span class="p">))</span> <span class="o">'</span><span class="p">(</span><span class="sc">#\@</span> <span class="sc">#\$</span> <span class="sc">#\!</span><span class="p">))</span>
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+  <meta itemprop="codeSampleType" content="code snippet" />
+
+  <meta itemprop="programmingLanguage" content="Lisp" />
+
+  <div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nb">mapc</span> <span class="nf">#'</span><span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">c</span><span class="p">)</span> <span class="p">(</span><span class="nb">set-macro-character</span> <span class="nv">c</span> <span class="nf">#'</span><span class="nv">meta-reader</span><span class="p">))</span> <span class="o">'</span><span class="p">(</span><span class="sc">#\@</span> <span class="sc">#\$</span> <span class="sc">#\!</span><span class="p">))</span>
 </code></pre>
+  </div>
 </div>
 <p>Recognize the sequence and alternatives:</p>
-<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nb">set-macro-character</span> <span class="sc">#\[</span>
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+  <meta itemprop="codeSampleType" content="code snippet" />
+
+  <meta itemprop="programmingLanguage" content="Lisp" />
+
+  <div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nb">set-macro-character</span> <span class="sc">#\[</span>
   <span class="nf">#'</span><span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">s</span> <span class="nv">c</span><span class="p">)</span> <span class="p">(</span><span class="nv">make-meta</span> <span class="ss">:char</span> <span class="nv">c</span> <span class="ss">:form</span> <span class="p">(</span><span class="nb">read-delimited-list</span> <span class="sc">#\]</span> <span class="nv">s</span> <span class="no">t</span><span class="p">))))</span>
 
 <span class="p">(</span><span class="nb">set-macro-character</span> <span class="sc">#\{</span>
@@ -144,9 +167,15 @@
 <span class="p">(</span><span class="nb">mapc</span> <span class="nf">#'</span><span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">c</span><span class="p">)</span> <span class="p">(</span><span class="nb">set-macro-character</span> <span class="nv">c</span> <span class="p">(</span><span class="nb">get-macro-character</span> <span class="sc">#\)</span> <span class="no">nil</span><span class="p">)))</span>
       <span class="o">'</span><span class="p">(</span><span class="sc">#\]</span> <span class="sc">#\}</span><span class="p">))</span>
 </code></pre>
+  </div>
 </div>
 <p>And finally, the META compiler:</p>
-<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nb">defun</span> <span class="nv">compileit</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+  <meta itemprop="codeSampleType" content="code snippet" />
+
+  <meta itemprop="programmingLanguage" content="Lisp" />
+
+  <div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nb">defun</span> <span class="nv">compileit</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
   <span class="p">(</span><span class="nb">typecase</span> <span class="nv">x</span>
     <span class="p">(</span><span class="nv">meta</span>
       <span class="p">(</span><span class="nb">ecase</span> <span class="p">(</span><span class="nv">meta-char</span> <span class="nv">x</span><span class="p">)</span>
@@ -159,10 +188,16 @@
 
 <span class="p">(</span><span class="nb">defmacro</span> <span class="nv">matchit</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span> <span class="p">(</span><span class="nv">compileit</span> <span class="nv">x</span><span class="p">))</span>
 </code></pre>
+  </div>
 </div>
 <p>It remains to determine how to feed the parser input data. <a href="http://home.pipeline.com/~hbaker1/Prag-Parse.html" title="Old article about parsing">Article</a> offers options such as reading from the stream, from the string and from the list. Our toy engine will read from the line at least because it’s so much easier to “roll back” a few characters back.</p>
 
-<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nb">defmacro</span> <span class="nv">match</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+  <meta itemprop="codeSampleType" content="code snippet" />
+
+  <meta itemprop="programmingLanguage" content="Lisp" />
+
+  <div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nb">defmacro</span> <span class="nv">match</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
   <span class="p">(</span><span class="nb">etypecase</span> <span class="nv">x</span>
     <span class="p">(</span><span class="nb">character</span>
       <span class="o">`</span><span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nb">and</span> <span class="p">(</span><span class="nb">&lt;</span> <span class="nv">index</span> <span class="nv">end</span><span class="p">)</span> <span class="p">(</span><span class="nb">eql</span> <span class="p">(</span><span class="nb">char</span> <span class="nv">str</span> <span class="nv">index</span><span class="p">)</span> <span class="ss">',x</span><span class="p">))</span>
@@ -177,6 +212,7 @@
      <span class="p">(</span><span class="k">setq</span> <span class="o">,</span><span class="nv">v</span> <span class="p">(</span><span class="nb">char</span> <span class="nv">str</span> <span class="nv">index</span><span class="p">))</span> <span class="p">(</span><span class="nb">incf</span> <span class="nv">index</span><span class="p">)))</span>
 
 </code></pre>
+  </div>
 </div>
 <p>In order for these macros to work, the string should be described as lexical variables <code class="highlighter-rouge">str</code>,<code class="highlighter-rouge"> index</code> and <code class="highlighter-rouge">end</code>.</p>
 

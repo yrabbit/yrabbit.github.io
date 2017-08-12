@@ -71,7 +71,7 @@
 <h1 class="post-title" itemprop="name">Lisp: Executable File Instead of Source</h1>
 <p class="post-meta">
 	01 May 2016 &bull;
-	1 min. read &bull;
+	2 min. read &bull;
 	<a href="#disqus_thread" data-disqus-identifier="2016-05-01-lisp-standalone-executable.md">Comments</a> &bull; 
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 <a href="https://feedburner.google.com/fb/a/mailverify?uri=YellowRabbit&amp;loc=en_US" onclick="window.open(this.href, 'mywin',
@@ -92,20 +92,37 @@
 <p>The project by this time has already acquired a finished look and is organized as a local quicklisp system. <a href="http://xach.livejournal.com/278047.html">Here</a> you can read how to create a convenient development environment immediately.</p>
 
 <p>Next, you need buildapp, it’s an executable, so we go to the directory that we have in ${PATH}. For me it is <code class="highlighter-rouge">~/local/bin</code>. Run sbcl</p>
-<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nv">ql:quickload</span> <span class="ss">'buildapp</span><span class="p">)</span>
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+  <meta itemprop="codeSampleType" content="code snippet" />
+
+  <meta itemprop="programmingLanguage" content="Lisp" />
+
+  <div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nv">ql:quickload</span> <span class="ss">'buildapp</span><span class="p">)</span>
 <span class="p">(</span><span class="nv">buildapp:build-buildapp</span><span class="p">)</span>
 
 </code></pre>
+  </div>
 </div>
 <p>We move to the project directory and run sbcl, load our project (in my case <code class="highlighter-rouge">test-cffi</code>) and write its manifest.</p>
 
-<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nv">ql:quickload</span> <span class="ss">:test-cffi</span><span class="p">)</span>
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+  <meta itemprop="codeSampleType" content="code snippet" />
+
+  <meta itemprop="programmingLanguage" content="Lisp" />
+
+  <div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nv">ql:quickload</span> <span class="ss">:test-cffi</span><span class="p">)</span>
 <span class="p">(</span><span class="nv">ql:write-asdf-manifest-file</span> <span class="s">"test-cffi.manifest"</span><span class="p">)</span>
 </code></pre>
+  </div>
 </div>
 <p>And finally:</p>
 
-<div class="language-sh highlighter-rouge"><pre class="highlight"><code><span class="gp">% </span>buildapp --output <span class="nb">test</span>-cffi --manifest-file <span class="nb">test</span>-cffi.manifest <span class="se">\</span>
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+  <meta itemprop="codeSampleType" content="code snippet" />
+
+  <meta itemprop="programmingLanguage" content="shell" />
+
+  <div class="language-sh highlighter-rouge"><pre class="highlight"><code><span class="gp">% </span>buildapp --output <span class="nb">test</span>-cffi --manifest-file <span class="nb">test</span>-cffi.manifest <span class="se">\</span>
 --load-system <span class="nb">test</span>-cffi --entry <span class="nb">test</span>-cffi:main
 <span class="gp">% </span>ls -l
 -rw-r--r--  1 rabbit  rabbit      1654 01-May-2016 20:49 <span class="nb">test</span>-cffi.manifest
@@ -115,16 +132,22 @@
 -rw-r--r--  1 rabbit  rabbit       280 17-Apr-2016 15:45 <span class="nb">test</span>-cffi.asd
 -rw-r--r--  1 rabbit  rabbit      2181 01-May-2016 20:59 <span class="nb">test</span>-cffi.lisp
 </code></pre>
+  </div>
 </div>
 <p>The function <code class="highlighter-rouge">main</code>, which should be exported from our project looks like this:</p>
 
-<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nb">defun</span> <span class="nv">main</span> <span class="p">(</span><span class="nv">argv</span><span class="p">)</span>
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+  <meta itemprop="codeSampleType" content="code snippet" />
+
+  <meta itemprop="programmingLanguage" content="Lisp" />
+
+  <div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nb">defun</span> <span class="nv">main</span> <span class="p">(</span><span class="nv">argv</span><span class="p">)</span>
   <span class="p">(</span><span class="k">declare</span> <span class="p">(</span><span class="k">ignore</span> <span class="nv">argv</span><span class="p">))</span>
   <span class="p">(</span><span class="nv">win-box</span><span class="p">))</span>
 
 </code></pre>
+  </div>
 </div>
-
 
 <hr />
 <div align="center">

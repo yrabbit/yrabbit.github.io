@@ -86,7 +86,12 @@
 
 <h2 id="making-order">Making Order</h2>
 <p>The META kernel is an independent part of the engine, so you can put it into a <a href="/pub/lisp/meta-parser-core.lisp">separate file</a> and put the general order in the project. The file <code class="highlighter-rouge">toy-engine.asd</code>, which describes the composition and sequence of compilation of engine modules:</p>
-<div class="language-cl highlighter-rouge">
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+  <meta itemprop="codeSampleType" content="code snippet">
+
+  <meta itemprop="programmingLanguage" content="Lisp">
+
+  <div class="language-cl highlighter-rouge">
 <pre class="highlight"><code><span class="c1">;;;; toy-engine.asd</span>
 
 <span class="p">(</span><span class="nv">asdf:defsystem</span> <span class="ss">#:toy-engine</span>
@@ -100,12 +105,19 @@
                <span class="p">(</span><span class="ss">:file</span> <span class="s">"html-grammar"</span><span class="p">)</span>
                <span class="p">(</span><span class="ss">:file</span> <span class="s">"toy-engine"</span><span class="p">)))</span>
 </code></pre>
+  </div>
 </div>
 <p>The files <code class="highlighter-rouge">html-grammar.lisp</code> and<code class="highlighter-rouge"> toy-engine.lisp</code> are still empty and consist of one line each:</p>
 
-<div class="language-cl highlighter-rouge">
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+  <meta itemprop="codeSampleType" content="code snippet">
+
+  <meta itemprop="programmingLanguage" content="Lisp">
+
+  <div class="language-cl highlighter-rouge">
 <pre class="highlight"><code><span class="p">(</span><span class="nb">in-package</span> <span class="ss">#:toy-engine</span><span class="p">)</span>
 </code></pre>
+  </div>
 </div>
 
 <h2 id="grammar-diagram">Grammar Diagram</h2>
@@ -115,7 +127,12 @@
 <h2 id="symbol-validation-functions">Symbol Validation Functions</h2>
 <p>These simple functions, which are needed to check the characters in the META operation <code class="highlighter-rouge">@</code>, must be available at compile time:</p>
 
-<div class="language-cl highlighter-rouge">
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+  <meta itemprop="codeSampleType" content="code snippet">
+
+  <meta itemprop="programmingLanguage" content="Lisp">
+
+  <div class="language-cl highlighter-rouge">
 <pre class="highlight"><code><span class="p">(</span><span class="k">eval-when</span> <span class="p">(</span><span class="ss">:compile-toplevel</span> <span class="ss">:load-toplevel</span> <span class="ss">:execute</span><span class="p">)</span>
   <span class="p">(</span><span class="nb">defun</span> <span class="nv">gen-text-p</span> <span class="p">(</span><span class="nv">ch</span><span class="p">)</span>
     <span class="s">"Text is always between &gt; and &lt;"</span>
@@ -133,10 +150,16 @@
         <span class="p">(</span><span class="nb">digit-char-p</span> <span class="nv">ch</span><span class="p">))))</span>
 
 </code></pre>
+  </div>
 </div>
 <p>The function is called not explicitly, but through checking the membership of the data type:</p>
 
-<div class="language-cl highlighter-rouge">
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+  <meta itemprop="codeSampleType" content="code snippet">
+
+  <meta itemprop="programmingLanguage" content="Lisp">
+
+  <div class="language-cl highlighter-rouge">
 <pre class="highlight"><code><span class="p">(</span><span class="nb">deftype</span> <span class="nv">gen-text</span> <span class="p">()</span>
   <span class="s">"All except a &lt;"</span>
   <span class="o">'</span><span class="p">(</span><span class="nv">satisfies</span> <span class="nv">gen-text-p</span><span class="p">))</span>
@@ -149,30 +172,48 @@
   <span class="s">"Tag name is alphanumeric"</span>
   <span class="o">'</span><span class="p">(</span><span class="nv">satisfies</span> <span class="nv">azAZ09-p</span><span class="p">))</span>
 </code></pre>
+  </div>
 </div>
 
 <p>Another useful type is an empty space <img class="emoji" title=":smile:" alt=":smile:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f604.png" height="20" width="20" align="absmiddle"></p>
 
-<div class="language-cl highlighter-rouge">
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+  <meta itemprop="codeSampleType" content="code snippet">
+
+  <meta itemprop="programmingLanguage" content="Lisp">
+
+  <div class="language-cl highlighter-rouge">
 <pre class="highlight"><code><span class="p">(</span><span class="nb">deftype</span> <span class="nv">whitespace</span> <span class="p">()</span>
   <span class="o">'</span><span class="p">(</span><span class="nb">member</span> <span class="sc">#\Space</span> <span class="sc">#\Tab</span> <span class="sc">#\LineFeed</span> <span class="sc">#\Return</span> <span class="sc">#\FormFeed</span> <span class="sc">#\Page</span><span class="p">))</span>
 </code></pre>
+  </div>
 </div>
 
 <h2 id="generation-of-nodes-and-the-parcers-skeleton">Generation of nodes and the parcer’s skeleton</h2>
 
 <p>The parser will create a DOM tree right through the parsing. For each type of node there corresponds its own function, first we will recognize one simple element: text. And its function:</p>
-<div class="language-cl highlighter-rouge">
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+  <meta itemprop="codeSampleType" content="code snippet">
+
+  <meta itemprop="programmingLanguage" content="Lisp">
+
+  <div class="language-cl highlighter-rouge">
 <pre class="highlight"><code><span class="c1">;; Create nodes</span>
 <span class="c1">;; Text</span>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">make-text-node</span> <span class="p">(</span><span class="nv">text</span><span class="p">)</span>
   <span class="p">(</span><span class="nb">make-instance</span> <span class="ss">'text-node</span>
 		 <span class="ss">:text</span> <span class="nv">text</span><span class="p">))</span>
 </code></pre>
+  </div>
 </div>
 <p>The parser accepts at the input a line for parsing, possibly the number of the first and last characters for parsing and returns the root node of the resulting tree. I do not yet know how the child nodes will join, so the parser’s skeleton looks like this:</p>
 
-<div class="language-cl highlighter-rouge">
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+  <meta itemprop="codeSampleType" content="code snippet">
+
+  <meta itemprop="programmingLanguage" content="Lisp">
+
+  <div class="language-cl highlighter-rouge">
 <pre class="highlight"><code><span class="c1">;;; HTML parser</span>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">parse-html</span> <span class="p">(</span><span class="nv">str</span> <span class="k">&amp;optional</span> <span class="p">(</span><span class="nv">index</span> <span class="mi">0</span><span class="p">)</span> <span class="p">(</span><span class="nv">end</span> <span class="p">(</span><span class="nb">length</span> <span class="nv">str</span><span class="p">)))</span>
   <span class="p">(</span><span class="k">declare</span> <span class="p">(</span><span class="k">type</span> <span class="kt">fixnum</span> <span class="nv">index</span> <span class="nv">end</span><span class="p">))</span>
@@ -188,10 +229,16 @@
 		<span class="p">(</span><span class="nv">make-text-node</span> <span class="nv">text</span><span class="p">)))))</span>
       <span class="p">(</span><span class="nv">parse-text</span><span class="p">)))</span>
 </code></pre>
+  </div>
 </div>
 <p>We check on the tree from one text node:</p>
 
-<div class="language-cl highlighter-rouge">
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+  <meta itemprop="codeSampleType" content="code snippet">
+
+  <meta itemprop="programmingLanguage" content="Lisp">
+
+  <div class="language-cl highlighter-rouge">
 <pre class="highlight"><code><span class="nb">*</span> <span class="p">(</span><span class="nv">ql:quickload</span> <span class="ss">'toy-engine</span><span class="p">)</span>
 <span class="nv">To</span> <span class="nb">load</span> <span class="s">"toy-engine"</span><span class="err">:</span>
   <span class="nv">Load</span> <span class="mi">1</span> <span class="nv">ASDF</span> <span class="nv">system:</span>
@@ -213,6 +260,7 @@
 <span class="s">"}"</span>
 <span class="nb">*</span>
 </code></pre>
+  </div>
 </div>
 <p>Looks good::
 <img src="/imgs/posts/lisp-webengine-text-node.png" alt="Tree after parsing" title="Tree after text parsing" class="center-image"></p>

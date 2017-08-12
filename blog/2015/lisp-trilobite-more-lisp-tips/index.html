@@ -86,7 +86,12 @@
 
 <h2 id="a-little-combing">A little combing</h2>
 
-<div class="language-cl highlighter-rouge">
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+  <meta itemprop="codeSampleType" content="code snippet">
+
+  <meta itemprop="programmingLanguage" content="Lisp">
+
+  <div class="language-cl highlighter-rouge">
 <pre class="highlight"><code><span class="c1">;; test pattern for win</span>
 <span class="c1">;; ((left...) (right...)</span>
 <span class="c1">;;  (up...) (down...)</span>
@@ -165,12 +170,18 @@
     <span class="p">(</span><span class="nb">or</span> <span class="p">(</span><span class="nb">gethash</span> <span class="nv">cell</span> <span class="nv">previous</span><span class="p">)</span>
         <span class="p">(</span><span class="nb">setf</span> <span class="p">(</span><span class="nb">gethash</span> <span class="nv">cell</span> <span class="nv">previous</span><span class="p">)</span> <span class="p">(</span><span class="nv">slow-get-test-patterns</span> <span class="nv">cell</span><span class="p">)))))</span>
 </code></pre>
+  </div>
 </div>
 
 <h2 id="several-auxiliary-predicates">Several auxiliary predicates</h2>
 <p>Expressions like <code class="highlighter-rouge">(if (eql *ai-player* (game-node-player tree))</code> do not look nice, so we’ll introduce some predicates.</p>
 
-<div class="language-cl highlighter-rouge">
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+  <meta itemprop="codeSampleType" content="code snippet">
+
+  <meta itemprop="programmingLanguage" content="Lisp">
+
+  <div class="language-cl highlighter-rouge">
 <pre class="highlight"><code><span class="c1">;; which player made the move</span>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">last-player</span> <span class="p">(</span><span class="nv">tree</span><span class="p">)</span>
   <span class="p">(</span><span class="nv">change-player</span> <span class="p">(</span><span class="nv">game-node-player</span> <span class="nv">tree</span><span class="p">)))</span>
@@ -183,12 +194,18 @@
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">cur-playerp</span> <span class="p">(</span><span class="nv">tree</span> <span class="nv">player</span><span class="p">)</span>
   <span class="p">(</span><span class="nb">eql</span> <span class="nv">player</span> <span class="p">(</span><span class="nv">game-node-player</span> <span class="nv">tree</span><span class="p">)))</span>
 </code></pre>
+  </div>
 </div>
 
 <h2 id="new-heuristics">New Heuristics</h2>
 
 <p>The difference from the old one is that the old one scores the position by counting the lengths of the already constructed lines of the chips, and the new one allows empty cells between the AI cells. In other words, it takes into account potential lines of the chips. Just say that it still does not allow AI to defeat the computer from the 11th hour.</p>
-<div class="language-cl highlighter-rouge">
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+  <meta itemprop="codeSampleType" content="code snippet">
+
+  <meta itemprop="programmingLanguage" content="Lisp">
+
+  <div class="language-cl highlighter-rouge">
 <pre class="highlight"><code><span class="c1">;; count player cells in line</span>
 <span class="c1">;; empty cells are allowed but other player cells not</span>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">count-player-cells</span> <span class="p">(</span><span class="nv">board</span> <span class="nv">cell</span> <span class="nv">player</span><span class="p">)</span>
@@ -209,6 +226,7 @@
                      <span class="nv">acc</span><span class="p">)))</span>
       <span class="p">(</span><span class="nv">test-line</span> <span class="nv">pattern</span> <span class="mi">0</span><span class="p">))))</span>
 </code></pre>
+  </div>
 </div>
 
 <hr>

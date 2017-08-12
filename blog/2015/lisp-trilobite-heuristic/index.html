@@ -94,15 +94,26 @@
 </ul>
 
 <p>Hence the best position is the position where the length of the line from the chips of our color is <code class="highlighter-rouge">*win-len*</code>.</p>
-<div class="language-cl highlighter-rouge">
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+  <meta itemprop="codeSampleType" content="code snippet">
+
+  <meta itemprop="programmingLanguage" content="Lisp">
+
+  <div class="language-cl highlighter-rouge">
 <pre class="highlight"><code><span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*ai-win*</span>     <span class="vg">*win-len*</span><span class="p">)</span>
 <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*draw*</span>       <span class="mi">0</span><span class="p">)</span>
 <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*human-win*</span> <span class="p">(</span><span class="nb">-</span> <span class="vg">*win-len*</span><span class="p">))</span>
 </code></pre>
+  </div>
 </div>
 <p>The new function evaluates the position based on the move player made and how long the line from the chips turned out.</p>
 
-<div class="language-cl highlighter-rouge">
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+  <meta itemprop="codeSampleType" content="code snippet">
+
+  <meta itemprop="programmingLanguage" content="Lisp">
+
+  <div class="language-cl highlighter-rouge">
 <pre class="highlight"><code><span class="c1">;; count longest line</span>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">score-position</span> <span class="p">(</span><span class="nv">tree</span> <span class="nv">move</span><span class="p">)</span>
   <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">cnt</span> <span class="p">(</span><span class="nv">count-player-cells</span> 
@@ -113,6 +124,7 @@
       <span class="p">(</span><span class="nb">-</span> <span class="nv">cnt</span><span class="p">)</span>
       <span class="nv">cnt</span><span class="p">)))</span>
 </code></pre>
+  </div>
 </div>
 <p>Minor changes in the old evaluation functions:</p>
 
@@ -121,7 +133,12 @@
   <li>Proper calculation of the length of the line.</li>
 </ol>
 
-<div class="language-cl highlighter-rouge">
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+  <meta itemprop="codeSampleType" content="code snippet">
+
+  <meta itemprop="programmingLanguage" content="Lisp">
+
+  <div class="language-cl highlighter-rouge">
 <pre class="highlight"><code><span class="p">(</span><span class="nb">defun</span> <span class="nv">rate-position</span> <span class="p">(</span><span class="nv">tree</span> <span class="nv">move</span><span class="p">)</span>    <span class="c1">; // 1</span>
   <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">moves</span> <span class="p">(</span><span class="nv">game-node-moves</span> <span class="nv">tree</span><span class="p">)))</span>
         <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">not</span> <span class="p">(</span><span class="nv">lazy-null</span> <span class="nv">moves</span><span class="p">))</span>
@@ -140,11 +157,16 @@
             <span class="p">(</span><span class="nv">rate-position</span> <span class="p">(</span><span class="nb">cadr</span> <span class="nv">move</span><span class="p">)</span> <span class="p">(</span><span class="nb">car</span> <span class="nv">move</span><span class="p">)))</span> <span class="c1">; // 1</span>
           <span class="p">(</span><span class="nv">take-all</span> <span class="p">(</span><span class="nv">game-node-moves</span> <span class="nv">tree</span><span class="p">))))</span>
 </code></pre>
+  </div>
 </div>
-
 <h2 id="game-log">Game Log</h2>
 
-<div class="language-cl highlighter-rouge">
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+  <meta itemprop="codeSampleType" content="code snippet">
+
+  <meta itemprop="programmingLanguage" content="Lisp">
+
+  <div class="language-cl highlighter-rouge">
 <pre class="highlight"><code><span class="nv">current</span> <span class="nv">player</span> <span class="nb">=</span> <span class="nv">The</span> <span class="nv">Evil</span> <span class="nv">AI</span>
 <span class="o">........</span>
 <span class="o">........</span>
@@ -174,9 +196,9 @@
 <span class="mi">8.</span> <span class="nv">h</span>
 <span class="mi">2</span>
 </code></pre>
-</div>
+  </div>
 
-<div class="language-cl highlighter-rouge">
+  <div class="language-cl highlighter-rouge">
 <pre class="highlight"><code><span class="nv">current</span> <span class="nv">player</span> <span class="nb">=</span> <span class="nv">The</span> <span class="nv">Evil</span> <span class="nv">AI</span>
 <span class="o">........</span>
 <span class="o">........</span>
@@ -206,9 +228,9 @@
 <span class="mi">8.</span> <span class="nv">h</span>
 <span class="mi">1</span>
 </code></pre>
-</div>
+  </div>
 
-<div class="language-cl highlighter-rouge">
+  <div class="language-cl highlighter-rouge">
 <pre class="highlight"><code><span class="nv">current</span> <span class="nv">player</span> <span class="nb">=</span> <span class="nv">The</span> <span class="nv">Evil</span> <span class="nv">AI</span>
 <span class="o">........</span>
 <span class="o">........</span>
@@ -238,9 +260,9 @@
 <span class="mi">8.</span> <span class="nv">h</span>
 <span class="mi">2</span>
 </code></pre>
-</div>
+  </div>
 
-<div class="language-cl highlighter-rouge">
+  <div class="language-cl highlighter-rouge">
 <pre class="highlight"><code><span class="nv">current</span> <span class="nv">player</span> <span class="nb">=</span> <span class="nv">The</span> <span class="nv">Evil</span> <span class="nv">AI</span>
 <span class="o">........</span>
 <span class="o">........</span>
@@ -270,9 +292,9 @@
 <span class="mi">8.</span> <span class="nv">h</span>
 <span class="mi">3</span>
 </code></pre>
-</div>
+  </div>
 
-<div class="language-cl highlighter-rouge">
+  <div class="language-cl highlighter-rouge">
 <pre class="highlight"><code><span class="nv">current</span> <span class="nv">player</span> <span class="nb">=</span> <span class="nv">The</span> <span class="nv">Evil</span> <span class="nv">AI</span>
 <span class="o">........</span>
 <span class="o">........</span>
@@ -302,9 +324,9 @@
 <span class="mi">8.</span> <span class="nv">h</span>
 <span class="mi">3</span>
 </code></pre>
-</div>
+  </div>
 
-<div class="language-cl highlighter-rouge">
+  <div class="language-cl highlighter-rouge">
 <pre class="highlight"><code><span class="nv">current</span> <span class="nv">player</span> <span class="nb">=</span> <span class="nv">The</span> <span class="nv">Evil</span> <span class="nv">AI</span>
 <span class="o">........</span>
 <span class="o">........</span>
@@ -334,9 +356,9 @@
 <span class="mi">8.</span> <span class="nv">h</span>
 <span class="mi">1</span>
 </code></pre>
-</div>
+  </div>
 
-<div class="language-cl highlighter-rouge">
+  <div class="language-cl highlighter-rouge">
 <pre class="highlight"><code><span class="nv">current</span> <span class="nv">player</span> <span class="nb">=</span> <span class="nv">The</span> <span class="nv">Evil</span> <span class="nv">AI</span>
 <span class="nv">H.......</span>
 <span class="nv">A.......</span>
@@ -365,9 +387,9 @@
 <span class="mi">7.</span> <span class="nv">h</span>
 <span class="mi">2</span>
 </code></pre>
-</div>
+  </div>
 
-<div class="language-cl highlighter-rouge">
+  <div class="language-cl highlighter-rouge">
 <pre class="highlight"><code><span class="nv">current</span> <span class="nv">player</span> <span class="nb">=</span> <span class="nv">The</span> <span class="nv">Evil</span> <span class="nv">AI</span>
 <span class="nv">H.......</span>
 <span class="nv">A.......</span>
@@ -396,9 +418,9 @@
 <span class="mi">7.</span> <span class="nv">h</span>
 <span class="mi">3</span>
 </code></pre>
-</div>
+  </div>
 
-<div class="language-cl highlighter-rouge">
+  <div class="language-cl highlighter-rouge">
 <pre class="highlight"><code><span class="nv">current</span> <span class="nv">player</span> <span class="nb">=</span> <span class="nv">The</span> <span class="nv">Evil</span> <span class="nv">AI</span>
 <span class="nv">H.......</span>
 <span class="nv">A.......</span>
@@ -427,9 +449,9 @@
 <span class="mi">7.</span> <span class="nv">h</span>
 <span class="mi">4</span>
 </code></pre>
-</div>
+  </div>
 
-<div class="language-cl highlighter-rouge">
+  <div class="language-cl highlighter-rouge">
 <pre class="highlight"><code><span class="nv">current</span> <span class="nv">player</span> <span class="nb">=</span> <span class="nv">The</span> <span class="nv">Evil</span> <span class="nv">AI</span>
 <span class="nv">H.......</span>
 <span class="nv">A.......</span>
@@ -458,9 +480,9 @@
 <span class="mi">7.</span> <span class="nv">h</span>
 <span class="mi">1</span>
 </code></pre>
-</div>
+  </div>
 
-<div class="language-cl highlighter-rouge">
+  <div class="language-cl highlighter-rouge">
 <pre class="highlight"><code><span class="nv">current</span> <span class="nv">player</span> <span class="nb">=</span> <span class="nv">The</span> <span class="nv">Evil</span> <span class="nv">AI</span>
 <span class="nv">H.......</span>
 <span class="nv">A.......</span>
@@ -482,6 +504,7 @@
 <span class="nv">The</span> <span class="nv">winner</span> <span class="nv">is</span> <span class="nv">The</span> <span class="nv">Evil</span> <span class="nv">AI</span>
 <span class="nb">*</span>
 </code></pre>
+  </div>
 </div>
 <p>I lost <img class="emoji" title=":frowning:" alt=":frowning:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f626.png" height="20" width="20" align="absmiddle"></p>
 
