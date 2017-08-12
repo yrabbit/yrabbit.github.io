@@ -121,7 +121,12 @@
 
 <p>In the file <code class="highlighter-rouge">${HOME}/.config/xkb/types/c720</code> we specify how the two modifiers will behave together - <em>Shift</em> and <em>Alt</em>. Interest is represented by situations when <em>Alt</em> is pressed, that is, level 3.</p>
 
-<figure class="highlight"><pre><code class="language-c" data-lang="c"><span class="n">xkb_types</span> <span class="s">"c720"</span> <span class="p">{</span>
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+  <meta itemprop="codeSampleType" content="code snippet" />
+
+  <meta itemprop="programmingLanguage" content="Ini" />
+
+  <figure class="highlight"><pre><code class="language-c" data-lang="c"><span class="n">xkb_types</span> <span class="s">"c720"</span> <span class="p">{</span>
 	<span class="n">virtual_modifiers</span> <span class="n">Alt</span><span class="p">;</span>
 	<span class="n">type</span> <span class="s">"ARROW"</span> <span class="p">{</span>
 		<span class="n">modifiers</span>	<span class="o">=</span> <span class="n">Shift</span><span class="o">+</span><span class="n">Alt</span><span class="p">;</span>
@@ -134,9 +139,16 @@
 	<span class="p">};</span>
 <span class="p">};</span></code></pre></figure>
 
+</div>
+
 <p>In the file <code class="highlighter-rouge">${HOME}/.config/xkb/symbols/c720</code> at level 3, we perform a substitution of the keys for the required keys and do not forget to clear the modifier flag, otherwise the new characters will not be processed correctly.</p>
 
-<figure class="highlight"><pre><code class="language-c" data-lang="c"><span class="n">xkb_symbols</span> <span class="s">"c720"</span> <span class="p">{</span>
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+  <meta itemprop="codeSampleType" content="code snippet" />
+
+  <meta itemprop="programmingLanguage" content="Ini" />
+
+  <figure class="highlight"><pre><code class="language-c" data-lang="c"><span class="n">xkb_symbols</span> <span class="s">"c720"</span> <span class="p">{</span>
 	<span class="n">key</span> <span class="o">&lt;</span><span class="n">BKSL</span><span class="o">&gt;</span> <span class="p">{</span>
 		<span class="n">type</span><span class="o">=</span><span class="s">"ARROW"</span><span class="p">,</span>
 		<span class="n">repeat</span><span class="o">=</span><span class="n">yes</span><span class="p">,</span>
@@ -203,9 +215,16 @@
 	<span class="p">};</span>
 <span class="p">};</span></code></pre></figure>
 
+</div>
+
 <p>It remains to write the following command in .xinitrc to load the changed layout:</p>
 
-<figure class="highlight"><pre><code class="language-console" data-lang="console"><span class="err">setxkbmap -layout "us+c720" -types "complete+c720" -print|xkbcomp -I"$HOME/.config/xkb" - "${DISPLAY%%.*}"</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-console" data-lang="console">&lt;div markdown="1" itemscope itemtype="http://schema.org/SoftwareSourceCode"&gt;
+&lt;meta itemprop="codeSampleType" content="code snippet" /&gt;
+&lt;meta itemprop="programmingLanguage" content="Shell" /&gt;
+<span class="err">setxkbmap -layout "us+c720" -types "complete+c720" -print|xkbcomp -I"$HOME/.config/xkb" - "${DISPLAY%%.*}"</span></code></pre></figure>
+
+<p>&lt;/div&gt;</p>
 
 
 <hr />
