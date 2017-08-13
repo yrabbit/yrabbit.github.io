@@ -48,8 +48,7 @@
 		
 
                 <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Lato:300italic,700italic,300,700">
-		<link rel="stylesheet" href="/css/main.css" />
-		<link rel="stylesheet" href="/css/syntax.css" />
+		<link rel="stylesheet" href="/css/styles.css" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<!--[if lt IE 9]>
 		<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -71,7 +70,7 @@
 <h1 class="post-title" itemprop="name">Трилобит: игра на Lisp</h1>
 <p class="post-meta">
 	11 Dec 2015 &bull;
-	4 мин. читать &bull;
+	5 мин. читать &bull;
 	<a href="#disqus_thread" data-disqus-identifier="2015-12-11-lisp-trilobite-game-board.md">Comments</a> &bull; 
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 <a href="https://feedburner.google.com/fb/a/mailverify?uri=YellowRabbit-ru&amp;loc=ru_RU" onclick="window.open(this.href, 'mywin',
@@ -96,7 +95,9 @@
 <h2 id="Игровое-поле-доска">Игровое поле (доска)</h2>
 <p>Из книги стало ясно, что доску нужного мне размера (8х7) мне скорее всего не получится реализовать без опыта оптимизации программ на Lisp. Так что начнём с крошечной доски 3x3, на которой, тем не менее, можно будет отработать логику искусственного интеллекта.</p>
 
-<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="c1">;; *** Consts</span>
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode"><meta itemprop="codeSampleType" content="code snippet" /><meta itemprop="programmingLanguage" content="cl" />
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code>
+<span class="c1">;; *** Consts</span>
 <span class="c1">;; board</span>
 <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*board-width*</span>  <span class="mi">3</span><span class="p">)</span>
 <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*board-height*</span> <span class="mi">3</span><span class="p">)</span>
@@ -104,11 +105,16 @@
 
 </code></pre>
 </div>
+</div>
 <p>Условием для победы также будет считаться более короткая линия из фишек:</p>
 
-<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="c1">;; row length for win</span>
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode"><meta itemprop="codeSampleType" content="code snippet" /><meta itemprop="programmingLanguage" content="cl" />
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code>
+<span class="c1">;; row length for win</span>
 <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*win-len*</span> <span class="mi">3</span><span class="p">)</span>
+
 </code></pre>
+</div>
 </div>
 <p>Каждая клетка доски может находиться в одном из трёх состояний:</p>
 <ol>
@@ -117,17 +123,23 @@
   <li>с нашей фишкой.</li>
 </ol>
 
-<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="c1">;; cell types</span>
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode"><meta itemprop="codeSampleType" content="code snippet" /><meta itemprop="programmingLanguage" content="cl" />
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code>
+<span class="c1">;; cell types</span>
 <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*empty-cell*</span> <span class="mi">0</span><span class="p">)</span>
 <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*ai-cell*</span>    <span class="mi">1</span><span class="p">)</span>
 <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*human-cell*</span> <span class="mi">2</span><span class="p">)</span>
+
 </code></pre>
+</div>
 </div>
 <p><em>defparameter</em> не совсем то, что мне нужно, тут скорее подошёл бы старый добрый <em>#define</em>, но я пока не обнаружил в Lisp какого-либо подобия <em>настоящих</em> констант.</p>
 
 <p>Доска это массив из ячеек. Её можно создать или полностью из пустых клеток, или копированием из списка клеток, а копировать я буду часто поскольку нужно будет очень много досок с различными комбинациями фишек.</p>
 
-<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="c1">;; *** Board</span>
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode"><meta itemprop="codeSampleType" content="code snippet" /><meta itemprop="programmingLanguage" content="cl" />
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code>
+<span class="c1">;; *** Board</span>
 <span class="c1">;; two dimentional array of cells</span>
 <span class="c1">;; . X -&gt;</span>
 <span class="c1">;; Y</span>
@@ -140,11 +152,15 @@
 <span class="c1">;; make board from list</span>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">board-from-list</span> <span class="p">(</span><span class="nv">lst</span><span class="p">)</span>
   <span class="p">(</span><span class="nb">make-array</span> <span class="vg">*board-size*</span> <span class="ss">:initial-contents</span> <span class="nv">lst</span><span class="p">))</span>
+
 </code></pre>
+</div>
 </div>
 <p>Нужно ввести понятия игроков чтобы как-то различать чей сейчас ход и т.д.</p>
 
-<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="c1">;; players</span>
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode"><meta itemprop="codeSampleType" content="code snippet" /><meta itemprop="programmingLanguage" content="cl" />
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code>
+<span class="c1">;; players</span>
 <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*ai-player*</span>    <span class="mi">1</span><span class="p">)</span>
 <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*human-player*</span> <span class="mi">2</span><span class="p">)</span>
 
@@ -162,11 +178,15 @@
   <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">eql</span> <span class="nv">player</span> <span class="vg">*ai-player*</span><span class="p">)</span>
     <span class="s">"The Evil AI"</span>
     <span class="s">"Human"</span><span class="p">))</span>
+
 </code></pre>
+</div>
 </div>
 <p>И, возвращаясь к нашей доске, опишем пару вспомогательных функция для доступа и проверки ячеек.</p>
 
-<div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="c1">;; get board cell</span>
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode"><meta itemprop="codeSampleType" content="code snippet" /><meta itemprop="programmingLanguage" content="cl" />
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code>
+<span class="c1">;; get board cell</span>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">get-cell</span> <span class="p">(</span><span class="nv">board</span> <span class="nv">cell</span><span class="p">)</span>
   <span class="p">(</span><span class="nb">aref</span> <span class="nv">board</span> <span class="nv">cell</span><span class="p">))</span>
 
@@ -176,11 +196,15 @@
 
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">cell-playerp</span> <span class="p">(</span><span class="nv">board</span> <span class="nv">cell</span> <span class="nv">player</span><span class="p">)</span>
   <span class="p">(</span><span class="nb">eql</span> <span class="p">(</span><span class="nv">get-cell</span> <span class="nv">board</span> <span class="nv">cell</span><span class="p">)</span> <span class="nv">player</span><span class="p">))</span>
+
 </code></pre>
+</div>
 </div>
 <p>На данный момент можно немного посмотреть на работу доски:</p>
 
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="gp">% </span>rlwrap sbcl --load trilobite.lisp
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode"><meta itemprop="codeSampleType" content="code snippet" /><meta itemprop="programmingLanguage" content="shell" />
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code>
+<span class="gp">% </span>rlwrap sbcl --load trilobite.lisp
 This is SBCL 1.2.9, an implementation of ANSI Common Lisp.
 More information about SBCL is available at &lt;http://www.sbcl.org/&gt;.
 
@@ -206,6 +230,7 @@ NIL
 * (exit)
 
 </span></code></pre>
+</div>
 </div>
 
 

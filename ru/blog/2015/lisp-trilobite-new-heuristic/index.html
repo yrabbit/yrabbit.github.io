@@ -43,8 +43,7 @@
 		
 
                 <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Lato:300italic,700italic,300,700">
-		<link rel="stylesheet" href="/css/main.css">
-		<link rel="stylesheet" href="/css/syntax.css">
+		<link rel="stylesheet" href="/css/styles.css">
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 		<!--[if lt IE 9]>
 		<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -87,8 +86,12 @@
 <h2 id="Идея">Идея</h2>
 <p>Для начала небольшая парочка функций, которые подсчитывают количество фишек противника в соседних клетках.</p>
 
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+<meta itemprop="codeSampleType" content="code snippet">
+<meta itemprop="programmingLanguage" content="cl">
 <div class="language-cl highlighter-rouge">
-<pre class="highlight"><code><span class="c1">;; count enemy neighbors</span>
+<pre class="highlight"><code>
+<span class="c1">;; count enemy neighbors</span>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">slow-get-neighbors-pattern</span> <span class="p">(</span><span class="nv">cell</span><span class="p">)</span>
   <span class="p">(</span><span class="nb">remove-if</span> <span class="nf">#'</span><span class="nb">null</span>
   <span class="p">(</span><span class="nb">list</span>
@@ -121,24 +124,36 @@
     <span class="p">(</span><span class="nb">reduce</span> <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">acc</span> <span class="nv">x</span><span class="p">)</span> <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nv">cell-playerp</span> <span class="nv">board</span> <span class="nv">x</span> <span class="p">(</span><span class="nv">change-player</span> <span class="nv">player</span><span class="p">))</span>
                               <span class="p">(</span><span class="nb">1+</span> <span class="nv">acc</span><span class="p">)</span>
                               <span class="nv">acc</span><span class="p">))</span> <span class="nv">pat</span> <span class="ss">:initial-value</span> <span class="mi">0</span><span class="p">))))</span>
+
 </code></pre>
+</div>
 </div>
 <p>Процесс экспериментирования с эвристиками стал гораздо легче, когда я ввел несколько констант, которые задавали относительные <em>веса</em> разных эвристик. В частности победа или поражения имеют просто огромный вес.</p>
 
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+<meta itemprop="codeSampleType" content="code snippet">
+<meta itemprop="programmingLanguage" content="cl">
 <div class="language-cl highlighter-rouge">
-<pre class="highlight"><code><span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*enemy-weight*</span>   <span class="mi">4</span><span class="p">)</span>
+<pre class="highlight"><code>
+<span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*enemy-weight*</span>   <span class="mi">4</span><span class="p">)</span>
 <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*player-weight*</span>  <span class="mi">5</span><span class="p">)</span>
 <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*win-weight*</span>    <span class="p">(</span><span class="nb">*</span> <span class="mi">9</span> <span class="p">(</span><span class="nb">max</span> <span class="vg">*enemy-weight*</span> <span class="vg">*player-weight*</span><span class="p">)))</span>
 
 <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*ai-win*</span>        <span class="vg">*win-weight*</span><span class="p">)</span>
 <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*draw*</span>          <span class="mi">0</span><span class="p">)</span>
 <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*human-win*</span>     <span class="p">(</span><span class="nb">-</span> <span class="vg">*win-weight*</span><span class="p">))</span>
+
 </code></pre>
+</div>
 </div>
 <p>А вот как теперь оценивается позиция с помощью новых весовых коэффициентов:</p>
 
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+<meta itemprop="codeSampleType" content="code snippet">
+<meta itemprop="programmingLanguage" content="cl">
 <div class="language-cl highlighter-rouge">
-<pre class="highlight"><code><span class="c1">;; count longest line</span>
+<pre class="highlight"><code>
+<span class="c1">;; count longest line</span>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">score-position</span> <span class="p">(</span><span class="nv">tree</span> <span class="nv">move</span><span class="p">)</span>
   <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">cnt</span> <span class="p">(</span><span class="nv">count-player-cells</span> 
                <span class="p">(</span><span class="nv">game-node-board</span> <span class="nv">tree</span><span class="p">)</span> 
@@ -151,7 +166,9 @@
     <span class="p">(</span><span class="nb">+</span> <span class="nv">enemy</span> <span class="p">(</span><span class="nb">*</span> <span class="vg">*player-weight*</span> <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nv">last-playerp</span> <span class="nv">tree</span> <span class="vg">*ai-player*</span><span class="p">)</span>
                      <span class="nv">cnt</span>
                      <span class="p">(</span><span class="nb">-</span> <span class="nv">cnt</span><span class="p">))))))</span>
+
 </code></pre>
+</div>
 </div>
 
 <p>Суть новой эвристики: кроме подсчёта перспективных линий из своих фишек AI старается сделать ход так, чтобы иметь в соседях как можно больше фишек противника. ``Облепливая’’ фишки противника AI тем самым снижает его возможности строить линии.</p>

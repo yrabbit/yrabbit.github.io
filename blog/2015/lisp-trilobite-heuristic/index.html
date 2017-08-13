@@ -43,8 +43,7 @@
 		
 
                 <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Lato:300italic,700italic,300,700">
-		<link rel="stylesheet" href="/css/main.css">
-		<link rel="stylesheet" href="/css/syntax.css">
+		<link rel="stylesheet" href="/css/styles.css">
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 		<!--[if lt IE 9]>
 		<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -66,7 +65,7 @@
 <h1 class="post-title" itemprop="name">The Simplest Heuristic for the Machine Mind</h1>
 <p class="post-meta">
 	23 Dec 2015 •
-	8 min. read •
+	9 min. read •
 	<a href="#disqus_thread" data-disqus-identifier="2015-12-23-lisp-trilobite-heuristic.md">Comments</a> • 
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 <a href="https://feedburner.google.com/fb/a/mailverify?uri=YellowRabbit&amp;loc=en_US" onclick="window.open(this.href, 'mywin',
@@ -95,26 +94,25 @@
 
 <p>Hence the best position is the position where the length of the line from the chips of our color is <code class="highlighter-rouge">*win-len*</code>.</p>
 <div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
-  <meta itemprop="codeSampleType" content="code snippet">
-
-  <meta itemprop="programmingLanguage" content="Lisp">
-
-  <div class="language-cl highlighter-rouge">
-<pre class="highlight"><code><span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*ai-win*</span>     <span class="vg">*win-len*</span><span class="p">)</span>
+<meta itemprop="codeSampleType" content="code snippet">
+<meta itemprop="programmingLanguage" content="cl">
+<div class="language-cl highlighter-rouge">
+<pre class="highlight"><code>
+<span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*ai-win*</span>     <span class="vg">*win-len*</span><span class="p">)</span>
 <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*draw*</span>       <span class="mi">0</span><span class="p">)</span>
 <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*human-win*</span> <span class="p">(</span><span class="nb">-</span> <span class="vg">*win-len*</span><span class="p">))</span>
+
 </code></pre>
-  </div>
+</div>
 </div>
 <p>The new function evaluates the position based on the move player made and how long the line from the chips turned out.</p>
 
 <div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
-  <meta itemprop="codeSampleType" content="code snippet">
-
-  <meta itemprop="programmingLanguage" content="Lisp">
-
-  <div class="language-cl highlighter-rouge">
-<pre class="highlight"><code><span class="c1">;; count longest line</span>
+<meta itemprop="codeSampleType" content="code snippet">
+<meta itemprop="programmingLanguage" content="cl">
+<div class="language-cl highlighter-rouge">
+<pre class="highlight"><code>
+<span class="c1">;; count longest line</span>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">score-position</span> <span class="p">(</span><span class="nv">tree</span> <span class="nv">move</span><span class="p">)</span>
   <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">cnt</span> <span class="p">(</span><span class="nv">count-player-cells</span> 
                <span class="p">(</span><span class="nv">game-node-board</span> <span class="nv">tree</span><span class="p">)</span> 
@@ -123,8 +121,9 @@
     <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">eql</span> <span class="vg">*ai-player*</span> <span class="p">(</span><span class="nv">game-node-player</span> <span class="nv">tree</span><span class="p">))</span>
       <span class="p">(</span><span class="nb">-</span> <span class="nv">cnt</span><span class="p">)</span>
       <span class="nv">cnt</span><span class="p">)))</span>
+
 </code></pre>
-  </div>
+</div>
 </div>
 <p>Minor changes in the old evaluation functions:</p>
 
@@ -134,12 +133,11 @@
 </ol>
 
 <div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
-  <meta itemprop="codeSampleType" content="code snippet">
-
-  <meta itemprop="programmingLanguage" content="Lisp">
-
-  <div class="language-cl highlighter-rouge">
-<pre class="highlight"><code><span class="p">(</span><span class="nb">defun</span> <span class="nv">rate-position</span> <span class="p">(</span><span class="nv">tree</span> <span class="nv">move</span><span class="p">)</span>    <span class="c1">; // 1</span>
+<meta itemprop="codeSampleType" content="code snippet">
+<meta itemprop="programmingLanguage" content="cl">
+<div class="language-cl highlighter-rouge">
+<pre class="highlight"><code>
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">rate-position</span> <span class="p">(</span><span class="nv">tree</span> <span class="nv">move</span><span class="p">)</span>    <span class="c1">; // 1</span>
   <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">moves</span> <span class="p">(</span><span class="nv">game-node-moves</span> <span class="nv">tree</span><span class="p">)))</span>
         <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">not</span> <span class="p">(</span><span class="nv">lazy-null</span> <span class="nv">moves</span><span class="p">))</span>
           <span class="p">(</span><span class="nb">apply</span> <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">eq</span> <span class="vg">*ai-player*</span> <span class="p">(</span><span class="nv">game-node-player</span> <span class="nv">tree</span><span class="p">))</span>
@@ -156,18 +154,18 @@
   <span class="p">(</span><span class="nb">mapcar</span> <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">move</span><span class="p">)</span>
             <span class="p">(</span><span class="nv">rate-position</span> <span class="p">(</span><span class="nb">cadr</span> <span class="nv">move</span><span class="p">)</span> <span class="p">(</span><span class="nb">car</span> <span class="nv">move</span><span class="p">)))</span> <span class="c1">; // 1</span>
           <span class="p">(</span><span class="nv">take-all</span> <span class="p">(</span><span class="nv">game-node-moves</span> <span class="nv">tree</span><span class="p">))))</span>
+
 </code></pre>
-  </div>
+</div>
 </div>
 <h2 id="game-log">Game Log</h2>
 
 <div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
-  <meta itemprop="codeSampleType" content="code snippet">
-
-  <meta itemprop="programmingLanguage" content="Lisp">
-
-  <div class="language-cl highlighter-rouge">
-<pre class="highlight"><code><span class="nv">current</span> <span class="nv">player</span> <span class="nb">=</span> <span class="nv">The</span> <span class="nv">Evil</span> <span class="nv">AI</span>
+<meta itemprop="codeSampleType" content="code snippet">
+<meta itemprop="programmingLanguage" content="cl">
+<div class="language-cl highlighter-rouge">
+<pre class="highlight"><code>
+<span class="nv">current</span> <span class="nv">player</span> <span class="nb">=</span> <span class="nv">The</span> <span class="nv">Evil</span> <span class="nv">AI</span>
 <span class="o">........</span>
 <span class="o">........</span>
 <span class="o">........</span>
@@ -195,11 +193,17 @@
 <span class="mi">7.</span> <span class="nv">g</span>
 <span class="mi">8.</span> <span class="nv">h</span>
 <span class="mi">2</span>
-</code></pre>
-  </div>
 
-  <div class="language-cl highlighter-rouge">
-<pre class="highlight"><code><span class="nv">current</span> <span class="nv">player</span> <span class="nb">=</span> <span class="nv">The</span> <span class="nv">Evil</span> <span class="nv">AI</span>
+</code></pre>
+</div>
+</div>
+
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+<meta itemprop="codeSampleType" content="code snippet">
+<meta itemprop="programmingLanguage" content="cl">
+<div class="language-cl highlighter-rouge">
+<pre class="highlight"><code>
+<span class="nv">current</span> <span class="nv">player</span> <span class="nb">=</span> <span class="nv">The</span> <span class="nv">Evil</span> <span class="nv">AI</span>
 <span class="o">........</span>
 <span class="o">........</span>
 <span class="o">........</span>
@@ -227,11 +231,17 @@
 <span class="mi">7.</span> <span class="nv">g</span>
 <span class="mi">8.</span> <span class="nv">h</span>
 <span class="mi">1</span>
-</code></pre>
-  </div>
 
-  <div class="language-cl highlighter-rouge">
-<pre class="highlight"><code><span class="nv">current</span> <span class="nv">player</span> <span class="nb">=</span> <span class="nv">The</span> <span class="nv">Evil</span> <span class="nv">AI</span>
+</code></pre>
+</div>
+</div>
+
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+<meta itemprop="codeSampleType" content="code snippet">
+<meta itemprop="programmingLanguage" content="cl">
+<div class="language-cl highlighter-rouge">
+<pre class="highlight"><code>
+<span class="nv">current</span> <span class="nv">player</span> <span class="nb">=</span> <span class="nv">The</span> <span class="nv">Evil</span> <span class="nv">AI</span>
 <span class="o">........</span>
 <span class="o">........</span>
 <span class="o">........</span>
@@ -259,11 +269,17 @@
 <span class="mi">7.</span> <span class="nv">g</span>
 <span class="mi">8.</span> <span class="nv">h</span>
 <span class="mi">2</span>
-</code></pre>
-  </div>
 
-  <div class="language-cl highlighter-rouge">
-<pre class="highlight"><code><span class="nv">current</span> <span class="nv">player</span> <span class="nb">=</span> <span class="nv">The</span> <span class="nv">Evil</span> <span class="nv">AI</span>
+</code></pre>
+</div>
+</div>
+
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+<meta itemprop="codeSampleType" content="code snippet">
+<meta itemprop="programmingLanguage" content="cl">
+<div class="language-cl highlighter-rouge">
+<pre class="highlight"><code>
+<span class="nv">current</span> <span class="nv">player</span> <span class="nb">=</span> <span class="nv">The</span> <span class="nv">Evil</span> <span class="nv">AI</span>
 <span class="o">........</span>
 <span class="o">........</span>
 <span class="o">........</span>
@@ -291,11 +307,17 @@
 <span class="mi">7.</span> <span class="nv">g</span>
 <span class="mi">8.</span> <span class="nv">h</span>
 <span class="mi">3</span>
-</code></pre>
-  </div>
 
-  <div class="language-cl highlighter-rouge">
-<pre class="highlight"><code><span class="nv">current</span> <span class="nv">player</span> <span class="nb">=</span> <span class="nv">The</span> <span class="nv">Evil</span> <span class="nv">AI</span>
+</code></pre>
+</div>
+</div>
+
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+<meta itemprop="codeSampleType" content="code snippet">
+<meta itemprop="programmingLanguage" content="cl">
+<div class="language-cl highlighter-rouge">
+<pre class="highlight"><code>
+<span class="nv">current</span> <span class="nv">player</span> <span class="nb">=</span> <span class="nv">The</span> <span class="nv">Evil</span> <span class="nv">AI</span>
 <span class="o">........</span>
 <span class="o">........</span>
 <span class="o">........</span>
@@ -323,11 +345,17 @@
 <span class="mi">7.</span> <span class="nv">g</span>
 <span class="mi">8.</span> <span class="nv">h</span>
 <span class="mi">3</span>
-</code></pre>
-  </div>
 
-  <div class="language-cl highlighter-rouge">
-<pre class="highlight"><code><span class="nv">current</span> <span class="nv">player</span> <span class="nb">=</span> <span class="nv">The</span> <span class="nv">Evil</span> <span class="nv">AI</span>
+</code></pre>
+</div>
+</div>
+
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+<meta itemprop="codeSampleType" content="code snippet">
+<meta itemprop="programmingLanguage" content="cl">
+<div class="language-cl highlighter-rouge">
+<pre class="highlight"><code>
+<span class="nv">current</span> <span class="nv">player</span> <span class="nb">=</span> <span class="nv">The</span> <span class="nv">Evil</span> <span class="nv">AI</span>
 <span class="o">........</span>
 <span class="o">........</span>
 <span class="nv">A.......</span>
@@ -355,11 +383,17 @@
 <span class="mi">7.</span> <span class="nv">g</span>
 <span class="mi">8.</span> <span class="nv">h</span>
 <span class="mi">1</span>
-</code></pre>
-  </div>
 
-  <div class="language-cl highlighter-rouge">
-<pre class="highlight"><code><span class="nv">current</span> <span class="nv">player</span> <span class="nb">=</span> <span class="nv">The</span> <span class="nv">Evil</span> <span class="nv">AI</span>
+</code></pre>
+</div>
+</div>
+
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+<meta itemprop="codeSampleType" content="code snippet">
+<meta itemprop="programmingLanguage" content="cl">
+<div class="language-cl highlighter-rouge">
+<pre class="highlight"><code>
+<span class="nv">current</span> <span class="nv">player</span> <span class="nb">=</span> <span class="nv">The</span> <span class="nv">Evil</span> <span class="nv">AI</span>
 <span class="nv">H.......</span>
 <span class="nv">A.......</span>
 <span class="nv">A.......</span>
@@ -386,11 +420,17 @@
 <span class="mi">6.</span> <span class="nv">g</span>
 <span class="mi">7.</span> <span class="nv">h</span>
 <span class="mi">2</span>
-</code></pre>
-  </div>
 
-  <div class="language-cl highlighter-rouge">
-<pre class="highlight"><code><span class="nv">current</span> <span class="nv">player</span> <span class="nb">=</span> <span class="nv">The</span> <span class="nv">Evil</span> <span class="nv">AI</span>
+</code></pre>
+</div>
+</div>
+
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+<meta itemprop="codeSampleType" content="code snippet">
+<meta itemprop="programmingLanguage" content="cl">
+<div class="language-cl highlighter-rouge">
+<pre class="highlight"><code>
+<span class="nv">current</span> <span class="nv">player</span> <span class="nb">=</span> <span class="nv">The</span> <span class="nv">Evil</span> <span class="nv">AI</span>
 <span class="nv">H.......</span>
 <span class="nv">A.......</span>
 <span class="nv">A.......</span>
@@ -417,11 +457,17 @@
 <span class="mi">6.</span> <span class="nv">g</span>
 <span class="mi">7.</span> <span class="nv">h</span>
 <span class="mi">3</span>
-</code></pre>
-  </div>
 
-  <div class="language-cl highlighter-rouge">
-<pre class="highlight"><code><span class="nv">current</span> <span class="nv">player</span> <span class="nb">=</span> <span class="nv">The</span> <span class="nv">Evil</span> <span class="nv">AI</span>
+</code></pre>
+</div>
+</div>
+
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+<meta itemprop="codeSampleType" content="code snippet">
+<meta itemprop="programmingLanguage" content="cl">
+<div class="language-cl highlighter-rouge">
+<pre class="highlight"><code>
+<span class="nv">current</span> <span class="nv">player</span> <span class="nb">=</span> <span class="nv">The</span> <span class="nv">Evil</span> <span class="nv">AI</span>
 <span class="nv">H.......</span>
 <span class="nv">A.......</span>
 <span class="nv">A.......</span>
@@ -448,11 +494,17 @@
 <span class="mi">6.</span> <span class="nv">g</span>
 <span class="mi">7.</span> <span class="nv">h</span>
 <span class="mi">4</span>
-</code></pre>
-  </div>
 
-  <div class="language-cl highlighter-rouge">
-<pre class="highlight"><code><span class="nv">current</span> <span class="nv">player</span> <span class="nb">=</span> <span class="nv">The</span> <span class="nv">Evil</span> <span class="nv">AI</span>
+</code></pre>
+</div>
+</div>
+
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+<meta itemprop="codeSampleType" content="code snippet">
+<meta itemprop="programmingLanguage" content="cl">
+<div class="language-cl highlighter-rouge">
+<pre class="highlight"><code>
+<span class="nv">current</span> <span class="nv">player</span> <span class="nb">=</span> <span class="nv">The</span> <span class="nv">Evil</span> <span class="nv">AI</span>
 <span class="nv">H.......</span>
 <span class="nv">A.......</span>
 <span class="nv">A.......</span>
@@ -479,11 +531,17 @@
 <span class="mi">6.</span> <span class="nv">g</span>
 <span class="mi">7.</span> <span class="nv">h</span>
 <span class="mi">1</span>
-</code></pre>
-  </div>
 
-  <div class="language-cl highlighter-rouge">
-<pre class="highlight"><code><span class="nv">current</span> <span class="nv">player</span> <span class="nb">=</span> <span class="nv">The</span> <span class="nv">Evil</span> <span class="nv">AI</span>
+</code></pre>
+</div>
+</div>
+
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+<meta itemprop="codeSampleType" content="code snippet">
+<meta itemprop="programmingLanguage" content="cl">
+<div class="language-cl highlighter-rouge">
+<pre class="highlight"><code>
+<span class="nv">current</span> <span class="nv">player</span> <span class="nb">=</span> <span class="nv">The</span> <span class="nv">Evil</span> <span class="nv">AI</span>
 <span class="nv">H.......</span>
 <span class="nv">A.......</span>
 <span class="nv">AH......</span>
@@ -503,8 +561,9 @@
 <span class="nv">abcdefgh</span>
 <span class="nv">The</span> <span class="nv">winner</span> <span class="nv">is</span> <span class="nv">The</span> <span class="nv">Evil</span> <span class="nv">AI</span>
 <span class="nb">*</span>
+
 </code></pre>
-  </div>
+</div>
 </div>
 <p>I lost <img class="emoji" title=":frowning:" alt=":frowning:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f626.png" height="20" width="20" align="absmiddle"></p>
 

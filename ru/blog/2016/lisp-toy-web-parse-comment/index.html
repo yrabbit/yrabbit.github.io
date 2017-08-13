@@ -43,8 +43,7 @@
 		
 
                 <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Lato:300italic,700italic,300,700">
-		<link rel="stylesheet" href="/css/main.css">
-		<link rel="stylesheet" href="/css/syntax.css">
+		<link rel="stylesheet" href="/css/styles.css">
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 		<!--[if lt IE 9]>
 		<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -89,10 +88,16 @@
 
 <p>Создание узла комментария очень простое:</p>
 
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+<meta itemprop="codeSampleType" content="code snippet">
+<meta itemprop="programmingLanguage" content="cl">
 <div class="language-cl highlighter-rouge">
-<pre class="highlight"><code><span class="p">(</span><span class="nb">defun</span> <span class="nv">make-comment-node</span> <span class="p">()</span>
+<pre class="highlight"><code>
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">make-comment-node</span> <span class="p">()</span>
   <span class="p">(</span><span class="nb">make-instance</span> <span class="ss">'comment-node</span><span class="p">))</span>
+
 </code></pre>
+</div>
 </div>
 
 <p>Итак для разбора комментария первым делом, что первым делом? Пианину! Шутка. Первым делом запоминаем позицию <code class="highlighter-rouge">index</code> в строке чтобы потом откатится (<code class="highlighter-rouge">oldindex</code>).</p>
@@ -105,8 +110,12 @@
 
 <p>Чтобы сработать сравнение с <code class="highlighter-rouge">--&gt;</code> должно не сработать<img class="emoji" title=":smile:" alt=":smile:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f604.png" height="20" width="20" align="absmiddle"> То есть, найдя <code class="highlighter-rouge">--&gt;</code> мы запоминаем факт обнаружения в переменной <code class="highlighter-rouge">eoc-found</code><sup id="fnref:eoc"><a href="#fn:eoc" class="footnote">2</a></sup> и говорим, что сравнение не удалось <code class="highlighter-rouge">!nil</code>. Далее мы будем поглощать все символы подряд только, если <code class="highlighter-rouge">--&gt;</code> не была найдена.</p>
 
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+<meta itemprop="codeSampleType" content="code snippet">
+<meta itemprop="programmingLanguage" content="cl">
 <div class="language-cl highlighter-rouge">
-<pre class="highlight"><code>       <span class="p">(</span><span class="nv">parse-comment</span> <span class="p">()</span>
+<pre class="highlight"><code>
+       <span class="p">(</span><span class="nv">parse-comment</span> <span class="p">()</span>
           <span class="s">"&lt;!-- ??? --&gt;"</span>
           <span class="p">(</span><span class="k">let</span> <span class="p">(</span><span class="nv">ch</span> <span class="nv">eoc-found</span> <span class="p">(</span><span class="nv">oldindex</span> <span class="nv">index</span><span class="p">))</span>
             <span class="p">(</span><span class="nb">or</span> <span class="p">(</span><span class="nb">and</span> <span class="p">(</span><span class="nv">matchit</span>
@@ -116,13 +125,19 @@
 			    <span class="nv">}</span> <span class="nv">!eoc-found}]</span><span class="p">)</span>
 		     <span class="p">(</span><span class="nv">make-comment-node</span><span class="p">))</span>
                 <span class="p">(</span><span class="k">progn</span> <span class="p">(</span><span class="nb">setf</span> <span class="nv">index</span> <span class="nv">oldindex</span><span class="p">)</span> <span class="no">nil</span><span class="p">))))</span>
+
 </code></pre>
+</div>
 </div>
 
 <p>Проверяем, заменив вызов <code class="highlighter-rouge">parse-tex</code> в <code class="highlighter-rouge">parse-html</code> на вызов <code class="highlighter-rouge">(cons (parse-comment) (princ index)))</code>:</p>
 
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+<meta itemprop="codeSampleType" content="code snippet">
+<meta itemprop="programmingLanguage" content="cl">
 <div class="language-cl highlighter-rouge">
-<pre class="highlight"><code><span class="nb">*</span> <span class="p">(</span><span class="nv">ql:quickload</span> <span class="ss">'toy-engine</span><span class="p">)</span>
+<pre class="highlight"><code>
+<span class="nb">*</span> <span class="p">(</span><span class="nv">ql:quickload</span> <span class="ss">'toy-engine</span><span class="p">)</span>
 <span class="nv">To</span> <span class="nb">load</span> <span class="s">"toy-engine"</span><span class="err">:</span>
   <span class="nv">Load</span> <span class="mi">1</span> <span class="nv">ASDF</span> <span class="nv">system:</span>
     <span class="nv">toy-engine</span>
@@ -145,7 +160,9 @@
 
 <span class="s">"}"</span>
 <span class="nb">*</span>
+
 </code></pre>
+</div>
 </div>
 
 <p>Как видно из <code class="highlighter-rouge">index=38</code> парсер правильно поглотил всю внутренность комментария.</p>

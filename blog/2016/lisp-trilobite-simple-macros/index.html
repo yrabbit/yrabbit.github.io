@@ -48,8 +48,7 @@
 		
 
                 <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Lato:300italic,700italic,300,700">
-		<link rel="stylesheet" href="/css/main.css" />
-		<link rel="stylesheet" href="/css/syntax.css" />
+		<link rel="stylesheet" href="/css/styles.css" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<!--[if lt IE 9]>
 		<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -93,12 +92,9 @@
 
 <p>The simplest application of macros: reducing the number of lines in the code. Of course, this did not make the object file any less and did not speed up the program. Generally speaking, if macros could treat their arguments not as forms, then it would be possible to generate the <code class="highlighter-rouge">left-pattern</code> tables at compile time. I need to think about this.</p>
 
-<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
-  <meta itemprop="codeSampleType" content="code snippet" />
-
-  <meta itemprop="programmingLanguage" content="Lisp" />
-
-  <div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="c1">;; ((left...) (right...)</span>
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode"><meta itemprop="codeSampleType" content="code snippet" /><meta itemprop="programmingLanguage" content="cl" />
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code>
+<span class="c1">;; ((left...) (right...)</span>
 <span class="c1">;;  (up...) (down...)</span>
 <span class="c1">;;  (left-up...) (right-down...)</span>
 <span class="c1">;;  (left-down...) (right-up))</span>
@@ -150,8 +146,9 @@
                         <span class="p">(</span><span class="nb">-</span> <span class="vg">*board-width*</span> <span class="p">(</span><span class="nb">mod</span> <span class="nv">cell</span> <span class="vg">*board-width*</span><span class="p">)</span> <span class="mi">1</span><span class="p">)</span>
                         <span class="p">(</span><span class="nb">floor</span> <span class="nv">cell</span> <span class="vg">*board-width*</span><span class="p">))</span>
                        <span class="nv">right-up-pattern</span><span class="p">))))</span>
+
 </code></pre>
-  </div>
+</div>
 </div>
 
 <hr />

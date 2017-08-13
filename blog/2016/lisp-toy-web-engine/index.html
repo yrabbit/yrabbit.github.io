@@ -48,8 +48,7 @@
 		
 
                 <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Lato:300italic,700italic,300,700">
-		<link rel="stylesheet" href="/css/main.css" />
-		<link rel="stylesheet" href="/css/syntax.css" />
+		<link rel="stylesheet" href="/css/styles.css" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<!--[if lt IE 9]>
 		<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -98,56 +97,47 @@ Magic. I’ll try to depict something primitive to display HTML.</p>
 We keep the descendants as a simple list. It is clear that the list is very poorly scaled, but probably for a toy engine this will not be a problem.</p>
 
 <p>And most importantly — get acquainted with CLOS!</p>
-<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
-  <meta itemprop="codeSampleType" content="code snippet" />
-
-  <meta itemprop="programmingLanguage" content="Lisp" />
-
-  <div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nb">defclass</span> <span class="nv">node</span> <span class="p">()</span>
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode"><meta itemprop="codeSampleType" content="code snippet" /><meta itemprop="programmingLanguage" content="cl" />
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code>
+<span class="p">(</span><span class="nb">defclass</span> <span class="nv">node</span> <span class="p">()</span>
   <span class="p">((</span><span class="nv">children</span> <span class="ss">:accessor</span> <span class="nv">node-children</span>
 	     <span class="ss">:initform</span> <span class="o">'</span><span class="p">()</span>
 	     <span class="ss">:initarg</span> <span class="ss">:children</span><span class="p">)))</span>
+
 </code></pre>
-  </div>
+</div>
 </div>
 <p>Adding a child is quite simple, although it is possible that the reverse order of the children in the list will affect the future. In that case, just change the method.</p>
 
-<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
-  <meta itemprop="codeSampleType" content="code snippet" />
-
-  <meta itemprop="programmingLanguage" content="Lisp" />
-
-  <div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nb">defgeneric</span> <span class="nv">node-add-child</span> <span class="p">(</span><span class="nv">tree-node</span> <span class="nv">child</span><span class="p">)</span>
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode"><meta itemprop="codeSampleType" content="code snippet" /><meta itemprop="programmingLanguage" content="cl" />
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code>
+<span class="p">(</span><span class="nb">defgeneric</span> <span class="nv">node-add-child</span> <span class="p">(</span><span class="nv">tree-node</span> <span class="nv">child</span><span class="p">)</span>
 	    <span class="p">(</span><span class="ss">:method</span> <span class="p">((</span><span class="nv">tree-node</span> <span class="nv">node</span><span class="p">)</span> <span class="p">(</span><span class="nv">child</span> <span class="nv">node</span><span class="p">))</span>
 		     <span class="p">(</span><span class="nb">setf</span> <span class="p">(</span><span class="nv">node-children</span> <span class="nv">tree-node</span><span class="p">)</span>
 			   <span class="p">(</span><span class="nb">push</span> <span class="nv">child</span> <span class="p">(</span><span class="nv">node-children</span> <span class="nv">tree-node</span><span class="p">)))))</span>
+
 </code></pre>
-  </div>
+</div>
 </div>
 
 <p>There are <a href="https://dom.spec.whatwg.org/#nodes">many types of nodes</a>, But the toy engine will only use a few. Just a text:</p>
 
-<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
-  <meta itemprop="codeSampleType" content="code snippet" />
-
-  <meta itemprop="programmingLanguage" content="Lisp" />
-
-  <div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="c1">;; Text is a simplest node.</span>
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode"><meta itemprop="codeSampleType" content="code snippet" /><meta itemprop="programmingLanguage" content="cl" />
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code>
+<span class="c1">;; Text is a simplest node.</span>
 <span class="c1">;; Just string of text.</span>
 <span class="p">(</span><span class="nb">defclass</span> <span class="nv">text-node</span> <span class="p">(</span><span class="nv">node</span><span class="p">)</span>
   <span class="p">((</span><span class="nv">text</span> <span class="ss">:accessor</span> <span class="nv">text-node-text</span>
 	 <span class="ss">:initform</span> <span class="s">""</span>
 	 <span class="ss">:initarg</span> <span class="ss">:text</span><span class="p">)))</span>
+
 </code></pre>
-  </div>
+</div>
 </div>
 <p>Then the element or tag and its attributes. Attributes are stored in a hash table:</p>
-<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
-  <meta itemprop="codeSampleType" content="code snippet" />
-
-  <meta itemprop="programmingLanguage" content="Lisp" />
-
-  <div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="c1">;; Element represents all remaining types of nodes (joke).</span>
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode"><meta itemprop="codeSampleType" content="code snippet" /><meta itemprop="programmingLanguage" content="cl" />
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code>
+<span class="c1">;; Element represents all remaining types of nodes (joke).</span>
 <span class="c1">;; Tag name and any number of attributes.</span>
 <span class="p">(</span><span class="nb">defclass</span> <span class="nv">element-node</span> <span class="p">(</span><span class="nv">node</span><span class="p">)</span>
   <span class="p">((</span><span class="nv">tag</span> <span class="ss">:accessor</span> <span class="nv">element-node-tag</span>
@@ -156,21 +146,20 @@ We keep the descendants as a simple list. It is clear that the list is very poor
    <span class="p">(</span><span class="nv">attrs</span> <span class="ss">:reader</span> <span class="nv">element-node-attrs</span>
 	  <span class="ss">:initform</span> <span class="p">(</span><span class="nb">make-hash-table</span> <span class="ss">:test</span> <span class="nf">#'</span><span class="nb">equal</span><span class="p">))))</span>  <span class="c1">; "key" --- "value", they are strings</span>
 							<span class="c1">; so use "equal"</span>
+
 </code></pre>
-  </div>
+</div>
 </div>
 <p>And a comment:</p>
 
-<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
-  <meta itemprop="codeSampleType" content="code snippet" />
-
-  <meta itemprop="programmingLanguage" content="Lisp" />
-
-  <div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="c1">;; Comment</span>
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode"><meta itemprop="codeSampleType" content="code snippet" /><meta itemprop="programmingLanguage" content="cl" />
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code>
+<span class="c1">;; Comment</span>
 <span class="p">(</span><span class="nb">defclass</span> <span class="nv">comment-node</span> <span class="p">(</span><span class="nv">node</span><span class="p">)</span>
   <span class="p">())</span>
+
 </code></pre>
-  </div>
+</div>
 </div>
 
 <h2 id="debug-image">Debug image</h2>
@@ -178,26 +167,21 @@ We keep the descendants as a simple list. It is clear that the list is very poor
 
 <p>Suppose we have a simple HTML file:</p>
 
-<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
-  <meta itemprop="codeSampleType" content="code snippet" />
-
-  <meta itemprop="programmingLanguage" content="Lisp" />
-
-  <div class="language-html highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;html</span> <span class="na">class=</span><span class="s">e</span><span class="nt">&gt;</span>
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode"><meta itemprop="codeSampleType" content="code snippet" /><meta itemprop="programmingLanguage" content="html" />
+<div class="language-html highlighter-rouge"><pre class="highlight"><code>
+<span class="nt">&lt;html</span> <span class="na">class=</span><span class="s">e</span><span class="nt">&gt;</span>
  <span class="nt">&lt;head&gt;&lt;title&gt;</span>Aliens?<span class="nt">&lt;/title&gt;&lt;/head&gt;</span>
  <span class="nt">&lt;body&gt;</span>Why yes.<span class="nt">&lt;/body&gt;</span>
 <span class="nt">&lt;/html&gt;</span>
+
 </code></pre>
-  </div>
+</div>
 </div>
 <p>Since the HTML parser is not even in the project, we’ll do the tree with our hands:</p>
 
-<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
-  <meta itemprop="codeSampleType" content="code snippet" />
-
-  <meta itemprop="programmingLanguage" content="Lisp" />
-
-  <div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nv">ql:quickload</span> <span class="ss">:toy-engine</span><span class="p">)</span>
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode"><meta itemprop="codeSampleType" content="code snippet" /><meta itemprop="programmingLanguage" content="cl" />
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code>
+<span class="p">(</span><span class="nv">ql:quickload</span> <span class="ss">:toy-engine</span><span class="p">)</span>
 <span class="p">(</span><span class="nb">in-package</span> <span class="ss">:toy-engine</span><span class="p">)</span>
 <span class="c1">; &lt;html class="e"&gt;</span>
 <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*root*</span> <span class="p">(</span><span class="nb">make-instance</span> <span class="ss">'element-node</span> <span class="ss">:tag</span> <span class="s">"html"</span><span class="p">))</span>
@@ -218,19 +202,17 @@ We keep the descendants as a simple list. It is clear that the list is very poor
 <span class="c1">; </span>
 <span class="p">(</span><span class="nv">pp-&gt;dot</span> <span class="ss">#p"~/tmp/part1.dot"</span> <span class="p">(</span><span class="k">lambda</span> <span class="p">()</span> <span class="p">(</span><span class="nv">pp-dom</span> <span class="vg">*root*</span><span class="p">)))</span>
 
+
 </code></pre>
-  </div>
+</div>
 </div>
 <p>After running through Graphviz we get the following image of the tree:</p>
 
 <p><img src="/imgs/posts/lisp-webengine-dom.png" alt="HTML tree, part 1" class="center-image" /></p>
 
-<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
-  <meta itemprop="codeSampleType" content="code snippet" />
-
-  <meta itemprop="programmingLanguage" content="Lisp" />
-
-  <div class="language-cl highlighter-rouge"><pre class="highlight"><code><span class="c1">;;; ========================</span>
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode"><meta itemprop="codeSampleType" content="code snippet" /><meta itemprop="programmingLanguage" content="cl" />
+<div class="language-cl highlighter-rouge"><pre class="highlight"><code>
+<span class="c1">;;; ========================</span>
 <span class="c1">;;; Pretty-print a DOM tree.</span>
 <span class="c1">;;; ========================</span>
 <span class="p">(</span><span class="nb">defgeneric</span> <span class="nv">pp-node-title</span> <span class="p">(</span><span class="nv">tree-node</span><span class="p">)</span>
@@ -300,7 +282,7 @@ We keep the descendants as a simple list. It is clear that the list is very poor
     <span class="p">(</span><span class="nb">funcall</span> <span class="nv">thunk</span><span class="p">)))</span>
 
 </code></pre>
-  </div>
+</div>
 </div>
 
 <hr />

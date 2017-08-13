@@ -48,8 +48,7 @@
 		
 
                 <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Lato:300italic,700italic,300,700">
-		<link rel="stylesheet" href="/css/main.css" />
-		<link rel="stylesheet" href="/css/syntax.css" />
+		<link rel="stylesheet" href="/css/styles.css" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<!--[if lt IE 9]>
 		<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -92,18 +91,17 @@
 <p><img src="/imgs/posts/acer-c720-keyboard.jpeg" alt="Multimedia keys on the Acer C720 keyboard" title="Multimedia keys on the Acer C720 keyboard" class="center-image" /></p>
 
 <p>Create the file <code class="highlighter-rouge">${HOME}/.xbindkeys</code> with the following contents:</p>
-<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
-  <meta itemprop="codeSampleType" content="code snippet" />
-
-  <meta itemprop="programmingLanguage" content="Bash" />
-
-  <figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="c"># volume</span>
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode"><meta itemprop="codeSampleType" content="code snippet" /><meta itemprop="programmingLanguage" content="bash" />
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>
+<span class="c"># volume</span>
 <span class="s2">"mixer -f /dev/mixer1 vol -5"</span>
   F9
 
 <span class="s2">"mixer -f /dev/mixer1 vol +5"</span>
-  F10</code></pre></figure>
+  F10
 
+</code></pre>
+</div>
 </div>
 
 <p>It’s correct for DragonFly BSD, because the /dev/mixer0 device is equal to the hdmi output.</p>

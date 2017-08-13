@@ -43,8 +43,7 @@
 		
 
                 <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Lato:300italic,700italic,300,700">
-		<link rel="stylesheet" href="/css/main.css">
-		<link rel="stylesheet" href="/css/syntax.css">
+		<link rel="stylesheet" href="/css/styles.css">
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 		<!--[if lt IE 9]>
 		<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -128,9 +127,15 @@
 <p><img src="/imgs/posts/2kHz+4kHz.png" alt="Суммарный входной сигнал" title="Суммарный входной сигнал" class="center-image"></p>
 
 <p>Сигнал и шум задаём функциями:</p>
-<pre><code class="language-maxima">kH2(t):=sin(2*%pi*2000*t)$
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+<meta itemprop="codeSampleType" content="code snippet">
+<meta itemprop="programmingLanguage" content="maxima">
+<pre><code class="language-maxima">
+kH2(t):=sin(2*%pi*2000*t)$
 kH4(t):=sin(2*%pi*4000*t)$
+
 </code></pre>
+</div>
 
 <p>В Maxima мы можем описать входные данные двумя списками значений, <code class="highlighter-rouge">tl</code> - отсчёты времени 100 интервалов по 0.00005 секунды, <code class="highlighter-rouge">kH2lkH4l</code> - список входных значений \(x_i\):</p>
 <pre><code class="language-maxima">tl:makelist(i / (100 * 500), i, 0, 100)$
@@ -138,16 +143,28 @@ kH2lkH4l:makelist(kH4(i / (100 * 500)) + kH2(i / (100 * 500)), i, 0, 100)$
 </code></pre>
 
 <p>Сама функция фильтра состоит из рекурсивной части, которая дословно повторяет \(y_i=\alpha y_{i-1} + (1 - \alpha)x_i\):</p>
-<pre><code class="language-maxima">lowpass_rec(x, alpha):= 
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+<meta itemprop="codeSampleType" content="code snippet">
+<meta itemprop="programmingLanguage" content="maxima">
+<pre><code class="language-maxima">
+lowpass_rec(x, alpha):= 
   if length(x) = 1 then
     [(1 - alpha) * first(x)]
   else block([y],
     y: lowpass_rec(rest(x), alpha),
     return(cons(alpha * first(y) + (1 - alpha) * first(x), y)))$
+
 </code></pre>
+</div>
 <p>и точки входа:</p>
-<pre><code class="language-maxima">lowpass(x, alpha):=reverse(lowpass_rec(reverse(x), alpha))$
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+<meta itemprop="codeSampleType" content="code snippet">
+<meta itemprop="programmingLanguage" content="maxima">
+<pre><code class="language-maxima">
+lowpass(x, alpha):=reverse(lowpass_rec(reverse(x), alpha))$
+
 </code></pre>
+</div>
 
 <p>\(\Delta T=0.00005\) у нас фиксирована и определяется частотой поступления данных от датчика. Частоту сглаживания возьмём 3кГц: \(f_c=\frac{1}{2\pi RC}=3000\)Гц.</p>
 
@@ -156,11 +173,17 @@ kH2lkH4l:makelist(kH4(i / (100 * 500)) + kH2(i / (100 * 500)), i, 0, 100)$
 <script type="math/tex; mode=display">\alpha=\frac{RC}{RC+\Delta T}=0.7262210965743948</script>
 
 <p>Посмотрим как работает фильтр с этим значением \(\alpha\) вместе с другими.</p>
-<pre><code class="language-maxima">plot2d([[discrete, tl, kH2lkH4l], [discrete, tl, lowpass(kH2lkH4l, 0.5)],
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+<meta itemprop="codeSampleType" content="code snippet">
+<meta itemprop="programmingLanguage" content="maxima">
+<pre><code class="language-maxima">
+plot2d([[discrete, tl, kH2lkH4l], [discrete, tl, lowpass(kH2lkH4l, 0.5)],
         [discrete, tl, lowpass(kH2lkH4l, 0.7262210965743948)],
         [discrete, tl, lowpass(kH2lkH4l, 0.9)]],
         [legend, "V_in", "a=0.5", "a=0.726", "a=0.9"])$
+
 </code></pre>
+</div>
 
 <p><img src="/imgs/posts/choose-alpha.png" alt="Работа фильтра нижних частот" title="График действия фильтра нижних частот"></p>
 
@@ -172,11 +195,17 @@ kH2lkH4l:makelist(kH4(i / (100 * 500)) + kH2(i / (100 * 500)), i, 0, 100)$
 
 <h2 id="Послесловие">Послесловие</h2>
 <p>Кажется, что уже можно вставить этот фильтр как есть куда-нибудь вроде:</p>
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+<meta itemprop="codeSampleType" content="code snippet">
+<meta itemprop="programmingLanguage" content="java">
 <div class="language-java highlighter-rouge">
-<pre class="highlight"><code>  <span class="nd">@Override</span>
+<pre class="highlight"><code>
+  <span class="nd">@Override</span>
     <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onSensorChanged</span><span class="o">(</span><span class="n">SensorEvent</span> <span class="n">event</span><span class="o">)</span>
     <span class="o">{</span>
+
 </code></pre>
+</div>
 </div>
 
 <p>\(\ldots\) и разочароваться. Дело в \(\Delta T\) или в периоде дискретизации, которое изменяется от модели к модели, да и во время работы программы может варьироваться довольно значительно. И при фиксированной \(\alpha\) это приведёт к изменению рабочей частоты фильтра. Так что \(\alpha\) должна быть динамической, но этом в следующий раз. <img class="emoji" title=":smile:" alt=":smile:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f604.png" height="20" width="20" align="absmiddle"></p>

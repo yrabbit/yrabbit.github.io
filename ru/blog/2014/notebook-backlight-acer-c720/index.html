@@ -48,8 +48,7 @@
 		
 
                 <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Lato:300italic,700italic,300,700">
-		<link rel="stylesheet" href="/css/main.css" />
-		<link rel="stylesheet" href="/css/syntax.css" />
+		<link rel="stylesheet" href="/css/styles.css" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<!--[if lt IE 9]>
 		<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -119,8 +118,9 @@
 </ul>
 
 <p>Для двух sysctl пишем две функции обработки чтения/записи:</p>
-
-<figure class="highlight"><pre><code class="language-c" data-lang="c"><span class="cm">/*
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode"><meta itemprop="codeSampleType" content="code snippet" /><meta itemprop="programmingLanguage" content="c" />
+<div class="language-c highlighter-rouge"><pre class="highlight"><code>
+<span class="cm">/*
  * Read max backlight level
  */</span>
 <span class="k">static</span> <span class="kt">int</span>
@@ -156,11 +156,16 @@
 	<span class="p">}</span>
 
 	<span class="k">return</span><span class="p">(</span><span class="n">err</span><span class="p">);</span>
-<span class="p">}</span></code></pre></figure>
+<span class="p">}</span>
+
+</code></pre>
+</div>
+</div>
 
 <p><code class="highlighter-rouge">dev</code> можно узнать только во время выполнения, так что используем динамическое управление sysctl с помощью макроса <code class="highlighter-rouge">SYSCTL_ADD_PROC</code>.</p>
-
-<figure class="highlight"><pre><code class="language-c" data-lang="c"><span class="n">SYSCTL_ADD_PROC</span><span class="p">(</span><span class="o">&amp;</span><span class="n">connector</span><span class="o">-&gt;</span><span class="n">dev</span><span class="o">-&gt;</span><span class="n">sysctl</span><span class="o">-&gt;</span><span class="n">ctx</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">sysctl__hw_children</span><span class="p">,</span>
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode"><meta itemprop="codeSampleType" content="code snippet" /><meta itemprop="programmingLanguage" content="c" />
+<div class="language-c highlighter-rouge"><pre class="highlight"><code>
+<span class="n">SYSCTL_ADD_PROC</span><span class="p">(</span><span class="o">&amp;</span><span class="n">connector</span><span class="o">-&gt;</span><span class="n">dev</span><span class="o">-&gt;</span><span class="n">sysctl</span><span class="o">-&gt;</span><span class="n">ctx</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">sysctl__hw_children</span><span class="p">,</span>
 			<span class="n">OID_AUTO</span><span class="p">,</span> <span class="s">"backlight_max"</span><span class="p">,</span> 
 			<span class="n">CTLTYPE_INT</span> <span class="o">|</span> <span class="n">CTLFLAG_RD</span> <span class="o">|</span> <span class="n">CTLFLAG_ANYBODY</span><span class="p">,</span>
 			<span class="n">connector</span><span class="o">-&gt;</span><span class="n">dev</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">),</span>
@@ -171,7 +176,11 @@
 			<span class="n">CTLTYPE_INT</span> <span class="o">|</span> <span class="n">CTLFLAG_RW</span> <span class="o">|</span> <span class="n">CTLFLAG_ANYBODY</span><span class="p">,</span>
 			<span class="n">connector</span><span class="o">-&gt;</span><span class="n">dev</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">),</span>
 			<span class="n">sysctl_backlight_handler</span><span class="p">,</span>
-			<span class="s">"I"</span><span class="p">,</span> <span class="s">"Backlight level"</span><span class="p">);</span></code></pre></figure>
+			<span class="s">"I"</span><span class="p">,</span> <span class="s">"Backlight level"</span><span class="p">);</span>
+
+</code></pre>
+</div>
+</div>
 
 <p>В результате становится возможным использовать команды типа <code class="highlighter-rouge">sysctl hw.backlight_level=370</code> чтобы установить приемлимый уровень подсветки. Фактически сейчас эта команда прописана у меня в <em>.xinitrc</em>, я не озадачиваюсь пока привязкой какого-нибудь скрипта к клавишам <em>F6</em> и <em>F7</em>. Это не сложно, просто впереди ещё один способ, который только предстоит придумать:)</p>
 

@@ -43,8 +43,7 @@
 		
 
                 <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Lato:300italic,700italic,300,700">
-		<link rel="stylesheet" href="/css/main.css">
-		<link rel="stylesheet" href="/css/syntax.css">
+		<link rel="stylesheet" href="/css/styles.css">
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 		<!--[if lt IE 9]>
 		<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -66,7 +65,7 @@
 <h1 class="post-title" itemprop="name">Грамматика HTML в самом первом приближении</h1>
 <p class="post-meta">
 	25 May 2016 •
-	4 мин. читать •
+	5 мин. читать •
 	<a href="#disqus_thread" data-disqus-identifier="2016-05-25-lisp-toy-web-parse-text.md">Comments</a> • 
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 <a href="https://feedburner.google.com/fb/a/mailverify?uri=YellowRabbit-ru&amp;loc=ru_RU" onclick="window.open(this.href, 'mywin',
@@ -87,8 +86,12 @@
 <h2 id="Наводим-порядок">Наводим порядок</h2>
 <p>Ядро META это самостоятельная часть движка, так что можно выделить её в <a href="/pub/lisp/meta-parser-core.lisp">отдельный файл</a> и навести общий порядок в проекте. Файл <code class="highlighter-rouge">toy-engine.asd</code>, описывающий состав и последовательность компиляции модулей движка:</p>
 
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+<meta itemprop="codeSampleType" content="code snippet">
+<meta itemprop="programmingLanguage" content="cl">
 <div class="language-cl highlighter-rouge">
-<pre class="highlight"><code><span class="c1">;;;; toy-engine.asd</span>
+<pre class="highlight"><code>
+<span class="c1">;;;; toy-engine.asd</span>
 
 <span class="p">(</span><span class="nv">asdf:defsystem</span> <span class="ss">#:toy-engine</span>
   <span class="ss">:description</span> <span class="s">"Tiny web-engine"</span>
@@ -100,14 +103,22 @@
                <span class="p">(</span><span class="ss">:file</span> <span class="s">"meta-parser-core"</span><span class="p">)</span>
                <span class="p">(</span><span class="ss">:file</span> <span class="s">"html-grammar"</span><span class="p">)</span>
                <span class="p">(</span><span class="ss">:file</span> <span class="s">"toy-engine"</span><span class="p">)))</span>
+
 </code></pre>
+</div>
 </div>
 
 <p>Файлы <code class="highlighter-rouge">html-grammar.lisp</code> и <code class="highlighter-rouge">toy-engine.lisp</code> пока пустые и состоят из одной строчки каждый:</p>
 
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+<meta itemprop="codeSampleType" content="code snippet">
+<meta itemprop="programmingLanguage" content="cl">
 <div class="language-cl highlighter-rouge">
-<pre class="highlight"><code><span class="p">(</span><span class="nb">in-package</span> <span class="ss">#:toy-engine</span><span class="p">)</span>
+<pre class="highlight"><code>
+<span class="p">(</span><span class="nb">in-package</span> <span class="ss">#:toy-engine</span><span class="p">)</span>
+
 </code></pre>
+</div>
 </div>
 
 <h2 id="Схема-грамматики">Схема грамматики</h2>
@@ -117,8 +128,12 @@
 <h2 id="Функции-проверки-символов">Функции проверки символов</h2>
 <p>Эти простые функции, которые нужны для проверки символов в операции META <code class="highlighter-rouge">@</code>, должны быть доступны во время компиляции:</p>
 
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+<meta itemprop="codeSampleType" content="code snippet">
+<meta itemprop="programmingLanguage" content="cl">
 <div class="language-cl highlighter-rouge">
-<pre class="highlight"><code><span class="p">(</span><span class="k">eval-when</span> <span class="p">(</span><span class="ss">:compile-toplevel</span> <span class="ss">:load-toplevel</span> <span class="ss">:execute</span><span class="p">)</span>
+<pre class="highlight"><code>
+<span class="p">(</span><span class="k">eval-when</span> <span class="p">(</span><span class="ss">:compile-toplevel</span> <span class="ss">:load-toplevel</span> <span class="ss">:execute</span><span class="p">)</span>
   <span class="p">(</span><span class="nb">defun</span> <span class="nv">gen-text-p</span> <span class="p">(</span><span class="nv">ch</span><span class="p">)</span>
     <span class="s">"Text is always between &gt; and &lt;"</span>
     <span class="p">(</span><span class="nb">char/=</span> <span class="nv">ch</span> <span class="sc">#\&lt;</span><span class="p">))</span>
@@ -134,12 +149,18 @@
              <span class="p">(</span><span class="nb">char&lt;=</span> <span class="nv">ch</span> <span class="sc">#\Z</span><span class="p">))</span>
         <span class="p">(</span><span class="nb">digit-char-p</span> <span class="nv">ch</span><span class="p">))))</span>
 
+
 </code></pre>
+</div>
 </div>
 <p>Функция вызываются не явно, а через проверку принадлежности к типу данных:</p>
 
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+<meta itemprop="codeSampleType" content="code snippet">
+<meta itemprop="programmingLanguage" content="cl">
 <div class="language-cl highlighter-rouge">
-<pre class="highlight"><code><span class="p">(</span><span class="nb">deftype</span> <span class="nv">gen-text</span> <span class="p">()</span>
+<pre class="highlight"><code>
+<span class="p">(</span><span class="nb">deftype</span> <span class="nv">gen-text</span> <span class="p">()</span>
   <span class="s">"All except a &lt;"</span>
   <span class="o">'</span><span class="p">(</span><span class="nv">satisfies</span> <span class="nv">gen-text-p</span><span class="p">))</span>
 
@@ -150,33 +171,51 @@
 <span class="p">(</span><span class="nb">deftype</span> <span class="nv">tag-text</span> <span class="p">()</span>
   <span class="s">"Tag name is alphanumeric"</span>
   <span class="o">'</span><span class="p">(</span><span class="nv">satisfies</span> <span class="nv">azAZ09-p</span><span class="p">))</span>
+
 </code></pre>
+</div>
 </div>
 
 <p>Ещё один полезный тип — пустое место <img class="emoji" title=":smile:" alt=":smile:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f604.png" height="20" width="20" align="absmiddle"></p>
 
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+<meta itemprop="codeSampleType" content="code snippet">
+<meta itemprop="programmingLanguage" content="cl">
 <div class="language-cl highlighter-rouge">
-<pre class="highlight"><code><span class="p">(</span><span class="nb">deftype</span> <span class="nv">whitespace</span> <span class="p">()</span>
+<pre class="highlight"><code>
+<span class="p">(</span><span class="nb">deftype</span> <span class="nv">whitespace</span> <span class="p">()</span>
   <span class="o">'</span><span class="p">(</span><span class="nb">member</span> <span class="sc">#\Space</span> <span class="sc">#\Tab</span> <span class="sc">#\LineFeed</span> <span class="sc">#\Return</span> <span class="sc">#\FormFeed</span> <span class="sc">#\Page</span><span class="p">))</span>
+
 </code></pre>
+</div>
 </div>
 
 <h2 id="Генерация-узлов-и-скелет-парсера">Генерация узлов и скелет парсера</h2>
 
 <p>Парсер будет создавать дерево DOM прямо по ходу разбора. За каждый тип узла отвечает своя функция, для начала будем распознавать один простой элемент: текст. И его функция:</p>
 
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+<meta itemprop="codeSampleType" content="code snippet">
+<meta itemprop="programmingLanguage" content="cl">
 <div class="language-cl highlighter-rouge">
-<pre class="highlight"><code><span class="c1">;; Create nodes</span>
+<pre class="highlight"><code>
+<span class="c1">;; Create nodes</span>
 <span class="c1">;; Text</span>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">make-text-node</span> <span class="p">(</span><span class="nv">text</span><span class="p">)</span>
   <span class="p">(</span><span class="nb">make-instance</span> <span class="ss">'text-node</span>
 		 <span class="ss">:text</span> <span class="nv">text</span><span class="p">))</span>
+
 </code></pre>
+</div>
 </div>
 <p>Парсер принимает на входе строку для разбора, возможно номер первого и последнего символов для разбора и возвращает корневой узел получившегося дерева. Пока не знаю как будут присоединяться дочерние узлы, так что скелет парсера имеет вид:</p>
 
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+<meta itemprop="codeSampleType" content="code snippet">
+<meta itemprop="programmingLanguage" content="cl">
 <div class="language-cl highlighter-rouge">
-<pre class="highlight"><code><span class="c1">;;; HTML parser</span>
+<pre class="highlight"><code>
+<span class="c1">;;; HTML parser</span>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">parse-html</span> <span class="p">(</span><span class="nv">str</span> <span class="k">&amp;optional</span> <span class="p">(</span><span class="nv">index</span> <span class="mi">0</span><span class="p">)</span> <span class="p">(</span><span class="nv">end</span> <span class="p">(</span><span class="nb">length</span> <span class="nv">str</span><span class="p">)))</span>
   <span class="p">(</span><span class="k">declare</span> <span class="p">(</span><span class="k">type</span> <span class="kt">fixnum</span> <span class="nv">index</span> <span class="nv">end</span><span class="p">))</span>
     <span class="p">(</span><span class="k">labels</span>
@@ -190,12 +229,18 @@
 	        <span class="no">nil</span>
 		<span class="p">(</span><span class="nv">make-text-node</span> <span class="nv">text</span><span class="p">)))))</span>
       <span class="p">(</span><span class="nv">parse-text</span><span class="p">)))</span>
+
 </code></pre>
+</div>
 </div>
 <p>Проверяем на дереве из одного текстового узла:</p>
 
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+<meta itemprop="codeSampleType" content="code snippet">
+<meta itemprop="programmingLanguage" content="cl">
 <div class="language-cl highlighter-rouge">
-<pre class="highlight"><code><span class="nb">*</span> <span class="p">(</span><span class="nv">ql:quickload</span> <span class="ss">'toy-engine</span><span class="p">)</span>
+<pre class="highlight"><code>
+<span class="nb">*</span> <span class="p">(</span><span class="nv">ql:quickload</span> <span class="ss">'toy-engine</span><span class="p">)</span>
 <span class="nv">To</span> <span class="nb">load</span> <span class="s">"toy-engine"</span><span class="err">:</span>
   <span class="nv">Load</span> <span class="mi">1</span> <span class="nv">ASDF</span> <span class="nv">system:</span>
     <span class="nv">toy-engine</span>
@@ -215,7 +260,9 @@
 
 <span class="s">"}"</span>
 <span class="nb">*</span>
+
 </code></pre>
+</div>
 </div>
 <p>Выглядит неплохо:
 <img src="/imgs/posts/lisp-webengine-text-node.png" alt="Дерево после разбора" class="center-image"></p>

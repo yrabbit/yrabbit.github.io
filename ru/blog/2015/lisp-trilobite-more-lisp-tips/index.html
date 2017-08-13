@@ -43,8 +43,7 @@
 		
 
                 <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Lato:300italic,700italic,300,700">
-		<link rel="stylesheet" href="/css/main.css">
-		<link rel="stylesheet" href="/css/syntax.css">
+		<link rel="stylesheet" href="/css/styles.css">
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 		<!--[if lt IE 9]>
 		<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -86,8 +85,12 @@
 
 <h2 id="Немного-причёсывания">Немного причёсывания</h2>
 
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+<meta itemprop="codeSampleType" content="code snippet">
+<meta itemprop="programmingLanguage" content="cl">
 <div class="language-cl highlighter-rouge">
-<pre class="highlight"><code><span class="c1">;; test pattern for win</span>
+<pre class="highlight"><code>
+<span class="c1">;; test pattern for win</span>
 <span class="c1">;; ((left...) (right...)</span>
 <span class="c1">;;  (up...) (down...)</span>
 <span class="c1">;;  (left-up...) (right-down...)</span>
@@ -164,14 +167,20 @@
   <span class="p">(</span><span class="nb">defun</span> <span class="nv">get-test-patterns</span> <span class="p">(</span><span class="nv">cell</span><span class="p">)</span>
     <span class="p">(</span><span class="nb">or</span> <span class="p">(</span><span class="nb">gethash</span> <span class="nv">cell</span> <span class="nv">previous</span><span class="p">)</span>
         <span class="p">(</span><span class="nb">setf</span> <span class="p">(</span><span class="nb">gethash</span> <span class="nv">cell</span> <span class="nv">previous</span><span class="p">)</span> <span class="p">(</span><span class="nv">slow-get-test-patterns</span> <span class="nv">cell</span><span class="p">)))))</span>
+
 </code></pre>
+</div>
 </div>
 
 <h2 id="Несколько-вспомогательных-предикатов">Несколько вспомогательных предикатов</h2>
 <p>Выражения типа (if (eql *ai-player* (game-node-player tree)) смотрятся не очень, поэтому введём несколько предикатов.</p>
 
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+<meta itemprop="codeSampleType" content="code snippet">
+<meta itemprop="programmingLanguage" content="cl">
 <div class="language-cl highlighter-rouge">
-<pre class="highlight"><code><span class="c1">;; which player made the move</span>
+<pre class="highlight"><code>
+<span class="c1">;; which player made the move</span>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">last-player</span> <span class="p">(</span><span class="nv">tree</span><span class="p">)</span>
   <span class="p">(</span><span class="nv">change-player</span> <span class="p">(</span><span class="nv">game-node-player</span> <span class="nv">tree</span><span class="p">)))</span>
 
@@ -182,15 +191,21 @@
 <span class="c1">;; is current player</span>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">cur-playerp</span> <span class="p">(</span><span class="nv">tree</span> <span class="nv">player</span><span class="p">)</span>
   <span class="p">(</span><span class="nb">eql</span> <span class="nv">player</span> <span class="p">(</span><span class="nv">game-node-player</span> <span class="nv">tree</span><span class="p">)))</span>
+
 </code></pre>
+</div>
 </div>
 
 <h2 id="Новая-эвристика">Новая эвристика</h2>
 
 <p>Отличие её от старой заключается в том, что старая оценивала позицию подсчитывая длины уже построенных линий из фишек, а новая допускает пустые клетки между клетками с фишками AI. Другими словами она принимает в расчёт потенциальные линии из фишек. Сразу скажу, что она всё равно не позволяет победить компьютер из 11-го часа.</p>
 
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+<meta itemprop="codeSampleType" content="code snippet">
+<meta itemprop="programmingLanguage" content="cl">
 <div class="language-cl highlighter-rouge">
-<pre class="highlight"><code><span class="c1">;; count player cells in line</span>
+<pre class="highlight"><code>
+<span class="c1">;; count player cells in line</span>
 <span class="c1">;; empty cells are allowed but other player cells not</span>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">count-player-cells</span> <span class="p">(</span><span class="nv">board</span> <span class="nv">cell</span> <span class="nv">player</span><span class="p">)</span>
   <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">pattern</span> <span class="p">(</span><span class="nv">get-test-patterns</span> <span class="nv">cell</span><span class="p">)))</span>
@@ -209,7 +224,9 @@
                                              <span class="p">(</span><span class="nv">test-halfline</span> <span class="p">(</span><span class="nb">cadr</span> <span class="nv">pat</span><span class="p">)</span> <span class="mi">0</span><span class="p">))))</span>
                      <span class="nv">acc</span><span class="p">)))</span>
       <span class="p">(</span><span class="nv">test-line</span> <span class="nv">pattern</span> <span class="mi">0</span><span class="p">))))</span>
+
 </code></pre>
+</div>
 </div>
 
 <hr>

@@ -48,8 +48,7 @@
 		
 
                 <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Lato:300italic,700italic,300,700">
-		<link rel="stylesheet" href="/css/main.css" />
-		<link rel="stylesheet" href="/css/syntax.css" />
+		<link rel="stylesheet" href="/css/styles.css" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<!--[if lt IE 9]>
 		<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -96,43 +95,40 @@
 <h2 id="binding-of-the-backlight-adjustment-keys">Binding of the backlight adjustment keys</h2>
 
 <p>The first script <code class="highlighter-rouge">brightness-inc.sh</code> increases the brightness:</p>
-<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
-  <meta itemprop="codeSampleType" content="code snippet" />
-
-  <meta itemprop="programmingLanguage" content="Bash" />
-
-  <figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="c">#!/bin/sh</span>
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode"><meta itemprop="codeSampleType" content="code snippet" /><meta itemprop="programmingLanguage" content="bash" />
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>
+<span class="c">#!/bin/sh</span>
 <span class="nv">LVL</span><span class="o">=</span><span class="sb">`</span>/sbin/sysctl -n hw.backlight_level<span class="sb">`</span>
-/sbin/sysctl hw.backlight_level<span class="o">=</span><span class="k">$((</span> <span class="k">${</span><span class="nv">LVL</span><span class="k">}</span> <span class="o">+</span> <span class="m">50</span> <span class="k">))</span></code></pre></figure>
+/sbin/sysctl hw.backlight_level<span class="o">=</span><span class="k">$((</span> <span class="k">${</span><span class="nv">LVL</span><span class="k">}</span> <span class="o">+</span> <span class="m">50</span> <span class="k">))</span>
 
+</code></pre>
+</div>
 </div>
 
 <p>The second script <code class="highlighter-rouge">brightness-dec.sh</code> reduces:</p>
-<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
-  <meta itemprop="codeSampleType" content="code snippet" />
-
-  <meta itemprop="programmingLanguage" content="Bash" />
-
-  <figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="c">#!/bin/sh</span>
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode"><meta itemprop="codeSampleType" content="code snippet" /><meta itemprop="programmingLanguage" content="bash" />
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>
+<span class="c">#!/bin/sh</span>
 <span class="nv">LVL</span><span class="o">=</span><span class="sb">`</span>/sbin/sysctl -n hw.backlight_level<span class="sb">`</span>
-/sbin/sysctl hw.backlight_level<span class="o">=</span><span class="k">$((</span> <span class="k">${</span><span class="nv">LVL</span><span class="k">}</span> <span class="o">-</span> <span class="m">50</span> <span class="k">))</span></code></pre></figure>
+/sbin/sysctl hw.backlight_level<span class="o">=</span><span class="k">$((</span> <span class="k">${</span><span class="nv">LVL</span><span class="k">}</span> <span class="o">-</span> <span class="m">50</span> <span class="k">))</span>
 
+</code></pre>
+</div>
 </div>
 
 <p>In the file <code class="highlighter-rouge">.xbindkeysrc</code> we specify the binding of scripts to the keys:</p>
-<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
-  <meta itemprop="codeSampleType" content="code snippet" />
-
-  <meta itemprop="programmingLanguage" content="Bash" />
-
-  <figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="c"># brightness</span>
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode"><meta itemprop="codeSampleType" content="code snippet" /><meta itemprop="programmingLanguage" content="bash" />
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>
+<span class="c"># brightness</span>
 <span class="s2">"brightness-dec.sh"</span>
   F6
 
 <span class="s2">"brightness-inc.sh"</span>
-  F7</code></pre></figure>
+  F7
 
-  <p>i&lt;/div&gt;</p>
+
+</code></pre>
+</div>
 </div>
 
 <hr />
