@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-	xmlns:xhtml="http://www.w3.org/1999/xhtml">
+	xmlns:xhtml="http://www.w3.org/1999/xhtml"
+	xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
 
 
 	<!-- Site/Blog Indexes -->
@@ -9,7 +10,7 @@
 		
 		<xhtml:link rel="alternate" hreflang="en" href=" https://yrabbit.github.io/"/>
 		<xhtml:link rel="alternate" hreflang="ru" href=" https://yrabbit.github.io/ru/"/>
-		<lastmod>2017-08-14T19:46:20+10:00</lastmod>
+		<lastmod>2017-08-16T09:54:30+10:00</lastmod>
 		<changefreq>daily</changefreq>
 		<priority>1.0</priority>
 	</url>
@@ -18,7 +19,7 @@
 		
 		<xhtml:link rel="alternate" hreflang="en" href=" https://yrabbit.github.io/blog"/>
 		<xhtml:link rel="alternate" hreflang="ru" href=" https://yrabbit.github.io/ru/blog"/>
-		<lastmod>2017-08-14T19:46:20+10:00</lastmod>
+		<lastmod>2017-08-16T09:54:30+10:00</lastmod>
 		<changefreq>daily</changefreq>
 		<priority>1.0</priority>
 	</url>
@@ -247,7 +248,7 @@
 		
 		<xhtml:link rel="alternate" hreflang="en" href=" https://yrabbit.github.io/about/"/>
 		<xhtml:link rel="alternate" hreflang="ru" href=" https://yrabbit.github.io/ru/about/"/>
-		<lastmod>2017-08-14T19:46:20+10:00</lastmod>
+		<lastmod>2017-08-16T09:54:30+10:00</lastmod>
 		<changefreq>daily</changefreq>
 		<priority>0.8</priority>
 	</url>
@@ -256,7 +257,7 @@
 		
 		<xhtml:link rel="alternate" hreflang="en" href=" https://yrabbit.github.io/contact/"/>
 		<xhtml:link rel="alternate" hreflang="ru" href=" https://yrabbit.github.io/ru/contact/"/>
-		<lastmod>2017-08-14T19:46:20+10:00</lastmod>
+		<lastmod>2017-08-16T09:54:30+10:00</lastmod>
 		<changefreq>daily</changefreq>
 		<priority>0.8</priority>
 	</url>
@@ -265,7 +266,7 @@
 		
 		<xhtml:link rel="alternate" hreflang="en" href=" https://yrabbit.github.io/projects/"/>
 		<xhtml:link rel="alternate" hreflang="ru" href=" https://yrabbit.github.io/ru/projects/"/>
-		<lastmod>2017-08-14T19:46:20+10:00</lastmod>
+		<lastmod>2017-08-16T09:54:30+10:00</lastmod>
 		<changefreq>daily</changefreq>
 		<priority>0.8</priority>
 	</url>
@@ -277,7 +278,7 @@
 		
 		<xhtml:link rel="alternate" hreflang="en" href=" https://yrabbit.github.io/"/>
 		<xhtml:link rel="alternate" hreflang="ru" href=" https://yrabbit.github.io/ru/"/>
-		<lastmod>2017-08-14T19:46:20+10:00</lastmod>
+		<lastmod>2017-08-16T09:54:30+10:00</lastmod>
 		<changefreq>daily</changefreq>
 		<priority>1.0</priority>
 	</url>
@@ -286,7 +287,7 @@
 		
 		<xhtml:link rel="alternate" hreflang="en" href=" https://yrabbit.github.io/blog"/>
 		<xhtml:link rel="alternate" hreflang="ru" href=" https://yrabbit.github.io/ru/blog"/>
-		<lastmod>2017-08-14T19:46:20+10:00</lastmod>
+		<lastmod>2017-08-16T09:54:30+10:00</lastmod>
 		<changefreq>daily</changefreq>
 		<priority>1.0</priority>
 	</url>
@@ -515,7 +516,7 @@
 		
 		<xhtml:link rel="alternate" hreflang="en" href=" https://yrabbit.github.io/about/"/>
 		<xhtml:link rel="alternate" hreflang="ru" href=" https://yrabbit.github.io/ru/about/"/>
-		<lastmod>2017-08-14T19:46:20+10:00</lastmod>
+		<lastmod>2017-08-16T09:54:30+10:00</lastmod>
 		<changefreq>daily</changefreq>
 		<priority>0.8</priority>
 	</url>
@@ -524,7 +525,7 @@
 		
 		<xhtml:link rel="alternate" hreflang="en" href=" https://yrabbit.github.io/contact/"/>
 		<xhtml:link rel="alternate" hreflang="ru" href=" https://yrabbit.github.io/ru/contact/"/>
-		<lastmod>2017-08-14T19:46:20+10:00</lastmod>
+		<lastmod>2017-08-16T09:54:30+10:00</lastmod>
 		<changefreq>daily</changefreq>
 		<priority>0.8</priority>
 	</url>
@@ -533,7 +534,7 @@
 		
 		<xhtml:link rel="alternate" hreflang="en" href=" https://yrabbit.github.io/projects/"/>
 		<xhtml:link rel="alternate" hreflang="ru" href=" https://yrabbit.github.io/ru/projects/"/>
-		<lastmod>2017-08-14T19:46:20+10:00</lastmod>
+		<lastmod>2017-08-16T09:54:30+10:00</lastmod>
 		<changefreq>daily</changefreq>
 		<priority>0.8</priority>
 	</url>
