@@ -7,7 +7,37 @@
 	<author>
 		<name>Yellow Rabbit</name>
 	</author>
-	<updated>2017-08-16T09:54:30+10:00</updated>
+	<updated>2017-08-30T17:41:22+10:00</updated>
+
+	<entry>
+		<title type="text">The Oak Tree</title>
+		<link href="https://yrabbit.github.io/blog/2017/the-oak-I-planted/" />
+		<id>https://yrabbit.github.io/blog/2017/the-oak-I-planted/</id>
+		<published>2017-08-30T00:00:00+10:00</published>
+		<updated>2017-08-30T00:00:00+10:00</updated>
+		<summary type="html">All started with an acorn, photos of which I do not have :disappointed:
+
+</summary>
+		<content type="html">
+&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners/oak.png&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;p&gt;All started with an acorn, photos of which I do not have :disappointed:&lt;/p&gt;
+
+&lt;h2 id=&quot;2016-05&quot;&gt;2016-05&lt;/h2&gt;
+&lt;p&gt;The first oak leaves
+&lt;img src=&quot;/imgs/posts/IMG_20160528_161209.jpg&quot; alt=&quot;The first oak leaves&quot; title=&quot;The first oak leaves&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;2016-07&quot;&gt;2016-07&lt;/h2&gt;
+&lt;p&gt;Aspire to the top&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/imgs/posts/IMG_20160709_142601.jpg&quot; alt=&quot;Oak stretches upwards (two months)&quot; title=&quot;Oak stretches upwards (two months)&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;2017-07&quot;&gt;2017-07&lt;/h2&gt;
+&lt;p&gt;After moving - it grows too fast :smile:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/imgs/posts/IMG_20170719_130300.jpg&quot; alt=&quot; Oak in a year &quot; title=&quot;Oak in a year&quot; class=&quot;center-image&quot; /&gt;
+&lt;img src=&quot;/imgs/posts/IMG_20170719_130241.jpg&quot; alt=&quot; Oak in a year &quot; title=&quot;Oak in a year&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+</content>
+	</entry>
 
 	<entry>
 		<title type="text">Microdata for Blocks with Syntax Highlighting in Jekyll</title>
@@ -3319,171 +3349,6 @@ To make a move means to copy a board, simultaneously changing one of the cells t
       &lt;p&gt;One may do not check up, but it’s probably useful&amp;nbsp;&lt;a href=&quot;#fnref:up&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
     &lt;/li&gt;
   &lt;/ol&gt;
-&lt;/div&gt;
-</content>
-	</entry>
-
-	<entry>
-		<title type="text">Trilobite Game in Lisp: Problem Statement</title>
-		<link href="https://yrabbit.github.io/blog/2015/lisp-trilobite-game-board/" />
-		<id>https://yrabbit.github.io/blog/2015/lisp-trilobite-game-board/</id>
-		<published>2015-12-11T21:20:47+10:00</published>
-		<updated>2017-07-28T17:23:26+10:00</updated>
-		<summary type="html">Formulation of the problem
-In the 11th hour game a puzzle came into play, the purpose of which is to build 4 chips in a row. And you can not select the row for the new chip, you can select only the column.
-
- I can not beat the computer in this mini-game, so I’ll try to arrange a battle of the two AIs. It would be fun to write an opponent for a computer on Lisp, since I’m practically not familiar with this language.
-
-</summary>
-		<content type="html">
-&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;https://yrabbit.github.io/imgs/post-banners/trilobite-board.jpeg&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
-&lt;h2 id=&quot;formulation-of-the-problem&quot;&gt;Formulation of the problem&lt;/h2&gt;
-&lt;p&gt;In the 11th hour game a puzzle came into play, the purpose of which is to build 4 chips in a row. And you can not select the row for the new chip, you can select only the column.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/imgs/posts/trilobite-original-screen.png&quot; alt=&quot;Trilobite original game screen&quot; title=&quot;Trilobite original game screen&quot; /&gt; I can not beat the computer in this mini-game, so I’ll try to arrange a battle of the two AIs. It would be fun to write an opponent for a computer on Lisp, since I’m practically not familiar with this language.&lt;/p&gt;
-
-&lt;p&gt;First I read &lt;a href=&quot;https://www.amazon.com/s/ref=nb_sb_noss/179-0107147-8261974?url=search-alias%3Dstripbooks&amp;amp;field-keywords=Land+of+Lisp%3A+Learn+to+Program+in+Lisp%2C+One+Game+at+a+Time%21&quot;&gt;Land of Lisp: Learn to Program in Lisp, One Game at a Time!&lt;/a&gt; to understand how one can write games in this language. As a compiler/interpreter, I use SBCL, as one of the available (/usr/dports/lang/sbcl) for &lt;a href=&quot;https://www.dragonflybsd.org/&quot;&gt;DragonFly BSD&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h2 id=&quot;playing-field-board&quot;&gt;Playing field (board)&lt;/h2&gt;
-&lt;p&gt;From the book it became clear that the board I needed (the size 8x7) I most likely will not be able to implement without the experience of optimizing programs on Lisp. So let’s start with a tiny 3x3 board, on which, nevertheless, it will be possible to work out the logic of artificial intelligence.&lt;/p&gt;
-
-&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;&lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;&lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;cl&quot; /&gt;
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
-&lt;span class=&quot;c1&quot;&gt;;; *** Consts&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;;; board&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defparameter&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*board-width*&lt;/span&gt;  &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defparameter&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*board-height*&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defparameter&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*board-size*&lt;/span&gt;   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*board-width*&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*board-height*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;p&gt;The condition for victory will also be considered a shorter line of chips:&lt;/p&gt;
-
-&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;&lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;&lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;cl&quot; /&gt;
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
-&lt;span class=&quot;c1&quot;&gt;;; row length for win&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defparameter&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*win-len*&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;p&gt;Each square of the board can be in one of three states:&lt;/p&gt;
-&lt;ol&gt;
-  &lt;li&gt;be empty;&lt;/li&gt;
-  &lt;li&gt;contain an opponent’s chip;&lt;/li&gt;
-  &lt;li&gt;contain our chip.&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;&lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;&lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;cl&quot; /&gt;
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
-&lt;span class=&quot;c1&quot;&gt;;; cell types&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defparameter&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*empty-cell*&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defparameter&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*ai-cell*&lt;/span&gt;    &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defparameter&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*human-cell*&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-
-&lt;p&gt;&lt;em&gt;defparameter&lt;/em&gt; not exactly what I need, I rather prefer good old &lt;em&gt;#define&lt;/em&gt;, but I have not yet found any substitution for &lt;em&gt;real constants&lt;/em&gt; in Lisp.&lt;/p&gt;
-
-&lt;p&gt;A board is an array of cells. It can be created either completely from empty cells, or by copying from the list of cells, and I will copy often because there will be a lot of boards with different combinations of chips.&lt;/p&gt;
-
-&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;&lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;&lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;cl&quot; /&gt;
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
-&lt;span class=&quot;c1&quot;&gt;;; *** Board&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;;; two dimentional array of cells&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;;; . X -&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;;; Y&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;;; |&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;;; v&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;;; initial board&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;new-board&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;make-array&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*board-size*&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:initial-element&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*empty-cell*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-
-&lt;span class=&quot;c1&quot;&gt;;; make board from list&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;board-from-list&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;lst&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;make-array&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*board-size*&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:initial-contents&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;lst&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;p&gt;It is necessary to introduce the concepts of players in order to somehow distinguish whose turn is now, etc.&lt;/p&gt;
-
-&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;&lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;&lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;cl&quot; /&gt;
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
-&lt;span class=&quot;c1&quot;&gt;;; players&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defparameter&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*ai-player*&lt;/span&gt;    &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defparameter&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*human-player*&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;change-player&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;eql&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*ai-player*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;vg&quot;&gt;*human-player*&lt;/span&gt;
-    &lt;span class=&quot;vg&quot;&gt;*ai-player*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;get-player-color&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;eql&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*ai-player*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;vg&quot;&gt;*ai-cell*&lt;/span&gt;
-    &lt;span class=&quot;vg&quot;&gt;*human-cell*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;get-player-str&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;eql&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*ai-player*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;&quot;The Evil AI&quot;&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;&quot;Human&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;p&gt;Back to our board,  we describe a couple of auxiliary functions for accessing and checking cells.&lt;/p&gt;
-
-&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;&lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;&lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;cl&quot; /&gt;
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
-&lt;span class=&quot;c1&quot;&gt;;; get board cell&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;get-cell&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;board&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;cell&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;aref&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;board&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;cell&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-
-&lt;span class=&quot;c1&quot;&gt;;; cell type predicates&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;cell-emptyp&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;board&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;cell&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;eql&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;get-cell&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;board&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;cell&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*empty-cell*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;cell-playerp&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;board&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;cell&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;eql&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;get-cell&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;board&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;cell&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;p&gt;At the moment, you can take a look at the work of the board:&lt;/p&gt;
-
-&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;&lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;&lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;shell&quot; /&gt;
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
-&lt;span class=&quot;gp&quot;&gt;% &lt;/span&gt;rlwrap sbcl --load trilobite.lisp
-This is SBCL 1.2.9, an implementation of ANSI Common Lisp.
-More information about SBCL is available at &amp;lt;http://www.sbcl.org/&amp;gt;.
-
-SBCL is free software, provided as is, with absolutely no warranty.
-It is mostly &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;the public domain; some portions are provided under
-BSD-style licenses.  See the CREDITS and COPYING files &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;the
-distribution &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;more information.
-&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;board-from-list &lt;span class=&quot;s1&quot;&gt;'(1 2 3 4 5 6 7 8 9))
-
-#(1 2 3 4 5 6 7 8 9)
-* (new-board)
-
-#(0 0 0 0 0 0 0 0 0)
-* (cell-emptyp (new-board) 4)
-
-T
-* (get-cell (new-board) 4)
-
-0
-* (cell-playerp (new-board) 4 *ai-player*)
-
-NIL
-* (exit)
-
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
 &lt;/div&gt;
 </content>
 	</entry>
