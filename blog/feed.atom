@@ -7,7 +7,7 @@
 	<author>
 		<name>Yellow Rabbit</name>
 	</author>
-	<updated>2017-09-04T22:39:25+10:00</updated>
+	<updated>2017-09-04T22:47:13+10:00</updated>
 
 	<entry>
 		<title type="text">Connect Google Play Games Services Manually</title>
@@ -90,7 +90,7 @@ By the way, if the key is not reflected, then you just need to add our applicati
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;https://yrabbit.github.ioimgs/posts/joystick.png&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;https://yrabbit.github.io/imgs/post-banners/joystick.png&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;p&gt;If you follow &lt;a href=&quot;https://developers.google.com/games/services/android/init&quot;&gt;Google’s instructions&lt;/a&gt; to integrate with GPGS (Google Play Games Services), then wild glitches are guaranteed when trying to compile the resulting monster. And the point here is not that you do not find the item &lt;code class=&quot;highlighter-rouge&quot;&gt;File &amp;gt; Import Module&lt;/code&gt; in Android Studio, the problem is that the module “BaseGameUtils” is designed for older versions of GPGS and SDK.&lt;/p&gt;
 
 &lt;p&gt;So we have:&lt;/p&gt;
@@ -177,7 +177,7 @@ private GameHelper gameHelper;
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners/oak.png&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;https://yrabbit.github.io/imgs/post-banners/oak.jpeg&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;p&gt;All started with an acorn, photos of which I do not have :disappointed:&lt;/p&gt;
 
 &lt;h2 id=&quot;2016-05&quot;&gt;2016-05&lt;/h2&gt;
