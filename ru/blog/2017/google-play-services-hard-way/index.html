@@ -29,13 +29,13 @@
 <link rel="canonical" href="https://yrabbit.github.io/ru/blog/2017/google-play-services-hard-way/" />
 <meta property="og:url" content="https://yrabbit.github.io/ru/blog/2017/google-play-services-hard-way/" />
 <meta property="og:site_name" content="Ассемблер, Lisp и всё такое - блог программиста" />
-<meta property="og:image" content="https://yrabbit.github.io/imgs/post-banners/joystick.png" />
+<meta property="og:image" content="https://yrabbit.github.io/imgs/post-banners/joystick.jpeg" />
 <meta property="og:image:height" content="300" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2017-09-02T00:00:00+10:00" />
 <script type="application/ld+json">
-{"@context":"http://schema.org","@type":"BlogPosting","headline":"Подключение Google Play Games Services вручную","author":{"@type":"Person","name":"Yellow Rabbit"},"image":{"width":1200,"height":300,"url":"https://yrabbit.github.io/imgs/post-banners/joystick.png","@type":"ImageObject"},"datePublished":"2017-09-02T00:00:00+10:00","dateModified":"2017-09-02T00:00:00+10:00","description":"Описан процесс подключения Google Play Games Services к проекту вручную.","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://yrabbit.github.io/imgs/blog-log.png"},"name":"Yellow Rabbit"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://yrabbit.github.io/ru/blog/2017/google-play-services-hard-way/"},"url":"https://yrabbit.github.io/ru/blog/2017/google-play-services-hard-way/"}</script>
+{"@context":"http://schema.org","@type":"BlogPosting","headline":"Подключение Google Play Games Services вручную","author":{"@type":"Person","name":"Yellow Rabbit"},"image":{"width":1200,"height":300,"url":"https://yrabbit.github.io/imgs/post-banners/joystick.jpeg","@type":"ImageObject"},"datePublished":"2017-09-02T00:00:00+10:00","dateModified":"2017-09-02T00:00:00+10:00","description":"Описан процесс подключения Google Play Games Services к проекту вручную.","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://yrabbit.github.io/imgs/blog-log.png"},"name":"Yellow Rabbit"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://yrabbit.github.io/ru/blog/2017/google-play-services-hard-way/"},"url":"https://yrabbit.github.io/ru/blog/2017/google-play-services-hard-way/"}</script>
 <!-- End Jekyll SEO tag -->
 
 		<script src="https://apis.google.com/js/platform.js" async defer>
@@ -82,8 +82,8 @@
 </p>
 
 
-	<div class="post-banner" style="background-image: url(/imgs/post-banners/joystick.png);">
-		<img src="/imgs/post-banners/joystick.png" alt="Подключение Google Play Games Services вручную" />
+	<div class="post-banner" style="background-image: url(/imgs/post-banners/joystick.jpeg);">
+		<img src="/imgs/post-banners/joystick.jpeg" alt="Подключение Google Play Games Services вручную" />
 	</div>
 
 <p>Если в точности следовать <a href="https://developers.google.com/games/services/android/init">указаниям Google</a> по интеграции с GPGS (Google Play Games Services), то гарантированы дикие глюки при попытке откомпилировать получившегося монстра. И дело тут не в том, что вы не найдёте в Android Studio пункта <code class="highlighter-rouge">File &gt; Import Module</code>,  проблема в том, что модуль <code class="highlighter-rouge">BaseGameUtils</code> рассчитан на старые версии GPGS и SDK.</p>

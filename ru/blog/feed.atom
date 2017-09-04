@@ -7,7 +7,7 @@
 	<author>
 		<name>Yellow Rabbit</name>
 	</author>
-	<updated>2017-09-04T22:56:13+10:00</updated>
+	<updated>2017-09-04T23:04:18+10:00</updated>
 
 	<entry>
 		<title type="text">Подключение Google Play Games Services вручную</title>
@@ -19,7 +19,7 @@
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;https://yrabbit.github.io/imgs/post-banners/joystick.png&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;https://yrabbit.github.io/imgs/post-banners/joystick.jpeg&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;p&gt;Если в точности следовать &lt;a href=&quot;https://developers.google.com/games/services/android/init&quot;&gt;указаниям Google&lt;/a&gt; по интеграции с GPGS (Google Play Games Services), то гарантированы дикие глюки при попытке откомпилировать получившегося монстра. И дело тут не в том, что вы не найдёте в Android Studio пункта &lt;code class=&quot;highlighter-rouge&quot;&gt;File &amp;gt; Import Module&lt;/code&gt;,  проблема в том, что модуль &lt;code class=&quot;highlighter-rouge&quot;&gt;BaseGameUtils&lt;/code&gt; рассчитан на старые версии GPGS и SDK.&lt;/p&gt;
 
 &lt;p&gt;Итак имеем:&lt;/p&gt;
