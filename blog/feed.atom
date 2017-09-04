@@ -7,7 +7,7 @@
 	<author>
 		<name>Yellow Rabbit</name>
 	</author>
-	<updated>2017-09-04T22:47:13+10:00</updated>
+	<updated>2017-09-04T22:51:36+10:00</updated>
 
 	<entry>
 		<title type="text">Connect Google Play Games Services Manually</title>
@@ -15,83 +15,12 @@
 		<id>https://yrabbit.github.io/blog/2017/google-play-services-hard-way/</id>
 		<published>2017-09-02T00:00:00+10:00</published>
 		<updated>2017-09-02T00:00:00+10:00</updated>
-		<summary type="html">If you follow Google’s instructions to integrate with GPGS (Google Play Games Services), then wild glitches are guaranteed when trying to compile the resulting monster. And the point here is not that you do not find the item File &amp;gt; Import Module in Android Studio, the problem is that the module “BaseGameUtils” is designed for older versions of GPGS and SDK.
-
-So we have:
-
-  com.google.android.gms: play-services-games: 11.2.0
-  buildToolsVersion ‘26 .0.0 ‘
-
-
-We clone android basic samples and copy the contents of android-basic-samples/BasicSamples/libraries/BaseGameUtils/src/main/java/ to main/java для того чтобы сохранить иерархию com/google/example/games/basegameutils/.
-
-Also, take android-basic-samples/BasicSamples/libraries/BaseGameUtils/src/main/res/values/gamehelper_strings.xml, then add the contents of strings.xml to your string resources.
-
-We try make project and fix the little things, like the not found R module, it’s easy.
-
-Main Activity
-
-Some imports:
-
-
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.games.Games;
-
-import com.google.example.games.basegameutils.BaseGameUtils;
-import com.google.example.games.basegameutils.GameHelper;
-
-
-
-
-In addition to the variables mentioned in instructions, we need one more:
-
-
-private GameHelper gameHelper;
-
-
-
-
-It is needed to set the number of authorization requests. In onCreate:
-
-
-        // init game services
-        gameHelper = new GameHelper(this, GameHelper.CLIENT_GAMES);
-        gameHelper.enableDebugLog(true);
-        gameHelper.setMaxAutoSignInAttempts(1);
-        gameHelper.setup(this);
-
-        googleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(Games.API).addScope(Games.SCOPE_GAMES)
-		// ...
-                .build();
-
-
-
-
-Keys
-The inevitable part of adding GPGS are the problems with the keys. This is aided by inadequate documentation from Google. In fact, everything is simple, if you act carefully. So we should have the following state:
-
-
-  A fully working version is published without GPGS.
-  A Google Play Console game has been created, ready for testing.
-  Alpha version with GPGS is published.
-
-
-Point 2 provides for listing testers’ addresses in the “Testing” and testing permission for the alpha version, the same as in the description of the alpha version (paragraph 3).
-
-Next, you need to check that all the keys of our application (final and debugging) are reflected in the “Linked applications” item. To do this, we launch the Developer Console and view all the keys with the type of “Android”, for each key there must be a linked application.
-
-How simple!
-
-By the way, if the key is not reflected, then you just need to add our application again, it will pick up the first free key.
+		<summary type="html">If you follow Google’s instructions to integrate with GPGS (Google Play Games Services), then wild glitches are guaranteed when trying to compile the resulting monster. And the point here is not that you
 
 </summary>
 		<content type="html">
 &lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;https://yrabbit.github.io/imgs/post-banners/joystick.png&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
-&lt;p&gt;If you follow &lt;a href=&quot;https://developers.google.com/games/services/android/init&quot;&gt;Google’s instructions&lt;/a&gt; to integrate with GPGS (Google Play Games Services), then wild glitches are guaranteed when trying to compile the resulting monster. And the point here is not that you do not find the item &lt;code class=&quot;highlighter-rouge&quot;&gt;File &amp;gt; Import Module&lt;/code&gt; in Android Studio, the problem is that the module “BaseGameUtils” is designed for older versions of GPGS and SDK.&lt;/p&gt;
+&lt;p&gt;If you follow &lt;a href=&quot;https://developers.google.com/games/services/android/init&quot;&gt;Google’s instructions&lt;/a&gt; to integrate with GPGS (Google Play Games Services), then wild glitches are guaranteed when trying to compile the resulting monster. And the point here is not that you  do not find the item &lt;code class=&quot;highlighter-rouge&quot;&gt;File &amp;gt; Import Module&lt;/code&gt; in Android Studio, the problem is that the module “BaseGameUtils” is designed for older versions of GPGS and SDK.&lt;/p&gt;
 
 &lt;p&gt;So we have:&lt;/p&gt;
 &lt;ul&gt;
