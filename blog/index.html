@@ -65,6 +65,96 @@
 <div class="articles">
 
   <div>
+	<h2 class="post-title"><a href="/blog/2017/google-play-services-hard-way/">Connect Google Play Games Services Manually</a></h2>
+	<p class="post-meta">
+		02 Sep 2017 •
+		2 min. read •
+		<a href="/blog/2017/google-play-services-hard-way/#disqus_thread" data-disqus-identifier="2017-09-02-google-play-services-hard-way.md">Comments</a>
+	</p>
+
+	
+	<a href="/blog/2017/google-play-services-hard-way/" class="post-banner" style="background-image: url(/imgs/post-banners/joystick.png);">
+		<img src="/imgs/post-banners/joystick.png" alt="Connect Google Play Games Services Manually">
+	</a>
+	
+	
+	<p class="post-excerpt">If you follow Google’s instructions to integrate with GPGS (Google Play Games Services), then wild glitches are guaranteed when trying to compile the resulting monster. And the point here is not that you do not find the item File &gt; Import Module in Android Studio, the problem is that the module “BaseGameUtils” is designed for older versions of GPGS and SDK.
+
+So we have:
+
+  com.google.android.gms: play-services-games: 11.2.0
+  buildToolsVersion ‘26 .0.0 ‘
+
+
+We clone android basic samples and copy the contents of android-basic-samples/BasicSamples/libraries/BaseGameUtils/src/main/java/ to main/java для того чтобы сохранить иерархию com/google/example/games/basegameutils/.
+
+Also, take android-basic-samples/BasicSamples/libraries/BaseGameUtils/src/main/res/values/gamehelper_strings.xml, then add the contents of strings.xml to your string resources.
+
+We try make project and fix the little things, like the not found R module, it’s easy.
+
+Main Activity
+
+Some imports:
+
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.games.Games;
+
+import com.google.example.games.basegameutils.BaseGameUtils;
+import com.google.example.games.basegameutils.GameHelper;
+
+
+
+
+In addition to the variables mentioned in instructions, we need one more:
+
+
+private GameHelper gameHelper;
+
+
+
+
+It is needed to set the number of authorization requests. In onCreate:
+
+
+        // init game services
+        gameHelper = new GameHelper(this, GameHelper.CLIENT_GAMES);
+        gameHelper.enableDebugLog(true);
+        gameHelper.setMaxAutoSignInAttempts(1);
+        gameHelper.setup(this);
+
+        googleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(Games.API).addScope(Games.SCOPE_GAMES)
+		// ...
+                .build();
+
+
+
+
+Keys
+The inevitable part of adding GPGS are the problems with the keys. This is aided by inadequate documentation from Google. In fact, everything is simple, if you act carefully. So we should have the following state:
+
+
+  A fully working version is published without GPGS.
+  A Google Play Console game has been created, ready for testing.
+  Alpha version with GPGS is published.
+
+
+Point 2 provides for listing testers’ addresses in the “Testing” and testing permission for the alpha version, the same as in the description of the alpha version (paragraph 3).
+
+Next, you need to check that all the keys of our application (final and debugging) are reflected in the “Linked applications” item. To do this, we launch the Developer Console and view all the keys with the type of “Android”, for each key there must be a linked application.
+
+How simple!
+
+By the way, if the key is not reflected, then you just need to add our application again, it will pick up the first free key.
+
+ [<a href="/blog/2017/google-play-services-hard-way/">more...</a>]</p>
+  </div>	
+
+  <div>
 	<h2 class="post-title"><a href="/blog/2017/the-oak-I-planted/">The Oak Tree</a></h2>
 	<p class="post-meta">
 		30 Aug 2017 •
@@ -142,27 +232,6 @@ As was promised we move from the static smoothing to dynamic one in order to tak
  [<a href="/blog/2017/low-pass-filter-android-practice/">more...</a>]</p>
   </div>	
 
-  <div>
-	<h2 class="post-title"><a href="/blog/2017/low-pass-filter-android-sensors/">Low-pass Filter for Android Sensors</a></h2>
-	<p class="post-meta">
-		06 Aug 2017 •
-		4 min. read •
-		<a href="/blog/2017/low-pass-filter-android-sensors/#disqus_thread" data-disqus-identifier="2017-08-06-low-pass-filter-android-sensors.md">Comments</a>
-	</p>
-
-	
-	<a href="/blog/2017/low-pass-filter-android-sensors/" class="post-banner" style="background-image: url(/imgs/post-banners/low-pass-filter.jpeg);">
-		<img src="/imgs/post-banners/low-pass-filter.jpeg" alt="Low-pass Filter for Android Sensors">
-	</a>
-	
-	
-	<p class="post-excerpt">
-
-A  sensors in our mobile phones have, among other things, an imperfect output signal quality. Well, it’s difficult to do something with the hardware, but one can play with software digital signal filters.
-
- [<a href="/blog/2017/low-pass-filter-android-sensors/">more...</a>]</p>
-  </div>	
-
 </div>
 
 
@@ -178,6 +247,8 @@ A  sensors in our mobile phones have, among other things, an imperfect output si
 		<li><a href="/blog/page4/">4</a></li>
 
 		<li><a href="/blog/page5/">5</a></li>
+
+		<li><a href="/blog/page6/">6</a></li>
 
 
 
