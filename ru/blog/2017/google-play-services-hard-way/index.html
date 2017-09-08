@@ -35,7 +35,7 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2017-09-02T00:00:00+10:00" />
 <script type="application/ld+json">
-{"@context":"http://schema.org","@type":"BlogPosting","headline":"Подключение Google Play Games Services вручную","author":{"@type":"Person","name":"Yellow Rabbit"},"image":{"width":1200,"height":300,"url":"https://yrabbit.github.io/imgs/post-banners/joystick.jpeg","@type":"ImageObject"},"datePublished":"2017-09-02T00:00:00+10:00","dateModified":"2017-09-02T00:00:00+10:00","description":"Описан процесс подключения Google Play Games Services к проекту вручную.","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://yrabbit.github.io/imgs/blog-log.png"},"name":"Yellow Rabbit"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://yrabbit.github.io/ru/blog/2017/google-play-services-hard-way/"},"url":"https://yrabbit.github.io/ru/blog/2017/google-play-services-hard-way/"}</script>
+{"@context":"http://schema.org","@type":"BlogPosting","headline":"Подключение Google Play Games Services вручную","author":{"@type":"Person","name":"Yellow Rabbit"},"image":{"width":1200,"height":300,"url":"https://yrabbit.github.io/imgs/post-banners/joystick.jpeg","@type":"ImageObject"},"datePublished":"2017-09-02T00:00:00+10:00","dateModified":"2017-09-08T18:23:42+10:00","description":"Описан процесс подключения Google Play Games Services к проекту вручную.","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://yrabbit.github.io/imgs/blog-log.png"},"name":"Yellow Rabbit"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://yrabbit.github.io/ru/blog/2017/google-play-services-hard-way/"},"url":"https://yrabbit.github.io/ru/blog/2017/google-play-services-hard-way/"}</script>
 <!-- End Jekyll SEO tag -->
 
 		<script src="https://apis.google.com/js/platform.js" async defer>
@@ -70,7 +70,7 @@
 <h1 class="post-title">Google Play Games Services</h1>
 <p class="post-meta">
 	02 Sep 2017 &bull;
-	2 мин. читать &bull;
+	5 мин. читать &bull;
 	<a href="#disqus_thread" data-disqus-identifier="2017-09-02-google-play-services-hard-way.md">Comments</a> &bull; 
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 <a href="https://feedburner.google.com/fb/a/mailverify?uri=YellowRabbit-ru&amp;loc=ru_RU" onclick="window.open(this.href, 'mywin',
@@ -103,43 +103,46 @@
 <h2 id="main-activity">Main Activity</h2>
 
 <p>Несколько импортов:</p>
-<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode"><meta itemprop="codeSampleType" content="code snippet" /><meta itemprop="programmingLanguage" content="Java" />
-<pre><code class="language-Java">
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.games.Games;
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode"><meta itemprop="codeSampleType" content="code snippet" /><meta itemprop="programmingLanguage" content="java" />
+<div class="language-java highlighter-rouge"><pre class="highlight"><code>
+<span class="kn">import</span> <span class="nn">com.google.android.gms.common.ConnectionResult</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.google.android.gms.common.api.GoogleApiClient</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.google.android.gms.games.Games</span><span class="o">;</span>
 
-import com.google.example.games.basegameutils.BaseGameUtils;
-import com.google.example.games.basegameutils.GameHelper;
+<span class="kn">import</span> <span class="nn">com.google.example.games.basegameutils.BaseGameUtils</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.google.example.games.basegameutils.GameHelper</span><span class="o">;</span>
 
 </code></pre>
+</div>
 </div>
 
 <p>Кроме упомянутых в <a href="https://developers.google.com/games/services/android/init">инструкции</a> переменных нам понадобится ещё одна:</p>
-<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode"><meta itemprop="codeSampleType" content="code snippet" /><meta itemprop="programmingLanguage" content="Java" />
-<pre><code class="language-Java">
-private GameHelper gameHelper;
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode"><meta itemprop="codeSampleType" content="code snippet" /><meta itemprop="programmingLanguage" content="java" />
+<div class="language-java highlighter-rouge"><pre class="highlight"><code>
+<span class="kd">private</span> <span class="n">GameHelper</span> <span class="n">gameHelper</span><span class="o">;</span>
 
 </code></pre>
 </div>
+</div>
 
 <p>Она нужна чтобы задать количество запросов об авторизации. В <code class="highlighter-rouge">onCreate</code>:</p>
-<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode"><meta itemprop="codeSampleType" content="code snippet" /><meta itemprop="programmingLanguage" content="Java" />
-<pre><code class="language-Java">
-        // init game services
-        gameHelper = new GameHelper(this, GameHelper.CLIENT_GAMES);
-        gameHelper.enableDebugLog(true);
-        gameHelper.setMaxAutoSignInAttempts(1);
-        gameHelper.setup(this);
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode"><meta itemprop="codeSampleType" content="code snippet" /><meta itemprop="programmingLanguage" content="java" />
+<div class="language-java highlighter-rouge"><pre class="highlight"><code>
+        <span class="c1">// init game services</span>
+        <span class="n">gameHelper</span> <span class="o">=</span> <span class="k">new</span> <span class="n">GameHelper</span><span class="o">(</span><span class="k">this</span><span class="o">,</span> <span class="n">GameHelper</span><span class="o">.</span><span class="na">CLIENT_GAMES</span><span class="o">);</span>
+        <span class="n">gameHelper</span><span class="o">.</span><span class="na">enableDebugLog</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span>
+        <span class="n">gameHelper</span><span class="o">.</span><span class="na">setMaxAutoSignInAttempts</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+        <span class="n">gameHelper</span><span class="o">.</span><span class="na">setup</span><span class="o">(</span><span class="k">this</span><span class="o">);</span>
 
-        googleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(Games.API).addScope(Games.SCOPE_GAMES)
-		// ...
-                .build();
+        <span class="n">googleApiClient</span> <span class="o">=</span> <span class="k">new</span> <span class="n">GoogleApiClient</span><span class="o">.</span><span class="na">Builder</span><span class="o">(</span><span class="k">this</span><span class="o">)</span>
+                <span class="o">.</span><span class="na">addConnectionCallbacks</span><span class="o">(</span><span class="k">this</span><span class="o">)</span>
+                <span class="o">.</span><span class="na">addOnConnectionFailedListener</span><span class="o">(</span><span class="k">this</span><span class="o">)</span>
+                <span class="o">.</span><span class="na">addApi</span><span class="o">(</span><span class="n">Games</span><span class="o">.</span><span class="na">API</span><span class="o">).</span><span class="na">addScope</span><span class="o">(</span><span class="n">Games</span><span class="o">.</span><span class="na">SCOPE_GAMES</span><span class="o">)</span>
+		<span class="c1">// ...</span>
+                <span class="o">.</span><span class="na">build</span><span class="o">();</span>
 
 </code></pre>
+</div>
 </div>
 
 <h2 id="Ключи">Ключи</h2>
@@ -159,15 +162,69 @@ private GameHelper gameHelper;
 
 <p>Кстати, если ключ не отражен, то нужно просто добавить наше приложение ещё раз, оно подхватит первый свободный ключ.</p>
 
+<h2 id="Отказ-от-login">Отказ от login</h2>
+<p>Как требует <a href="https://developers.google.com/games/services/checklist">Google</a> не нужно предлагать авторизироваться в GPGS если пользователь когда-то отказался.</p>
+
+<p>Хранить этот флажок в настройках не составляет труда, осталось только поймать сам факт отказа. Для этого нужен обработчик:</p>
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode"><meta itemprop="codeSampleType" content="code snippet" /><meta itemprop="programmingLanguage" content="java" />
+<div class="language-java highlighter-rouge"><pre class="highlight"><code>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onActivityResult</span><span class="o">(</span><span class="kt">int</span> <span class="n">requestCode</span><span class="o">,</span> <span class="kt">int</span> <span class="n">responseCode</span><span class="o">,</span>
+                                 <span class="n">Intent</span> <span class="n">intent</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">.</span><span class="na">onActivityResult</span><span class="o">(</span><span class="n">requestCode</span><span class="o">,</span> <span class="n">responseCode</span><span class="o">,</span> <span class="n">intent</span><span class="o">);</span>
+
+        <span class="n">Settings</span><span class="o">.</span><span class="na">autoLoginGPGSOn</span> <span class="o">=</span> <span class="o">(</span><span class="n">responseCode</span> <span class="o">!=</span> <span class="n">Activity</span><span class="o">.</span><span class="na">RESULT_CANCELED</span><span class="o">);</span>
+    <span class="o">}</span>
+
+</code></pre>
+</div>
+</div>
+
+<p>Класс настроек, просто так:</p>
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode"><meta itemprop="codeSampleType" content="code snippet" /><meta itemprop="programmingLanguage" content="java" />
+<div class="language-java highlighter-rouge"><pre class="highlight"><code>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Settings</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">boolean</span> <span class="n">soundOn</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">boolean</span> <span class="n">musicOn</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">boolean</span> <span class="n">introOn</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">boolean</span> <span class="n">autoLoginGPGSOn</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+
+
+    <span class="kd">public</span> <span class="kd">final</span> <span class="kd">static</span> <span class="n">String</span> <span class="n">file</span> <span class="o">=</span> <span class="s">".my_cool_settings"</span><span class="o">;</span>
+
+    <span class="kd">private</span> <span class="kd">static</span> <span class="n">SharedPreferences</span> <span class="n">prefs</span> <span class="o">;</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">load</span><span class="o">(</span><span class="n">GLGame</span> <span class="n">game</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">prefs</span> <span class="o">=</span> <span class="n">game</span><span class="o">.</span><span class="na">getSharedPreferences</span><span class="o">(</span><span class="n">file</span><span class="o">,</span> <span class="mi">0</span><span class="o">);</span>
+        <span class="n">soundOn</span> <span class="o">=</span> <span class="n">prefs</span><span class="o">.</span><span class="na">getBoolean</span><span class="o">(</span><span class="s">"soundOn"</span><span class="o">,</span> <span class="kc">true</span><span class="o">);</span>
+        <span class="n">musicOn</span> <span class="o">=</span> <span class="n">prefs</span><span class="o">.</span><span class="na">getBoolean</span><span class="o">(</span><span class="s">"musicOn"</span><span class="o">,</span> <span class="kc">true</span><span class="o">);</span>
+        <span class="n">introOn</span> <span class="o">=</span> <span class="n">prefs</span><span class="o">.</span><span class="na">getBoolean</span><span class="o">(</span><span class="s">"introOn"</span><span class="o">,</span> <span class="kc">true</span><span class="o">);</span>
+        <span class="n">autoLoginGPGSOn</span> <span class="o">=</span> <span class="n">prefs</span><span class="o">.</span><span class="na">getBoolean</span><span class="o">(</span><span class="s">"autoLoginGPGSOn"</span><span class="o">,</span> <span class="kc">true</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">save</span><span class="o">(</span><span class="n">GLGame</span> <span class="n">game</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">prefs</span> <span class="o">=</span> <span class="n">game</span><span class="o">.</span><span class="na">getSharedPreferences</span><span class="o">(</span><span class="n">file</span><span class="o">,</span> <span class="mi">0</span><span class="o">);</span>
+        <span class="n">SharedPreferences</span><span class="o">.</span><span class="na">Editor</span> <span class="n">editor</span> <span class="o">=</span> <span class="n">prefs</span><span class="o">.</span><span class="na">edit</span><span class="o">();</span>
+        <span class="n">editor</span><span class="o">.</span><span class="na">putBoolean</span><span class="o">(</span><span class="s">"soundOn"</span><span class="o">,</span> <span class="n">soundOn</span><span class="o">);</span>
+        <span class="n">editor</span><span class="o">.</span><span class="na">putBoolean</span><span class="o">(</span><span class="s">"musicOn"</span><span class="o">,</span> <span class="n">musicOn</span><span class="o">);</span>
+        <span class="n">editor</span><span class="o">.</span><span class="na">putBoolean</span><span class="o">(</span><span class="s">"introOn"</span><span class="o">,</span> <span class="n">introOn</span><span class="o">);</span>
+        <span class="n">editor</span><span class="o">.</span><span class="na">putBoolean</span><span class="o">(</span><span class="s">"autoLoginGPGSOn"</span><span class="o">,</span> <span class="n">autoLoginGPGSOn</span><span class="o">);</span>
+        <span class="n">editor</span><span class="o">.</span><span class="na">apply</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+</code></pre>
+</div>
+</div>
+
 <section id="related">
   <h2>Также можно почитать</h2>
     <ul class="posts">
     
+        <li><span>02 Jun 2016</span> &raquo; <a href="/ru/blog/2016/lisp-toy-web-parse-element/">Web-движок на Lisp: разбираем самый сложный элемент</a></li>
+    
         <li><span>01 May 2016</span> &raquo; <a href="/ru/blog/2016/lisp-standalone-executable/">Lisp: создание самодостаточного исполняемого файла </a></li>
     
-        <li><span>31 May 2016</span> &raquo; <a href="/ru/blog/2016/lisp-toy-web-parse-comment/">Браузер на Lisp: разбираем комментарии</a></li>
-    
-        <li><span>27 Mar 2016</span> &raquo; <a href="/ru/blog/2016/xiaomi-android-6-watch/">Исправление Android 6 Wear на Xiaomi</a></li>
+        <li><span>07 Aug 2017</span> &raquo; <a href="/ru/blog/2017/low-pass-filter-android-practice/">Фильтр нижних частот для датчиков Андроид - практика</a></li>
     
     </ul>
 </section>
