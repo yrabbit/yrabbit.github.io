@@ -70,7 +70,7 @@
 <h1 class="post-title">Google Play Games Services</h1>
 <p class="post-meta">
 	02 Sep 2017 &bull;
-	5 мин. читать &bull;
+	4 мин. читать &bull;
 	<a href="#disqus_thread" data-disqus-identifier="2017-09-02-google-play-services-hard-way.md">Comments</a> &bull; 
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 <a href="https://feedburner.google.com/fb/a/mailverify?uri=YellowRabbit-ru&amp;loc=ru_RU" onclick="window.open(this.href, 'mywin',
@@ -134,12 +134,6 @@
         <span class="n">gameHelper</span><span class="o">.</span><span class="na">setMaxAutoSignInAttempts</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
         <span class="n">gameHelper</span><span class="o">.</span><span class="na">setup</span><span class="o">(</span><span class="k">this</span><span class="o">);</span>
 
-        <span class="n">googleApiClient</span> <span class="o">=</span> <span class="k">new</span> <span class="n">GoogleApiClient</span><span class="o">.</span><span class="na">Builder</span><span class="o">(</span><span class="k">this</span><span class="o">)</span>
-                <span class="o">.</span><span class="na">addConnectionCallbacks</span><span class="o">(</span><span class="k">this</span><span class="o">)</span>
-                <span class="o">.</span><span class="na">addOnConnectionFailedListener</span><span class="o">(</span><span class="k">this</span><span class="o">)</span>
-                <span class="o">.</span><span class="na">addApi</span><span class="o">(</span><span class="n">Games</span><span class="o">.</span><span class="na">API</span><span class="o">).</span><span class="na">addScope</span><span class="o">(</span><span class="n">Games</span><span class="o">.</span><span class="na">SCOPE_GAMES</span><span class="o">)</span>
-		<span class="c1">// ...</span>
-                <span class="o">.</span><span class="na">build</span><span class="o">();</span>
 
 </code></pre>
 </div>
