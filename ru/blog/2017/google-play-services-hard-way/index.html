@@ -164,7 +164,7 @@
 <div class="language-java highlighter-rouge"><pre class="highlight"><code>
     <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onActivityResult</span><span class="o">(</span><span class="kt">int</span> <span class="n">requestCode</span><span class="o">,</span> <span class="kt">int</span> <span class="n">responseCode</span><span class="o">,</span>
                                  <span class="n">Intent</span> <span class="n">intent</span><span class="o">)</span> <span class="o">{</span>
-        <span class="kd">super</span><span class="o">.</span><span class="na">onActivityResult</span><span class="o">(</span><span class="n">requestCode</span><span class="o">,</span> <span class="n">responseCode</span><span class="o">,</span> <span class="n">intent</span><span class="o">);</span>
+        <span class="n">gameHelper</span><span class="o">.</span><span class="na">onActivityResult</span><span class="o">(</span><span class="n">requestCode</span><span class="o">,</span> <span class="n">responseCode</span><span class="o">,</span> <span class="n">intent</span><span class="o">);</span>
 
         <span class="n">Settings</span><span class="o">.</span><span class="na">autoLoginGPGSOn</span> <span class="o">=</span> <span class="o">(</span><span class="n">responseCode</span> <span class="o">!=</span> <span class="n">Activity</span><span class="o">.</span><span class="na">RESULT_CANCELED</span><span class="o">);</span>
     <span class="o">}</span>
