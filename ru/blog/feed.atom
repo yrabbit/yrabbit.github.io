@@ -7,7 +7,111 @@
 	<author>
 		<name>Yellow Rabbit</name>
 	</author>
-	<updated>2017-09-16T19:27:20+10:00</updated>
+	<updated>2017-11-18T10:24:04+10:00</updated>
+
+	<entry>
+		<title type="text">Починка загрузчика isolinux для Acer C720</title>
+		<link href="https://yrabbit.github.io/ru/blog/2017/c720-and-syslinux/" />
+		<id>https://yrabbit.github.io/blog/2017/c720-and-syslinux/</id>
+		<published>2017-11-18T00:00:00+10:00</published>
+		<updated>2017-11-18T00:00:00+10:00</updated>
+		<summary type="html">Оказалось, что дистрибутив antiX Linux не хочет дружить с моим Acer C720: установщик впадает в так называемый bootloop. Причина заключается в особенностях Sea BIOS, которая забирает себе 16М нижней памяти, что приводит к краху syslinux. Это исправлено в версии 6.04 syslinux, но что делать мне сейчас со старым дистрибутивом на руках? Будем заменять syslinux в ISO.
+
+</summary>
+		<content type="html">
+&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;https://yrabbit.github.io/imgs/post-bannersCD.jpeg&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;p&gt;Оказалось, что дистрибутив &lt;a href=&quot;https://www.antixforum.com/&quot;&gt;antiX Linux&lt;/a&gt; не хочет дружить с моим Acer C720: установщик впадает в так называемый &lt;em&gt;bootloop&lt;/em&gt;. Причина заключается в особенностях Sea BIOS, которая забирает себе 16М нижней памяти, что приводит к краху &lt;em&gt;syslinux&lt;/em&gt;. Это исправлено в версии 6.04 &lt;em&gt;syslinux&lt;/em&gt;, но что делать мне сейчас со старым дистрибутивом на руках? Будем заменять &lt;em&gt;syslinux&lt;/em&gt; в ISO.&lt;/p&gt;
+
+&lt;h2 id=&quot;Новый-syslinux&quot;&gt;Новый syslinux&lt;/h2&gt;
+&lt;p&gt;Забираем и распаковываем новый syslinux:&lt;/p&gt;
+
+&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;&lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;&lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;shell&quot; /&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+wget https://www.kernel.org/pub/linux/utils/boot/syslinux/Testing/6.04/syslinux-6.04-pre1.tar.gz
+tar zxvpf syslinux-6.04-pre1.tar.gz
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Из этого каталога мы потом заберём свежие версии файлов.&lt;/p&gt;
+
+&lt;h2 id=&quot;Подготавливаем-образ&quot;&gt;Подготавливаем образ&lt;/h2&gt;
+&lt;p&gt;Монтируем и копируем содержимое установочного диска в каталог &lt;code class=&quot;highlighter-rouge&quot;&gt;dst&lt;/code&gt; - корень нового установочного образа. У меня установочный образ был на флешке &lt;code class=&quot;highlighter-rouge&quot;&gt;/dev/sdb&lt;/code&gt;&lt;/p&gt;
+
+&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;&lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;&lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;shell&quot; /&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+mkdir dst /mnt/dst
+mount -t iso9660 /dev/sdb /mnt/dst
+cp -a /mnt/dst ./
+umount /mnt/dst
+&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;dst
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Забираем загрузочный сектор.&lt;/p&gt;
+&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;&lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;&lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;shell&quot; /&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+dd &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/dev/sdb &lt;span class=&quot;nv&quot;&gt;bs&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;512 &lt;span class=&quot;nv&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1 &lt;span class=&quot;nv&quot;&gt;of&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;isohdpfx.bin
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;Заменяем-файлы-новыми-версиями&quot;&gt;Заменяем файлы новыми версиями&lt;/h2&gt;
+
+&lt;p&gt;Нужно скопировать файлы из каталога с новой версией &lt;em&gt;syslinux&lt;/em&gt; в &lt;code class=&quot;highlighter-rouge&quot;&gt;dst/boot/isolinux/&lt;/code&gt;
+Список файлов для копирования:&lt;/p&gt;
+
+&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;&lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;&lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;shell&quot; /&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+./bios/com32/chain/chain.c32
+./bios/com32/gfxboot/gfxboot.c32
+./bios/core/isolinux.bin
+./bios/com32/elflink/ldlinux/ldlinux.c32
+./bios/com32/lib/libcom32.c32
+./bios/com32/cmenu/libmenu/libmenu.c32
+./bios/com32/libutil/libutil.c32
+./bios/com32/menu/menu.c32
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;В файле &lt;code class=&quot;highlighter-rouge&quot;&gt;dst/boot/isolinux/version&lt;/code&gt; пишем новую версию 6.04.&lt;/p&gt;
+
+&lt;h2 id=&quot;Собираем-образ&quot;&gt;Собираем образ&lt;/h2&gt;
+
+&lt;p&gt;Запускаем небольшой скрипт в родительском каталоге &lt;code class=&quot;highlighter-rouge&quot;&gt;dst&lt;/code&gt;&lt;/p&gt;
+&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;&lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;&lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;shell&quot; /&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+&lt;span class=&quot;c&quot;&gt;#!/bin/sh&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;MBR_FILE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;isohdpfx.bin
+xorriso -as mkisofs &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+        -iso-level 3 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+        -R -J -pad &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+        -full-iso9660-filenames &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+        -volid &lt;span class=&quot;s2&quot;&gt;&quot;antiXlive&quot;&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+        -eltorito-boot boot/isolinux/isolinux.bin &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+        -eltorito-catalog boot/isolinux/isolinux.cat &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+        -no-emul-boot -boot-load-size 4 -boot-info-table &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+        -isohybrid-mbr &lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;MBR_FILE&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+        -eltorito-alt-boot &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+        -e boot/grub/efi.img &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+        -no-emul-boot -isohybrid-gpt-basdat &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+        -output antix-core-c720.iso &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+        ./dst
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;В результате получим новый ISO &lt;code class=&quot;highlighter-rouge&quot;&gt;antix-core-c720.iso&lt;/code&gt;, который можем записать обратно на флеш и загрузиться с него.&lt;/p&gt;
+
+</content>
+	</entry>
 
 	<entry>
 		<title type="text">Добавление к семейству: две маленькие лиственницы</title>
@@ -2769,225 +2873,6 @@ plot2d([[discrete, tl, kH2lkH4l], [discrete, tl, lowpass(kH2lkH4l, 0.5)],
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;p&gt;Работает :triumph:.&lt;/p&gt;
-
-</content>
-	</entry>
-
-	<entry>
-		<title type="text">Игра Трилобит на Lisp: взаимодействие с игроком</title>
-		<link href="https://yrabbit.github.io/ru/blog/2015/lisp-trilobite-game-ui/" />
-		<id>https://yrabbit.github.io/blog/2015/lisp-trilobite-game-ui/</id>
-		<published>2015-12-15T13:22:42+10:00</published>
-		<updated>2017-07-29T16:08:52+10:00</updated>
-		<summary type="html">Продолжаем развивать игру, описанную тут, тут и тут.
-
-Интерфейс
-Вот и подошло время обзавестись небольшой системой взаимодействия с человеком. Для начала покажем доску:
-
-</summary>
-		<content type="html">
-&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;https://yrabbit.github.io/imgs/post-banners/trilobite-ui.jpeg&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
-&lt;p&gt;Продолжаем развивать игру, описанную &lt;a href=&quot;/blog/2015/lisp-trilobite-game-board/&quot;&gt;тут&lt;/a&gt;, &lt;a href=&quot;/blog/2015/lisp-trilobite-moves-victory-check/&quot;&gt;тут&lt;/a&gt; и &lt;a href=&quot;/blog/2015/lisp-trilobite-rules-engine/&quot;&gt;тут&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h2 id=&quot;Интерфейс&quot;&gt;Интерфейс&lt;/h2&gt;
-&lt;p&gt;Вот и подошло время обзавестись небольшой системой взаимодействия с человеком. Для начала покажем доску:&lt;/p&gt;
-
-&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;&lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;&lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;cl&quot; /&gt;
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
-&lt;span class=&quot;c1&quot;&gt;;; *** UI&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;;; show board&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;draw-board&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;board&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;flet&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;get-cell-char&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;cell&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-                    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cond&lt;/span&gt;
-                      &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;eql&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;cell&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*ai-cell*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;    &lt;span class=&quot;sc&quot;&gt;#\A&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-                      &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;eql&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;cell&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*human-cell*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;sc&quot;&gt;#\H&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-                      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;t&lt;/span&gt; &lt;span class=&quot;sc&quot;&gt;#\.&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;loop&lt;/span&gt;
-      &lt;span class=&quot;nv&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;j&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;below&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*board-height*&lt;/span&gt;
-      &lt;span class=&quot;nv&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;row-idx&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;by&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*board-width*&lt;/span&gt;
-      &lt;span class=&quot;nb&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;progn&lt;/span&gt;
-           &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;fresh-line&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-           &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;loop&lt;/span&gt;
-             &lt;span class=&quot;nv&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;below&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*board-width*&lt;/span&gt;
-             &lt;span class=&quot;nv&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;idx&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;row-idx&lt;/span&gt;
-             &lt;span class=&quot;nv&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;cell&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;get-cell&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;board&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;idx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-             &lt;span class=&quot;nb&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;princ&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;get-cell-char&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;cell&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))))&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;fresh-line&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;loop&lt;/span&gt; 
-      &lt;span class=&quot;nv&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;below&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*board-width*&lt;/span&gt;
-      &lt;span class=&quot;nb&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;princ&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;code-char&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;97&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))))&lt;/span&gt;
-
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;p&gt;Под доской печатаются буквенные обозначения колонок, они нам понадобятся для ввода ходов человека.&lt;/p&gt;
-
-&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;&lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;&lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;cl&quot; /&gt;
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
-&lt;span class=&quot;nb&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;draw-board&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;new-board&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-
-&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;abc&lt;/span&gt;
-
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;p&gt;Небольшая вспомогательная функция для вывода победителя. Победитель - это &lt;em&gt;не&lt;/em&gt;проигравший в текущей позиции :smile:&lt;/p&gt;
-
-&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;&lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;&lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;cl&quot; /&gt;
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
-&lt;span class=&quot;c1&quot;&gt;;; announce winner&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;announce-winner&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;tree&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;fresh-line&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;game-node-failp&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tree&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;format&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;The winner is ~a&quot;&lt;/span&gt;
-            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;get-player-str&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;change-player&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;game-node-player&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tree&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;princ&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;There are no winners.&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
-
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;p&gt;Полностью информация об игровой ситуации включает в себя доску и текущего активного игрока.&lt;/p&gt;
-
-&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;&lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;&lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;cl&quot; /&gt;
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
-&lt;span class=&quot;c1&quot;&gt;;; show situation&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;print-info&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;tree&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;fresh-line&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;format&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;current player = ~a&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;get-player-str&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;game-node-player&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tree&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;draw-board&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;game-node-board&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tree&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
-
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;p&gt;Попробуем на первоначальной доске:&lt;/p&gt;
-
-&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;&lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;&lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;cl&quot; /&gt;
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
-&lt;span class=&quot;nb&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;print-info&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;game-tree&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;new-board&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*ai-player*&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;-1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-
-&lt;span class=&quot;nv&quot;&gt;current&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;The&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Evil&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;AI&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;abc&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;NIL&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;*&lt;/span&gt;
-
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;p&gt;Обработка хода человека проста: предлагается ввести число соответствующее буквенному обозначению колонки. Заполненные колонки не предлагаются для выбора. Правда не проверяется корректность данных, но для наших целей это не критично.&lt;/p&gt;
-
-&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;&lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;&lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;cl&quot; /&gt;
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
-&lt;span class=&quot;c1&quot;&gt;;; handle human&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;handle-human&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;tree&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;fresh-line&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;princ&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;choose your move:&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;moves&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;game-node-moves&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tree&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;labels&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;print-moves&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;lst&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; 
-                          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;unless&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;null&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;lst&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-                            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let*&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;move&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;car&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;lst&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-                                   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;action&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;code-char&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;97&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;mod&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;car&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;move&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*board-width*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))))&lt;/span&gt;
-                              &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;fresh-line&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-                              &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;format&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;~a. ~a&quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;n&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;action&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-                              &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;print-moves&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cdr&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;lst&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;1+&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))))&lt;/span&gt;
-      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;print-moves&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;moves&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;fresh-line&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cadr&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;nth&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;1-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;read&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;moves&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
-
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-
-&lt;h2 id=&quot;Главный-цикл&quot;&gt;Главный цикл&lt;/h2&gt;
-&lt;p&gt;Самая важная функция программы. Даёт возможность ходить компьютеру и человеку по очереди, проверяя на победу.&lt;/p&gt;
-
-&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;&lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;&lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;cl&quot; /&gt;
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
-&lt;span class=&quot;c1&quot;&gt;;; main loop&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;play&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;tree&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;print-info&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tree&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;game-node-failp&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tree&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;announce-winner&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tree&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;eq&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*ai-player*&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;game-node-player&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tree&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;play&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;handle-computer&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tree&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;play&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;handle-human&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tree&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))))&lt;/span&gt;
-
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;p&gt;Полностью небольшая партия:&lt;/p&gt;
-
-&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;&lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;&lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;cl&quot; /&gt;
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
-&lt;span class=&quot;nb&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;play&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;game-tree&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;new-board&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*ai-player*&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;-1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-
-&lt;span class=&quot;nv&quot;&gt;current&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;The&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Evil&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;AI&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;abc&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;current&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Human&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;A..&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;abc&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;choose&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;your&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;move:&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;1.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;a&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;2.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;b&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;3.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;c&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;current&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;The&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Evil&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;AI&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;H..&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;A..&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;abc&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;current&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Human&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;H..&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;AA.&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;abc&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;choose&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;your&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;move:&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;1.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;a&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;2.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;b&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;3.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;c&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;current&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;The&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Evil&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;AI&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;H..&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;H..&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;AA.&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;abc&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;current&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Human&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;H..&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;HA.&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;AA.&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;abc&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;choose&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;your&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;move:&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;1.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;b&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;2.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;c&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;current&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;The&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Evil&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;AI&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;H..&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;HA.&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;AAH&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;abc&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;current&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Human&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;HA.&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;HA.&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;AAH&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;abc&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;The&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;winner&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;is&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;The&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Evil&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;AI&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;NIL&lt;/span&gt;
-
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;p&gt;Компьютер выиграл :frowning: Хотя AI играет довольно странно, он всё равно выиграл.&lt;/p&gt;
 
 </content>
 	</entry>
