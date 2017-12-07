@@ -94,12 +94,11 @@
 <p>We take away and unpack the new syslinux:</p>
 
 <div itemscope="" itemtype="http://schema.org/SoftwareSourceCode"><meta itemprop="codeSampleType" content="code snippet" /><meta itemprop="programmingLanguage" content="shell" />
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 wget https://www.kernel.org/pub/linux/utils/boot/syslinux/Testing/6.04/syslinux-6.04-pre1.tar.gz
-tar zxvpf syslinux-6.04-pre1.tar.gz
+<span class="nb">tar </span>zxvpf syslinux-6.04-pre1.tar.gz
 
-</code></pre>
-</div>
+</code></pre></div></div>
 </div>
 
 <p>From this directory we will then take the latest versions of the files.</p>
@@ -108,24 +107,22 @@ tar zxvpf syslinux-6.04-pre1.tar.gz
 <p>We mount and copy the contents of the installation disk to the directory <code class="highlighter-rouge">dst</code> - the root of the new installation image. I had an installation image on the flash drive <code class="highlighter-rouge">/dev/sdb</code></p>
 
 <div itemscope="" itemtype="http://schema.org/SoftwareSourceCode"><meta itemprop="codeSampleType" content="code snippet" /><meta itemprop="programmingLanguage" content="shell" />
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 mkdir dst /mnt/dst
-mount -t iso9660 /dev/sdb /mnt/dst
-cp -a /mnt/dst ./
+mount <span class="nt">-t</span> iso9660 /dev/sdb /mnt/dst
+cp <span class="nt">-a</span> /mnt/dst ./
 umount /mnt/dst
 <span class="nb">cd </span>dst
 
-</code></pre>
-</div>
+</code></pre></div></div>
 </div>
 
 <p>Take away the boot sector.</p>
 <div itemscope="" itemtype="http://schema.org/SoftwareSourceCode"><meta itemprop="codeSampleType" content="code snippet" /><meta itemprop="programmingLanguage" content="shell" />
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 dd <span class="k">if</span><span class="o">=</span>/dev/sdb <span class="nv">bs</span><span class="o">=</span>512 <span class="nv">count</span><span class="o">=</span>1 <span class="nv">of</span><span class="o">=</span>isohdpfx.bin
 
-</code></pre>
-</div>
+</code></pre></div></div>
 </div>
 
 <h2 id="replace-files-with-new-versions">Replace files with new versions</h2>
@@ -134,7 +131,7 @@ dd <span class="k">if</span><span class="o">=</span>/dev/sdb <span class="nv">bs
 List of files to copy:</p>
 
 <div itemscope="" itemtype="http://schema.org/SoftwareSourceCode"><meta itemprop="codeSampleType" content="code snippet" /><meta itemprop="programmingLanguage" content="shell" />
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 ./bios/com32/chain/chain.c32
 ./bios/com32/gfxboot/gfxboot.c32
 ./bios/core/isolinux.bin
@@ -144,8 +141,7 @@ List of files to copy:</p>
 ./bios/com32/libutil/libutil.c32
 ./bios/com32/menu/menu.c32
 
-</code></pre>
-</div>
+</code></pre></div></div>
 </div>
 
 <p>In the file <code class="highlighter-rouge">dst/boot/isolinux/version</code> we write the new version 6.04.</p>
@@ -155,26 +151,25 @@ List of files to copy:</p>
 <p>Run a small script in the parent directory <code class="highlighter-rouge">dst</code></p>
 
 <div itemscope="" itemtype="http://schema.org/SoftwareSourceCode"><meta itemprop="codeSampleType" content="code snippet" /><meta itemprop="programmingLanguage" content="shell" />
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 <span class="c">#!/bin/sh</span>
 <span class="nv">MBR_FILE</span><span class="o">=</span>isohdpfx.bin
-xorriso -as mkisofs <span class="se">\</span>
-        -iso-level 3 <span class="se">\</span>
-        -R -J -pad <span class="se">\</span>
-        -full-iso9660-filenames <span class="se">\</span>
-        -volid <span class="s2">"antiXlive"</span> <span class="se">\</span>
-        -eltorito-boot boot/isolinux/isolinux.bin <span class="se">\</span>
-        -eltorito-catalog boot/isolinux/isolinux.cat <span class="se">\</span>
-        -no-emul-boot -boot-load-size 4 -boot-info-table <span class="se">\</span>
-        -isohybrid-mbr <span class="k">${</span><span class="nv">MBR_FILE</span><span class="k">}</span> <span class="se">\</span>
-        -eltorito-alt-boot <span class="se">\</span>
-        -e boot/grub/efi.img <span class="se">\</span>
-        -no-emul-boot -isohybrid-gpt-basdat <span class="se">\</span>
-        -output antix-core-c720.iso <span class="se">\</span>
+xorriso <span class="nt">-as</span> mkisofs <span class="se">\</span>
+        <span class="nt">-iso-level</span> 3 <span class="se">\</span>
+        <span class="nt">-R</span> <span class="nt">-J</span> <span class="nt">-pad</span> <span class="se">\</span>
+        <span class="nt">-full-iso9660-filenames</span> <span class="se">\</span>
+        <span class="nt">-volid</span> <span class="s2">"antiXlive"</span> <span class="se">\</span>
+        <span class="nt">-eltorito-boot</span> boot/isolinux/isolinux.bin <span class="se">\</span>
+        <span class="nt">-eltorito-catalog</span> boot/isolinux/isolinux.cat <span class="se">\</span>
+        <span class="nt">-no-emul-boot</span> <span class="nt">-boot-load-size</span> 4 <span class="nt">-boot-info-table</span> <span class="se">\</span>
+        <span class="nt">-isohybrid-mbr</span> <span class="k">${</span><span class="nv">MBR_FILE</span><span class="k">}</span> <span class="se">\</span>
+        <span class="nt">-eltorito-alt-boot</span> <span class="se">\</span>
+        <span class="nt">-e</span> boot/grub/efi.img <span class="se">\</span>
+        <span class="nt">-no-emul-boot</span> <span class="nt">-isohybrid-gpt-basdat</span> <span class="se">\</span>
+        <span class="nt">-output</span> antix-core-c720.iso <span class="se">\</span>
         ./dst
 
-</code></pre>
-</div>
+</code></pre></div></div>
 </div>
 
 <p>As a result, we get a new ISO <code class="highlighter-rouge">antix-core-c720.iso</code>, which we can write back to the flash and boot from it.</p>
@@ -184,7 +179,7 @@ xorriso -as mkisofs <span class="se">\</span>
   <h2>Related Posts</h2>
     <ul class="posts">
     
-        <li><span>13 Sep 2017</span> &raquo; <a href="/blog/2017/an-addition-to-the-family-two-tiny-larches/">Addition to the family: two small larch</a></li>
+        <li><span>13 Sep 2017</span> &raquo; <a href="/blog/2017/an-addition-to-the-family-two-tiny-larches/">Addition to the family: two small larches</a></li>
     
         <li><span>02 Sep 2017</span> &raquo; <a href="/blog/2017/google-play-services-hard-way/">Connect Google Play Games Services Manually</a></li>
     

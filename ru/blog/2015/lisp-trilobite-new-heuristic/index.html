@@ -89,8 +89,7 @@
 <div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
 <meta itemprop="codeSampleType" content="code snippet">
 <meta itemprop="programmingLanguage" content="cl">
-<div class="language-cl highlighter-rouge">
-<pre class="highlight"><code>
+<div class="language-cl highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 <span class="c1">;; count enemy neighbors</span>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">slow-get-neighbors-pattern</span> <span class="p">(</span><span class="nv">cell</span><span class="p">)</span>
   <span class="p">(</span><span class="nb">remove-if</span> <span class="nf">#'</span><span class="nb">null</span>
@@ -125,16 +124,14 @@
                               <span class="p">(</span><span class="nb">1+</span> <span class="nv">acc</span><span class="p">)</span>
                               <span class="nv">acc</span><span class="p">))</span> <span class="nv">pat</span> <span class="ss">:initial-value</span> <span class="mi">0</span><span class="p">))))</span>
 
-</code></pre>
-</div>
+</code></pre></div></div>
 </div>
 <p>Процесс экспериментирования с эвристиками стал гораздо легче, когда я ввел несколько констант, которые задавали относительные <em>веса</em> разных эвристик. В частности победа или поражения имеют просто огромный вес.</p>
 
 <div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
 <meta itemprop="codeSampleType" content="code snippet">
 <meta itemprop="programmingLanguage" content="cl">
-<div class="language-cl highlighter-rouge">
-<pre class="highlight"><code>
+<div class="language-cl highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*enemy-weight*</span>   <span class="mi">4</span><span class="p">)</span>
 <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*player-weight*</span>  <span class="mi">5</span><span class="p">)</span>
 <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*win-weight*</span>    <span class="p">(</span><span class="nb">*</span> <span class="mi">9</span> <span class="p">(</span><span class="nb">max</span> <span class="vg">*enemy-weight*</span> <span class="vg">*player-weight*</span><span class="p">)))</span>
@@ -143,16 +140,14 @@
 <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*draw*</span>          <span class="mi">0</span><span class="p">)</span>
 <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*human-win*</span>     <span class="p">(</span><span class="nb">-</span> <span class="vg">*win-weight*</span><span class="p">))</span>
 
-</code></pre>
-</div>
+</code></pre></div></div>
 </div>
 <p>А вот как теперь оценивается позиция с помощью новых весовых коэффициентов:</p>
 
 <div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
 <meta itemprop="codeSampleType" content="code snippet">
 <meta itemprop="programmingLanguage" content="cl">
-<div class="language-cl highlighter-rouge">
-<pre class="highlight"><code>
+<div class="language-cl highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 <span class="c1">;; count longest line</span>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">score-position</span> <span class="p">(</span><span class="nv">tree</span> <span class="nv">move</span><span class="p">)</span>
   <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">cnt</span> <span class="p">(</span><span class="nv">count-player-cells</span> 
@@ -167,8 +162,7 @@
                      <span class="nv">cnt</span>
                      <span class="p">(</span><span class="nb">-</span> <span class="nv">cnt</span><span class="p">))))))</span>
 
-</code></pre>
-</div>
+</code></pre></div></div>
 </div>
 
 <p>Суть новой эвристики: кроме подсчёта перспективных линий из своих фишек AI старается сделать ход так, чтобы иметь в соседях как можно больше фишек противника. ``Облепливая’’ фишки противника AI тем самым снижает его возможности строить линии.</p>

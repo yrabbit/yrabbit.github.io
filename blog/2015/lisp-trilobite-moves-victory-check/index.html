@@ -90,8 +90,7 @@
 <div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
 <meta itemprop="codeSampleType" content="code snippet">
 <meta itemprop="programmingLanguage" content="cl">
-<div class="language-cl highlighter-rouge">
-<pre class="highlight"><code>
+<div class="language-cl highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 <span class="c1">;; add move to the board</span>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">board-add-move</span> <span class="p">(</span><span class="nv">board</span> <span class="nv">move-cell</span> <span class="nv">player</span><span class="p">)</span>
   <span class="p">(</span><span class="nv">board-from-list</span>
@@ -102,16 +101,14 @@
                 <span class="p">(</span><span class="nv">get-player-color</span> <span class="nv">player</span><span class="p">)</span>
                 <span class="nv">cell</span><span class="p">))))</span>
 
-</code></pre>
-</div>
+</code></pre></div></div>
 </div>
 <p>Form the list of possible cells for the move. These are empty cells located at the very bottom of each column. Of course, if there are free cells on the column at all.</p>
 
 <div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
 <meta itemprop="codeSampleType" content="code snippet">
 <meta itemprop="programmingLanguage" content="cl">
-<div class="language-cl highlighter-rouge">
-<pre class="highlight"><code>
+<div class="language-cl highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 <span class="c1">;; possible moves</span>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">possible-moves</span> <span class="p">(</span><span class="nv">board</span><span class="p">)</span>
   <span class="p">(</span><span class="k">labels</span> <span class="p">((</span><span class="nv">lastlinep</span> <span class="p">(</span><span class="nv">idx</span><span class="p">)</span>
@@ -127,8 +124,7 @@
       <span class="k">if</span> <span class="p">(</span><span class="nv">lowest-empty-cellp</span> <span class="nv">cell</span><span class="p">)</span>
         <span class="nv">collect</span> <span class="nv">cell</span><span class="p">)))</span>
 
-</code></pre>
-</div>
+</code></pre></div></div>
 </div>
 <h2 id="checking-for-a-winning-situation">Checking for a winning situation</h2>
 <p>The condition for winning the game is to create a line from the <code class="highlighter-rouge">*win-len*</code> chips of the same color. We will check for victory after each move. To do this, it is necessary to detect the lines that resulted from the last move. The following figure shows how we will check cells and count the number of identical chips in directions (vectors) starting from the last move[^how-to-make-svg] cell.</p>
@@ -154,8 +150,7 @@
 <div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
 <meta itemprop="codeSampleType" content="code snippet">
 <meta itemprop="programmingLanguage" content="cl">
-<div class="language-cl highlighter-rouge">
-<pre class="highlight"><code>
+<div class="language-cl highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 <span class="c1">;; test pattern for win</span>
 <span class="c1">;; ((left...) (right...)</span>
 <span class="c1">;;  (up...) (down...)</span>
@@ -217,8 +212,7 @@
         <span class="nv">for</span> <span class="nv">yoff</span> <span class="nv">from</span> <span class="mi">1</span> <span class="nv">to</span> <span class="p">(</span><span class="nb">min</span> <span class="p">(</span><span class="nb">1-</span> <span class="vg">*win-len*</span><span class="p">)</span> <span class="p">(</span><span class="nb">floor</span> <span class="nv">cell</span> <span class="vg">*board-width*</span><span class="p">))</span>
         <span class="nv">collect</span> <span class="p">(</span><span class="nb">-</span> <span class="nv">cell</span> <span class="p">(</span><span class="nb">-</span> <span class="p">(</span><span class="nb">*</span> <span class="nv">yoff</span> <span class="vg">*board-width*</span><span class="p">)</span> <span class="nv">xoff</span><span class="p">))))))</span>
 
-</code></pre>
-</div>
+</code></pre></div></div>
 </div>
 <p>Having received a template for testing cells, one  can proceed with the actual verification. Here one need to take into account that the central cell already contains a chip of the desired color - this is the last move, so the vectors are considered in pairs. That is, if we have two left chips on the left and one desired chip on the right, then in the sum with the central chip we have a line of 2 + 1 + 1 = 4 chips.</p>
 
@@ -229,8 +223,7 @@
 <div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
 <meta itemprop="codeSampleType" content="code snippet">
 <meta itemprop="programmingLanguage" content="cl">
-<div class="language-cl highlighter-rouge">
-<pre class="highlight"><code>
+<div class="language-cl highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 <span class="c1">;; count cells with player's color in row</span>
 <span class="c1">;; pattern is a list of lists</span>
 <span class="c1">;;      first halfline    second halfline</span>
@@ -253,30 +246,26 @@
                     <span class="nv">acc</span><span class="p">)))</span>
        <span class="p">(</span><span class="nv">test-line</span> <span class="nv">pattern</span> <span class="mi">0</span><span class="p">))))</span>
 
-</code></pre>
-</div>
+</code></pre></div></div>
 </div>
 <p>Checking for a player’s victory turned out ridiculously simple:</p>
 
 <div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
 <meta itemprop="codeSampleType" content="code snippet">
 <meta itemprop="programmingLanguage" content="cl">
-<div class="language-cl highlighter-rouge">
-<pre class="highlight"><code>
+<div class="language-cl highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 <span class="c1">;; test for win for player</span>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">test-for-win</span> <span class="p">(</span><span class="nv">board</span> <span class="nv">cell</span> <span class="nv">player</span><span class="p">)</span>
   <span class="p">(</span><span class="nb">&gt;=</span> <span class="p">(</span><span class="nv">count-player-cells</span> <span class="nv">board</span> <span class="nv">cell</span> <span class="nv">player</span><span class="p">)</span> <span class="vg">*win-len*</span><span class="p">))</span>
 
-</code></pre>
-</div>
+</code></pre></div></div>
 </div>
 <p>You can see how well it is possible to create a template for testing for victory:</p>
 
 <div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
 <meta itemprop="codeSampleType" content="code snippet">
 <meta itemprop="programmingLanguage" content="cl">
-<div class="language-cl highlighter-rouge">
-<pre class="highlight"><code>
+<div class="language-cl highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 <span class="nb">*</span> <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*board-width*</span> <span class="mi">10</span><span class="p">)</span> <span class="c1">; one  need to increase the size of the board for clarity</span>
 
 <span class="vg">*BOARD-WIDTH*</span>
@@ -293,38 +282,33 @@
 <span class="p">((</span><span class="mi">43</span> <span class="mi">42</span> <span class="mi">41</span> <span class="mi">40</span><span class="p">)</span> <span class="p">(</span><span class="mi">45</span> <span class="mi">46</span> <span class="mi">47</span> <span class="mi">48</span><span class="p">)</span> <span class="p">(</span><span class="mi">34</span> <span class="mi">24</span> <span class="mi">14</span> <span class="mi">4</span><span class="p">)</span> <span class="p">(</span><span class="mi">54</span> <span class="mi">64</span> <span class="mi">74</span> <span class="mi">84</span><span class="p">)</span> <span class="p">(</span><span class="mi">33</span> <span class="mi">22</span> <span class="mi">11</span> <span class="mi">0</span><span class="p">)</span>
  <span class="p">(</span><span class="mi">55</span> <span class="mi">66</span> <span class="mi">77</span> <span class="mi">88</span><span class="p">)</span> <span class="p">(</span><span class="mi">53</span> <span class="mi">62</span> <span class="mi">71</span> <span class="mi">80</span><span class="p">)</span> <span class="p">(</span><span class="mi">35</span> <span class="mi">26</span> <span class="mi">17</span> <span class="mi">8</span><span class="p">))</span>
 
-</code></pre>
-</div>
+</code></pre></div></div>
 </div>
 <p>Well, this is the center of the board and the function (after all, I do not like it) has formed all the vectors correctly. Let’s try to choose a cell closer to the upper left corner. In this case, some of the lists should be trimmed.</p>
 
 <div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
 <meta itemprop="codeSampleType" content="code snippet">
 <meta itemprop="programmingLanguage" content="cl">
-<div class="language-cl highlighter-rouge">
-<pre class="highlight"><code>
+<div class="language-cl highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 <span class="nb">*</span> <span class="p">(</span><span class="nv">get-test-patterns</span> <span class="mi">32</span><span class="p">)</span>
 
 <span class="p">((</span><span class="mi">31</span> <span class="mi">30</span><span class="p">)</span> <span class="p">(</span><span class="mi">33</span> <span class="mi">34</span> <span class="mi">35</span> <span class="mi">36</span><span class="p">)</span> <span class="p">(</span><span class="mi">22</span> <span class="mi">12</span> <span class="mi">2</span><span class="p">)</span> <span class="p">(</span><span class="mi">42</span> <span class="mi">52</span> <span class="mi">62</span> <span class="mi">72</span><span class="p">)</span> <span class="p">(</span><span class="mi">21</span> <span class="mi">10</span><span class="p">)</span> <span class="p">(</span><span class="mi">43</span> <span class="mi">54</span> <span class="mi">65</span> <span class="mi">76</span><span class="p">)</span> <span class="p">(</span><span class="mi">41</span> <span class="mi">50</span><span class="p">)</span>
  <span class="p">(</span><span class="mi">23</span> <span class="mi">14</span> <span class="mi">5</span><span class="p">))</span>
 
-</code></pre>
-</div>
+</code></pre></div></div>
 </div>
 <p>Not bad, the vectors to the left and up are shortened. Another critical cell should be close to the right edge of the board:</p>
 
 <div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
 <meta itemprop="codeSampleType" content="code snippet">
 <meta itemprop="programmingLanguage" content="cl">
-<div class="language-cl highlighter-rouge">
-<pre class="highlight"><code>
+<div class="language-cl highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 <span class="nb">*</span> <span class="p">(</span><span class="nv">get-test-patterns</span> <span class="mi">29</span><span class="p">)</span>
 
 <span class="p">((</span><span class="mi">28</span> <span class="mi">27</span> <span class="mi">26</span> <span class="mi">25</span><span class="p">)</span> <span class="nv">NIL</span> <span class="p">(</span><span class="mi">19</span> <span class="mi">9</span><span class="p">)</span> <span class="p">(</span><span class="mi">39</span> <span class="mi">49</span> <span class="mi">59</span> <span class="mi">69</span><span class="p">)</span> <span class="p">(</span><span class="mi">18</span> <span class="mi">7</span><span class="p">)</span> <span class="nv">NIL</span> <span class="p">(</span><span class="mi">38</span> <span class="mi">47</span> <span class="mi">56</span> <span class="mi">65</span><span class="p">)</span> <span class="nv">NIL</span><span class="p">)</span>
 <span class="nb">*</span>
 
-</code></pre>
-</div>
+</code></pre></div></div>
 </div>
 <p>Great! Vectors pointing to the right are empty.</p>
 
@@ -350,7 +334,7 @@
 </li>
     
         <li>
-<span>13 Sep 2017</span> » <a href="/blog/2017/an-addition-to-the-family-two-tiny-larches/">Addition to the family: two small larch</a>
+<span>13 Sep 2017</span> » <a href="/blog/2017/an-addition-to-the-family-two-tiny-larches/">Addition to the family: two small larches</a>
 </li>
     
         <li>

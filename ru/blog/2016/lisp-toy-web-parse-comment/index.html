@@ -91,13 +91,11 @@
 <div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
 <meta itemprop="codeSampleType" content="code snippet">
 <meta itemprop="programmingLanguage" content="cl">
-<div class="language-cl highlighter-rouge">
-<pre class="highlight"><code>
+<div class="language-cl highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">make-comment-node</span> <span class="p">()</span>
   <span class="p">(</span><span class="nb">make-instance</span> <span class="ss">'comment-node</span><span class="p">))</span>
 
-</code></pre>
-</div>
+</code></pre></div></div>
 </div>
 
 <p>Итак для разбора комментария первым делом, что первым делом? Пианину! Шутка. Первым делом запоминаем позицию <code class="highlighter-rouge">index</code> в строке чтобы потом откатится (<code class="highlighter-rouge">oldindex</code>).</p>
@@ -113,8 +111,7 @@
 <div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
 <meta itemprop="codeSampleType" content="code snippet">
 <meta itemprop="programmingLanguage" content="cl">
-<div class="language-cl highlighter-rouge">
-<pre class="highlight"><code>
+<div class="language-cl highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
        <span class="p">(</span><span class="nv">parse-comment</span> <span class="p">()</span>
           <span class="s">"&lt;!-- ??? --&gt;"</span>
           <span class="p">(</span><span class="k">let</span> <span class="p">(</span><span class="nv">ch</span> <span class="nv">eoc-found</span> <span class="p">(</span><span class="nv">oldindex</span> <span class="nv">index</span><span class="p">))</span>
@@ -126,8 +123,7 @@
 		     <span class="p">(</span><span class="nv">make-comment-node</span><span class="p">))</span>
                 <span class="p">(</span><span class="k">progn</span> <span class="p">(</span><span class="nb">setf</span> <span class="nv">index</span> <span class="nv">oldindex</span><span class="p">)</span> <span class="no">nil</span><span class="p">))))</span>
 
-</code></pre>
-</div>
+</code></pre></div></div>
 </div>
 
 <p>Проверяем, заменив вызов <code class="highlighter-rouge">parse-tex</code> в <code class="highlighter-rouge">parse-html</code> на вызов <code class="highlighter-rouge">(cons (parse-comment) (princ index)))</code>:</p>
@@ -135,8 +131,7 @@
 <div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
 <meta itemprop="codeSampleType" content="code snippet">
 <meta itemprop="programmingLanguage" content="cl">
-<div class="language-cl highlighter-rouge">
-<pre class="highlight"><code>
+<div class="language-cl highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 <span class="nb">*</span> <span class="p">(</span><span class="nv">ql:quickload</span> <span class="ss">'toy-engine</span><span class="p">)</span>
 <span class="nv">To</span> <span class="nb">load</span> <span class="s">"toy-engine"</span><span class="err">:</span>
   <span class="nv">Load</span> <span class="mi">1</span> <span class="nv">ASDF</span> <span class="nv">system:</span>
@@ -161,8 +156,7 @@
 <span class="s">"}"</span>
 <span class="nb">*</span>
 
-</code></pre>
-</div>
+</code></pre></div></div>
 </div>
 
 <p>Как видно из <code class="highlighter-rouge">index=38</code> парсер правильно поглотил всю внутренность комментария.</p>

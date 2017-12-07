@@ -96,29 +96,27 @@
 
 <p>Первый скрипт <code class="highlighter-rouge">brightness-inc.sh</code> увеличивает яркость:</p>
 <div itemscope="" itemtype="http://schema.org/SoftwareSourceCode"><meta itemprop="codeSampleType" content="code snippet" /><meta itemprop="programmingLanguage" content="bash" />
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 <span class="c">#!/bin/sh</span>
-<span class="nv">LVL</span><span class="o">=</span><span class="sb">`</span>/sbin/sysctl -n hw.backlight_level<span class="sb">`</span>
+<span class="nv">LVL</span><span class="o">=</span><span class="sb">`</span>/sbin/sysctl <span class="nt">-n</span> hw.backlight_level<span class="sb">`</span>
 /sbin/sysctl hw.backlight_level<span class="o">=</span><span class="k">$((</span> <span class="k">${</span><span class="nv">LVL</span><span class="k">}</span> <span class="o">+</span> <span class="m">50</span> <span class="k">))</span>
 
-</code></pre>
-</div>
+</code></pre></div></div>
 </div>
 
 <p>Второй скрипт <code class="highlighter-rouge">brightness-dec.sh</code> уменьшает:</p>
 <div itemscope="" itemtype="http://schema.org/SoftwareSourceCode"><meta itemprop="codeSampleType" content="code snippet" /><meta itemprop="programmingLanguage" content="bash" />
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 <span class="c">#!/bin/sh</span>
-<span class="nv">LVL</span><span class="o">=</span><span class="sb">`</span>/sbin/sysctl -n hw.backlight_level<span class="sb">`</span>
+<span class="nv">LVL</span><span class="o">=</span><span class="sb">`</span>/sbin/sysctl <span class="nt">-n</span> hw.backlight_level<span class="sb">`</span>
 /sbin/sysctl hw.backlight_level<span class="o">=</span><span class="k">$((</span> <span class="k">${</span><span class="nv">LVL</span><span class="k">}</span> <span class="o">-</span> <span class="m">50</span> <span class="k">))</span>
 
-</code></pre>
-</div>
+</code></pre></div></div>
 </div>
 
 <p>В файле <code class="highlighter-rouge">.xbindkeysrc</code> указываем привязку скриптов к клавишам:</p>
 <div itemscope="" itemtype="http://schema.org/SoftwareSourceCode"><meta itemprop="codeSampleType" content="code snippet" /><meta itemprop="programmingLanguage" content="bash" />
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 <span class="c"># brightness</span>
 <span class="s2">"brightness-dec.sh"</span>
   F6
@@ -127,8 +125,7 @@
   F7
 
 
-</code></pre>
-</div>
+</code></pre></div></div>
 </div>
 
 

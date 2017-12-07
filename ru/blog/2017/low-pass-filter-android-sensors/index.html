@@ -198,14 +198,12 @@ plot2d([[discrete, tl, kH2lkH4l], [discrete, tl, lowpass(kH2lkH4l, 0.5)],
 <div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
 <meta itemprop="codeSampleType" content="code snippet">
 <meta itemprop="programmingLanguage" content="java">
-<div class="language-java highlighter-rouge">
-<pre class="highlight"><code>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
   <span class="nd">@Override</span>
     <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onSensorChanged</span><span class="o">(</span><span class="n">SensorEvent</span> <span class="n">event</span><span class="o">)</span>
     <span class="o">{</span>
 
-</code></pre>
-</div>
+</code></pre></div></div>
 </div>
 
 <p>\(\ldots\) и разочароваться. Дело в \(\Delta T\) или в периоде дискретизации, которое изменяется от модели к модели, да и во время работы программы может варьироваться довольно значительно. И при фиксированной \(\alpha\) это приведёт к изменению рабочей частоты фильтра. Так что \(\alpha\) должна быть динамической, но этом в следующий раз. <img class="emoji" title=":smile:" alt=":smile:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f604.png" height="20" width="20" align="absmiddle"></p>

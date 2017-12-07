@@ -94,7 +94,7 @@
 <p><img src="/imgs/posts/trilobite-rules-tree.png" alt="Дерево движка игровых правил для игры Трилобит" title="Игровые правила для игры" /></p>
 
 <div itemscope="" itemtype="http://schema.org/SoftwareSourceCode"><meta itemprop="codeSampleType" content="code snippet" /><meta itemprop="programmingLanguage" content="cl" />
-<div class="language-cl highlighter-rouge"><pre class="highlight"><code>
+<div class="language-cl highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 <span class="c1">;; game rules engine is a tree which elements are lists</span>
 <span class="p">(</span><span class="nb">defstruct</span> <span class="p">(</span><span class="nv">game-node</span> <span class="p">(</span><span class="ss">:type</span> <span class="nb">list</span><span class="p">))</span>
   <span class="nv">player</span>  <span class="c1">; *human-player* or *ai-player*</span>
@@ -102,8 +102,7 @@
   <span class="nv">failp</span>   <span class="c1">; is it a fail?</span>
   <span class="nv">moves</span><span class="p">)</span>  <span class="c1">; nil or list of lists (move cell . game-tree).</span>
 
-</code></pre>
-</div>
+</code></pre></div></div>
 </div>
 
 <table>
@@ -150,7 +149,7 @@
 <p>Итак создаём дерево движка правил, это делается одной рекурсивной функцией, и она прекрасно справляется с крошечной доской 3х3, однако очень быстро  исчерпывает стек и ломается на больших досках.</p>
 
 <div itemscope="" itemtype="http://schema.org/SoftwareSourceCode"><meta itemprop="codeSampleType" content="code snippet" /><meta itemprop="programmingLanguage" content="cl" />
-<div class="language-cl highlighter-rouge"><pre class="highlight"><code>
+<div class="language-cl highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 <span class="c1">;; new tree</span>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">game-tree</span> <span class="p">(</span><span class="nv">board</span> <span class="nv">player</span> <span class="nv">move</span><span class="p">)</span>
   <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">fail</span> <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">eql</span> <span class="mi">-1</span> <span class="nv">move</span><span class="p">)</span>
@@ -172,8 +171,7 @@
                                              <span class="nv">move</span><span class="p">)))</span>
                    <span class="p">(</span><span class="nv">possible-moves</span> <span class="nv">board</span><span class="p">))))))</span>
 
-</code></pre>
-</div>
+</code></pre></div></div>
 </div>
 
 <p>Параметр <em>move</em> у этой функции означает клетку, куда был сделан ход, который привёл к этой ситуации на доске. Если <em>move</em> равен -1, то это значит, что предыдущего хода не было - это самая начальная комбинация и не нужно проверять не проиграл ли кто-нибудь.
@@ -192,19 +190,18 @@
 Оценки, здесь ничья лучше чем проигрыш, но хуже чем победа:</p>
 
 <div itemscope="" itemtype="http://schema.org/SoftwareSourceCode"><meta itemprop="codeSampleType" content="code snippet" /><meta itemprop="programmingLanguage" content="cl" />
-<div class="language-cl highlighter-rouge"><pre class="highlight"><code>
+<div class="language-cl highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*ai-win*</span>     <span class="mi">1</span><span class="p">)</span>
 <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*draw*</span>       <span class="mi">0</span><span class="p">)</span>
 <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*human-win*</span> <span class="mi">-1</span><span class="p">)</span>
 
-</code></pre>
-</div>
+</code></pre></div></div>
 </div>
 
 <p>Следующие две функции реализуют этот алгоритм.</p>
 
 <div itemscope="" itemtype="http://schema.org/SoftwareSourceCode"><meta itemprop="codeSampleType" content="code snippet" /><meta itemprop="programmingLanguage" content="cl" />
-<div class="language-cl highlighter-rouge"><pre class="highlight"><code>
+<div class="language-cl highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">rate-position</span> <span class="p">(</span><span class="nv">tree</span><span class="p">)</span>
   <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">moves</span> <span class="p">(</span><span class="nv">game-node-moves</span> <span class="nv">tree</span><span class="p">)))</span>
         <span class="p">(</span><span class="k">if</span> <span class="nv">moves</span>
@@ -223,14 +220,13 @@
             <span class="p">(</span><span class="nv">rate-position</span> <span class="p">(</span><span class="nb">cadr</span> <span class="nv">move</span><span class="p">)))</span>
           <span class="p">(</span><span class="nv">game-node-moves</span> <span class="nv">tree</span><span class="p">)))</span>
 
-</code></pre>
-</div>
+</code></pre></div></div>
 </div>
 
 <p>Проверим как работает подсчёт оценок для ходов. Создадим пустую доску, где первым будет ходить AI, запомним её для удобства в переменной *game* и посмотрим как он оценивает свои возможные ходы:</p>
 
 <div itemscope="" itemtype="http://schema.org/SoftwareSourceCode"><meta itemprop="codeSampleType" content="code snippet" /><meta itemprop="programmingLanguage" content="cl" />
-<div class="language-cl highlighter-rouge"><pre class="highlight"><code>
+<div class="language-cl highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 <span class="nb">*</span> <span class="p">(</span><span class="nb">defvar</span> <span class="vg">*game*</span> <span class="p">(</span><span class="nv">game-tree</span> <span class="p">(</span><span class="nv">new-board</span><span class="p">)</span> <span class="vg">*ai-player*</span> <span class="mi">-1</span><span class="p">))</span>
 
 <span class="vg">*GAME*</span>
@@ -241,25 +237,23 @@
 
 <span class="p">(</span><span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">)</span>
 
-</code></pre>
-</div>
+</code></pre></div></div>
 </div>
 <p>Похоже что компьютеру всё равно куда ходить - все ходы оцениваются как ведущие к ничьей. Посмотрим, что будет, если мы сымитируем выбор AI первого хода.
 Для этого извлечём второй элемент первого хода (cadar список-ходов) и запомним его в переменной *first-move*:</p>
 
 <div itemscope="" itemtype="http://schema.org/SoftwareSourceCode"><meta itemprop="codeSampleType" content="code snippet" /><meta itemprop="programmingLanguage" content="cl" />
-<div class="language-cl highlighter-rouge"><pre class="highlight"><code>
+<div class="language-cl highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 <span class="nb">*</span> <span class="p">(</span><span class="nb">defvar</span> <span class="vg">*first-move*</span> <span class="p">(</span><span class="nb">cadar</span> <span class="p">(</span><span class="nv">game-node-moves</span> <span class="vg">*game*</span><span class="p">)))</span>
 
 <span class="vg">*FIRST-MOVE*</span>
 
-</code></pre>
-</div>
+</code></pre></div></div>
 </div>
 <p>Проверим оценки ситуации:</p>
 
 <div itemscope="" itemtype="http://schema.org/SoftwareSourceCode"><meta itemprop="codeSampleType" content="code snippet" /><meta itemprop="programmingLanguage" content="cl" />
-<div class="language-cl highlighter-rouge"><pre class="highlight"><code>
+<div class="language-cl highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 <span class="nb">*</span> <span class="p">(</span><span class="nv">game-node-board</span> <span class="vg">*first-move*</span><span class="p">)</span>
 
 <span class="o">#(</span><span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">)</span>
@@ -267,29 +261,27 @@
 
 <span class="p">(</span><span class="mi">1</span> <span class="mi">1</span> <span class="mi">0</span><span class="p">)</span>
 
-</code></pre>
-</div>
+</code></pre></div></div>
 </div>
 
 <p>О! Компьютер увидел для себя два возможных пути к победе! Вряд ли у него получится ими воспользоваться, поскольку сейчас ход человека, и он наверняка выберет последний ход, который ведёт к возможной ничье.
 Окончательно оформляем действия компьютера как функцию:</p>
 
 <div itemscope="" itemtype="http://schema.org/SoftwareSourceCode"><meta itemprop="codeSampleType" content="code snippet" /><meta itemprop="programmingLanguage" content="cl" />
-<div class="language-cl highlighter-rouge"><pre class="highlight"><code>
+<div class="language-cl highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 <span class="c1">; ai</span>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">handle-computer</span> <span class="p">(</span><span class="nv">tree</span><span class="p">)</span>
   <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">ratings</span> <span class="p">(</span><span class="nv">get-ratings</span> <span class="nv">tree</span><span class="p">)))</span>
       <span class="p">(</span><span class="nb">cadr</span> <span class="p">(</span><span class="nb">nth</span> <span class="p">(</span><span class="nb">position</span> <span class="p">(</span><span class="nb">apply</span> <span class="nf">#'</span><span class="nb">max</span> <span class="nv">ratings</span><span class="p">)</span> <span class="nv">ratings</span><span class="p">)</span> <span class="p">(</span><span class="nv">game-node-moves</span> <span class="nv">tree</span><span class="p">)))))</span>
 
-</code></pre>
-</div>
+</code></pre></div></div>
 </div>
 
 <p>Здесь в две строчки записано: когда компьютеру предоставляется возможность сделать ход, он подсчитывает оценки для возможных ходов и выбирает ход с максимальной оценкой.
 Посмотрим какой ход AI выберет в самом начале, когда все ходы ведут к возможной ничье:</p>
 
 <div itemscope="" itemtype="http://schema.org/SoftwareSourceCode"><meta itemprop="codeSampleType" content="code snippet" /><meta itemprop="programmingLanguage" content="cl" />
-<div class="language-cl highlighter-rouge"><pre class="highlight"><code>
+<div class="language-cl highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 <span class="nb">*</span> <span class="p">(</span><span class="nb">defvar</span> <span class="vg">*game*</span> <span class="p">(</span><span class="nv">game-tree</span> <span class="p">(</span><span class="nv">new-board</span><span class="p">)</span> <span class="vg">*ai-player*</span> <span class="mi">-1</span><span class="p">))</span>
 
 <span class="vg">*GAME*</span>
@@ -297,13 +289,12 @@
 
 <span class="o">#(</span><span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">)</span>
 
-</code></pre>
-</div>
+</code></pre></div></div>
 </div>
 <div class="footnotes">
   <ol>
     <li id="fn:tree-picture-source">
-      <p>Сделано с помощью <a href="/pub/lisp/rules-tree.dot">маленькой программки для</a> <a href="http://www.graphviz.org">Graphviz</a>.&nbsp;<a href="#fnref:tree-picture-source" class="reversefootnote">&#8617;</a></p>
+      <p>Сделано с помощью <a href="/pub/lisp/rules-tree.dot">маленькой программки для</a> <a href="http://www.graphviz.org">Graphviz</a>. <a href="#fnref:tree-picture-source" class="reversefootnote">&#8617;</a></p>
     </li>
   </ol>
 </div>

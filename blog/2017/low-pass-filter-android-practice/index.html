@@ -96,7 +96,7 @@
 <p>The raw data is accumulated in <code class="highlighter-rouge">rawAccData</code>, processed by the filter - in<code class="highlighter-rouge"> lpfAccData</code>. The variables <code class="highlighter-rouge">count</code> and<code class="highlighter-rouge"> beginTime</code> are needed to calculate the average sampling period. In this simple program, the sensors are polled constantly so these variables can be initialized at startup. In real programs, you need to consider stopping the poll while in pause state, and so on.</p>
 
 <div itemscope="" itemtype="http://schema.org/SoftwareSourceCode"><meta itemprop="codeSampleType" content="code snippet" /><meta itemprop="programmingLanguage" content="java" />
-<div class="language-java highlighter-rouge"><pre class="highlight"><code>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
     <span class="kd">private</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">MAX_TESTS_NUM</span> <span class="o">=</span> <span class="mi">200</span> <span class="o">*</span> <span class="mi">60</span><span class="o">;</span> <span class="c1">// One minute measurement with a frequency of 200Hz</span>
     <span class="kd">private</span> <span class="kd">final</span> <span class="kt">float</span><span class="o">[]</span> <span class="n">rawAccData</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">float</span><span class="o">[</span><span class="n">MAX_TESTS_NUM</span> <span class="o">*</span> <span class="mi">3</span><span class="o">];</span>
     <span class="kd">private</span> <span class="kt">int</span> <span class="n">rawAccDataIdx</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
@@ -108,23 +108,21 @@
     <span class="kd">private</span> <span class="kt">float</span> <span class="n">beginTime</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">nanoTime</span><span class="o">();</span>
     <span class="kd">private</span> <span class="kt">float</span> <span class="n">rc</span> <span class="o">=</span> <span class="mf">0.002f</span><span class="o">;</span>
 
-</code></pre>
-</div>
+</code></pre></div></div>
 </div>
 <p>Somewhere in the event handler from the sensors, let’s write the call to read the data:</p>
 <div itemscope="" itemtype="http://schema.org/SoftwareSourceCode"><meta itemprop="codeSampleType" content="code snippet" /><meta itemprop="programmingLanguage" content="java" />
-<div class="language-java highlighter-rouge"><pre class="highlight"><code>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
     <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onSensorChanged</span><span class="o">(</span><span class="n">SensorEvent</span> <span class="n">event</span><span class="o">)</span> <span class="o">{</span>
         <span class="c1">// ...</span>
             <span class="n">readSensorData</span><span class="o">(</span><span class="n">event</span><span class="o">);</span>
         <span class="c1">// ...</span>
 
-</code></pre>
-</div>
+</code></pre></div></div>
 </div>
 <p>Read the data and apply the filter:</p>
 <div itemscope="" itemtype="http://schema.org/SoftwareSourceCode"><meta itemprop="codeSampleType" content="code snippet" /><meta itemprop="programmingLanguage" content="java" />
-<div class="language-java highlighter-rouge"><pre class="highlight"><code>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
     <span class="kd">private</span> <span class="kt">void</span> <span class="nf">readSensorData</span><span class="o">(</span><span class="n">SensorEvent</span> <span class="n">event</span><span class="o">)</span> <span class="o">{</span>
         <span class="kd">final</span> <span class="kt">int</span> <span class="n">type</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="na">sensor</span><span class="o">.</span><span class="na">getType</span><span class="o">();</span>
         <span class="k">if</span> <span class="o">(</span><span class="n">type</span> <span class="o">==</span> <span class="n">Sensor</span><span class="o">.</span><span class="na">TYPE_ACCELEROMETER</span><span class="o">)</span> <span class="o">{</span>
@@ -137,15 +135,14 @@
         <span class="o">}</span>
     <span class="o">}</span>
 
-</code></pre>
-</div>
+</code></pre></div></div>
 </div>
 <p>Actually the filter itself: calculate the average sampling period, determine \(\alpha\) and use the formula:</p>
 
 <script type="math/tex; mode=display">y_i=\alpha y_{i-1}+(1-\alpha)x_i</script>
 
 <div itemscope="" itemtype="http://schema.org/SoftwareSourceCode"><meta itemprop="codeSampleType" content="code snippet" /><meta itemprop="programmingLanguage" content="java" />
-<div class="language-java highlighter-rouge"><pre class="highlight"><code>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
     <span class="kd">private</span> <span class="kt">void</span> <span class="nf">applyLPF</span><span class="o">()</span> <span class="o">{</span>
         <span class="kd">final</span> <span class="kt">float</span> <span class="n">tm</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">nanoTime</span><span class="o">();</span>
         <span class="kd">final</span> <span class="kt">float</span> <span class="n">dt</span> <span class="o">=</span> <span class="o">((</span><span class="n">tm</span> <span class="o">-</span> <span class="n">beginTime</span><span class="o">)</span> <span class="o">/</span> <span class="mf">1000000000.0f</span><span class="o">)</span> <span class="o">/</span> <span class="n">count</span><span class="o">;</span>
@@ -169,8 +166,7 @@
         <span class="o">++</span><span class="n">count</span><span class="o">;</span>
     <span class="o">}</span>
 
-</code></pre>
-</div>
+</code></pre></div></div>
 </div>
 
 <h2 id="practice">Practice</h2>
@@ -209,7 +205,7 @@
     
         <li><span>18 Nov 2017</span> &raquo; <a href="/blog/2017/c720-and-syslinux/">Repairing the isolinux bootloader for Acer C720</a></li>
     
-        <li><span>13 Sep 2017</span> &raquo; <a href="/blog/2017/an-addition-to-the-family-two-tiny-larches/">Addition to the family: two small larch</a></li>
+        <li><span>13 Sep 2017</span> &raquo; <a href="/blog/2017/an-addition-to-the-family-two-tiny-larches/">Addition to the family: two small larches</a></li>
     
         <li><span>02 Sep 2017</span> &raquo; <a href="/blog/2017/google-play-services-hard-way/">Connect Google Play Games Services Manually</a></li>
     

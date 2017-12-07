@@ -100,20 +100,19 @@
 
 <p>К фрагменту кода будет добалена microdata разметка:</p>
 <div itemscope="" itemtype="http://schema.org/SoftwareSourceCode"><meta itemprop="codeSampleType" content="code snippet" /><meta itemprop="programmingLanguage" content="html" />
-<div class="language-html highlighter-rouge"><pre class="highlight"><code>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 <span class="nt">&lt;div</span> <span class="na">itemscope=</span><span class="s">""</span> <span class="na">itemtype=</span><span class="s">"http://schema.org/SoftwareSourceCode"</span><span class="nt">&gt;</span>
 <span class="nt">&lt;meta</span> <span class="na">itemprop=</span><span class="s">"codeSampleType"</span> <span class="na">content=</span><span class="s">"code snippet"</span> <span class="nt">/&gt;</span>
 <span class="nt">&lt;meta</span> <span class="na">itemprop=</span><span class="s">"programmingLanguage"</span> <span class="na">content=</span><span class="s">"ruby"</span> <span class="nt">/&gt;</span>
 
-</code></pre>
-</div>
+</code></pre></div></div>
 </div>
 
 <h2 id="Полный-текст-плагина">Полный текст плагина</h2>
 <p>Просто помещаем файлик в каталог <code class="highlighter-rouge">_plugins</code>.</p>
 
 <div itemscope="" itemtype="http://schema.org/SoftwareSourceCode"><meta itemprop="codeSampleType" content="code snippet" /><meta itemprop="programmingLanguage" content="ruby" />
-<div class="language-ruby highlighter-rouge"><pre class="highlight"><code>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 <span class="k">module</span> <span class="nn">Jekyll</span>
   <span class="k">class</span> <span class="nc">MicrodataHighlightBlock</span> <span class="o">&lt;</span> <span class="no">Liquid</span><span class="o">::</span><span class="no">Block</span>
     <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">tag_name</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">tokens</span><span class="p">)</span>
@@ -141,8 +140,7 @@
 
 <span class="no">Liquid</span><span class="o">::</span><span class="no">Template</span><span class="p">.</span><span class="nf">register_tag</span><span class="p">(</span><span class="s2">"mds"</span><span class="p">,</span> <span class="no">Jekyll</span><span class="o">::</span><span class="no">MicrodataHighlightBlock</span><span class="p">)</span>
 
-</code></pre>
-</div>
+</code></pre></div></div>
 </div>
 
 <section id="related">

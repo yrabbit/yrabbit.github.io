@@ -93,53 +93,49 @@
 <p>Далее нужен buildapp, это исполняемый файл, так что переходим в каталог, который у нас в ${PATH}. Для меня это <em>~/local/bin</em>. Запускаем sbcl</p>
 
 <div itemscope="" itemtype="http://schema.org/SoftwareSourceCode"><meta itemprop="codeSampleType" content="code snippet" /><meta itemprop="programmingLanguage" content="cl" />
-<div class="language-cl highlighter-rouge"><pre class="highlight"><code>
+<div class="language-cl highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 <span class="p">(</span><span class="nv">ql:quickload</span> <span class="ss">'buildapp</span><span class="p">)</span>
 <span class="p">(</span><span class="nv">buildapp:build-buildapp</span><span class="p">)</span>
 
-</code></pre>
-</div>
+</code></pre></div></div>
 </div>
 
 <p>Переходим в каталог проекта и запускаем sbcl, загружаем наш проект (в моём случае <em>test-cffi</em>) и записываем его манифест.</p>
 
 <div itemscope="" itemtype="http://schema.org/SoftwareSourceCode"><meta itemprop="codeSampleType" content="code snippet" /><meta itemprop="programmingLanguage" content="cl" />
-<div class="language-cl highlighter-rouge"><pre class="highlight"><code>
+<div class="language-cl highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 <span class="p">(</span><span class="nv">ql:quickload</span> <span class="ss">:test-cffi</span><span class="p">)</span>
 <span class="p">(</span><span class="nv">ql:write-asdf-manifest-file</span> <span class="s">"test-cffi.manifest"</span><span class="p">)</span>
 
-</code></pre>
-</div>
+</code></pre></div></div>
 </div>
 
 <p>И уже окончательно:</p>
 
 <div itemscope="" itemtype="http://schema.org/SoftwareSourceCode"><meta itemprop="codeSampleType" content="code snippet" /><meta itemprop="programmingLanguage" content="sh" />
-<div class="language-sh highlighter-rouge"><pre class="highlight"><code>
-<span class="gp">% </span>buildapp --output <span class="nb">test</span>-cffi --manifest-file <span class="nb">test</span>-cffi.manifest <span class="se">\</span>
---load-system <span class="nb">test</span>-cffi --entry <span class="nb">test</span>-cffi:main
-<span class="gp">% </span>ls -l
--rw-r--r--  1 rabbit  rabbit      1654 01-May-2016 20:49 <span class="nb">test</span>-cffi.manifest
--rw-r--r--  1 rabbit  rabbit       111 01-May-2016 20:57 package.lisp
--rw-r--r--  1 rabbit  rabbit        57 17-Apr-2016 15:22 README.txt
--rwxr-xr-x  1 rabbit  rabbit  57802800 01-May-2016 22:06 <span class="nb">test</span>-cffi<span class="k">*</span>
--rw-r--r--  1 rabbit  rabbit       280 17-Apr-2016 15:45 <span class="nb">test</span>-cffi.asd
--rw-r--r--  1 rabbit  rabbit      2181 01-May-2016 20:59 <span class="nb">test</span>-cffi.lisp
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+% buildapp <span class="nt">--output</span> test-cffi <span class="nt">--manifest-file</span> test-cffi.manifest <span class="se">\</span>
+<span class="nt">--load-system</span> test-cffi <span class="nt">--entry</span> test-cffi:main
+% <span class="nb">ls</span> <span class="nt">-l</span>
+<span class="nt">-rw-r--r--</span>  1 rabbit  rabbit      1654 01-May-2016 20:49 test-cffi.manifest
+<span class="nt">-rw-r--r--</span>  1 rabbit  rabbit       111 01-May-2016 20:57 package.lisp
+<span class="nt">-rw-r--r--</span>  1 rabbit  rabbit        57 17-Apr-2016 15:22 README.txt
+<span class="nt">-rwxr-xr-x</span>  1 rabbit  rabbit  57802800 01-May-2016 22:06 test-cffi<span class="k">*</span>
+<span class="nt">-rw-r--r--</span>  1 rabbit  rabbit       280 17-Apr-2016 15:45 test-cffi.asd
+<span class="nt">-rw-r--r--</span>  1 rabbit  rabbit      2181 01-May-2016 20:59 test-cffi.lisp
 
-</code></pre>
-</div>
+</code></pre></div></div>
 </div>
 
 <p>Функция <em>main</em>, которая дожна быть экспортирована из нашего проекта имеет вид:</p>
 
 <div itemscope="" itemtype="http://schema.org/SoftwareSourceCode"><meta itemprop="codeSampleType" content="code snippet" /><meta itemprop="programmingLanguage" content="cl" />
-<div class="language-cl highlighter-rouge"><pre class="highlight"><code>
+<div class="language-cl highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">main</span> <span class="p">(</span><span class="nv">argv</span><span class="p">)</span>
   <span class="p">(</span><span class="k">declare</span> <span class="p">(</span><span class="k">ignore</span> <span class="nv">argv</span><span class="p">))</span>
   <span class="p">(</span><span class="nv">win-box</span><span class="p">))</span>
 
-</code></pre>
-</div>
+</code></pre></div></div>
 </div>
 
 

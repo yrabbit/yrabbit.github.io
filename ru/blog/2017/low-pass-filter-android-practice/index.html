@@ -96,7 +96,7 @@
 <p>Сырые данные накапливаем в <code class="highlighter-rouge">rawAccData</code>, обработанные фильтром - в <code class="highlighter-rouge">lpfAccData</code>. Переменные <code class="highlighter-rouge">count</code> и <code class="highlighter-rouge">beginTime</code> нужны для вычисления среднего периода дискретизации. В этой простой программе датчики опрашиваются постоянно поэтому эти переменные можно инициализировать при запуске. В реальных программах нужно учитывать останов опроса на время паузы и т.д.</p>
 
 <div itemscope="" itemtype="http://schema.org/SoftwareSourceCode"><meta itemprop="codeSampleType" content="code snippet" /><meta itemprop="programmingLanguage" content="java" />
-<div class="language-java highlighter-rouge"><pre class="highlight"><code>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
     <span class="kd">private</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">MAX_TESTS_NUM</span> <span class="o">=</span> <span class="mi">200</span> <span class="o">*</span> <span class="mi">60</span><span class="o">;</span> <span class="c1">// одна  минута измерений с частотой 200Гц</span>
     <span class="kd">private</span> <span class="kd">final</span> <span class="kt">float</span><span class="o">[]</span> <span class="n">rawAccData</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">float</span><span class="o">[</span><span class="n">MAX_TESTS_NUM</span> <span class="o">*</span> <span class="mi">3</span><span class="o">];</span>
     <span class="kd">private</span> <span class="kt">int</span> <span class="n">rawAccDataIdx</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
@@ -108,25 +108,23 @@
     <span class="kd">private</span> <span class="kt">float</span> <span class="n">beginTime</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">nanoTime</span><span class="o">();</span>
     <span class="kd">private</span> <span class="kt">float</span> <span class="n">rc</span> <span class="o">=</span> <span class="mf">0.002f</span><span class="o">;</span>
 
-</code></pre>
-</div>
+</code></pre></div></div>
 </div>
 
 <p>Где-то в обработчике событий от датчиков пропишем вызов чтения данных:</p>
 <div itemscope="" itemtype="http://schema.org/SoftwareSourceCode"><meta itemprop="codeSampleType" content="code snippet" /><meta itemprop="programmingLanguage" content="java" />
-<div class="language-java highlighter-rouge"><pre class="highlight"><code>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
     <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onSensorChanged</span><span class="o">(</span><span class="n">SensorEvent</span> <span class="n">event</span><span class="o">)</span> <span class="o">{</span>
         <span class="c1">// ...</span>
             <span class="n">readSensorData</span><span class="o">(</span><span class="n">event</span><span class="o">);</span>
         <span class="c1">// ...</span>
 
-</code></pre>
-</div>
+</code></pre></div></div>
 </div>
 
 <p>Считываем данные и применяем фильтр:</p>
 <div itemscope="" itemtype="http://schema.org/SoftwareSourceCode"><meta itemprop="codeSampleType" content="code snippet" /><meta itemprop="programmingLanguage" content="java" />
-<div class="language-java highlighter-rouge"><pre class="highlight"><code>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
     <span class="kd">private</span> <span class="kt">void</span> <span class="nf">readSensorData</span><span class="o">(</span><span class="n">SensorEvent</span> <span class="n">event</span><span class="o">)</span> <span class="o">{</span>
         <span class="kd">final</span> <span class="kt">int</span> <span class="n">type</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="na">sensor</span><span class="o">.</span><span class="na">getType</span><span class="o">();</span>
         <span class="k">if</span> <span class="o">(</span><span class="n">type</span> <span class="o">==</span> <span class="n">Sensor</span><span class="o">.</span><span class="na">TYPE_ACCELEROMETER</span><span class="o">)</span> <span class="o">{</span>
@@ -140,8 +138,7 @@
     <span class="o">}</span>
 
 
-</code></pre>
-</div>
+</code></pre></div></div>
 </div>
 
 <p>Собственно сам фильтр: вычисляем средний период дискретизации, определяем \(\alpha\) и используем формулу:</p>
@@ -149,7 +146,7 @@
 <script type="math/tex; mode=display">y_i=\alpha y_{i-1}+(1-\alpha)x_i</script>
 
 <div itemscope="" itemtype="http://schema.org/SoftwareSourceCode"><meta itemprop="codeSampleType" content="code snippet" /><meta itemprop="programmingLanguage" content="java" />
-<div class="language-java highlighter-rouge"><pre class="highlight"><code>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
     <span class="kd">private</span> <span class="kt">void</span> <span class="nf">applyLPF</span><span class="o">()</span> <span class="o">{</span>
         <span class="kd">final</span> <span class="kt">float</span> <span class="n">tm</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">nanoTime</span><span class="o">();</span>
         <span class="kd">final</span> <span class="kt">float</span> <span class="n">dt</span> <span class="o">=</span> <span class="o">((</span><span class="n">tm</span> <span class="o">-</span> <span class="n">beginTime</span><span class="o">)</span> <span class="o">/</span> <span class="mf">1000000000.0f</span><span class="o">)</span> <span class="o">/</span> <span class="n">count</span><span class="o">;</span>
@@ -173,8 +170,7 @@
         <span class="o">++</span><span class="n">count</span><span class="o">;</span>
     <span class="o">}</span>
 
-</code></pre>
-</div>
+</code></pre></div></div>
 </div>
 
 <h2 id="Практика">Практика</h2>

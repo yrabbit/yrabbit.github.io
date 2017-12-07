@@ -89,8 +89,7 @@
 <div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
 <meta itemprop="codeSampleType" content="code snippet">
 <meta itemprop="programmingLanguage" content="cl">
-<div class="language-cl highlighter-rouge">
-<pre class="highlight"><code>
+<div class="language-cl highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 <span class="p">(</span><span class="nb">defmacro</span> <span class="nv">lazy</span> <span class="p">(</span><span class="k">&amp;body</span> <span class="nv">body</span><span class="p">)</span>
   <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">forcedp</span> <span class="p">(</span><span class="nb">gensym</span><span class="p">))</span> <span class="c1">; флажок Вычислено?</span>
         <span class="p">(</span><span class="nv">value</span> <span class="p">(</span><span class="nb">gensym</span><span class="p">)))</span>  <span class="c1">; вычисленное значение</span>
@@ -105,16 +104,14 @@
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">force</span> <span class="p">(</span><span class="nv">lazy-value</span><span class="p">)</span>
   <span class="p">(</span><span class="nb">funcall</span> <span class="nv">lazy-value</span><span class="p">))</span>
 
-</code></pre>
-</div>
+</code></pre></div></div>
 </div>
 <p>Посмотрим как они работают: сначала сделаем переменную, вычисление значения которой требует значительных затрат, на которые мы не можем пойти прямо сейчас, а затем используем эту переменную когда наступит нужный момент:</p>
 
 <div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
 <meta itemprop="codeSampleType" content="code snippet">
 <meta itemprop="programmingLanguage" content="cl">
-<div class="language-cl highlighter-rouge">
-<pre class="highlight"><code>
+<div class="language-cl highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 <span class="nb">*</span> <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*lazy-var*</span> <span class="p">(</span><span class="nv">lazy</span> <span class="p">(</span><span class="k">progn</span> <span class="p">(</span><span class="nb">princ</span> <span class="s">"Очень жуткий процесс вычисления"</span><span class="p">)</span> <span class="mi">12345</span><span class="p">)))</span>
 
 <span class="vg">*LAZY-VAR*</span>
@@ -122,16 +119,14 @@
 <span class="err">Очень</span> <span class="err">жуткий</span> <span class="err">процесс</span> <span class="err">вычисления</span>
 <span class="mi">12345</span>
 
-</code></pre>
-</div>
+</code></pre></div></div>
 </div>
 <p>Теперь можно сделать ленивые списки, которые так важны для ленивого дерева комбинаций.</p>
 
 <div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
 <meta itemprop="codeSampleType" content="code snippet">
 <meta itemprop="programmingLanguage" content="cl">
-<div class="language-cl highlighter-rouge">
-<pre class="highlight"><code>
+<div class="language-cl highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 <span class="p">(</span><span class="nb">defmacro</span> <span class="nv">lazy-cons</span> <span class="p">(</span><span class="nv">a</span> <span class="nv">d</span><span class="p">)</span>
   <span class="o">`</span><span class="p">(</span><span class="nv">lazy</span> <span class="p">(</span><span class="nb">cons</span> <span class="o">,</span><span class="nv">a</span> <span class="o">,</span><span class="nv">d</span><span class="p">)))</span>
 
@@ -150,16 +145,14 @@
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">lazy-null</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
   <span class="p">(</span><span class="nb">not</span> <span class="p">(</span><span class="nv">force</span> <span class="nv">x</span><span class="p">)))</span>
 
-</code></pre>
-</div>
+</code></pre></div></div>
 </div>
 <p>Проверяем.</p>
 
 <div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
 <meta itemprop="codeSampleType" content="code snippet">
 <meta itemprop="programmingLanguage" content="cl">
-<div class="language-cl highlighter-rouge">
-<pre class="highlight"><code>
+<div class="language-cl highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 <span class="nb">*</span> <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*lst*</span> <span class="p">(</span><span class="nv">lazy-cons</span> <span class="mi">12</span> <span class="mi">34</span><span class="p">))</span>
 
 <span class="vg">*LST*</span>
@@ -176,16 +169,14 @@
 
 <span class="mi">34</span>
 
-</code></pre>
-</div>
+</code></pre></div></div>
 </div>
 <p>Простые функции для преобразования обычных списков в ленивые и обратно:</p>
 
 <div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
 <meta itemprop="codeSampleType" content="code snippet">
 <meta itemprop="programmingLanguage" content="cl">
-<div class="language-cl highlighter-rouge">
-<pre class="highlight"><code>
+<div class="language-cl highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">make-lazy</span> <span class="p">(</span><span class="nv">lst</span><span class="p">)</span>
   <span class="p">(</span><span class="nv">lazy</span> <span class="p">(</span><span class="nb">when</span> <span class="nv">lst</span>
           <span class="p">(</span><span class="nb">cons</span> <span class="p">(</span><span class="nb">car</span> <span class="nv">lst</span><span class="p">)</span> <span class="p">(</span><span class="nv">make-lazy</span> <span class="p">(</span><span class="nb">cdr</span> <span class="nv">lst</span><span class="p">))))))</span>
@@ -198,16 +189,14 @@
   <span class="p">(</span><span class="nb">unless</span> <span class="p">(</span><span class="nv">lazy-null</span> <span class="nv">lst</span><span class="p">)</span>
     <span class="p">(</span><span class="nb">cons</span> <span class="p">(</span><span class="nv">lazy-car</span> <span class="nv">lst</span><span class="p">)</span> <span class="p">(</span><span class="nv">take-all</span> <span class="p">(</span><span class="nv">lazy-cdr</span> <span class="nv">lst</span><span class="p">)))))</span>
 
-</code></pre>
-</div>
+</code></pre></div></div>
 </div>
 <p>И как же без функций оперирующих с ленивыми функциями и списками:</p>
 
 <div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
 <meta itemprop="codeSampleType" content="code snippet">
 <meta itemprop="programmingLanguage" content="cl">
-<div class="language-cl highlighter-rouge">
-<pre class="highlight"><code>
+<div class="language-cl highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 <span class="c1">; Эти функции возвращают ленивые списки</span>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">lazy-mapcar</span> <span class="p">(</span><span class="nv">fun</span> <span class="nv">lst</span><span class="p">)</span>
   <span class="p">(</span><span class="nv">lazy</span> <span class="p">(</span><span class="nb">unless</span> <span class="p">(</span><span class="nv">lazy-null</span> <span class="nv">lst</span><span class="p">)</span>
@@ -235,8 +224,7 @@
     <span class="p">(</span><span class="nv">lazy-car</span> <span class="nv">lst</span><span class="p">)</span>
     <span class="p">(</span><span class="nv">lazy-nth</span> <span class="p">(</span><span class="nb">1-</span> <span class="nv">n</span><span class="p">)</span> <span class="p">(</span><span class="nv">lazy-cdr</span> <span class="nv">lst</span><span class="p">))))</span>
 
-</code></pre>
-</div>
+</code></pre></div></div>
 </div>
 
 <h2 id="Ленивые-ходы">Ленивые ходы</h2>
@@ -245,8 +233,7 @@
 <div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
 <meta itemprop="codeSampleType" content="code snippet">
 <meta itemprop="programmingLanguage" content="cl">
-<div class="language-cl highlighter-rouge">
-<pre class="highlight"><code>
+<div class="language-cl highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">game-tree</span> <span class="p">(</span><span class="nv">board</span> <span class="nv">player</span> <span class="nv">move</span><span class="p">)</span>
   <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">fail</span> <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">eql</span> <span class="mi">-1</span> <span class="nv">move</span><span class="p">)</span>
                 <span class="no">nil</span>
@@ -268,8 +255,7 @@
                             <span class="p">(</span><span class="nv">make-lazy</span> <span class="p">(</span><span class="nv">possible-moves</span> <span class="nv">board</span><span class="p">)))))))</span> <span class="c1">; // 1</span>
 
 
-</code></pre>
-</div>
+</code></pre></div></div>
 </div>
 
 <ol>
@@ -283,21 +269,18 @@
 <div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
 <meta itemprop="codeSampleType" content="code snippet">
 <meta itemprop="programmingLanguage" content="cl">
-<div class="language-cl highlighter-rouge">
-<pre class="highlight"><code>
+<div class="language-cl highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*board-width*</span>  <span class="mi">8</span><span class="p">)</span>
 <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*board-height*</span> <span class="mi">7</span><span class="p">)</span>
 <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*win-len*</span> <span class="mi">4</span><span class="p">)</span>
 
-</code></pre>
-</div>
+</code></pre></div></div>
 </div>
 
 <div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
 <meta itemprop="codeSampleType" content="code snippet">
 <meta itemprop="programmingLanguage" content="cl">
-<div class="language-cl highlighter-rouge">
-<pre class="highlight"><code>
+<div class="language-cl highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 <span class="nb">*</span> <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*g*</span> <span class="p">(</span><span class="nv">game-tree</span> <span class="p">(</span><span class="nv">new-board</span><span class="p">)</span> <span class="vg">*ai-player*</span> <span class="mi">-1</span><span class="p">))</span>
 
 <span class="vg">*G*</span>
@@ -308,16 +291,14 @@
    <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">)</span>
  <span class="nv">NIL</span> <span class="err">#</span><span class="nv">&lt;CLOSURE</span> <span class="p">(</span><span class="nv">LAMBDA</span> <span class="p">()</span> <span class="ss">:IN</span> <span class="nv">LAZY-MAPCAR</span><span class="p">)</span> <span class="nv">{1004B029AB}&gt;</span><span class="p">)</span>
 
-</code></pre>
-</div>
+</code></pre></div></div>
 </div>
 <p>Замечательно! Как видно всё дерево сейчас состоит из доски и closure ленивого списка возможных ходов. Попробуем посмотреть какая комбинация будет после хода с номером 6:</p>
 
 <div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
 <meta itemprop="codeSampleType" content="code snippet">
 <meta itemprop="programmingLanguage" content="cl">
-<div class="language-cl highlighter-rouge">
-<pre class="highlight"><code>
+<div class="language-cl highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 <span class="nb">*</span> <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*sixth*</span> <span class="p">(</span><span class="nv">lazy-nth</span> <span class="mi">6</span> <span class="p">(</span><span class="nv">game-node-moves</span> <span class="vg">*g*</span><span class="p">)))</span>
 
 <span class="vg">*SIXTH*</span>
@@ -330,16 +311,14 @@
   <span class="nv">NIL</span> <span class="err">#</span><span class="nv">&lt;CLOSURE</span> <span class="p">(</span><span class="nv">LAMBDA</span> <span class="p">()</span> <span class="ss">:IN</span> <span class="nv">LAZY-MAPCAR</span><span class="p">)</span> <span class="nv">{1004B0C04B}&gt;</span><span class="p">))</span>
 <span class="nb">*</span>
 
-</code></pre>
-</div>
+</code></pre></div></div>
 </div>
 <p>Великолепно: мы получаем  ветку дерева только тогда, когда она действительно нужна. Осталось ещё одно место, где изменение будет сравнительно небольшим - это вывод возможных ходов в интерфейсе с человеком:</p>
 
 <div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
 <meta itemprop="codeSampleType" content="code snippet">
 <meta itemprop="programmingLanguage" content="cl">
-<div class="language-cl highlighter-rouge">
-<pre class="highlight"><code>
+<div class="language-cl highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 <span class="c1">;; handle human</span>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">handle-human</span> <span class="p">(</span><span class="nv">tree</span><span class="p">)</span>
   <span class="p">(</span><span class="nb">fresh-line</span><span class="p">)</span>
@@ -356,8 +335,7 @@
     <span class="p">(</span><span class="nb">fresh-line</span><span class="p">)</span>
     <span class="p">(</span><span class="nb">cadr</span> <span class="p">(</span><span class="nv">lazy-nth</span> <span class="p">(</span><span class="nb">1-</span> <span class="p">(</span><span class="nb">read</span><span class="p">))</span> <span class="nv">moves</span><span class="p">))))</span> <span class="c1">; // 2</span>
 
-</code></pre>
-</div>
+</code></pre></div></div>
 </div>
 
 <ol>
@@ -370,8 +348,7 @@
 <div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
 <meta itemprop="codeSampleType" content="code snippet">
 <meta itemprop="programmingLanguage" content="cl">
-<div class="language-cl highlighter-rouge">
-<pre class="highlight"><code>
+<div class="language-cl highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 <span class="nb">*</span> <span class="p">(</span><span class="nv">handle-human</span> <span class="p">(</span><span class="nv">game-tree</span> <span class="p">(</span><span class="nv">new-board</span><span class="p">)</span> <span class="vg">*ai-player*</span> <span class="mi">-1</span><span class="p">))</span>
 
 <span class="nv">choose</span> <span class="nv">your</span> <span class="nv">move:</span>
@@ -390,8 +367,7 @@
  <span class="nv">NIL</span> <span class="err">#</span><span class="nv">&lt;CLOSURE</span> <span class="p">(</span><span class="nv">LAMBDA</span> <span class="p">()</span> <span class="ss">:IN</span> <span class="nv">LAZY-MAPCAR</span><span class="p">)</span> <span class="nv">{10046CCCFB}&gt;</span><span class="p">)</span>
 <span class="nb">*</span>
 
-</code></pre>
-</div>
+</code></pre></div></div>
 </div>
 <p>Работает <img class="emoji" title=":triumph:" alt=":triumph:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f624.png" height="20" width="20" align="absmiddle">.</p>
 
