@@ -7,7 +7,7 @@
 	<author>
 		<name>Yellow Rabbit</name>
 	</author>
-	<updated>2017-12-07T20:49:26+10:00</updated>
+	<updated>2017-12-13T09:09:48+10:00</updated>
 
 	<entry>
 		<title type="text">Repairing the isolinux bootloader for Acer C720</title>
@@ -21,7 +21,7 @@ This is fixed in version 6.04 of syslinux, but what do I do now with the old dis
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;https://yrabbit.github.io/imgs/post-bannersCD.jpeg&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;https://yrabbit.github.io/imgs/post-banners/CD.jpeg&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;p&gt;It turned out that the &lt;a href=&quot;https://www.antixforum.com/&quot;&gt;antiX Linux&lt;/a&gt; installer does not want to be friends with my Acer C720: the installer runs into the so-called &lt;em&gt;bootloop&lt;/em&gt;. The reason lies in the peculiarities of the Sea BIOS, which takes its 16M memory, which leads to the collapse of &lt;em&gt;syslinux&lt;/em&gt;.&lt;/p&gt;
 
 &lt;p&gt;This is fixed in version 6.04 of &lt;em&gt;syslinux&lt;/em&gt;, but what do I do now with the old distribution on my hands? We will replace &lt;em&gt;syslinux&lt;/em&gt; with ISO.&lt;/p&gt;
