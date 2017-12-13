@@ -7,7 +7,7 @@
 	<author>
 		<name>Yellow Rabbit</name>
 	</author>
-	<updated>2017-12-13T10:38:44+10:00</updated>
+	<updated>2017-12-13T10:47:16+10:00</updated>
 
 	<entry>
 		<title type="text">Возвращение клавиши Escape на клавиатуру Arteck HB030 bluetooth</title>
@@ -19,7 +19,7 @@
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;https://yrabbit.github.io/imgs/post-banners/android-studioi-min.png&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;https://yrabbit.github.io/imgs/post-banners/android-studio-min.png&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;p&gt;Верхний ряд клавиш на bluetooth клавиатуре Arteck HB030 по умолчанию работает как мультимедийные клавиши, чтобы получить Escape, F1-F10 нужно нажать клавишу Fn и одну из этих клавиш. Мне, как приверженцу &lt;a href=&quot;https://vim.sourceforge.io/&quot;&gt;Vim&lt;/a&gt;, это не очень удобно.&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/imgs/posts/IMG_20171213_092843_HDR-min.jpg&quot; alt=&quot;Arteck HB030&quot; title=&quot;Клавиши Arteck HB030&quot; class=&quot;center_image&quot; width=&quot;50%&quot; /&gt;&lt;/p&gt;
