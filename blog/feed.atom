@@ -7,7 +7,7 @@
 	<author>
 		<name>Yellow Rabbit</name>
 	</author>
-	<updated>2018-03-17T15:19:42+10:00</updated>
+	<updated>2018-03-17T15:33:25+10:00</updated>
 
 	<entry>
 		<title type="text">A Prometheus Moment with Raspberry Pi</title>
@@ -108,7 +108,7 @@ This can o neglected. &lt;em&gt;However&lt;/em&gt;, in other similar cases it is
 
 &lt;p&gt;&lt;img src=&quot;/imgs/posts/minips-min.png&quot; alt=&quot;small power supply&quot; title=&quot;Small power supply&quot; class=&quot;center-image&quot; width=&quot;50%&quot; /&gt;
 Regulators AMS1117, on which this unit is built, are described as protected from short circuit and temperature
-overload, so that nothing terrible will happen if there are errors in the scheme or calculations.&lt;/p&gt;
+overload, so that nothing terrible will happen if there are errors in the circuit or calculations.&lt;/p&gt;
 
 &lt;p&gt;You just need to remember that the maximum input voltage is 15V.&lt;/p&gt;
 
