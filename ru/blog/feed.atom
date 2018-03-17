@@ -7,7 +7,117 @@
 	<author>
 		<name>Yellow Rabbit</name>
 	</author>
-	<updated>2017-12-13T10:47:16+10:00</updated>
+	<updated>2018-03-17T15:19:42+10:00</updated>
+
+	<entry>
+		<title type="text">Почувствовать себя Прометеем с Raspberry Pi</title>
+		<link href="https://yrabbit.github.io/ru/blog/2018/a-prometheus-moment/" />
+		<id>https://yrabbit.github.io/blog/2018/a-prometheus-moment/</id>
+		<published>2018-03-15T00:00:00+10:00</published>
+		<updated>2018-03-15T00:00:00+10:00</updated>
+		<summary type="html">
+
+Как человек, не знающий за какой конец держать паяльник, я очень опасаюсь повредить Raspberry Pi. Поэтому мне хочется получить ясное представление как устроены эти GPIO чтобы не поджарить их.
+
+</summary>
+		<content type="html">
+&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;/imgs/post-banners/soldering-iron-min.png&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;script type=&quot;text/javascript&quot; async=&quot;&quot; src=&quot;https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML&quot;&gt;
+&lt;/script&gt;
+
+&lt;p&gt;Как человек, не знающий за какой конец держать паяльник, я очень опасаюсь повредить Raspberry Pi. Поэтому мне хочется получить ясное представление как устроены эти GPIO чтобы не поджарить их.&lt;/p&gt;
+
+&lt;p&gt;Упрощенно каждый GPIO можно представить как пару полевых транзисторов с плавающим затвором:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/imgs/posts/cmos-output.png&quot; alt=&quot;CMOS output&quot; title=&quot;CMOS выход&quot; class=&quot;center-image&quot; width=&quot;50%&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Не обращаем внимания на диоды, по идее они призваны обеспечивать защиту от статики не той полярности, на практике всё равно можно угробить микросхему статическим зарядом.&lt;/p&gt;
+
+&lt;p&gt;Итак, у нас имеется два транзистора, один из которых открыт. Какой? Зависит от уровня на &lt;code class=&quot;highlighter-rouge&quot;&gt;Input&lt;/code&gt;: если там &lt;code class=&quot;highlighter-rouge&quot;&gt;0&lt;/code&gt;, то открыт &lt;code class=&quot;highlighter-rouge&quot;&gt;U2&lt;/code&gt; (у него канал типа &lt;code class=&quot;highlighter-rouge&quot;&gt;P&lt;/code&gt; и он сужается при положительном заряде на затворе 1), если же там &lt;code class=&quot;highlighter-rouge&quot;&gt;1&lt;/code&gt;, то открыт &lt;code class=&quot;highlighter-rouge&quot;&gt;U1&lt;/code&gt; (у него канал типа &lt;code class=&quot;highlighter-rouge&quot;&gt;N&lt;/code&gt; и он расширяется при положительном заряде на затворе 1).&lt;/p&gt;
+
+&lt;p&gt;Но самое смешное тут то, что ток через переходы транзисторов &lt;em&gt;ничем не ограничен&lt;/em&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;Допустимые-и-начальные-значения&quot;&gt;Допустимые и начальные значения&lt;/h2&gt;
+&lt;p&gt;&lt;em&gt;Напряжение&lt;/em&gt;. Тут всё просто — 3.3V.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Ток&lt;/em&gt;. Может быть запрограммирован как 2, 4, 6, 8, 10, 12, 14 или 16mA. Однако тут есть подвох: все GPIO должны потреблять вместе &lt;a href=&quot;https://raspberrypi.stackexchange.com/questions/43536/maximum-current-on-each-gpio-pin-for-raspberry-pi-3-model-b&quot;&gt;не более 50mA&lt;/a&gt;. Начальное значение нигде не документировано, считается, что все выходы работают на 8mA. Кроме того программирование определённого тока означает лишь то, что &lt;a href=&quot;https://www.raspberrypi.org/forums/viewtopic.php?f=29&amp;amp;t=151871&amp;amp;sid=8396483e3f44436b68a9d309ff80d015&amp;amp;start=25&quot;&gt;при этом токе гарантировано различение логических уровней напряжения&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;То есть ток будет потребляться тот, что нужен нагрузке независимо от запрограммированного, но &lt;em&gt;более 16mA&lt;/em&gt; потреблять не стоит:smile:.&lt;/p&gt;
+
+&lt;h2 id=&quot;Расчёт-схемы&quot;&gt;Расчёт схемы&lt;/h2&gt;
+&lt;p&gt;Итак имеем светодиод:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/imgs/posts/blue-led-5mm-min.png&quot; alt=&quot;Голубой 5mm светодиод&quot; title=&quot;Голубой светодид 5mm&quot; class=&quot;center-image&quot; width=&quot;50%&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Из &lt;a href=&quot;https://en.wikipedia.org/wiki/Light-emitting_diode&quot;&gt;википедии&lt;/a&gt; подсматриваем табличку падений напряжений на 20mA 5mm светодиодах различного цвета:&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Цвет&lt;/th&gt;
+      &lt;th&gt;Падение напряжения&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Красный&lt;/td&gt;
+      &lt;td&gt;&lt;script type=&quot;math/tex&quot;&gt;% &lt;![CDATA[
+1.63 &lt; \Delta V &lt; 2.03 %]]&gt;&lt;/script&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Жёлтый&lt;/td&gt;
+      &lt;td&gt;&lt;script type=&quot;math/tex&quot;&gt;% &lt;![CDATA[
+2.10 &lt; \Delta V &lt; 2.18 %]]&gt;&lt;/script&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Зелёный&lt;/td&gt;
+      &lt;td&gt;&lt;script type=&quot;math/tex&quot;&gt;% &lt;![CDATA[
+1.90 &lt; \Delta V &lt; 4.00 %]]&gt;&lt;/script&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Голубой&lt;/td&gt;
+      &lt;td&gt;&lt;script type=&quot;math/tex&quot;&gt;% &lt;![CDATA[
+2.48 &lt; \Delta V &lt; 3.70 %]]&gt;&lt;/script&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;Пусть ток через диод будет 8mA, свечение мы заметим. Падение напряжения на диоде принимаем худшее — 2.48V. Оставшееся напряжение должно падать на резисторе &lt;code class=&quot;highlighter-rouge&quot;&gt;R1&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/imgs/posts/resistor-led-min.png&quot; alt=&quot;Резистор и светодиод&quot; title=&quot;Резистор и светодиод&quot; class=&quot;center-image&quot; width=&quot;7%&quot; /&gt;
+На резисторе падает &lt;script type=&quot;math/tex&quot;&gt;V_{R1}=V_{cc}-V_{D1}=3.3 - 2.48=0.82V&lt;/script&gt;. При токе в 8mA сопротивление резистора &lt;code class=&quot;highlighter-rouge&quot;&gt;R1&lt;/code&gt; равно &lt;script type=&quot;math/tex&quot;&gt;V_{R1}/0.008=102.5&lt;/script&gt; Ohm. У меня есть резисторы в 220 Ohm и 100 Ohm:
+&lt;img src=&quot;/imgs/posts/two-resistors-min.png&quot; alt=&quot;Два резистора&quot; title=&quot;Два резистора&quot; class=&quot;center-image&quot; width=&quot;70%&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Посмотрим насколько больше тока я получу при 100 Ohm: &lt;script type=&quot;math/tex&quot;&gt;\Delta I=V_{R1}/(100) - 0.008=0.0002&lt;/script&gt;A. Этим можно пренебречь. &lt;em&gt;Однако&lt;/em&gt; в других подобных случаях лучше увеличивать сопротивление, так как ток при этом будет уменьшаться, а, как правило, меньший ток это хорошо.&lt;/p&gt;
+
+&lt;h2 id=&quot;Проверка-на-плате&quot;&gt;Проверка на плате&lt;/h2&gt;
+&lt;p&gt;У меня есть небольшой блок питания, который можно использовать для проверки схемы перед подключением к Raspberri Pi:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/imgs/posts/minips-min.png&quot; alt=&quot;Небольшой блок питания&quot; title=&quot;Блок питания для платы&quot; class=&quot;center-image&quot; width=&quot;50%&quot; /&gt;
+Регуляторы AMS1117, на которых построен это блок, описаны как защищённые от короткого замыкания и температурной перегрузки, так что ничего страшного не случится, если в схеме или расчётах будут ошибки.&lt;/p&gt;
+
+&lt;p&gt;Нужно только помнить, что максимальное входное напряжение равно 15V.&lt;/p&gt;
+
+&lt;p&gt;Собираем плату:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/imgs/posts/resistor-led_bb-min.png&quot; alt=&quot;Макет платы&quot; title=&quot;Макет платы&quot; class=&quot;center-image&quot; width=&quot;95%&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;И проверяем напряжение на резисторе:
+&lt;img src=&quot;/imgs/posts/test-resistor-led-board-min.png&quot; alt=&quot;Плата и мультиметр&quot; title=&quot;Плата и мультиметр&quot; class=&quot;center-image&quot; width=&quot;60%&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;0.1V, значит на моём светодиоде падает больше, чем рассчитывалось:smile_cat:. Посчитаем какой ток течёт в цепи:&lt;/p&gt;
+
+&lt;p&gt;&lt;script type=&quot;math/tex&quot;&gt;I=V_{R1}/100=0.1/100=0.001&lt;/script&gt;A&lt;/p&gt;
+
+&lt;p&gt;Неплохо. Светодиод светится, ток вполне безопасный, можно переходить непосредственно к Raspberry Pi. Но это в следующий раз:smiley:&lt;/p&gt;
+</content>
+	</entry>
 
 	<entry>
 		<title type="text">Возвращение клавиши Escape на клавиатуру Arteck HB030 bluetooth</title>
@@ -19,15 +129,15 @@
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;https://yrabbit.github.io/imgs/post-banners/android-studio-min.png&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;/imgs/post-banners/android-studio-min.png&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;p&gt;Верхний ряд клавиш на bluetooth клавиатуре Arteck HB030 по умолчанию работает как мультимедийные клавиши, чтобы получить Escape, F1-F10 нужно нажать клавишу Fn и одну из этих клавиш. Мне, как приверженцу &lt;a href=&quot;https://vim.sourceforge.io/&quot;&gt;Vim&lt;/a&gt;, это не очень удобно.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/imgs/posts/IMG_20171213_092843_HDR-min.jpg&quot; alt=&quot;Arteck HB030&quot; title=&quot;Клавиши Arteck HB030&quot; class=&quot;center_image&quot; width=&quot;50%&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/imgs/posts/IMG_20171213_092843_HDR-min.jpg&quot; alt=&quot;Arteck HB030&quot; title=&quot;Клавиши Arteck HB030&quot; class=&quot;center-image&quot; width=&quot;50%&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Далее идём почти по тому же пути как и &lt;a href=&quot;/blog/2014/keyboard-acer-c720/&quot;&gt;ранее&lt;/a&gt;. Создадим каталог для конфигурационных файлов:&lt;/p&gt;
 &lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;&lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;&lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;shell&quot; /&gt;
 &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
-mkdir &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; ~/.config/xkb
+&lt;span class=&quot;nb&quot;&gt;mkdir&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; ~/.config/xkb
 
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 &lt;/div&gt;
@@ -88,7 +198,7 @@ setxkbmap &lt;span class=&quot;nt&quot;&gt;-layout&lt;/span&gt; us,ru &lt;span c
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;https://yrabbit.github.io/imgs/post-bannersCD.jpeg&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;/imgs/post-bannersCD.jpeg&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;p&gt;Оказалось, что дистрибутив &lt;a href=&quot;https://www.antixforum.com/&quot;&gt;antiX Linux&lt;/a&gt; не хочет дружить с моим Acer C720: установщик впадает в так называемый &lt;em&gt;bootloop&lt;/em&gt;. Причина заключается в особенностях Sea BIOS, которая забирает себе 16М нижней памяти, что приводит к краху &lt;em&gt;syslinux&lt;/em&gt;. Это исправлено в версии 6.04 &lt;em&gt;syslinux&lt;/em&gt;, но что делать мне сейчас со старым дистрибутивом на руках? Будем заменять &lt;em&gt;syslinux&lt;/em&gt; в ISO.&lt;/p&gt;
 
 &lt;h2 id=&quot;Новый-syslinux&quot;&gt;Новый syslinux&lt;/h2&gt;
@@ -109,9 +219,9 @@ wget https://www.kernel.org/pub/linux/utils/boot/syslinux/Testing/6.04/syslinux-
 
 &lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;&lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;&lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;shell&quot; /&gt;
 &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
-mkdir dst /mnt/dst
+&lt;span class=&quot;nb&quot;&gt;mkdir &lt;/span&gt;dst /mnt/dst
 mount &lt;span class=&quot;nt&quot;&gt;-t&lt;/span&gt; iso9660 /dev/sdb /mnt/dst
-cp &lt;span class=&quot;nt&quot;&gt;-a&lt;/span&gt; /mnt/dst ./
+&lt;span class=&quot;nb&quot;&gt;cp&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-a&lt;/span&gt; /mnt/dst ./
 umount /mnt/dst
 &lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;dst
 
@@ -121,7 +231,7 @@ umount /mnt/dst
 &lt;p&gt;Забираем загрузочный сектор.&lt;/p&gt;
 &lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;&lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;&lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;shell&quot; /&gt;
 &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
-dd &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/dev/sdb &lt;span class=&quot;nv&quot;&gt;bs&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;512 &lt;span class=&quot;nv&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1 &lt;span class=&quot;nv&quot;&gt;of&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;isohdpfx.bin
+&lt;span class=&quot;nb&quot;&gt;dd &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/dev/sdb &lt;span class=&quot;nv&quot;&gt;bs&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;512 &lt;span class=&quot;nv&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1 &lt;span class=&quot;nv&quot;&gt;of&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;isohdpfx.bin
 
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 &lt;/div&gt;
@@ -193,13 +303,13 @@ xorriso &lt;span class=&quot;nt&quot;&gt;-as&lt;/span&gt; mkisofs &lt;span class
 </summary>
 		<content type="html">
 &lt;img src=&quot;https://yrabbit.github.io/imgs/post-banners/leika.jpeg&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
-&lt;p&gt;&lt;img src=&quot;/imgs/posts/IMG_20170913_130654-min.jpg&quot; alt=&quot;Одна&quot; title=&quot;Первая лиственница&quot; class=&quot;center_image&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/imgs/posts/IMG_20170913_130654-min.jpg&quot; alt=&quot;Одна&quot; title=&quot;Первая лиственница&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/imgs/posts/IMG_20170913_130547-min.jpg&quot; alt=&quot;Вторая&quot; title=&quot;Вторая лиственница&quot; class=&quot;center_image&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/imgs/posts/IMG_20170913_130547-min.jpg&quot; alt=&quot;Вторая&quot; title=&quot;Вторая лиственница&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;Бонус&quot;&gt;Бонус&lt;/h2&gt;
 
-&lt;p&gt;&lt;img src=&quot;/imgs/posts/IMG_20170913_130810-min.jpg&quot; alt=&quot;Капуста&quot; title=&quot;Несъедобная капуста&quot; class=&quot;center_image&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/imgs/posts/IMG_20170913_130810-min.jpg&quot; alt=&quot;Капуста&quot; title=&quot;Несъедобная капуста&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
 </content>
 	</entry>
 
@@ -213,7 +323,7 @@ xorriso &lt;span class=&quot;nt&quot;&gt;-as&lt;/span&gt; mkisofs &lt;span class
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;https://yrabbit.github.io/imgs/post-banners/joystick.jpeg&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;/imgs/post-banners/joystick.jpeg&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;p&gt;Если в точности следовать &lt;a href=&quot;https://developers.google.com/games/services/android/init&quot;&gt;указаниям Google&lt;/a&gt; по интеграции с GPGS (Google Play Games Services), то гарантированы дикие глюки при попытке откомпилировать получившегося монстра. И дело тут не в том, что вы не найдёте в Android Studio пункта &lt;code class=&quot;highlighter-rouge&quot;&gt;File &amp;gt; Import Module&lt;/code&gt;,  проблема в том, что модуль &lt;code class=&quot;highlighter-rouge&quot;&gt;BaseGameUtils&lt;/code&gt; рассчитан на старые версии GPGS и SDK.&lt;/p&gt;
 
 &lt;p&gt;Итак имеем:&lt;/p&gt;
@@ -345,7 +455,7 @@ xorriso &lt;span class=&quot;nt&quot;&gt;-as&lt;/span&gt; mkisofs &lt;span class
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;https://yrabbit.github.io/imgs/post-banners/oak.png&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;/imgs/post-banners/oak.png&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;p&gt;Всё началось с жёлудя, фотографии которого у меня нет :disappointed:&lt;/p&gt;
 
 &lt;h2 id=&quot;2016-05&quot;&gt;2016-05&lt;/h2&gt;
@@ -375,7 +485,7 @@ xorriso &lt;span class=&quot;nt&quot;&gt;-as&lt;/span&gt; mkisofs &lt;span class
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;https://yrabbit.github.io/imgs/post-banners/binary-numbers.png&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;/imgs/post-banners/binary-numbers.png&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;p&gt;Чтобы указывать что за кусок кода я размещаю на странице я на скорую руку набросал плагин для Jekyll. Он добавляет микроразметку к блоку кода.&lt;/p&gt;
 
 &lt;h2 id=&quot;plugin-на-коленке&quot;&gt;Plugin на коленке&lt;/h2&gt;
@@ -445,7 +555,7 @@ xorriso &lt;span class=&quot;nt&quot;&gt;-as&lt;/span&gt; mkisofs &lt;span class
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;https://yrabbit.github.io{&quot;post&quot;=&gt;&quot;/imgs/post-banners/nebula.png&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300, &quot;path&quot;=&gt;nil}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io{&quot;post&quot;=&gt;&quot;/imgs/post-banners/nebula.png&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;p&gt;Бывает, что затеяв рутинную уборку на чердаке, перебираешь старые штуковины в коробках и вдруг попадётся тебе детская твоя машинка, и нахлынут воспоминания и застынешь, позабыв обо всём. Вот так и с игрой &lt;a href=&quot;https://play.google.com/store/apps/details?id=com.grf.game.SpaceMercenary&quot;&gt;“Космический наёмник”&lt;/a&gt;. Среди бесплатных мобильных игр так много мусора, что Космический Наемник (aka Space Mercenary 宇宙佣兵) оказался приятным сюрпризом.&lt;/p&gt;
 
 &lt;p&gt;“На этот раз работёнка по-настоящему опасная: вернуть похищенные священные алмазы, которые вмонтированы в обшивку огромной космической станции.” - вся завязка в одном предложении, которое тем не менее точно описывает игру. Нам на самом деле предстоит перемещаться в космосе, на самом деле искать и собирать некие сверкающие штуковины, и нынешние их владельцы вовсе не самые дружелюбные создания во вселенной.&lt;/p&gt;
@@ -485,7 +595,7 @@ xorriso &lt;span class=&quot;nt&quot;&gt;-as&lt;/span&gt; mkisofs &lt;span class
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;https://yrabbit.github.io/imgs/post-banners/radio-android.png&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;/imgs/post-banners/radio-android.png&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;script type=&quot;text/javascript&quot; async=&quot;&quot; src=&quot;https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML&quot;&gt;
 &lt;/script&gt;
 
@@ -618,7 +728,7 @@ xorriso &lt;span class=&quot;nt&quot;&gt;-as&lt;/span&gt; mkisofs &lt;span class
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;https://yrabbit.github.io/imgs/post-banners/low-pass-filter.jpeg&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;/imgs/post-banners/low-pass-filter.jpeg&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;script type=&quot;text/javascript&quot; async=&quot;&quot; src=&quot;https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML&quot;&gt;
 &lt;/script&gt;
 
@@ -750,7 +860,7 @@ plot2d([[discrete, tl, kH2lkH4l], [discrete, tl, lowpass(kH2lkH4l, 0.5)],
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;https://yrabbit.github.io/imgs/post-banners/lisp-webengine-recursion.jpeg&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;/imgs/post-banners/lisp-webengine-recursion.jpeg&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;p&gt;Самый сложный элемент. Гораздо сложнее &lt;a href=&quot;/blog/2016/lisp-toy-web-parse-comment/&quot;&gt;комментариев&lt;/a&gt;. У нас есть открывающие и закрывающие теги, атрибуты и их значения, а ко всему прочему, элементы ещё могут быть вложенными.&lt;/p&gt;
 
 &lt;p&gt;У него даже конструктор сложный :smile:&lt;/p&gt;
@@ -1139,7 +1249,7 @@ plot2d([[discrete, tl, kH2lkH4l], [discrete, tl, lowpass(kH2lkH4l, 0.5)],
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;https://yrabbit.github.io/imgs/post-banners/lisp-webengine-comment.jpeg&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;/imgs/post-banners/lisp-webengine-comment.jpeg&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;p&gt;После того, как удалось &lt;a href=&quot;/blog/2016/lisp-toy-web-parse-text/&quot;&gt;разобрать текстовый элемент HTML&lt;/a&gt;, переходим к более сложному элементу - комментариям.&lt;/p&gt;
 
 &lt;h2 id=&quot;Комментарии&quot;&gt;Комментарии&lt;/h2&gt;
@@ -1239,7 +1349,7 @@ plot2d([[discrete, tl, kH2lkH4l], [discrete, tl, lowpass(kH2lkH4l, 0.5)],
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;https://yrabbit.github.io/imgs/post-banners/lisp-webengine-text.jpeg&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;/imgs/post-banners/lisp-webengine-text.jpeg&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;p&gt;После знакомства с &lt;a href=&quot;/blog/2016/lisp-toy-web-parsing-meta/&quot;&gt;парсером META&lt;/a&gt; переходим к рассмотрению грамматики HTML. А также посмотрим как разобрать простейший элемент.&lt;/p&gt;
 
 &lt;h2 id=&quot;Наводим-порядок&quot;&gt;Наводим порядок&lt;/h2&gt;
@@ -1407,7 +1517,7 @@ plot2d([[discrete, tl, kH2lkH4l], [discrete, tl, lowpass(kH2lkH4l, 0.5)],
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;https://yrabbit.github.io/imgs/post-banners/lisp-webengine-meta.jpeg&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;/imgs/post-banners/lisp-webengine-meta.jpeg&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 
 &lt;p&gt;Чтобы строить дерево документа нам нужен парсер HTML. Простой. В январе 1991 года появилась статья Henry G. Baker &lt;a href=&quot;http://home.pipeline.com/~hbaker1/Prag-Parse.html&quot; title=&quot;Старая статья о парсинге&quot;&gt;“Прагматичный парсинг на Common Lisp”&lt;/a&gt;, в которой он описывает META — классическую простую и одновременно эффективную технику построения рекурсивных нисходящих парсеров.&lt;/p&gt;
 
@@ -1540,7 +1650,7 @@ plot2d([[discrete, tl, kH2lkH4l], [discrete, tl, lowpass(kH2lkH4l, 0.5)],
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;https://yrabbit.github.io/imgs/post-baners/lisp-webengine-dom.jpeg&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;/imgs/post-baners/lisp-webengine-dom.jpeg&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;p&gt;Что происходит внутри браузеров? Как эта куча тэгов превращается в такие изумительные страницы на экране? 
 Магия. Попробую изобразить что-то примитивное для отображения HTML.&lt;/p&gt;
 
@@ -1752,7 +1862,7 @@ plot2d([[discrete, tl, kH2lkH4l], [discrete, tl, lowpass(kH2lkH4l, 0.5)],
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;https://yrabbit.github.io/imgs/post-banners/standalone-lisp.jpeg&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;/imgs/post-banners/standalone-lisp.jpeg&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;p&gt;Желание делать отдельный самодостаточный исполняемый файл, хотя можно просто дать исходники, немного станновато, но допустим, что такая необходимость возникла.&lt;/p&gt;
 
 &lt;p&gt;Проект к этому моменту уже приобрёл законченный вид и организован как локальная система quicklisp. &lt;a href=&quot;http://xach.livejournal.com/278047.html&quot;&gt;Здесь&lt;/a&gt; можно прочитать как сразу создать удобную среду для разработки.&lt;/p&gt;
@@ -1818,7 +1928,7 @@ plot2d([[discrete, tl, kH2lkH4l], [discrete, tl, lowpass(kH2lkH4l, 0.5)],
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;https://yrabbit.github.io/imgs/post-banners/xiaomi-android-wear.jpeg&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;/imgs/post-banners/xiaomi-android-wear.jpeg&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;p&gt;После обновления Xiaomi Mi 4LTE на MIUI 7.2.9.0 (MXDCNDB) версия андроида в телефоне изменилась на 6.0.1. Как побочный эффект часы &lt;a href=&quot;http://www.lg.com/uk/smart-watches/lg-W110&quot;&gt;LG G Watch R 1085&lt;/a&gt; перестали соединяться с телефоном, а на самом телефоне Google Play Services впали в панику. Ниже приведен способ восстановления работоспособности связки телефон – часы.&lt;/p&gt;
 
 &lt;ol&gt;
@@ -1863,7 +1973,7 @@ plot2d([[discrete, tl, kH2lkH4l], [discrete, tl, lowpass(kH2lkH4l, 0.5)],
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;https://yrabbit.github.io/imgs/post-banners/trilobite-macros.jpeg&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;/imgs/post-banners/trilobite-macros.jpeg&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;p&gt;Вообще говоря можно писать на Lisp и при этом не подозревать о макросах. Это тёмное искусство и освоить его тяжко, однако простые вещи вполне можно попробовать.&lt;/p&gt;
 
 &lt;h2 id=&quot;Делаем-вещи-короче&quot;&gt;Делаем вещи короче&lt;/h2&gt;
@@ -1941,7 +2051,7 @@ plot2d([[discrete, tl, kH2lkH4l], [discrete, tl, lowpass(kH2lkH4l, 0.5)],
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;https://yrabbit.github.io/imgs/post-banners/trilobite-modern-lamp.jpeg&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;/imgs/post-banners/trilobite-modern-lamp.jpeg&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;p&gt;Компьютер &lt;a href=&quot;/blog/2015/lisp-trilobite-heuristic/&quot;&gt;играет хуже&lt;/a&gt; своего собрата из &lt;em&gt;11th hour&lt;/em&gt;. С этим надо что-то делать. Попробуем другие эвристики для компьютерного игрока.&lt;/p&gt;
 
 &lt;h2 id=&quot;Идея&quot;&gt;Идея&lt;/h2&gt;
@@ -2037,7 +2147,7 @@ plot2d([[discrete, tl, kH2lkH4l], [discrete, tl, lowpass(kH2lkH4l, 0.5)],
 
 </summary>
 		<content type="html">
-&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;https://yrabbit.github.io/imgs/post-banners/trilobite-lisp-tricks.jpeg&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;/imgs/post-banners/trilobite-lisp-tricks.jpeg&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
 &lt;p&gt;Хотя я проигрываю AI, он не может победить монстра из 11-го часа :frowning: И, пока у меня не появилось идей по улучшению его работы, займусь украшательствами. Для начала чуть-чуть упростим построение шаблонов для проверки соседних ячеек, ну и заодно сделаем её запоминающей.&lt;/p&gt;
 
 &lt;h2 id=&quot;Немного-причёсывания&quot;&gt;Немного причёсывания&lt;/h2&gt;
@@ -2173,397 +2283,6 @@ plot2d([[discrete, tl, kH2lkH4l], [discrete, tl, lowpass(kH2lkH4l, 0.5)],
 
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 &lt;/div&gt;
-</content>
-	</entry>
-
-	<entry>
-		<title type="text">Игра Трилобит на Lisp: совершенствуем AI</title>
-		<link href="https://yrabbit.github.io/ru/blog/2015/lisp-trilobite-heuristic/" />
-		<id>https://yrabbit.github.io/blog/2015/lisp-trilobite-heuristic/</id>
-		<published>2015-12-23T19:30:09+10:00</published>
-		<updated>2017-07-29T19:19:37+10:00</updated>
-		<summary type="html">Итак противник уже играет круче меня, но это не достижение, меня все обыгрывают.  Будем улучшать искусственный разум.
-
-</summary>
-		<content type="html">
-&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;https://yrabbit.github.io/imgs/post-banners/trilobite-lamp.jpeg&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
-&lt;p&gt;Итак противник уже &lt;a href=&quot;/blog/2015/lisp-trilobite-big-lazy-tree/&quot;&gt;играет круче меня&lt;/a&gt;, но это не достижение, меня все обыгрывают.  Будем улучшать искусственный разум.&lt;/p&gt;
-
-&lt;h2 id=&quot;Чуточку-умнее&quot;&gt;Чуточку умнее&lt;/h2&gt;
-
-&lt;p&gt;Итак, AI действует разумно только когда видит чью-нибудь победу через ближайшие *ai-level* ходов, иначе просто выбирает первый же ход. Попробуем следующую эвристику:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;лучшей является позиция, где длина линии из фишек нашего цвета максимальна;&lt;/li&gt;
-  &lt;li&gt;худшей является позиция, где длина линии из фишек цвета противника максимальна.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Отсюда наилучшая позиция — это позиция, где длина линии из фишек нашего цвета равна *win-len*.&lt;/p&gt;
-
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defparameter&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*ai-win*&lt;/span&gt;     &lt;span class=&quot;vg&quot;&gt;*win-len*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defparameter&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*draw*&lt;/span&gt;       &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defparameter&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*human-win*&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*win-len*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Новая функция оценивает позицию исходя из того, какой игрок сделал ход и какой длины линия из фишек получилась.&lt;/p&gt;
-
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;;; count longest line&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;score-position&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;tree&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;move&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;cnt&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;count-player-cells&lt;/span&gt; 
-               &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;game-node-board&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tree&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; 
-               &lt;span class=&quot;nv&quot;&gt;move&lt;/span&gt; 
-               &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;change-player&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;game-node-player&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tree&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))))&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;eql&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*ai-player*&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;game-node-player&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tree&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;cnt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-      &lt;span class=&quot;nv&quot;&gt;cnt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;Небольшие изменения в старых функциях оценки ходов:&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;чтобы подсчитать длину линии, получившуюся в результате последнего хода, нужно этот ход знать;&lt;/li&gt;
-  &lt;li&gt;собственно подсчёт длины линии.&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;rate-position&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;tree&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;move&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;    &lt;span class=&quot;c1&quot;&gt;; // 1&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;moves&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;game-node-moves&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tree&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;not&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;lazy-null&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;moves&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;apply&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;eq&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*ai-player*&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;game-node-player&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tree&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-                   &lt;span class=&quot;nf&quot;&gt;#'&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;max&lt;/span&gt;
-                   &lt;span class=&quot;nf&quot;&gt;#'&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;min&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-                 &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;get-ratings&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tree&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;game-node-failp&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tree&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;eql&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*ai-player*&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;game-node-player&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tree&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-              &lt;span class=&quot;vg&quot;&gt;*human-win*&lt;/span&gt;
-              &lt;span class=&quot;vg&quot;&gt;*ai-win*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;score-position&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tree&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;move&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))))&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;; // 2&lt;/span&gt;
-
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;get-ratings&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;tree&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;mapcar&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;move&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;rate-position&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cadr&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;move&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;car&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;move&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;; // 1&lt;/span&gt;
-          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;take-all&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;game-node-moves&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tree&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;Листинг-игры&quot;&gt;Листинг игры&lt;/h2&gt;
-
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;current&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;The&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Evil&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;AI&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;abcdefgh&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;current&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Human&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;abcdefgh&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;choose&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;your&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;move:&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;1.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;a&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;2.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;b&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;3.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;c&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;4.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;d&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;5.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;e&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;6.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;f&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;7.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;g&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;8.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;h&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;current&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;The&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Evil&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;AI&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;AH......&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;abcdefgh&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;current&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Human&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;AH......&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;abcdefgh&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;choose&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;your&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;move:&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;1.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;a&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;2.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;b&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;3.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;c&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;4.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;d&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;5.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;e&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;6.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;f&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;7.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;g&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;8.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;h&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;current&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;The&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Evil&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;AI&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;H.......&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;AH......&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;abcdefgh&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;current&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Human&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;H.......&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;AA......&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;AH......&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;abcdefgh&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;choose&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;your&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;move:&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;1.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;a&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;2.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;b&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;3.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;c&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;4.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;d&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;5.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;e&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;6.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;f&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;7.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;g&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;8.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;h&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;current&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;The&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Evil&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;AI&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;HH......&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;AA......&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;AH......&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;abcdefgh&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;current&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Human&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;HH......&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;AA......&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;AH......&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;abcdefgh&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;choose&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;your&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;move:&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;1.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;a&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;2.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;b&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;3.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;c&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;4.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;d&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;5.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;e&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;6.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;f&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;7.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;g&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;8.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;h&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;current&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;The&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Evil&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;AI&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;HH......&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;AA......&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;AHH.....&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;abcdefgh&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;current&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Human&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;HH......&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;AA......&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;AHH.....&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;abcdefgh&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;choose&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;your&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;move:&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;1.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;a&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;2.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;b&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;3.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;c&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;4.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;d&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;5.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;e&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;6.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;f&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;7.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;g&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;8.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;h&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;current&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;The&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Evil&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;AI&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;HH......&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;AAH.....&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;AHH.....&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;abcdefgh&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;current&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Human&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;HH......&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;AAH.....&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;AHH.....&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;abcdefgh&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;choose&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;your&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;move:&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;1.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;a&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;2.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;b&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;3.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;c&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;4.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;d&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;5.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;e&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;6.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;f&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;7.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;g&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;8.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;h&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;current&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;The&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Evil&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;AI&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;H.......&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;HH......&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;AAH.....&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;AHH.....&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;abcdefgh&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;current&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Human&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;H.......&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;HH......&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;AAH.....&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;AHHA....&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;abcdefgh&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;choose&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;your&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;move:&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;1.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;b&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;2.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;c&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;3.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;d&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;4.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;e&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;5.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;f&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;6.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;g&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;7.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;h&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;current&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;The&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Evil&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;AI&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;H.......&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;HHH.....&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;AAH.....&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;AHHA....&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;abcdefgh&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;current&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Human&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;H.......&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;A.A.....&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;HHH.....&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;AAH.....&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;AHHA....&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;abcdefgh&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;choose&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;your&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;move:&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;1.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;c&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;2.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;b&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;3.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;d&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;4.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;e&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;5.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;f&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;6.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;g&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;7.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;h&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;current&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;The&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Evil&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;AI&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;H.......&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;A.A.....&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;HHH.....&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;AAHH....&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;AHHA....&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;abcdefgh&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;current&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Human&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;H.......&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;A.A.....&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;HHHA....&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;AAHH....&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;AHHA....&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;abcdefgh&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;choose&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;your&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;move:&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;1.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;c&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;2.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;b&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;3.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;d&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;4.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;e&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;5.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;f&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;6.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;g&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;7.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;h&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;current&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;The&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Evil&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;AI&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;H.......&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;A.A.....&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;HHHA....&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;AAHH....&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;AHHAH...&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;abcdefgh&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;current&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Human&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;H.......&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;AAA.....&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;HHHA....&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;AAHH....&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;AHHAH...&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;abcdefgh&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;choose&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;your&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;move:&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;1.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;b&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;2.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;c&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;3.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;d&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;4.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;e&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;5.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;f&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;6.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;g&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;7.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;h&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;current&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;The&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Evil&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;AI&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;H.......&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;AH......&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;AAA.....&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;HHHA....&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;AAHH....&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;AHHAH...&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;abcdefgh&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;current&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;player&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Human&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;H.......&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;A.......&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;AH......&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;AAAA....&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;HHHA....&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;AAHH....&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;AHHAH...&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;abcdefgh&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;The&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;winner&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;is&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;The&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Evil&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;AI&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;*&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;Я проиграл :frowning:&lt;/p&gt;
-
 </content>
 	</entry>
 

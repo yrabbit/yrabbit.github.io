@@ -15,7 +15,8 @@
 
 
 
-		<!-- Begin Jekyll SEO tag v2.2.4 -->
+		<!-- Begin Jekyll SEO tag v2.4.0 -->
+<meta name="generator" content="Jekyll v3.7.3">
 <meta property="og:title" content="Web-engine in Lisp: Parse Comments">
 <meta name="author" content="Yellow Rabbit">
 <meta property="og:locale" content="en">
@@ -23,14 +24,14 @@
 <meta property="og:description" content="Comments in HTML are not as easy to handle with as it might seem. A comment parser is described.">
 <link rel="canonical" href="https://yrabbit.github.io/blog/2016/lisp-toy-web-parse-comment/">
 <meta property="og:url" content="https://yrabbit.github.io/blog/2016/lisp-toy-web-parse-comment/">
-<meta property="og:site_name" content="Asm, Lisp, and so on - Programmer’s Blog">
+<meta property="og:site_name" content="{“en”=&gt;”Asm, Lisp, and so on - Programmer’s Blog”, “ru”=&gt;”Ассемблер, Lisp и всё такое - блог программиста”}">
 <meta property="og:image" content="https://yrabbit.github.io/imgs/post-banners/lisp-webengine-comment.jpeg">
 <meta property="og:image:height" content="300">
 <meta property="og:image:width" content="1200">
 <meta property="og:type" content="article">
 <meta property="article:published_time" content="2016-05-31T20:03:19+10:00">
 <script type="application/ld+json">
-{"@context":"http://schema.org","@type":"BlogPosting","headline":"Web-engine in Lisp: Parse Comments","author":{"@type":"Person","name":"Yellow Rabbit"},"image":{"width":1200,"height":300,"url":"https://yrabbit.github.io/imgs/post-banners/lisp-webengine-comment.jpeg","@type":"ImageObject"},"datePublished":"2016-05-31T20:03:19+10:00","dateModified":"2017-07-31T18:45:01+10:00","description":"Comments in HTML are not as easy to handle with as it might seem. A comment parser is described.","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://yrabbit.github.io/imgs/blog-log.png"},"name":"Yellow Rabbit"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://yrabbit.github.io/blog/2016/lisp-toy-web-parse-comment/"},"url":"https://yrabbit.github.io/blog/2016/lisp-toy-web-parse-comment/"}</script>
+{"description":"Comments in HTML are not as easy to handle with as it might seem. A comment parser is described.","author":{"@type":"Person","name":"Yellow Rabbit"},"@type":"BlogPosting","url":"https://yrabbit.github.io/blog/2016/lisp-toy-web-parse-comment/","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://yrabbit.github.io/imgs/blog-log.png"},"name":"Yellow Rabbit"},"image":{"width":1200,"height":300,"url":"https://yrabbit.github.io/imgs/post-banners/lisp-webengine-comment.jpeg","@type":"imageObject"},"headline":"Web-engine in Lisp: Parse Comments","dateModified":"2016-05-31T20:03:19+10:00","datePublished":"2016-05-31T20:03:19+10:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://yrabbit.github.io/blog/2016/lisp-toy-web-parse-comment/"},"@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 		<script src="https://apis.google.com/js/platform.js" async defer>
@@ -98,7 +99,7 @@
 </code></pre></div></div>
 </div>
 
-<p>So to parse the comment first thing, what’s the first thing? The piano! Just kidding<img class="emoji" title=":smile:" alt=":smile:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f604.png" height="20" width="20" align="absmiddle"> First of all, remember the position of <code class="highlighter-rouge">index</code> in the string to be rolled back (<code class="highlighter-rouge">oldindex</code>).</p>
+<p>So to parse the comment first thing, what’s the first thing? The piano! Just kidding<img class="emoji" title=":smile:" alt=":smile:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f604.png" height="20" width="20"> First of all, remember the position of <code class="highlighter-rouge">index</code> in the string to be rolled back (<code class="highlighter-rouge">oldindex</code>).</p>
 
 <p>The beginning of the comment is easy to define — just the sequence: <code class="highlighter-rouge">["!--" something]</code><sup id="fnref:why-where-is-no"><a href="#fn:why-where-is-no" class="footnote">1</a></sup>, but with the final <code class="highlighter-rouge">-&gt;</code> it’s not so good.</p>
 
@@ -106,7 +107,7 @@
 
 <p>The repetitive alternative <code class="highlighter-rouge">${"--&gt;" @(any-text ch)}</code> is also not an option: although we are now able to detect the end of the comment, but we can not quit the repetition.</p>
 
-<p>To work the comparison with <code class="highlighter-rouge">--&gt;</code>  should not work <img class="emoji" title=":smile:" alt=":smile:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f604.png" height="20" width="20" align="absmiddle"> That is, by finding <code class="highlighter-rouge">--&gt;</code> we remember the fact of detection in the variable <code class="highlighter-rouge">eoc-found</code><sup id="fnref:eoc"><a href="#fn:eoc" class="footnote">2</a></sup> and say that the comparison failed <code class="highlighter-rouge">!nil</code>. Next, we will consume all the characters in a row only if <code class="highlighter-rouge">--&gt;</code> has not been found.</p>
+<p>To work the comparison with <code class="highlighter-rouge">--&gt;</code>  should not work <img class="emoji" title=":smile:" alt=":smile:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f604.png" height="20" width="20"> That is, by finding <code class="highlighter-rouge">--&gt;</code> we remember the fact of detection in the variable <code class="highlighter-rouge">eoc-found</code><sup id="fnref:eoc"><a href="#fn:eoc" class="footnote">2</a></sup> and say that the comparison failed <code class="highlighter-rouge">!nil</code>. Next, we will consume all the characters in a row only if <code class="highlighter-rouge">--&gt;</code> has not been found.</p>
 
 <div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
 <meta itemprop="codeSampleType" content="code snippet">
@@ -177,15 +178,15 @@
     <ul class="posts">
     
         <li>
+<span>15 Mar 2018</span> » <a href="/blog/2018/a-prometheus-moment/">A Prometheus Moment with Raspberry Pi</a>
+</li>
+    
+        <li>
 <span>13 Dec 2017</span> » <a href="/blog/2017/escape-and-arteck-hb030-bluetooth-keyboard/">Return Escape to Arteck HB030 Bluetooth Keyboard</a>
 </li>
     
         <li>
 <span>18 Nov 2017</span> » <a href="/blog/2017/c720-and-syslinux/">Repairing the isolinux bootloader for Acer C720</a>
-</li>
-    
-        <li>
-<span>13 Sep 2017</span> » <a href="/blog/2017/an-addition-to-the-family-two-tiny-larches/">Addition to the family: two small larches</a>
 </li>
     
     </ul>
@@ -207,7 +208,7 @@
 
 
 				<p>
-				<small>© 2017 Yellow Rabbit</small>
+				<small>© 2018 Yellow Rabbit</small>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 <a href="https://feedburner.google.com/fb/a/mailverify?uri=YellowRabbit&amp;loc=en_US" onclick="window.open(this.href, 'mywin',
           'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Subscribe!">
