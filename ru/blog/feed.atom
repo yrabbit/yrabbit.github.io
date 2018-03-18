@@ -7,7 +7,7 @@
 	<author>
 		<name>Yellow Rabbit</name>
 	</author>
-	<updated>2018-03-17T15:33:25+10:00</updated>
+	<updated>2018-03-18T13:05:49+10:00</updated>
 
 	<entry>
 		<title type="text">Почувствовать себя Прометеем с Raspberry Pi</title>
@@ -109,11 +109,11 @@
 &lt;p&gt;&lt;img src=&quot;/imgs/posts/resistor-led_bb-min.png&quot; alt=&quot;Макет платы&quot; title=&quot;Макет платы&quot; class=&quot;center-image&quot; width=&quot;95%&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;И проверяем напряжение на резисторе:
-&lt;img src=&quot;/imgs/posts/test-resistor-led-board-min.png&quot; alt=&quot;Плата и мультиметр&quot; title=&quot;Плата и мультиметр&quot; class=&quot;center-image&quot; width=&quot;60%&quot; /&gt;&lt;/p&gt;
+&lt;img src=&quot;/imgs/posts/test-resistor-led-board-0-min.png&quot; alt=&quot;Плата и мультиметр&quot; title=&quot;Плата и мультиметр&quot; class=&quot;center-image&quot; width=&quot;60%&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;0.1V, значит на моём светодиоде падает больше, чем рассчитывалось:smile_cat:. Посчитаем какой ток течёт в цепи:&lt;/p&gt;
+&lt;p&gt;0.36V, значит на моём светодиоде падает больше, чем рассчитывалось:smile_cat:. Посчитаем какой ток течёт в цепи:&lt;/p&gt;
 
-&lt;p&gt;&lt;script type=&quot;math/tex&quot;&gt;I=V_{R1}/100=0.1/100=0.001&lt;/script&gt;A&lt;/p&gt;
+&lt;p&gt;&lt;script type=&quot;math/tex&quot;&gt;I=V_{R1}/100=0.36/100=0.0036&lt;/script&gt;A&lt;/p&gt;
 
 &lt;p&gt;Неплохо. Светодиод светится, ток вполне безопасный, можно переходить непосредственно к Raspberry Pi. Но это в следующий раз:smiley:&lt;/p&gt;
 </content>

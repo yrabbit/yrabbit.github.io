@@ -7,7 +7,7 @@
 	<author>
 		<name>Yellow Rabbit</name>
 	</author>
-	<updated>2018-03-17T15:33:25+10:00</updated>
+	<updated>2018-03-18T13:05:49+10:00</updated>
 
 	<entry>
 		<title type="text">A Prometheus Moment with Raspberry Pi</title>
@@ -117,12 +117,12 @@ overload, so that nothing terrible will happen if there are errors in the circui
 &lt;p&gt;&lt;img src=&quot;/imgs/posts/resistor-led_bb-min.png&quot; alt=&quot;Breadboard&quot; title=&quot;Breadboard&quot; class=&quot;center-image&quot; width=&quot;95%&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;And check the voltage on the resistor:
-&lt;img src=&quot;/imgs/posts/test-resistor-led-board-min.png&quot; alt=&quot;Breadboard and a multimeter&quot; title=&quot;Breadboard and a multimeter&quot; class=&quot;center-image&quot; width=&quot;60%&quot; /&gt;&lt;/p&gt;
+&lt;img src=&quot;/imgs/posts/test-resistor-led-board-0-min.png&quot; alt=&quot;Breadboard and a multimeter&quot; title=&quot;Breadboard and a multimeter&quot; class=&quot;center-image&quot; width=&quot;60%&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;0.1V, then a voltage drop on my LED is more than calculated:smile_cat:. 
 Calculate the current:&lt;/p&gt;
 
-&lt;p&gt;&lt;script type=&quot;math/tex&quot;&gt;I=V_{R1}/100=0.1/100=0.001&lt;/script&gt;A&lt;/p&gt;
+&lt;p&gt;&lt;script type=&quot;math/tex&quot;&gt;I=V_{R1}/100=0.36/100=0.0036&lt;/script&gt;A&lt;/p&gt;
 
 &lt;p&gt;Not bad. The LED lights up, the current is completely safe, I can go directly to Raspberry Pi. But about that next time: smiley:&lt;/p&gt;
 </content>
