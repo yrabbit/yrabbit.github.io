@@ -7,7 +7,7 @@
 	<author>
 		<name>Yellow Rabbit</name>
 	</author>
-	<updated>2018-03-18T21:14:51+10:00</updated>
+	<updated>2018-03-18T21:29:38+10:00</updated>
 
 	<entry>
 		<title type="text">Kotlin and GPIO in Raspberry Pi</title>
@@ -200,7 +200,7 @@ index 710d20f..7e38063 100644
 
 &lt;video id=&quot;blinkingUniverse&quot; src=&quot;/video/blinkingUniverse.mp4&quot; width=&quot;50%&quot; controls=&quot;&quot; class=&quot;center-image&quot;&gt;&lt;/video&gt;
 
-&lt;p&gt;Well, is not it cool? I’m happy :smile:&lt;/p&gt;
+&lt;p&gt;Well, isn’t it cool? I’m happy :smile:&lt;/p&gt;
 
 &lt;div class=&quot;footnotes&quot;&gt;
   &lt;ol&gt;
