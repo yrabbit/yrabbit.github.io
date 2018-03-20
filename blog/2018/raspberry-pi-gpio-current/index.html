@@ -1,0 +1,229 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="chrome=1" />
+		<meta http-equiv="Content-Language" content="en">
+<link rel="alternate"
+      hreflang="x-default"
+      href="  https://yrabbit.github.io/blog/2018/raspberry-pi-gpio-current/" />
+<link rel="alternate"
+      hreflang="en"
+      href="  https://yrabbit.github.io/blog/2018/raspberry-pi-gpio-current/" />
+
+
+  
+
+<link rel="alternate"
+    hreflang="ru"
+    href=" https://yrabbit.github.io/ru/blog/2018/raspberry-pi-gpio-current/" />
+
+
+
+		<!-- Begin Jekyll SEO tag v2.4.0 -->
+<meta name="generator" content="Jekyll v3.7.3" />
+<meta property="og:title" content="Raspberry Pi GPIO Drive Strength" />
+<meta name="author" content="Yellow Rabbit" />
+<meta property="og:locale" content="en" />
+<meta name="description" content="How to receive and set the current on the GPIO." />
+<meta property="og:description" content="How to receive and set the current on the GPIO." />
+<link rel="canonical" href="https://yrabbit.github.io/blog/2018/raspberry-pi-gpio-current/" />
+<meta property="og:url" content="https://yrabbit.github.io/blog/2018/raspberry-pi-gpio-current/" />
+<meta property="og:site_name" content="{“en”=&gt;”Asm, Lisp, and so on - Programmer’s Blog”, “ru”=&gt;”Ассемблер, Lisp и всё такое - блог программиста”}" />
+<meta property="og:image" content="https://yrabbit.github.io/imgs/post-banners/soldering-iron-amper.png" />
+<meta property="og:image:height" content="300" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2018-03-19T00:00:00+10:00" />
+<script type="application/ld+json">
+{"description":"How to receive and set the current on the GPIO.","author":{"@type":"Person","name":"Yellow Rabbit"},"@type":"BlogPosting","url":"https://yrabbit.github.io/blog/2018/raspberry-pi-gpio-current/","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://yrabbit.github.io/imgs/blog-log.png"},"name":"Yellow Rabbit"},"image":{"width":1200,"height":300,"url":"https://yrabbit.github.io/imgs/post-banners/soldering-iron-amper.png","@type":"imageObject"},"headline":"Raspberry Pi GPIO Drive Strength","dateModified":"2018-03-19T00:00:00+10:00","datePublished":"2018-03-19T00:00:00+10:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://yrabbit.github.io/blog/2018/raspberry-pi-gpio-current/"},"@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+		<script src="https://apis.google.com/js/platform.js" async defer>
+  {lang: 'ru'}
+</script>
+
+		<title>Raspberry Pi GPIO Drive Strength | Yellow Rabbit
+			
+		</title>
+		
+
+                <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Lato:300italic,700italic,300,700">
+		<link rel="stylesheet" href="/css/styles.css" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<!--[if lt IE 9]>
+		<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+	</head>
+	<body>
+		<div class="wrapper">
+			<header>
+				<h2><a href="https://yrabbit.github.io/blog/"><img src="/imgs/blog-logo.png" title="A programmer's blog about experiments with PDP-11 assembler, Lisp, as well as other fun things." alt="Yellow Rabbit" width="300" /></a></h2>
+				<nav><ul>
+						<li><a href="/about/">About</a></li>
+						<li><a href="/projects/">Projects</a></li>
+					<li><a class="active" href="/blog/">Blog</a></li>
+					<li><a href="/contact/">Contact</a></li>
+				</ul></nav>
+			</header>
+			<section>
+				
+<h1 class="post-title">Recalling the drive strength of the GPIO</h1>
+<p class="post-meta">
+	19 Mar 2018 &bull;
+	2 min. read &bull;
+	<a href="#disqus_thread" data-disqus-identifier="2018-03-19-raspberry-pi-gpio-current.md">Comments</a> &bull; 
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+<a href="https://feedburner.google.com/fb/a/mailverify?uri=YellowRabbit&amp;loc=en_US" onclick="window.open(this.href, 'mywin',
+          'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Subscribe!">
+    <i class="fa-rss fa"></i>
+</a>
+
+
+</p>
+
+
+	<div class="post-banner" style="background-image: url(/imgs/post-banners/soldering-iron-amper.png);">
+		<img src="/imgs/post-banners/soldering-iron-amper.png" alt="Raspberry Pi GPIO Drive Strength" />
+	</div>
+
+<p><a href="/blog/2018/a-prometheus-moment-raspberry-pi-edition/">Last time</a>, when the LED so delightfully shone, we completely lost sight of the need to somehow regulate the current on the GPIO, since 8mA, which set by default, a bit different from the desired 4mA.</p>
+
+<p>To begin with, the current is regulated<sup id="fnref:current-regulation"><a href="#fn:current-regulation" class="footnote">1</a></sup> not for a single GPIO, but for all at once (in fact, for three groups of contacts, but on Raspberry Pi 3b, which I have, such a group is only one - with the number 0).</p>
+
+<p>When I tackled the current-regulation problem, I found that these functions are missing in the <em>jpigpio</em> library, so I had to add them. I made a PR, but until it is accepted into the main repository, you can <a href="https://github.com/yrabbit/jpigpio">use my</a>.</p>
+
+<h2 id="example">Example</h2>
+<p>Read the current drive strength settings and change, if necessary:</p>
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode"><meta itemprop="codeSampleType" content="code snippet" /><meta itemprop="programmingLanguage" content="korlin" />
+<pre><code class="language-korlin">
+fun main(args: Array&lt;String&gt;) {
+    // dirty hack: need to point java.library.path to the location of libJPigpioC.so
+    AddDir.addDir("/home/rabbit/local/lib")
+
+    println("Kotlin Raspberry Pi gentoo64")
+    println("You must see a blinking universe :)")
+    try {
+        // Init lib
+        val pigpio = Pigpio()
+        pigpio.gpioInitialize()
+        Utils.addShutdown(pigpio)
+
+        // Mode output
+        pigpio.gpioSetMode(LED_PIN, PI_OUTPUT)
+
+        // Check drive strength on GPIO
+        val strength = pigpio.gpioGetPad(0)
+        println("Current drive strength:${strength}mA")
+
+        if (strength != CURRENT) {
+            pigpio.gpioSetPad(0, CURRENT)
+            val newStrength = pigpio.gpioGetPad(0)
+            println("New drive strength:${newStrength}mA")
+        }
+
+        repeat(3) {
+            // ON
+            pigpio.gpioWrite(LED_PIN, PI_HIGH)
+            pigpio.gpioDelay(500 * 1000)
+            // OFF
+            pigpio.gpioWrite(LED_PIN, PI_LOW)
+            pigpio.gpioDelay(500 * 1000)
+        }
+    } catch(e: PigpioException) {
+        e.printStackTrace()
+    }
+}
+
+const val LED_PIN = 26 // GPIO26
+const val CURRENT = 4 // 4mA
+
+</code></pre>
+</div>
+
+<p>How it worked:
+<img src="/imgs/posts/set-drive-strength-0.png" alt="The result of the launch" title="The result of the launch" class="center-image" width="90%" /></p>
+<div class="footnotes">
+  <ol>
+    <li id="fn:current-regulation">
+      <p>Once again, I repeat that setting the GPIO current to 4mA does not mean that the current will be limited by this value. It just ensures that at a current of 4mA the logical levels will be clearly different. <a href="#fnref:current-regulation" class="reversefootnote">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
+
+<section id="related">
+  <h2>Related Posts</h2>
+    <ul class="posts">
+    
+        <li><span>17 Mar 2018</span> &raquo; <a href="/blog/2018/a-prometheus-moment-raspberry-pi-edition/">Kotlin and GPIO in Raspberry Pi</a></li>
+    
+        <li><span>15 Mar 2018</span> &raquo; <a href="/blog/2018/a-prometheus-moment/">A Prometheus Moment with Raspberry Pi</a></li>
+    
+        <li><span>13 Dec 2017</span> &raquo; <a href="/blog/2017/escape-and-arteck-hb030-bluetooth-keyboard/">Return Escape to Arteck HB030 Bluetooth Keyboard</a></li>
+    
+    </ul>
+</section>
+<hr />
+<div align="center">
+<div class="g-plus" data-action="share"></div>
+<a href="https://twitter.com/share" class="twitter-share-button" data-show-count="false">Tweet</a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+</div>
+
+<div id="disqus_thread"></div>
+
+
+			</section>
+			<footer>
+
+<img class="avatar" src="https://www.gravatar.com/avatar/1d87b9cdbef9dec8e79613e19c601121?s=144" alt="Me" />
+
+
+
+				<p>
+				<small>© 2018 Yellow Rabbit</small>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+<a href="https://feedburner.google.com/fb/a/mailverify?uri=YellowRabbit&amp;loc=en_US" onclick="window.open(this.href, 'mywin',
+          'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Subscribe!">
+    <i class="fa-rss fa"></i>
+</a>
+
+
+<br />
+
+    <a href="https://twitter.com/YLRabbit">
+      <i class="fa fa-twitter"></i> Twitter
+    </a>
+
+
+    <a href="https://github.com/yrabbit">
+      <i class="fa fa-github"></i> GitHub
+    </a>
+
+				<br />
+					<small>Made with <a href="http://jekyllrb.com/">Jekyll</a> &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small>
+				</p>
+			</footer>
+		</div>
+		<script src="/js/scale.fix.js"></script>
+	
+
+	<script type="text/javascript">
+	var disqus_shortname = 'yrabbitblog',
+	disqus_identifier = '2018-03-19-raspberry-pi-gpio-current.md-en',
+	disqus_url        = 'https://yrabbit.github.io/blog/2018/raspberry-pi-gpio-current/'
+	;
+	(function() {
+		var load = function(src){
+			var s = document.createElement('script'); s.type = 'text/javascript'; s.async = true; s.src = src;
+			var e = document.getElementsByTagName('script')[0]; e.parentNode.insertBefore(s, e);
+		};
+		load('//' + disqus_shortname + '.disqus.com/count.js');
+		if (document.getElementById('disqus_thread')) {
+			load('//' + disqus_shortname + '.disqus.com/embed.js');
+		}
+	})();
+</script>
+
+
+	</body>
+</html>
