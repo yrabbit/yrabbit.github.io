@@ -151,10 +151,10 @@
 <p>Пусть ток через диод будет 8mA, свечение мы заметим. Падение напряжения на диоде принимаем худшее — 2.48V. Оставшееся напряжение должно падать на резисторе <code class="highlighter-rouge">R1</code>.</p>
 
 <p><img src="/imgs/posts/resistor-led-min.png" alt="Резистор и светодиод" title="Резистор и светодиод" class="center-image" width="7%">
-На резисторе падает <script type="math/tex">V_{R1}=V_{cc}-V_{D1}=3.3 - 2.48=0.82V</script>. При токе в 8mA сопротивление резистора <code class="highlighter-rouge">R1</code> равно <script type="math/tex">V_{R1}/0.008=102.5</script> Ohm. У меня есть резисторы в 220 Ohm и 100 Ohm:
+На резисторе падает <script type="math/tex">V_{R1}=V_{cc}-V_{D1}=3.3 - 2.48=0.82V</script>. При токе в 8mA сопротивление резистора <code class="highlighter-rouge">R1</code> равно <script type="math/tex">V_{R1}/0.008=102.5\Omega</script>. У меня есть резисторы в <script type="math/tex">220\Omega</script> и <script type="math/tex">100\Omega</script>:
 <img src="/imgs/posts/two-resistors-min.png" alt="Два резистора" title="Два резистора" class="center-image" width="70%"></p>
 
-<p>Посмотрим насколько больше тока я получу при 100 Ohm: <script type="math/tex">\Delta I=V_{R1}/(100) - 0.008=0.0002</script>A. Этим можно пренебречь. <em>Однако</em> в других подобных случаях лучше увеличивать сопротивление, так как ток при этом будет уменьшаться, а, как правило, меньший ток это хорошо.</p>
+<p>Посмотрим насколько больше тока я получу при <script type="math/tex">100\Omega</script>: <script type="math/tex">\Delta I=V_{R1}/(100) - 0.008=0.0002</script>A. Этим можно пренебречь. <em>Однако</em> в других подобных случаях лучше увеличивать сопротивление, так как ток при этом будет уменьшаться, а, как правило, меньший ток это хорошо.</p>
 
 <h2 id="Проверка-на-плате">Проверка на плате</h2>
 <p>У меня есть небольшой блок питания, который можно использовать для проверки схемы перед подключением к Raspberri Pi:</p>
@@ -182,15 +182,15 @@
     <ul class="posts">
     
         <li>
+<span>21 Mar 2018</span> » <a href="/ru/blog/2018/more-lights/">Больше света!</a>
+</li>
+    
+        <li>
 <span>19 Mar 2018</span> » <a href="/ru/blog/2018/raspberry-pi-gpio-current/">Управление током GPIO Raspberry Pi</a>
 </li>
     
         <li>
 <span>17 Mar 2018</span> » <a href="/ru/blog/2018/a-prometheus-moment-raspberry-pi-edition/">Kotlin и GPIO в Raspberry Pi</a>
-</li>
-    
-        <li>
-<span>13 Dec 2017</span> » <a href="/ru/blog/2017/escape-and-arteck-hb030-bluetooth-keyboard/">Возвращение клавиши Escape на клавиатуру Arteck HB030 bluetooth</a>
 </li>
     
     </ul>

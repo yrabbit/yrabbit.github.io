@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html>
+	<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="chrome=1">
+		<meta http-equiv="Content-Language" content="en">
+<link rel="alternate" hreflang="x-default" href="https://yrabbit.github.io/blog/2018/more-lights/">
+<link rel="alternate" hreflang="en" href="https://yrabbit.github.io/blog/2018/more-lights/">
+
+
+  
+
+<link rel="alternate" hreflang="ru" href="https://yrabbit.github.io/ru/blog/2018/more-lights/">
+
+
+
+		<!-- Begin Jekyll SEO tag v2.4.0 -->
+<meta name="generator" content="Jekyll v3.7.3">
+<meta property="og:title" content="Mode light!">
+<meta name="author" content="Yellow Rabbit">
+<meta property="og:locale" content="en">
+<meta name="description" content="Calculation and implementation of a circuit with several LEDs of different colors">
+<meta property="og:description" content="Calculation and implementation of a circuit with several LEDs of different colors">
+<link rel="canonical" href="https://yrabbit.github.io/blog/2018/more-lights/">
+<meta property="og:url" content="https://yrabbit.github.io/blog/2018/more-lights/">
+<meta property="og:site_name" content="{“en”=&gt;”Asm, Lisp, and so on - Programmer’s Blog”, “ru”=&gt;”Ассемблер, Lisp и всё такое - блог программиста”}">
+<meta property="og:image" content="https://yrabbit.github.io/imgs/post-banners/soldering-iron-min.png">
+<meta property="og:image:height" content="300">
+<meta property="og:image:width" content="1200">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2018-03-21T00:00:00+10:00">
+<script type="application/ld+json">
+{"description":"Calculation and implementation of a circuit with several LEDs of different colors","author":{"@type":"Person","name":"Yellow Rabbit"},"@type":"BlogPosting","url":"https://yrabbit.github.io/blog/2018/more-lights/","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://yrabbit.github.io/imgs/blog-log.png"},"name":"Yellow Rabbit"},"image":{"width":1200,"height":300,"url":"https://yrabbit.github.io/imgs/post-banners/soldering-iron-min.png","@type":"imageObject"},"headline":"Mode light!","dateModified":"2018-03-21T00:00:00+10:00","datePublished":"2018-03-21T00:00:00+10:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://yrabbit.github.io/blog/2018/more-lights/"},"@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+		<script src="https://apis.google.com/js/platform.js" async defer>
+  {lang: 'ru'}
+</script>
+
+		<title>Mode light! | Yellow Rabbit
+			
+		</title>
+		
+
+                <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Lato:300italic,700italic,300,700">
+		<link rel="stylesheet" href="/css/styles.css">
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+		<!--[if lt IE 9]>
+		<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+	</head>
+	<body>
+		<div class="wrapper">
+			<header>
+				<h2><a href="https://yrabbit.github.io/blog/"><img src="/imgs/blog-logo.png" title="A programmer's blog about experiments with PDP-11 assembler, Lisp, as well as other fun things." alt="Yellow Rabbit" width="300"></a></h2>
+				<nav><ul>
+						<li><a href="/about/">About</a></li>
+						<li><a href="/projects/">Projects</a></li>
+					<li><a class="active" href="/blog/">Blog</a></li>
+					<li><a href="/contact/">Contact</a></li>
+				</ul></nav>
+			</header>
+			<section>
+				
+<h1 class="post-title">Use more LEDs</h1>
+<p class="post-meta">
+	21 Mar 2018 •
+	5 min. read •
+	<a href="#disqus_thread" data-disqus-identifier="2018-03-21-more-lights.md">Comments</a> • 
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+<a href="https://feedburner.google.com/fb/a/mailverify?uri=YellowRabbit&amp;loc=en_US" onclick="window.open(this.href, 'mywin',
+          'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Subscribe!">
+    <i class="fa-rss fa"></i>
+</a>
+
+
+</p>
+
+
+	<div class="post-banner" style="background-image: url(/imgs/post-banners/soldering-iron-min.png);">
+		<img src="/imgs/post-banners/soldering-iron-min.png" alt="Mode light!">
+	</div>
+
+<script type="text/javascript" async="" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+<p><a href="/blog/2018/a-prometheus-moment">One blue LED</a> was simply amazing. I have a few more LEDs in different colors. Let’s do something like a mini-garland!</p>
+
+<p>Let’s see what I have:
+<img src="/imgs/posts/LEDS-I-have.jpeg" alt="I have LEDs" title="What LEDs I have" class="center-image" width="60%">
+Three 5mm LEDs: red, yellow and green. Using <a href="/blog/2018/a-prometheus-moment">the table</a> for voltage drops on LEDs of different colors, we calculate the voltage drop across the limiting resistors:</p>
+
+<table class="mbtablestyle">
+  <thead>
+    <tr>
+      <th>Color</th>
+      <th>V across the LED</th>
+      <th>V across the resistor</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Red</td>
+      <td><script type="math/tex">V_{red}=1.63V</script></td>
+      <td><script type="math/tex">V_{R2}=V_{cc}-V_{red}=3.3-1.63=1.67V</script></td>
+    </tr>
+  </tbody>
+  <tbody>
+    <tr>
+      <td>Yellow</td>
+      <td><script type="math/tex">V_{yellow}=2.10V</script></td>
+      <td><script type="math/tex">V_{R3}=V_{cc}-V_{yellow}=3.3-2.10=1.20V</script></td>
+    </tr>
+  </tbody>
+  <tbody>
+    <tr>
+      <td>Green</td>
+      <td><script type="math/tex">V_{green}=1.90V</script></td>
+      <td><script type="math/tex">V_{R4}=V_{cc}-V_{green}=3.3-1.90=1.40V</script></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Again, we start from the permissible current through the load resistors equal to 8mA:</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td><script type="math/tex">R_{red}=1.67/0.008=208.75\Omega</script></td>
+    </tr>
+    <tr>
+      <td><script type="math/tex">R_{yellow}=1.2/0.008=150.0\Omega</script></td>
+    </tr>
+    <tr>
+      <td><script type="math/tex">R_{green}=1.4/0.008=175.0\Omega</script></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>We round up (to reduce the current through the resistor, but not to increase it) and get for all three resistors <script type="math/tex">220\Omega</script>.</p>
+
+<p>The total current <script type="math/tex">I=4 \cdot 0.008=0.032A</script>, this is below the permissible 50mA, as usual, we first check the circuit on a small power supply.</p>
+
+<h2 id="schematic-diagram">Schematic diagram</h2>
+<p>LEDs: <code class="highlighter-rouge">D1</code> - blue, <code class="highlighter-rouge">D2</code> - green, <code class="highlighter-rouge">D3</code> - yellow, <code class="highlighter-rouge">D4</code> - red. 
+Resistors: <code class="highlighter-rouge">R1</code> - <script type="math/tex">100\Omega</script>, <code class="highlighter-rouge">R2</code>, <code class="highlighter-rouge">R3</code>, <code class="highlighter-rouge">R4</code> - <script type="math/tex">220\Omega</script>.
+<img src="/imgs/posts/mini-garland.png" alt="Schematic diagram" title="Schematic diagram" class="center-image" width="50%"></p>
+
+<p>GPIO compliance with colors:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>GPIO</th>
+      <th>Color</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>26</td>
+      <td>Blue</td>
+    </tr>
+  </tbody>
+  <tbody>
+    <tr>
+      <td>22</td>
+      <td>Green</td>
+    </tr>
+  </tbody>
+  <tbody>
+    <tr>
+      <td>27</td>
+      <td>Yellow</td>
+    </tr>
+  </tbody>
+  <tbody>
+    <tr>
+      <td>17</td>
+      <td>Red</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="breadboard">Breadboard</h2>
+<p><img src="/imgs/posts/more-leds_bb.png" alt="Breadboard" title="Breadboard" class="center-image" width="80%"></p>
+
+<h2 id="testing">Testing</h2>
+<p><img src="/imgs/posts/mb-garland.jpeg" alt="Working board" title="Working board" width="40%">
+<img src="/imgs/posts/mb-red.jpeg" alt="Voltage on the red LED" title="Voltage on the red LED" width="40%">
+<img src="/imgs/posts/mb-yellow.jpeg" alt="Voltage on the yellow LED" title="Voltage on the yellow LED" width="40%">
+<img src="/imgs/posts/mb-green.jpeg" alt="Voltage on the green LED" title="Voltage on the green LED" width="40%"></p>
+
+<p>Calculate the currents through the resistors:</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td><script type="math/tex">I_{R2}=0.58/220=2mA</script></td>
+    </tr>
+    <tr>
+      <td><script type="math/tex">I_{R3}=1.28/220=5.8mA</script></td>
+    </tr>
+    <tr>
+      <td><script type="math/tex">I_{R4}=1.14/220=5mA</script></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>That is, the assumption about 8mA turned out to be correct and we can safely connect the scheme to Raspberry Pi:</p>
+
+<h2 id="program">Program</h2>
+<p>Let’s make some simple effects:</p>
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+<meta itemprop="codeSampleType" content="code snippet">
+<meta itemprop="programmingLanguage" content="kotlin">
+<div class="language-kotlin highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="k">package</span> <span class="nn">io.github.yrabbit.kotlin.led</span>
+
+<span class="k">import</span> <span class="nn">io.github.yrabbit.java.util.AddDir</span>
+<span class="k">import</span> <span class="nn">jpigpio.JPigpio.*</span>
+<span class="k">import</span> <span class="nn">jpigpio.Pigpio</span>
+<span class="k">import</span> <span class="nn">jpigpio.PigpioException</span>
+<span class="k">import</span> <span class="nn">jpigpio.Utils</span>
+
+<span class="k">fun</span> <span class="n">main</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">Array</span><span class="p">&lt;</span><span class="n">String</span><span class="p">&gt;)</span> <span class="p">{</span>
+    <span class="c1">// dirty hack: need to point java.library.path to the location of libJPigpioC.so</span>
+    <span class="n">AddDir</span><span class="p">.</span><span class="n">addDir</span><span class="p">(</span><span class="s">"/home/rabbit/local/lib"</span><span class="p">)</span>
+
+    <span class="n">println</span><span class="p">(</span><span class="s">"Kotlin Raspberry Pi gentoo64"</span><span class="p">)</span>
+    <span class="n">println</span><span class="p">(</span><span class="s">"You must see a lights :)"</span><span class="p">)</span>
+
+    <span class="c1">// Init lib</span>
+    <span class="kd">val</span> <span class="py">pigpio</span> <span class="p">=</span> <span class="n">Pigpio</span><span class="p">()</span>
+    <span class="n">pigpio</span><span class="p">.</span><span class="n">gpioInitialize</span><span class="p">()</span>
+    <span class="n">Utils</span><span class="p">.</span><span class="n">addShutdown</span><span class="p">(</span><span class="n">pigpio</span><span class="p">)</span>
+
+    <span class="c1">// Check drive strength on GPIO</span>
+    <span class="kd">val</span> <span class="py">strength</span> <span class="p">=</span> <span class="n">pigpio</span><span class="p">.</span><span class="n">gpioGetPad</span><span class="p">(</span><span class="m">0</span><span class="p">)</span>
+    <span class="n">println</span><span class="p">(</span><span class="s">"Current drive strength:${strength}mA"</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">strength</span> <span class="p">!=</span> <span class="n">CURRENT</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">pigpio</span><span class="p">.</span><span class="n">gpioSetPad</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="n">CURRENT</span><span class="p">)</span>
+        <span class="kd">val</span> <span class="py">newStrength</span> <span class="p">=</span> <span class="n">pigpio</span><span class="p">.</span><span class="n">gpioGetPad</span><span class="p">(</span><span class="m">0</span><span class="p">)</span>
+        <span class="n">println</span><span class="p">(</span><span class="s">"New drive strength:${newStrength}mA"</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Mode output</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">led</span> <span class="k">in</span> <span class="n">LEDS</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">pigpio</span><span class="p">.</span><span class="n">gpioSetMode</span><span class="p">(</span><span class="n">led</span><span class="p">,</span> <span class="n">PI_OUTPUT</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="c1">// forward and backward</span>
+    <span class="kd">val</span> <span class="py">mode0</span> <span class="p">=</span> <span class="n">arrayOf</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="m">1</span><span class="p">,</span> <span class="m">2</span><span class="p">,</span> <span class="m">3</span><span class="p">,</span> <span class="m">2</span><span class="p">,</span> <span class="m">1</span><span class="p">)</span>
+    <span class="c1">//</span>
+    <span class="kd">val</span> <span class="py">mode1</span> <span class="p">=</span> <span class="n">arrayOf</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="m">3</span><span class="p">,</span> <span class="m">1</span><span class="p">,</span> <span class="m">2</span><span class="p">,</span> <span class="m">1</span><span class="p">,</span> <span class="m">2</span><span class="p">)</span>
+    <span class="kd">val</span> <span class="py">mode2</span> <span class="p">=</span> <span class="n">arrayOf</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="m">1</span><span class="p">,</span> <span class="m">2</span><span class="p">,</span> <span class="m">3</span><span class="p">)</span>
+
+    <span class="n">repeat</span><span class="p">(</span><span class="m">3</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">chainBlink</span><span class="p">(</span><span class="n">pigpio</span><span class="p">,</span> <span class="n">mode0</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="n">repeat</span><span class="p">(</span><span class="m">3</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">chainBlink</span><span class="p">(</span><span class="n">pigpio</span><span class="p">,</span> <span class="n">mode1</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="n">repeat</span><span class="p">(</span><span class="m">3</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">chainBlink</span><span class="p">(</span><span class="n">pigpio</span><span class="p">,</span> <span class="n">mode2</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">fun</span> <span class="n">chainBlink</span><span class="p">(</span><span class="n">pigpio</span><span class="p">:</span> <span class="n">Pigpio</span><span class="p">,</span> <span class="n">chain</span><span class="p">:</span> <span class="n">Array</span><span class="p">&lt;</span><span class="n">Int</span><span class="p">&gt;)</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">led</span> <span class="k">in</span> <span class="n">chain</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// ON</span>
+        <span class="n">pigpio</span><span class="p">.</span><span class="n">gpioWrite</span><span class="p">(</span><span class="n">LEDS</span><span class="p">[</span><span class="n">led</span><span class="p">],</span> <span class="n">PI_HIGH</span><span class="p">)</span>
+        <span class="n">pigpio</span><span class="p">.</span><span class="n">gpioDelay</span><span class="p">(</span><span class="m">300</span> <span class="p">*</span> <span class="m">1000</span><span class="p">)</span>
+        <span class="c1">// OFF</span>
+        <span class="n">pigpio</span><span class="p">.</span><span class="n">gpioWrite</span><span class="p">(</span><span class="n">LEDS</span><span class="p">[</span><span class="n">led</span><span class="p">],</span> <span class="n">PI_LOW</span><span class="p">)</span>
+        <span class="n">pigpio</span><span class="p">.</span><span class="n">gpioDelay</span><span class="p">(</span><span class="m">100</span> <span class="p">*</span> <span class="m">1000</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">const</span> <span class="kd">val</span> <span class="py">BLUE_LED_PIN</span>   <span class="p">=</span> <span class="m">26</span> <span class="c1">// GPIO26</span>
+<span class="k">const</span> <span class="kd">val</span> <span class="py">GREEN_LED_PIN</span>  <span class="p">=</span> <span class="m">22</span> <span class="c1">// GPIO22</span>
+<span class="k">const</span> <span class="kd">val</span> <span class="py">YELLOW_LED_PIN</span> <span class="p">=</span> <span class="m">27</span> <span class="c1">// GPIO27</span>
+<span class="k">const</span> <span class="kd">val</span> <span class="py">RED_LED_PIN</span>    <span class="p">=</span> <span class="m">17</span> <span class="c1">// GPIO17</span>
+<span class="kd">val</span> <span class="py">LEDS</span> <span class="p">=</span> <span class="n">arrayOf</span><span class="p">(</span><span class="n">BLUE_LED_PIN</span><span class="p">,</span> <span class="n">GREEN_LED_PIN</span><span class="p">,</span> <span class="n">YELLOW_LED_PIN</span><span class="p">,</span> <span class="n">RED_LED_PIN</span><span class="p">)</span>
+
+
+<span class="k">const</span> <span class="kd">val</span> <span class="py">CURRENT</span> <span class="p">=</span> <span class="m">8</span> <span class="c1">// 8mA</span>
+
+
+</code></pre></div></div>
+</div>
+
+<h2 id="start">Start</h2>
+<p>Run the resulting JAR:</p>
+
+<video id="disco" src="/video/VID_20180321_193931.mp4" width="50%" controls="" class="center-image"></video>
+
+<p>Well, is not it cool? I’m happy<img class="emoji" title=":smile:" alt=":smile:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f604.png" height="20" width="20"></p>
+
+<section id="related">
+  <h2>Related Posts</h2>
+    <ul class="posts">
+    
+        <li>
+<span>19 Mar 2018</span> » <a href="/blog/2018/raspberry-pi-gpio-current/">Raspberry Pi GPIO Drive Strength</a>
+</li>
+    
+        <li>
+<span>17 Mar 2018</span> » <a href="/blog/2018/a-prometheus-moment-raspberry-pi-edition/">Kotlin and GPIO in Raspberry Pi</a>
+</li>
+    
+        <li>
+<span>15 Mar 2018</span> » <a href="/blog/2018/a-prometheus-moment/">A Prometheus Moment with Raspberry Pi</a>
+</li>
+    
+    </ul>
+</section>
+<hr>
+<div align="center">
+<div class="g-plus" data-action="share"></div>
+<a href="https://twitter.com/share" class="twitter-share-button" data-show-count="false">Tweet</a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+</div>
+
+<div id="disqus_thread"></div>
+
+
+			</section>
+			<footer>
+
+<img class="avatar" src="https://www.gravatar.com/avatar/1d87b9cdbef9dec8e79613e19c601121?s=144" alt="Me">
+
+
+
+				<p>
+				<small>© 2018 Yellow Rabbit</small>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+<a href="https://feedburner.google.com/fb/a/mailverify?uri=YellowRabbit&amp;loc=en_US" onclick="window.open(this.href, 'mywin',
+          'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Subscribe!">
+    <i class="fa-rss fa"></i>
+</a>
+
+
+<br>
+
+    <a href="https://twitter.com/YLRabbit">
+      <i class="fa fa-twitter"></i> Twitter
+    </a>
+
+
+    <a href="https://github.com/yrabbit">
+      <i class="fa fa-github"></i> GitHub
+    </a>
+
+				<br>
+					<small>Made with <a href="http://jekyllrb.com/">Jekyll</a> — Theme by <a href="https://github.com/orderedlist">orderedlist</a></small>
+				</p>
+			</footer>
+		</div>
+		<script src="/js/scale.fix.js"></script>
+	
+
+	<script type="text/javascript">
+	var disqus_shortname = 'yrabbitblog',
+	disqus_identifier = '2018-03-21-more-lights.md-en',
+	disqus_url        = 'https://yrabbit.github.io/blog/2018/more-lights/'
+	;
+	(function() {
+		var load = function(src){
+			var s = document.createElement('script'); s.type = 'text/javascript'; s.async = true; s.src = src;
+			var e = document.getElementsByTagName('script')[0]; e.parentNode.insertBefore(s, e);
+		};
+		load('//' + disqus_shortname + '.disqus.com/count.js');
+		if (document.getElementById('disqus_thread')) {
+			load('//' + disqus_shortname + '.disqus.com/embed.js');
+		}
+	})();
+</script>
+
+
+	</body>
+</html>
