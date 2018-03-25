@@ -66,7 +66,7 @@
 <h1 class="post-title">Аппаратный ШИМ</h1>
 <p class="post-meta">
 	22 Mar 2018 •
-	6 мин. читать •
+	7 мин. читать •
 	<a href="#disqus_thread" data-disqus-identifier="2018-03-22-pwm-and-led.md">Comments</a> • 
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 <a href="https://feedburner.google.com/fb/a/mailverify?uri=YellowRabbit-ru&amp;loc=ru_RU" onclick="window.open(this.href, 'mywin',
@@ -242,6 +242,33 @@
 </div>
 
 <p>К сожалению выяснилось, что библиотека <code class="highlighter-rouge">pigpio</code> не очень хорошо работает в многопоточной среде: я постоянно получал <code class="highlighter-rouge">signal 11</code> при пробных запусках. Так что пришлось временно воспользоваться вариантом <code class="highlighter-rouge">pigpio как демон</code>.</p>
+
+<p><em>Поправка</em>: как оказалось есть способ заставить работать <code class="highlighter-rouge">pigpio</code> без демона: нужно запускать сопрограммы в <code class="highlighter-rouge">CoroutineScope</code>. Тогда они работают в том же потоке, что и библиотека:</p>
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+<meta itemprop="codeSampleType" content="code snippet">
+<meta itemprop="programmingLanguage" content="kotlin">
+<div class="language-kotlin highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="k">fun</span> <span class="n">main</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">Array</span><span class="p">&lt;</span><span class="n">String</span><span class="p">&gt;)</span> <span class="p">{</span>
+    <span class="n">AddDir</span><span class="p">.</span><span class="n">addDir</span><span class="p">(</span><span class="s">"/home/rabbit/local/lib"</span><span class="p">)</span>
+    <span class="n">println</span><span class="p">(</span><span class="s">"*** Raspberry Pi Kotlin ***"</span><span class="p">)</span>
+    <span class="kd">val</span> <span class="py">pigpio</span> <span class="p">=</span> <span class="n">Pigpio</span><span class="p">()</span>
+    <span class="n">pigpio</span><span class="p">.</span><span class="n">gpioInitialize</span><span class="p">()</span>
+    <span class="n">Utils</span><span class="p">.</span><span class="n">addShutdown</span><span class="p">(</span><span class="n">pigpio</span><span class="p">)</span>
+    <span class="n">normOutputDriveStrength</span><span class="p">(</span><span class="n">pigpio</span><span class="p">)</span>
+
+    <span class="n">println</span><span class="p">(</span><span class="s">"PWM0 freq:$PWM_FREQ, max duty:$PI_HW_PWM_RANGE"</span><span class="p">)</span>
+    <span class="n">runBlocking</span> <span class="p">{</span>
+        <span class="kd">val</span> <span class="py">slowBreath</span> <span class="p">=</span> <span class="n">launch</span> <span class="p">{</span> <span class="n">runPWM</span><span class="p">(</span><span class="n">pigpio</span><span class="p">,</span> <span class="n">PWM0_GPIO</span><span class="p">,</span> <span class="m">30</span><span class="p">,</span> <span class="m">3</span><span class="p">,</span> <span class="n">PWM_STEP_30</span><span class="p">)</span> <span class="p">}</span>
+        <span class="kd">val</span> <span class="py">fastBreath</span> <span class="p">=</span> <span class="n">launch</span> <span class="p">{</span> <span class="n">runPWM</span><span class="p">(</span><span class="n">pigpio</span><span class="p">,</span> <span class="n">PWM1_GPIO</span><span class="p">,</span> <span class="m">10</span><span class="p">,</span> <span class="m">20</span><span class="p">,</span> <span class="n">PWM_STEP_10</span><span class="p">)</span> <span class="p">}</span>
+        <span class="n">slowBreath</span><span class="p">.</span><span class="n">join</span><span class="p">()</span>
+        <span class="n">fastBreath</span><span class="p">.</span><span class="n">join</span><span class="p">()</span>
+    <span class="p">}</span>
+    <span class="n">println</span><span class="p">(</span><span class="s">"done."</span><span class="p">)</span>
+    <span class="n">exitProcess</span><span class="p">(</span><span class="m">0</span><span class="p">)</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+</div>
 
 <h2 id="Запускаем">Запускаем</h2>
 <video id="breath" src="/video/2-pwm-leds.mp4" width="50%" controls="" class="center-image"></video>
