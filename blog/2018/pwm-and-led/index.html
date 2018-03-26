@@ -66,7 +66,7 @@
 <h1 class="post-title">Hardware PWM</h1>
 <p class="post-meta">
 	22 Mar 2018 •
-	7 min. read •
+	8 min. read •
 	<a href="#disqus_thread" data-disqus-identifier="2018-03-22-pwm-and-led.md">Comments</a> • 
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 <a href="https://feedburner.google.com/fb/a/mailverify?uri=YellowRabbit&amp;loc=en_US" onclick="window.open(this.href, 'mywin',
@@ -104,8 +104,7 @@
 <span class="k">package</span> <span class="nn">io.github.yrabbit.kotlin</span>
 
 <span class="k">import</span> <span class="nn">io.github.yrabbit.java.util.AddDir</span>
-<span class="k">import</span> <span class="nn">jpigpio.JPigpio</span>
-<span class="k">import</span> <span class="nn">jpigpio.JPigpio.PI_HW_PWM_RANGE</span>
+<span class="k">import</span> <span class="nn">jpigpio.JPigpio.*</span>
 <span class="k">import</span> <span class="nn">jpigpio.Pigpio</span>
 <span class="k">import</span> <span class="nn">jpigpio.Utils</span>
 
@@ -129,6 +128,7 @@
 		<span class="n">pigpio</span><span class="p">.</span><span class="n">gpioDelay</span><span class="p">(</span><span class="m">100</span> <span class="p">*</span> <span class="m">1000</span><span class="p">)</span>
 	    <span class="p">}</span>
     <span class="p">}</span>
+    <span class="n">pigpio</span><span class="p">.</span><span class="n">gpioSetMode</span><span class="p">(</span><span class="n">PWM0_GPIO</span><span class="p">,</span> <span class="n">PI_INPUT</span><span class="p">)</span>
 <span class="p">}</span>
 
 
@@ -142,7 +142,6 @@
 <span class="p">}</span>
 
 <span class="k">const</span> <span class="kd">val</span> <span class="py">PWM0_GPIO</span> <span class="p">=</span> <span class="m">18</span>
-<span class="k">const</span> <span class="kd">val</span> <span class="py">PWM1_GPIO</span> <span class="p">=</span> <span class="m">13</span>
 
 <span class="k">const</span> <span class="kd">val</span> <span class="py">PWM_FREQ</span> <span class="p">=</span> <span class="m">20000</span>
 
@@ -180,34 +179,39 @@
 <span class="k">import</span> <span class="nn">io.github.yrabbit.java.util.AddDir</span>
 <span class="k">import</span> <span class="nn">jpigpio.JPigpio</span>
 <span class="k">import</span> <span class="nn">jpigpio.JPigpio.PI_HW_PWM_RANGE</span>
+<span class="k">import</span> <span class="nn">jpigpio.JPigpio.PI_INPUT</span>
+<span class="k">import</span> <span class="nn">jpigpio.Pigpio</span>
 <span class="k">import</span> <span class="nn">jpigpio.PigpioSocket</span>
 <span class="k">import</span> <span class="nn">jpigpio.Utils</span>
 <span class="k">import</span> <span class="nn">kotlinx.coroutines.experimental.async</span>
 <span class="k">import</span> <span class="nn">kotlinx.coroutines.experimental.delay</span>
+<span class="k">import</span> <span class="nn">kotlinx.coroutines.experimental.launch</span>
 <span class="k">import</span> <span class="nn">kotlinx.coroutines.experimental.runBlocking</span>
 <span class="k">import</span> <span class="nn">kotlin.system.exitProcess</span>
 
 <span class="k">fun</span> <span class="n">main</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">Array</span><span class="p">&lt;</span><span class="n">String</span><span class="p">&gt;)</span> <span class="p">{</span>
     <span class="n">AddDir</span><span class="p">.</span><span class="n">addDir</span><span class="p">(</span><span class="s">"/home/rabbit/local/lib"</span><span class="p">)</span>
     <span class="n">println</span><span class="p">(</span><span class="s">"*** Raspberry Pi Kotlin ***"</span><span class="p">)</span>
-    <span class="kd">val</span> <span class="py">pigpio</span> <span class="p">=</span> <span class="n">PigpioSocket</span><span class="p">(</span><span class="s">"127.0.0.1"</span><span class="p">,</span> <span class="m">8888</span><span class="p">)</span>
+    <span class="kd">val</span> <span class="py">pigpio</span> <span class="p">=</span> <span class="n">Pigpio</span><span class="p">()</span>
     <span class="n">pigpio</span><span class="p">.</span><span class="n">gpioInitialize</span><span class="p">()</span>
     <span class="n">Utils</span><span class="p">.</span><span class="n">addShutdown</span><span class="p">(</span><span class="n">pigpio</span><span class="p">)</span>
     <span class="n">normOutputDriveStrength</span><span class="p">(</span><span class="n">pigpio</span><span class="p">)</span>
 
     <span class="n">println</span><span class="p">(</span><span class="s">"PWM0 freq:$PWM_FREQ, max duty:$PI_HW_PWM_RANGE"</span><span class="p">)</span>
-    <span class="kd">val</span> <span class="py">slowBreath</span> <span class="p">=</span> <span class="n">async</span> <span class="p">{</span> <span class="n">runPWM</span><span class="p">(</span><span class="n">pigpio</span><span class="p">,</span> <span class="n">PWM0_GPIO</span><span class="p">,</span> <span class="m">30</span><span class="p">,</span> <span class="m">3</span><span class="p">,</span> <span class="n">PWM_STEP_30</span><span class="p">)</span> <span class="p">}</span>
-    <span class="kd">val</span> <span class="py">fastBreath</span> <span class="p">=</span> <span class="n">async</span> <span class="p">{</span> <span class="n">runPWM</span><span class="p">(</span><span class="n">pigpio</span><span class="p">,</span> <span class="n">PWM1_GPIO</span><span class="p">,</span> <span class="m">10</span><span class="p">,</span> <span class="m">20</span><span class="p">,</span> <span class="n">PWM_STEP_10</span><span class="p">)</span> <span class="p">}</span>
     <span class="n">runBlocking</span> <span class="p">{</span>
-        <span class="n">slowBreath</span><span class="p">.</span><span class="n">await</span><span class="p">()</span>
-        <span class="n">fastBreath</span><span class="p">.</span><span class="n">await</span><span class="p">()</span>
+        <span class="kd">val</span> <span class="py">slowBreath</span> <span class="p">=</span> <span class="n">launch</span> <span class="p">{</span> <span class="n">runPWM</span><span class="p">(</span><span class="n">pigpio</span><span class="p">,</span> <span class="n">UsedGPIO</span><span class="p">.</span><span class="n">Pwm0</span><span class="p">.</span><span class="n">pin</span><span class="p">,</span> <span class="m">30</span><span class="p">,</span> <span class="m">3</span><span class="p">,</span> <span class="n">PWM_STEP_30</span><span class="p">)</span> <span class="p">}</span>
+        <span class="kd">val</span> <span class="py">fastBreath</span> <span class="p">=</span> <span class="n">launch</span> <span class="p">{</span> <span class="n">runPWM</span><span class="p">(</span><span class="n">pigpio</span><span class="p">,</span> <span class="n">UsedGPIO</span><span class="p">.</span><span class="n">Pwm1</span><span class="p">.</span><span class="n">pin</span><span class="p">,</span> <span class="m">10</span><span class="p">,</span> <span class="m">20</span><span class="p">,</span> <span class="n">PWM_STEP_10</span><span class="p">)</span> <span class="p">}</span>
+        <span class="n">slowBreath</span><span class="p">.</span><span class="n">join</span><span class="p">()</span>
+        <span class="n">fastBreath</span><span class="p">.</span><span class="n">join</span><span class="p">()</span>
     <span class="p">}</span>
+    <span class="n">gpioSwitchToInput</span><span class="p">(</span><span class="n">pigpio</span><span class="p">)</span>
     <span class="n">println</span><span class="p">(</span><span class="s">"done."</span><span class="p">)</span>
     <span class="n">exitProcess</span><span class="p">(</span><span class="m">0</span><span class="p">)</span>
 <span class="p">}</span>
 
 <span class="n">suspend</span> <span class="k">fun</span> <span class="n">runPWM</span><span class="p">(</span><span class="n">pigpio</span><span class="p">:</span> <span class="n">JPigpio</span><span class="p">,</span> <span class="n">pwmPin</span><span class="p">:</span> <span class="n">Int</span><span class="p">,</span> <span class="n">msDelay</span><span class="p">:</span> <span class="n">Int</span><span class="p">,</span> <span class="n">cnt</span><span class="p">:</span> <span class="n">Int</span><span class="p">,</span> <span class="n">st</span><span class="p">:</span> <span class="n">Int</span><span class="p">)</span> <span class="p">{</span>
     <span class="n">repeat</span> <span class="p">(</span><span class="n">cnt</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">println</span><span class="p">(</span><span class="s">"cnt:$cnt, ${Thread.currentThread().name}"</span><span class="p">)</span>
         <span class="k">for</span> <span class="p">(</span><span class="n">vol</span> <span class="k">in</span> <span class="m">0</span><span class="o">..</span><span class="n">PI_HW_PWM_RANGE</span> <span class="n">step</span> <span class="n">st</span><span class="p">)</span> <span class="p">{</span>
             <span class="n">pigpio</span><span class="p">.</span><span class="n">gpioHardwarePWM</span><span class="p">(</span><span class="n">pwmPin</span><span class="p">,</span> <span class="n">PWM_FREQ</span><span class="p">,</span> <span class="n">vol</span><span class="p">)</span>
             <span class="n">delay</span><span class="p">(</span><span class="n">msDelay</span><span class="p">)</span>
@@ -228,15 +232,27 @@
     <span class="p">}</span>
 <span class="p">}</span>
 
-<span class="k">const</span> <span class="kd">val</span> <span class="py">PWM0_GPIO</span> <span class="p">=</span> <span class="m">18</span>
-<span class="k">const</span> <span class="kd">val</span> <span class="py">PWM1_GPIO</span> <span class="p">=</span> <span class="m">13</span>
+<span class="cm">/*
+ * Clean up
+ */</span>
+<span class="k">fun</span> <span class="n">gpioSwitchToInput</span><span class="p">(</span><span class="n">pigpio</span><span class="p">:</span> <span class="n">JPigpio</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">UsedGPIO</span><span class="p">.</span><span class="n">values</span><span class="p">().</span><span class="n">forEach</span> <span class="p">{</span>
+        <span class="n">pigpio</span><span class="p">.</span><span class="n">gpioSetMode</span><span class="p">(</span><span class="n">it</span><span class="p">.</span><span class="n">pin</span><span class="p">,</span> <span class="n">PI_INPUT</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">enum</span> <span class="kd">class</span> <span class="nc">UsedGPIO</span><span class="p">(</span><span class="kd">val</span> <span class="py">pin</span><span class="p">:</span> <span class="n">Int</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">Pwm0</span><span class="p">(</span><span class="m">18</span><span class="p">),</span>   <span class="c1">// GPIO18</span>
+    <span class="n">Pwm1</span><span class="p">(</span><span class="m">13</span><span class="p">)</span>    <span class="c1">// GPIO13</span>
+<span class="p">}</span>
+<span class="kd">val</span> <span class="py">LEDS</span> <span class="p">=</span> <span class="n">arrayOf</span><span class="p">(</span><span class="n">UsedGPIO</span><span class="p">.</span><span class="n">Pwm0</span><span class="p">,</span> <span class="n">UsedGPIO</span><span class="p">.</span><span class="n">Pwm1</span><span class="p">)</span>
 
 <span class="k">const</span> <span class="kd">val</span> <span class="py">PWM_FREQ</span> <span class="p">=</span> <span class="m">20000</span>
 
 <span class="k">const</span> <span class="kd">val</span> <span class="py">PWM_STEP_30</span> <span class="p">=</span> <span class="n">PI_HW_PWM_RANGE</span> <span class="p">/</span> <span class="m">30</span>
 <span class="k">const</span> <span class="kd">val</span> <span class="py">PWM_STEP_10</span> <span class="p">=</span> <span class="n">PI_HW_PWM_RANGE</span> <span class="p">/</span> <span class="m">10</span>
 
-<span class="k">const</span> <span class="kd">val</span> <span class="py">CURRENT</span> <span class="p">=</span> <span class="m">8</span> <span class="c1">// mA</span>
+<span class="k">const</span> <span class="kd">val</span> <span class="py">CURRENT</span> <span class="p">=</span> <span class="m">8</span> <span class="c1">// mA&lt;Paste&gt;</span>
 
 </code></pre></div></div>
 </div>
@@ -258,11 +274,12 @@
 
     <span class="n">println</span><span class="p">(</span><span class="s">"PWM0 freq:$PWM_FREQ, max duty:$PI_HW_PWM_RANGE"</span><span class="p">)</span>
     <span class="n">runBlocking</span> <span class="p">{</span>
-        <span class="kd">val</span> <span class="py">slowBreath</span> <span class="p">=</span> <span class="n">launch</span> <span class="p">{</span> <span class="n">runPWM</span><span class="p">(</span><span class="n">pigpio</span><span class="p">,</span> <span class="n">PWM0_GPIO</span><span class="p">,</span> <span class="m">30</span><span class="p">,</span> <span class="m">3</span><span class="p">,</span> <span class="n">PWM_STEP_30</span><span class="p">)</span> <span class="p">}</span>
-        <span class="kd">val</span> <span class="py">fastBreath</span> <span class="p">=</span> <span class="n">launch</span> <span class="p">{</span> <span class="n">runPWM</span><span class="p">(</span><span class="n">pigpio</span><span class="p">,</span> <span class="n">PWM1_GPIO</span><span class="p">,</span> <span class="m">10</span><span class="p">,</span> <span class="m">20</span><span class="p">,</span> <span class="n">PWM_STEP_10</span><span class="p">)</span> <span class="p">}</span>
+        <span class="kd">val</span> <span class="py">slowBreath</span> <span class="p">=</span> <span class="n">launch</span> <span class="p">{</span> <span class="n">runPWM</span><span class="p">(</span><span class="n">pigpio</span><span class="p">,</span> <span class="n">UsedGPIO</span><span class="p">.</span><span class="n">Pwm0</span><span class="p">,</span> <span class="m">30</span><span class="p">,</span> <span class="m">3</span><span class="p">,</span> <span class="n">PWM_STEP_30</span><span class="p">)</span> <span class="p">}</span>
+        <span class="kd">val</span> <span class="py">fastBreath</span> <span class="p">=</span> <span class="n">launch</span> <span class="p">{</span> <span class="n">runPWM</span><span class="p">(</span><span class="n">pigpio</span><span class="p">,</span> <span class="n">UsedGPIO</span><span class="p">.</span><span class="n">Pwm1</span><span class="p">,</span> <span class="m">10</span><span class="p">,</span> <span class="m">20</span><span class="p">,</span> <span class="n">PWM_STEP_10</span><span class="p">)</span> <span class="p">}</span>
         <span class="n">slowBreath</span><span class="p">.</span><span class="n">join</span><span class="p">()</span>
         <span class="n">fastBreath</span><span class="p">.</span><span class="n">join</span><span class="p">()</span>
     <span class="p">}</span>
+    <span class="n">gpioSwitchToInput</span><span class="p">(</span><span class="n">pigpio</span><span class="p">)</span>
     <span class="n">println</span><span class="p">(</span><span class="s">"done."</span><span class="p">)</span>
     <span class="n">exitProcess</span><span class="p">(</span><span class="m">0</span><span class="p">)</span>
 <span class="p">}</span>

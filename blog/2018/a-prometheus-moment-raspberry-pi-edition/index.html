@@ -260,6 +260,7 @@ index 710d20f..7e38063 100644
     <span class="p">}</span> <span class="k">catch</span><span class="p">(</span><span class="n">e</span><span class="p">:</span> <span class="n">PigpioException</span><span class="p">)</span> <span class="p">{</span>
         <span class="n">e</span><span class="p">.</span><span class="n">printStackTrace</span><span class="p">()</span>
     <span class="p">}</span>
+    <span class="n">pigpio</span><span class="p">.</span><span class="n">gpioSetMode</span><span class="p">(</span><span class="n">LED_PIN</span><span class="p">,</span> <span class="n">PI_INPUT</span><span class="p">)</span>
 <span class="p">}</span>
 
 <span class="k">const</span> <span class="kd">val</span> <span class="py">LED_PIN</span> <span class="p">=</span> <span class="m">26</span> <span class="c1">// GPIO26</span>

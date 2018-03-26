@@ -133,6 +133,7 @@ fun main(args: Array&lt;String&gt;) {
     } catch(e: PigpioException) {
         e.printStackTrace()
     }
+    pigpio.gpioSetMode(LED_PIN, PI_INPUT)
 }
 
 const val LED_PIN = 26 // GPIO26
