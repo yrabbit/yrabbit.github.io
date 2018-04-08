@@ -137,7 +137,7 @@ Params: gpiopin                 GPIO for I/O (default "4")
 </code></pre></div></div>
 </div>
 
-<p>The overlay <code class="highlighter-rouge">w1-gpio-pullup</code> is not our option<sup id="fnref:2-GPIO-case"><a href="#fn:2-GPIO-case" class="footnote">1</a></sup>, but <code class="highlighter-rouge">w1-gpio</code> looks attractive.</p>
+<p>The overlay <code class="highlighter-rouge">w1-gpio-pullup</code> is not our option<sup id="fnref:2-GPIO-case"><a href="#fn:2-GPIO-case" class="footnote">1</a></sup>, but <code class="highlighter-rouge">w1-gpio</code> looks attractive. So we will add next line into the file <code class="highlighter-rouge">/boot/config.txt</code>:</p>
 
 <div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
 <meta itemprop="codeSampleType" content="code snippet">
@@ -150,7 +150,7 @@ Params: gpiopin                 GPIO for I/O (default "4")
 
 <p class="red">Attention</p>
 
-<p>As it turned out, not all yogurts are equally useful (btw, yoghurts are not useful at all, in any way). Some of the DS18B20 are not very successful fakes. In particular, I got both 158ac <sup id="fnref:1"><a href="#fn:1" class="footnote">2</a></sup> chips that do not work in parasitic mode, that is, I will have to apply voltage to the chips separately:</p>
+<p>As it turned out, not all yogurts are equally useful (btw, yoghurts are not useful at all, in any way). Some of the DS18B20 are not very successful fakes. In particular, I got both +158ac<sup id="fnref:1"><a href="#fn:1" class="footnote">2</a></sup> chips that do not work in parasitic mode, that is, I will have to apply voltage to the chips separately:</p>
 
 <p><img src="/imgs/posts/ds18b20-1.png" alt="Circuit with external power" title="Circuit with external power" class="center-image" width="70%"></p>
 
@@ -159,7 +159,7 @@ Params: gpiopin                 GPIO for I/O (default "4")
 
 <p><img src="/imgs/posts/bb-external-power.jpeg" alt="Breadboard" title="Breadboard" class="center-image" width="90%"></p>
 
-<p>check the detection of the thermometer and the correctness of the readings:
+<p>Check the detection of the thermometer and the correctness of the readings:
 <img src="/imgs/posts/w1-log.png" alt="Reading the thermometer " title="Reading the thermometer " class="center-image" width="90%"></p>
 
 <p><script type="math/tex">23.125^\circ C</script> looks quite plausible<img class="emoji" title=":smile:" alt=":smile:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f604.png" height="20" width="20"></p>

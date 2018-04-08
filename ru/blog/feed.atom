@@ -7,7 +7,7 @@
 	<author>
 		<name>Yellow Rabbit</name>
 	</author>
-	<updated>2018-04-08T13:47:41+10:00</updated>
+	<updated>2018-04-08T14:20:28+10:00</updated>
 
 	<entry>
 		<title type="text">Raspberry Pi и 1-wire устройства</title>
@@ -79,7 +79,7 @@ Params: gpiopin                 GPIO for I/O (default &quot;4&quot;)
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 &lt;/div&gt;
 
-&lt;p&gt;Оверлей &lt;code class=&quot;highlighter-rouge&quot;&gt;w1-gpio-pullup&lt;/code&gt; - это не наш вариант&lt;sup id=&quot;fnref:2-GPIO-case&quot;&gt;&lt;a href=&quot;#fn:2-GPIO-case&quot; class=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt;, а вот &lt;code class=&quot;highlighter-rouge&quot;&gt;w1-gpio&lt;/code&gt; выглядит привлекательно.&lt;/p&gt;
+&lt;p&gt;Оверлей &lt;code class=&quot;highlighter-rouge&quot;&gt;w1-gpio-pullup&lt;/code&gt; - это не наш вариант&lt;sup id=&quot;fnref:2-GPIO-case&quot;&gt;&lt;a href=&quot;#fn:2-GPIO-case&quot; class=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt;, а вот &lt;code class=&quot;highlighter-rouge&quot;&gt;w1-gpio&lt;/code&gt; выглядит привлекательно. Так что добавим в файл &lt;code class=&quot;highlighter-rouge&quot;&gt;/bbot/config.txt&lt;/code&gt; следующую строку:&lt;/p&gt;
 
 &lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;&lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;&lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;shell&quot; /&gt;
 &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;

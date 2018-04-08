@@ -7,7 +7,7 @@
 	<author>
 		<name>Yellow Rabbit</name>
 	</author>
-	<updated>2018-04-08T13:47:41+10:00</updated>
+	<updated>2018-04-08T14:20:28+10:00</updated>
 
 	<entry>
 		<title type="text">Raspberry Pi and 1-wire Devices</title>
@@ -79,7 +79,7 @@ Params: gpiopin                 GPIO for I/O (default &quot;4&quot;)
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 &lt;/div&gt;
 
-&lt;p&gt;The overlay &lt;code class=&quot;highlighter-rouge&quot;&gt;w1-gpio-pullup&lt;/code&gt; is not our option&lt;sup id=&quot;fnref:2-GPIO-case&quot;&gt;&lt;a href=&quot;#fn:2-GPIO-case&quot; class=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt;, but &lt;code class=&quot;highlighter-rouge&quot;&gt;w1-gpio&lt;/code&gt; looks attractive.&lt;/p&gt;
+&lt;p&gt;The overlay &lt;code class=&quot;highlighter-rouge&quot;&gt;w1-gpio-pullup&lt;/code&gt; is not our option&lt;sup id=&quot;fnref:2-GPIO-case&quot;&gt;&lt;a href=&quot;#fn:2-GPIO-case&quot; class=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt;, but &lt;code class=&quot;highlighter-rouge&quot;&gt;w1-gpio&lt;/code&gt; looks attractive. So we will add next line into the file &lt;code class=&quot;highlighter-rouge&quot;&gt;/boot/config.txt&lt;/code&gt;:&lt;/p&gt;
 
 &lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;&lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;&lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;shell&quot; /&gt;
 &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
@@ -90,7 +90,7 @@ Params: gpiopin                 GPIO for I/O (default &quot;4&quot;)
 
 &lt;p class=&quot;red&quot;&gt;Attention&lt;/p&gt;
 
-&lt;p&gt;As it turned out, not all yogurts are equally useful (btw, yoghurts are not useful at all, in any way). Some of the DS18B20 are not very successful fakes. In particular, I got both 158ac &lt;sup id=&quot;fnref:1&quot;&gt;&lt;a href=&quot;#fn:1&quot; class=&quot;footnote&quot;&gt;2&lt;/a&gt;&lt;/sup&gt; chips that do not work in parasitic mode, that is, I will have to apply voltage to the chips separately:&lt;/p&gt;
+&lt;p&gt;As it turned out, not all yogurts are equally useful (btw, yoghurts are not useful at all, in any way). Some of the DS18B20 are not very successful fakes. In particular, I got both +158ac&lt;sup id=&quot;fnref:1&quot;&gt;&lt;a href=&quot;#fn:1&quot; class=&quot;footnote&quot;&gt;2&lt;/a&gt;&lt;/sup&gt; chips that do not work in parasitic mode, that is, I will have to apply voltage to the chips separately:&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/imgs/posts/ds18b20-1.png&quot; alt=&quot;Circuit with external power&quot; title=&quot;Circuit with external power&quot; class=&quot;center-image&quot; width=&quot;70%&quot; /&gt;&lt;/p&gt;
 
@@ -99,7 +99,7 @@ Params: gpiopin                 GPIO for I/O (default &quot;4&quot;)
 
 &lt;p&gt;&lt;img src=&quot;/imgs/posts/bb-external-power.jpeg&quot; alt=&quot;Breadboard&quot; title=&quot;Breadboard&quot; class=&quot;center-image&quot; width=&quot;90%&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;check the detection of the thermometer and the correctness of the readings:
+&lt;p&gt;Check the detection of the thermometer and the correctness of the readings:
 &lt;img src=&quot;/imgs/posts/w1-log.png&quot; alt=&quot;Reading the thermometer &quot; title=&quot;Reading the thermometer &quot; class=&quot;center-image&quot; width=&quot;90%&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;script type=&quot;math/tex&quot;&gt;23.125^\circ C&lt;/script&gt; looks quite plausible:smile:&lt;/p&gt;
