@@ -7,7 +7,123 @@
 	<author>
 		<name>Yellow Rabbit</name>
 	</author>
-	<updated>2018-03-27T20:14:15+10:00</updated>
+	<updated>2018-04-08T13:47:41+10:00</updated>
+
+	<entry>
+		<title type="text">Raspberry Pi и 1-wire устройства</title>
+		<link href="https://yrabbit.github.io/ru/blog/2018/1-wire-devices-and-raspberry-pi/" />
+		<id>https://yrabbit.github.io/blog/2018/1-wire-devices-and-raspberry-pi/</id>
+		<published>2018-03-28T00:00:00+10:00</published>
+		<updated>2018-03-28T00:00:00+10:00</updated>
+		<summary type="html">
+
+1-wire - это система связи между устройствами, разработанная Dallas Semiconductor Corp, которая обеспечивает низкоскоростной обмен данными и питание по единственному проводу.
+
+Отличительной особенностью этой шины является возможность использовать только двух проводов: данных и земли. Чтобы добиться этого устройства включают конденсатор 800pF для запасания энергии и питания устройства в моменты использования линии данных.
+
+Посмотрим на одну из таких штук, оказавшуюся у меня под рукой: DS18B20.
+
+</summary>
+		<content type="html">
+&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;/imgs/post-banners/18b20-0-min.png&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;script type=&quot;text/javascript&quot; async=&quot;&quot; src=&quot;https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML&quot;&gt;
+&lt;/script&gt;
+
+&lt;p&gt;1-wire - это система связи между устройствами, разработанная Dallas Semiconductor Corp, которая обеспечивает низкоскоростной обмен данными и питание по единственному проводу.&lt;/p&gt;
+
+&lt;p&gt;Отличительной особенностью этой шины является возможность использовать только двух проводов: данных и земли. Чтобы добиться этого устройства включают конденсатор 800pF для запасания энергии и питания устройства в моменты использования линии данных.&lt;/p&gt;
+
+&lt;p&gt;Посмотрим на одну из таких штук, оказавшуюся у меня под рукой: DS18B20.&lt;/p&gt;
+
+&lt;h2 id=&quot;datasheet&quot;&gt;Datasheet&lt;/h2&gt;
+&lt;p&gt;Первым делом читаем &lt;a href=&quot;http://pdf1.alldatasheet.com/datasheet-pdf/view/58557/DALLAS/DS18B20.html&quot;&gt;документацию&lt;/a&gt; чтобы понять подходит ли это устройство и каковы его возможности. Итак:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Может питаться от линии данных от 3.0V до 5.0V. Это хорошо.&lt;/li&gt;
+  &lt;li&gt;Точность &lt;script type=&quot;math/tex&quot;&gt;\pm 0.5^\circ C&lt;/script&gt; в диапазоне от &lt;script type=&quot;math/tex&quot;&gt;-10^\circ C&lt;/script&gt; до &lt;script type=&quot;math/tex&quot;&gt;+85^\circ C&lt;/script&gt;.&lt;/li&gt;
+  &lt;li&gt;Потребляемый ток в режиме измерения: от &lt;script type=&quot;math/tex&quot;&gt;1mA&lt;/script&gt; до &lt;script type=&quot;math/tex&quot;&gt;1.5mA&lt;/script&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Далее в документации есть схема включения:
+&lt;img src=&quot;/imgs/posts/ds18b20-bad-0-min.png&quot; alt=&quot;Подозрительная схема включения&quot; title=&quot;Подозрительная схема включения&quot; class=&quot;center-image&quot; width=&quot;90%&quot; /&gt;
+которая мне не совершенно нравится. GPIO выход &lt;a href=&quot;/blog/2018/a-prometheus-moment&quot;&gt;как мы рассмотрели ранее&lt;/a&gt; состоит из двух транзисторов. Если установим на выходе низкий уровень (фактически соединим с землёй) и в тот же момент откроем подтягивающий транзистор в предложенной схеме, то получим жаренную Raspberry Pi:smiley: Я не хочу так рисковать.&lt;/p&gt;
+
+&lt;h2 id=&quot;Схема-включения-попроще&quot;&gt;Схема включения попроще&lt;/h2&gt;
+&lt;p&gt;Так что поставим резистор в &lt;script type=&quot;math/tex&quot;&gt;4.7k\Omega&lt;/script&gt;, что даст &lt;script type=&quot;math/tex&quot;&gt;3.3V / 4.7e3\Omega\approx0.7mA&lt;/script&gt;, если ток будет маловат для измерения температуры, то уменьшим сопротивление.
+&lt;img src=&quot;/imgs/posts/ds18b20-circuit.png&quot; alt=&quot;Упрощенная схема включения&quot; title=&quot;Упрощенная схема включения&quot; class=&quot;center-image&quot; width=&quot;70%&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;software&quot;&gt;Software&lt;/h2&gt;
+&lt;p&gt;Почему  &lt;code class=&quot;highlighter-rouge&quot;&gt;GPIO4&lt;/code&gt;? Почитаем &lt;code class=&quot;highlighter-rouge&quot;&gt;/boot/overlays/README&lt;/code&gt;:&lt;/p&gt;
+&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;&lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;&lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;text&quot; /&gt;
+&lt;div class=&quot;language-text highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+Name:   w1-gpio
+Info:   Configures the w1-gpio Onewire interface module.
+        Use this overlay if you *don't* need a GPIO to drive an external pullup.
+Load:   dtoverlay=w1-gpio,&amp;lt;param&amp;gt;=&amp;lt;val&amp;gt;
+Params: gpiopin                 GPIO for I/O (default &quot;4&quot;)
+
+        pullup                  Non-zero, &quot;on&quot;, or &quot;y&quot; to enable the parasitic
+                                power (2-wire, power-on-data) feature
+
+
+Name:   w1-gpio-pullup
+Info:   Configures the w1-gpio Onewire interface module.
+        Use this overlay if you *do* need a GPIO to drive an external pullup.
+Load:   dtoverlay=w1-gpio-pullup,&amp;lt;param&amp;gt;=&amp;lt;val&amp;gt;
+Params: gpiopin                 GPIO for I/O (default &quot;4&quot;)
+
+        pullup                  Non-zero, &quot;on&quot;, or &quot;y&quot; to enable the parasitic
+                                power (2-wire, power-on-data) feature
+
+        extpullup               GPIO for external pullup (default &quot;5&quot;)
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Оверлей &lt;code class=&quot;highlighter-rouge&quot;&gt;w1-gpio-pullup&lt;/code&gt; - это не наш вариант&lt;sup id=&quot;fnref:2-GPIO-case&quot;&gt;&lt;a href=&quot;#fn:2-GPIO-case&quot; class=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt;, а вот &lt;code class=&quot;highlighter-rouge&quot;&gt;w1-gpio&lt;/code&gt; выглядит привлекательно.&lt;/p&gt;
+
+&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;&lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;&lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;shell&quot; /&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+&lt;span class=&quot;nv&quot;&gt;dtoverlay&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;w1-gpio,gpiopin&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;4
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p class=&quot;red&quot;&gt;Внимание&lt;/p&gt;
+
+&lt;p&gt;Как оказалось не все йогурты одинаково полезны (btw, йогурты вообще не полезны, никак). Некоторые из DS18B20 являются не очень удачными подделками. В частности мне достались обе микросхемы серии +158ac&lt;sup id=&quot;fnref:1&quot;&gt;&lt;a href=&quot;#fn:1&quot; class=&quot;footnote&quot;&gt;2&lt;/a&gt;&lt;/sup&gt;, которые не работают в паразитном режиме, то есть мне придётся подавать напряжение на микросхемы отдельно:
+&lt;img src=&quot;/imgs/posts/ds18b20-1.png&quot; alt=&quot;Схема с внешним питанием&quot; title=&quot;Схема с внешним питанием&quot; class=&quot;center-image&quot; width=&quot;70%&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;Макетная-плата&quot;&gt;Макетная плата&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&quot;/imgs/posts/ds18b20_bb.png&quot; alt=&quot;Рисунок макетной платы&quot; title=&quot;Рисунок макетной платы&quot; class=&quot;center-image&quot; width=&quot;90%&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/imgs/posts/bb-external-power.jpeg&quot; alt=&quot;Макетная плата&quot; title=&quot;Макетная плата&quot; class=&quot;center-image&quot; width=&quot;90%&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Проверяем обнаружение термометра и корректность показаний:
+&lt;img src=&quot;/imgs/posts/w1-log.png&quot; alt=&quot;Считывание показаний термометра&quot; title=&quot;Считывание показаний термометра&quot; class=&quot;center-image&quot; width=&quot;90%&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;script type=&quot;math/tex&quot;&gt;23.125^\circ C&lt;/script&gt; выглядит вполне правдоподобно:smile:&lt;/p&gt;
+
+&lt;h2 id=&quot;Несколько-сенсоров&quot;&gt;Несколько сенсоров&lt;/h2&gt;
+&lt;p&gt;Это последнее, что я хотел бы попробовать сегодня, в конце концов это всё таки шина. Для начала внесём изменения в макетную плату:
+&lt;img src=&quot;/imgs/posts/IMG_20180407_194914_HDR-min.jpg&quot; alt=&quot;Макетная плата с шиной&quot; title=&quot;Макетная плата с шиной&quot; class=&quot;center-image&quot; width=&quot;70%&quot; /&gt;
+&lt;img src=&quot;/imgs/posts/IMG_20180407_195058_HDR-min.jpg&quot; alt=&quot;Макетная плата с RPi&quot; title=&quot;Макетная плата с RPi&quot; class=&quot;center-image&quot; width=&quot;70%&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Смотрим:
+&lt;img src=&quot;/imgs/posts/w1-log-0.png&quot; alt=&quot;Два термометра&quot; title=&quot;Два термометра&quot; class=&quot;center-image&quot; width=&quot;90%&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Погрешность &lt;script type=&quot;math/tex&quot;&gt;0.313&lt;/script&gt; укладывается в заявленную точность &lt;script type=&quot;math/tex&quot;&gt;\pm 0.5^\circ C&lt;/script&gt;.:smiley:&lt;/p&gt;
+&lt;div class=&quot;footnotes&quot;&gt;
+  &lt;ol&gt;
+    &lt;li id=&quot;fn:2-GPIO-case&quot;&gt;
+      &lt;p&gt;Если транзистор для сильного pull-up будет открыт, а GPIO канала данных будет включен как выход и с низким уровнем (из-за ошибки в драйвере допустим), то Raspberry Pi сгорит. &lt;a href=&quot;#fnref:2-GPIO-case&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+    &lt;li id=&quot;fn:1&quot;&gt;
+      &lt;p&gt;Как видно на картинке вверху поста. &lt;a href=&quot;#fnref:1&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/div&gt;
+</content>
+	</entry>
 
 	<entry>
 		<title type="text">Raspberry Pi и кнопка</title>
@@ -2519,219 +2635,6 @@ plot2d([[discrete, tl, kH2lkH4l], [discrete, tl, lowpass(kH2lkH4l, 0.5)],
 
 &lt;p&gt;И одно замечание на прощание: ядро использует reader-макросы, так что нужно следить чтобы всё функции, которые вызываются при работе компилятора META, были доступны на этапе компиляции. Следует использовать &lt;code class=&quot;highlighter-rouge&quot;&gt;(eval-when (:compile-toplevel) ...)&lt;/code&gt; в таких случаях.&lt;/p&gt;
 
-</content>
-	</entry>
-
-	<entry>
-		<title type="text">Web-движок на Lisp: игрушечная реализация</title>
-		<link href="https://yrabbit.github.io/ru/blog/2016/lisp-toy-web-engine/" />
-		<id>https://yrabbit.github.io/blog/2016/lisp-toy-web-engine/</id>
-		<published>2016-05-07T20:22:42+10:00</published>
-		<updated>2017-07-30T19:03:00+10:00</updated>
-		<summary type="html">Что происходит внутри браузеров? Как эта куча тэгов превращается в такие изумительные страницы на экране? 
-Магия. Попробую изобразить что-то примитивное для отображения HTML.
-
-</summary>
-		<content type="html">
-&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;/imgs/post-baners/lisp-webengine-dom.jpeg&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
-&lt;p&gt;Что происходит внутри браузеров? Как эта куча тэгов превращается в такие изумительные страницы на экране? 
-Магия. Попробую изобразить что-то примитивное для отображения HTML.&lt;/p&gt;
-
-&lt;h2 id=&quot;Теория&quot;&gt;Теория&lt;/h2&gt;
-
-&lt;p&gt;Здесь всё просто: &lt;a href=&quot;https://limpet.net/mbrubeck/2014/08/08/toy-layout-engine-1.html&quot;&gt;читаем серию статей об игрушечном вэб движке&lt;/a&gt;. А дальше я буду повторять только самый минимум.&lt;/p&gt;
-
-&lt;h2 id=&quot;Первый-шаг-dom&quot;&gt;Первый шаг: DOM&lt;/h2&gt;
-&lt;p&gt;DOM (объектная модель документа) это дерево узлов. Узел имеет ноль или больше потомков. 
-Потомки храним как простой список. Понятно, что список очень плохо масштабируется, но вероятно для игрушечного движка это не будет проблемой.&lt;/p&gt;
-
-&lt;p&gt;И самое главное — знакомимся с CLOS!&lt;/p&gt;
-
-&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;&lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;&lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;cl&quot; /&gt;
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defclass&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;node&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;children&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:accessor&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;node-children&lt;/span&gt;
-	     &lt;span class=&quot;ss&quot;&gt;:initform&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-	     &lt;span class=&quot;ss&quot;&gt;:initarg&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:children&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Добавление потомка достаточно простое, хотя возможно, что обратный порядок потомков в списке и скажется в будущем. В таком случае просто изменим метод.&lt;/p&gt;
-
-&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;&lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;&lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;cl&quot; /&gt;
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defgeneric&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;node-add-child&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;tree-node&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;child&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-	    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:method&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;tree-node&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;child&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-		     &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;setf&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;node-children&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tree-node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-			   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;push&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;child&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;node-children&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tree-node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))))&lt;/span&gt;
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Существует &lt;a href=&quot;https://dom.spec.whatwg.org/#nodes&quot;&gt;много типов узлов&lt;/a&gt;, но игрушечный движок будет использовать только несколько. Просто текст:&lt;/p&gt;
-
-&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;&lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;&lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;cl&quot; /&gt;
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
-&lt;span class=&quot;c1&quot;&gt;;; Text is a simplest node.&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;;; Just string of text.&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defclass&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;text-node&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;text&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:accessor&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;text-node-text&lt;/span&gt;
-	 &lt;span class=&quot;ss&quot;&gt;:initform&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;&quot;&lt;/span&gt;
-	 &lt;span class=&quot;ss&quot;&gt;:initarg&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:text&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Далее элемент или таг и его атрибуты. Атрибуты хранятся в хэш-таблице:&lt;/p&gt;
-
-&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;&lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;&lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;cl&quot; /&gt;
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
-&lt;span class=&quot;c1&quot;&gt;;; Element represents all remaining types of nodes (joke).&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;;; Tag name and any number of attributes.&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defclass&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;element-node&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;tag&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:accessor&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;element-node-tag&lt;/span&gt;
-	&lt;span class=&quot;ss&quot;&gt;:initform&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;&quot;&lt;/span&gt;
-	&lt;span class=&quot;ss&quot;&gt;:initarg&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:tag&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;attrs&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:reader&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;element-node-attrs&lt;/span&gt;
-	  &lt;span class=&quot;ss&quot;&gt;:initform&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;make-hash-table&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:test&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;#'&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;equal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;  &lt;span class=&quot;c1&quot;&gt;; &quot;key&quot; --- &quot;value&quot;, they are strings&lt;/span&gt;
-							&lt;span class=&quot;c1&quot;&gt;; so use &quot;equal&quot;&lt;/span&gt;
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Ну и комментарий:&lt;/p&gt;
-
-&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;&lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;&lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;cl&quot; /&gt;
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
-&lt;span class=&quot;c1&quot;&gt;;; Comment&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defclass&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;comment-node&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;())&lt;/span&gt;
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;/div&gt;
-
-&lt;h2 id=&quot;Отладочная-картинка&quot;&gt;Отладочная картинка&lt;/h2&gt;
-&lt;p&gt;Для визуализации дерева, которое будет строится по HTML документу напишем пару функций, создающих файл для Graphviz:&lt;/p&gt;
-
-&lt;p&gt;Допустим имеем простой HTML файл:&lt;/p&gt;
-
-&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;&lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;&lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;html&quot; /&gt;
-&lt;div class=&quot;language-html highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
-&lt;span class=&quot;nt&quot;&gt;&amp;lt;html&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
- &lt;span class=&quot;nt&quot;&gt;&amp;lt;head&amp;gt;&amp;lt;title&amp;gt;&lt;/span&gt;Aliens?&lt;span class=&quot;nt&quot;&gt;&amp;lt;/title&amp;gt;&amp;lt;/head&amp;gt;&lt;/span&gt;
- &lt;span class=&quot;nt&quot;&gt;&amp;lt;body&amp;gt;&lt;/span&gt;Why yes.&lt;span class=&quot;nt&quot;&gt;&amp;lt;/body&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;nt&quot;&gt;&amp;lt;/html&amp;gt;&lt;/span&gt;
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Поскольку парсер HTML ещё даже не в проекте, то сделаем дерево руками:&lt;/p&gt;
-
-&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;&lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;&lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;cl&quot; /&gt;
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ql:quickload&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:toy-engine&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;in-package&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:toy-engine&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;; &amp;lt;html class=&quot;e&quot;&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defparameter&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*root*&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;make-instance&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;'element-node&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:tag&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;html&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;setf&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;gethash&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;class&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;element-node-attrs&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*root*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;e&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;; &amp;lt;head&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defparameter&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*head*&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;make-instance&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;'element-node&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:tag&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;head&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;node-add-child&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*root*&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*head*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;; &amp;lt;title&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;node-add-child&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*head*&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;make-instance&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;'element-node&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:tag&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;title&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;; Aliens?&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;node-add-child&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;car&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;node-children&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*head*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;make-instance&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;'text-node&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:text&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Aliens?&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;; &amp;lt;body&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defparameter&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*body*&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;make-instance&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;'element-node&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:tag&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;body&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;node-add-child&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*root*&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*body*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;; Why yes.&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;node-add-child&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*body*&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;make-instance&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;'text-node&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:text&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Why yes.&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-
-&lt;span class=&quot;c1&quot;&gt;; &lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;pp-&amp;gt;dot&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;#p&quot;~/tmp/part1.dot&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;pp-dom&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*root*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
-
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;/div&gt;
-&lt;p&gt;После прогона через Graphviz получим такое изображение дерева:&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/imgs/posts/lisp-webengine-dom.png&quot; alt=&quot;Дерево, часть 1&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
-
-&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;&lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;&lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;cl&quot; /&gt;
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
-&lt;span class=&quot;c1&quot;&gt;;;; ========================&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;;;; Pretty-print a DOM tree.&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;;;; ========================&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defgeneric&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;pp-node-title&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;tree-node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-	    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:documentation&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;What to print in the node box.&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-	    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:method&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;tree-node&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-		     &lt;span class=&quot;s&quot;&gt;&quot;!empty!&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-	    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:method&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;tree-node&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;text-node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-		     &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;text-node-text&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tree-node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-	    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:method&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;tree-node&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;element-node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-		     &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;s&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;concatenate&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;'string&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;element-node-tag&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tree-node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;|&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
-		       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;concatenate&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;'string&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;s&lt;/span&gt;
-				    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;with-output-to-string&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-				      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;maphash&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;#'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;k&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;v&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-						   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;format&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;out&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;~a:~a,&quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;k&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;v&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-					       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;element-node-attrs&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tree-node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
-				    &lt;span class=&quot;s&quot;&gt;&quot;|&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
-	    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:method&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;tree-node&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;comment-node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-		     &lt;span class=&quot;s&quot;&gt;&quot;!comment!&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defgeneric&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;pp-node-class&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;tree-node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-	    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:documentation&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Enumerate classes of nodes.&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-	    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:method&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;tree-node&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;         &lt;span class=&quot;s&quot;&gt;&quot;N&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-	    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:method&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;tree-node&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;text-node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;    &lt;span class=&quot;s&quot;&gt;&quot;T&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-	    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:method&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;tree-node&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;element-node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;E&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-	    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:method&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;tree-node&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;comment-node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;C&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;pp-dom&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;root-node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;s&quot;&gt;&quot;Print DOM tree in the nice way.&quot;&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;nodes&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;make-hash-table&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;                &lt;span class=&quot;c1&quot;&gt;; node object --- seq.id&lt;/span&gt;
-	&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;types&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;make-hash-table&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:test&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;#'&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;equal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;; node class --- new sq.id&lt;/span&gt;
-	&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;labels&lt;/span&gt;
-	  &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;new-seq.id&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-		       &lt;span class=&quot;s&quot;&gt;&quot;New sequentual id for class object.&quot;&lt;/span&gt;
-		       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;gethash&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;pp-node-class&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;types&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-			 &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;incf&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;gethash&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;pp-node-class&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;types&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-			 &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;setf&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;gethash&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;pp-node-class&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;types&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
-	   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;seq.id&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-		   &lt;span class=&quot;s&quot;&gt;&quot;Id by object&quot;&lt;/span&gt;
-		   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;id&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;gethash&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;node&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;nodes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
-		     &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;id&lt;/span&gt;
-		       &lt;span class=&quot;nv&quot;&gt;id&lt;/span&gt;
-		       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;setf&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;gethash&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;node&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;nodes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;new-seq.id&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))))&lt;/span&gt;
-	   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;pp-node-name&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-			 &lt;span class=&quot;s&quot;&gt;&quot;Make node name for graphwizard.&quot;&lt;/span&gt;
-			 &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;format&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;~a~d&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;pp-node-class&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;seq.id&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
-	   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;pp-node&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-		    &lt;span class=&quot;s&quot;&gt;&quot;Print one node.&quot;&lt;/span&gt;
-		    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt;
-		      &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;pp-node-name&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
-		      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;format&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;~a[label=~s];~%&quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;
-			    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;concatenate&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;'string&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;:&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;pp-node-title&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
-		      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;mapc&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;#'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-				&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;progn&lt;/span&gt;
-				  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;format&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;~a -&amp;gt; ~a~%&quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;pp-node-name&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-				  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;pp-node&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
-			    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;node-children&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))))&lt;/span&gt;
-	  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;write-string&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;digraph dom {label=\&quot;DOM tree\&quot;;node [color=lightblue2, style=filled];&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-	  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;pp-node&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;root-node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-	  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;write-string&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;}&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
-
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;pp-&amp;gt;dot&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;fname&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;thunk&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;s&quot;&gt;&quot;Run the thunk and write any it's output to file.&quot;&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;with-open-file&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;vg&quot;&gt;*standard-output*&lt;/span&gt;
-		    &lt;span class=&quot;nv&quot;&gt;fname&lt;/span&gt;
-		    &lt;span class=&quot;ss&quot;&gt;:direction&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:output&lt;/span&gt;
-		    &lt;span class=&quot;ss&quot;&gt;:if-exists&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:supersede&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;funcall&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;thunk&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
-
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;/div&gt;
 </content>
 	</entry>
 
