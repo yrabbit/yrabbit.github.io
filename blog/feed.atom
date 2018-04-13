@@ -7,14 +7,14 @@
 	<author>
 		<name>Yellow Rabbit</name>
 	</author>
-	<updated>2018-04-13T15:36:26+10:00</updated>
+	<updated>2018-04-13T19:04:48+10:00</updated>
 
 	<entry>
 		<title type="text">Storing Temperature in the Database</title>
 		<link href="https://yrabbit.github.io/blog/2018/db-for-the-sensors-data/" />
 		<id>https://yrabbit.github.io/blog/2018/db-for-the-sensors-data/</id>
 		<published>2018-04-09T00:00:00+10:00</published>
-		<updated>2018-04-09T00:00:00+10:00</updated>
+		<updated>2018-04-13T19:03:54+10:00</updated>
 		<summary type="html">Never hurts to have the database, let’s try to store data about temperature measurements. Let’s see if we can use influxdb on Raspberry Pi.
 
 </summary>
@@ -135,11 +135,14 @@ openssl x509 &lt;span class=&quot;nt&quot;&gt;-in&lt;/span&gt; influxdb-selfsign
 &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;create&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;database&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;thermdb&lt;/span&gt;
 &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;create&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;user&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sensor&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;with&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;password&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'********'&lt;/span&gt;
 &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;grant&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;write&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;on&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;thermdb&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;to&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sensor&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;create&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;user&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;grafana&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;with&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;password&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'********'&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;grant&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;read&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;on&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;thermdb&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;to&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;grafana&lt;/span&gt;
 &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;show&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;users&lt;/span&gt;
 &lt;span class=&quot;k&quot;&gt;user&lt;/span&gt;   &lt;span class=&quot;k&quot;&gt;admin&lt;/span&gt;
 &lt;span class=&quot;c1&quot;&gt;----   -----&lt;/span&gt;
 &lt;span class=&quot;n&quot;&gt;spade&lt;/span&gt;  &lt;span class=&quot;k&quot;&gt;true&lt;/span&gt;
 &lt;span class=&quot;n&quot;&gt;sensor&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;false&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;grafana&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;false&lt;/span&gt;
 &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;exit&lt;/span&gt;
 
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
@@ -484,10 +487,53 @@ time                 mean_temp           sensor_id
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 &lt;/div&gt;
 
+&lt;h2 id=&quot;grafana&quot;&gt;Grafana&lt;/h2&gt;
+&lt;p&gt;Let’s do the visualization of the data. The easiest way is to use such a thing as &lt;a href=&quot;https://grafana.com&quot;&gt;Grafana&lt;/a&gt;&lt;/p&gt;
+&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;&lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;&lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;shell&quot; /&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+~# emerge grafana-bin 
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;And then follows the usual black magic: installing this package, we do not actually use the server from it, because it still does not work and I’m too lazy to understand why. So we will build our server from the sources and replace the executable file. Note that the whole build goes under the normal user:&lt;/p&gt;
+&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;&lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;&lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;shell&quot; /&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+~% go get github.com/grafana/grafana
+~% ~/go/src/github.com/grafana/grafana
+~% go run build.go setup
+~% go run build.go build
+~% &lt;span class=&quot;nb&quot;&gt;cp&lt;/span&gt; ~/go/bin/grafana-server /tmp 
+~% &lt;span class=&quot;nb&quot;&gt;sudo mv&lt;/span&gt; /tmp/grafana-server /usr/bin/
+~% &lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;rc-service grafana start
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;In the browser, open the page&lt;code class=&quot;highlighter-rouge&quot;&gt;http://localhost:3000&lt;/code&gt;. User name admin/admin (or what is stated in /etc/grafana/grafana.ini&lt;sup id=&quot;fnref:2&quot;&gt;&lt;a href=&quot;#fn:2&quot; class=&quot;footnote&quot;&gt;2&lt;/a&gt;&lt;/sup&gt;).
+&lt;img src=&quot;/imgs/posts/grafana-rpi-min.png&quot; alt=&quot;Start screen&quot; title=&quot;Start screen&quot; class=&quot;center-image&quot; width=&quot;100%&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Add the data source:
+&lt;img src=&quot;/imgs/posts/grafana-rpi-add-ds-min.png&quot; alt=&quot;Adding a data source&quot; title=&quot;Adding a data source&quot; class=&quot;center-image&quot; width=&quot;100%&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/imgs/posts/grafana-rpi-add-ds-0-min.png&quot; alt=&quot;Adding a data source&quot; title=&quot;Adding a data source&quot; class=&quot;center-image&quot; width=&quot;100%&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Next, add a panel, the most simple:
+&lt;img src=&quot;/imgs/posts/grafana-rpi-add-db-min.png&quot; alt=&quot;Panel&quot; title=&quot;Panel&quot; class=&quot;center-image&quot; width=&quot;100%&quot; /&gt;
+&lt;img src=&quot;/imgs/posts/grafana-rpi-add-db-0-min.png&quot; alt=&quot;Panel&quot; title=&quot;Panel&quot; class=&quot;center-image&quot; width=&quot;100%&quot; /&gt;
+&lt;img src=&quot;/imgs/posts/grafana-rpi-add-db-1-min.png&quot; alt=&quot;Panel&quot; title=&quot;Panel&quot; class=&quot;center-image&quot; width=&quot;100%&quot; /&gt;
+&lt;img src=&quot;/imgs/posts/grafana-rpi-add-db-2-min.png&quot; alt=&quot;Panel&quot; title=&quot;Panel&quot; class=&quot;center-image&quot; width=&quot;100%&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;And how do you like this beauty?:smiley:
+&lt;img src=&quot;/imgs/posts/grafana-rpi-add-db-3-min.png&quot; alt=&quot;Panel&quot; title=&quot;Panel&quot; class=&quot;center-image&quot; width=&quot;100%&quot; /&gt;&lt;/p&gt;
+
 &lt;div class=&quot;footnotes&quot;&gt;
   &lt;ol&gt;
     &lt;li id=&quot;fn:edit-config&quot;&gt;
       &lt;p&gt;Elementary changes in the files &lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/portage/package.accept_keywords&lt;/code&gt; etc. (Well, the elders of Gentoo know:wink:) &lt;a href=&quot;#fnref:edit-config&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+    &lt;li id=&quot;fn:2&quot;&gt;
+      &lt;p&gt;It’s a good idea to change the superuser name and password. &lt;a href=&quot;#fnref:2&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
     &lt;/li&gt;
   &lt;/ol&gt;
 &lt;/div&gt;

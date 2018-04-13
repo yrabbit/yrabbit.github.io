@@ -7,14 +7,14 @@
 	<author>
 		<name>Yellow Rabbit</name>
 	</author>
-	<updated>2018-04-13T15:36:26+10:00</updated>
+	<updated>2018-04-13T19:04:48+10:00</updated>
 
 	<entry>
 		<title type="text">Хранение температуры в базе данных</title>
 		<link href="https://yrabbit.github.io/ru/blog/2018/db-for-the-sensors-data/" />
 		<id>https://yrabbit.github.io/blog/2018/db-for-the-sensors-data/</id>
 		<published>2018-04-09T00:00:00+10:00</published>
-		<updated>2018-04-09T00:00:00+10:00</updated>
+		<updated>2018-04-13T19:04:06+10:00</updated>
 		<summary type="html">База данных никогда не помешает, попробуем хранить данные об измерениях температуры. Посмотрим получится ли использовать influxdb на Raspberry Pi.
 
 </summary>
@@ -135,11 +135,14 @@ openssl x509 &lt;span class=&quot;nt&quot;&gt;-in&lt;/span&gt; influxdb-selfsign
 &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;create&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;database&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;thermdb&lt;/span&gt;
 &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;create&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;user&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sensor&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;with&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;password&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'********'&lt;/span&gt;
 &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;grant&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;write&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;on&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;thermdb&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;to&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sensor&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;create&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;user&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;grafana&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;with&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;password&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'********'&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;grant&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;read&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;on&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;thermdb&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;to&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;grafana&lt;/span&gt;
 &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;show&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;users&lt;/span&gt;
 &lt;span class=&quot;k&quot;&gt;user&lt;/span&gt;   &lt;span class=&quot;k&quot;&gt;admin&lt;/span&gt;
 &lt;span class=&quot;c1&quot;&gt;----   -----&lt;/span&gt;
 &lt;span class=&quot;n&quot;&gt;spade&lt;/span&gt;  &lt;span class=&quot;k&quot;&gt;true&lt;/span&gt;
 &lt;span class=&quot;n&quot;&gt;sensor&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;false&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;grafana&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;false&lt;/span&gt;
 &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;exit&lt;/span&gt;
 
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
@@ -480,10 +483,53 @@ time                 mean_temp           sensor_id
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 &lt;/div&gt;
 
+&lt;h2 id=&quot;grafana&quot;&gt;Grafana&lt;/h2&gt;
+&lt;p&gt;Займемся визуализацией данных. Самый простой способ - использовать такую штуку как &lt;a href=&quot;https://grafana.com&quot;&gt;Grafana&lt;/a&gt;&lt;/p&gt;
+&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;&lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;&lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;shell&quot; /&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+~# emerge grafana-bin 
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;И далее следует обычная чёрная магия: установив этот пакет мы на самом деле не используем сервер из него, поскольку он всё равно не работает и разбираться почему так мне лень. Так что мы соберём свой сервер из исходников и заменим исполняемый файл. Заметим, что вся сборка идёт под обычным пользователем:&lt;/p&gt;
+&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;&lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;&lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;shell&quot; /&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+~% go get github.com/grafana/grafana
+~% ~/go/src/github.com/grafana/grafana
+~% go run build.go setup
+~% go run build.go build
+~% &lt;span class=&quot;nb&quot;&gt;cp&lt;/span&gt; ~/go/bin/grafana-server /tmp 
+~% &lt;span class=&quot;nb&quot;&gt;sudo mv&lt;/span&gt; /tmp/grafana-server /usr/bin/
+~% &lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;rc-service grafana start
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;В браузере открываем страницу &lt;code class=&quot;highlighter-rouge&quot;&gt;http://localhost:3000&lt;/code&gt;. Имя пользователя admin/admin (или то, что указано в /etc/grafana/grafana.ini&lt;sup id=&quot;fnref:2&quot;&gt;&lt;a href=&quot;#fn:2&quot; class=&quot;footnote&quot;&gt;2&lt;/a&gt;&lt;/sup&gt;).
+&lt;img src=&quot;/imgs/posts/grafana-rpi-min.png&quot; alt=&quot;Начальный экран&quot; title=&quot;Начальный экран&quot; class=&quot;center-image&quot; width=&quot;100%&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Добавляем источник данных:
+&lt;img src=&quot;/imgs/posts/grafana-rpi-add-ds-min.png&quot; alt=&quot;Добавление источника данных&quot; title=&quot;Добавление источника данных&quot; class=&quot;center-image&quot; width=&quot;100%&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/imgs/posts/grafana-rpi-add-ds-0-min.png&quot; alt=&quot;Добавление источника данных&quot; title=&quot;Добавление источника данных&quot; class=&quot;center-image&quot; width=&quot;100%&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Далее добавляем панель, самую простую:
+&lt;img src=&quot;/imgs/posts/grafana-rpi-add-db-min.png&quot; alt=&quot;Панель&quot; title=&quot;Панель&quot; class=&quot;center-image&quot; width=&quot;100%&quot; /&gt;
+&lt;img src=&quot;/imgs/posts/grafana-rpi-add-db-0-min.png&quot; alt=&quot;Панель&quot; title=&quot;Панель&quot; class=&quot;center-image&quot; width=&quot;100%&quot; /&gt;
+&lt;img src=&quot;/imgs/posts/grafana-rpi-add-db-1-min.png&quot; alt=&quot;Панель&quot; title=&quot;Панель&quot; class=&quot;center-image&quot; width=&quot;100%&quot; /&gt;
+&lt;img src=&quot;/imgs/posts/grafana-rpi-add-db-2-min.png&quot; alt=&quot;Панель&quot; title=&quot;Панель&quot; class=&quot;center-image&quot; width=&quot;100%&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;А как вам такая красота?:smiley:
+&lt;img src=&quot;/imgs/posts/grafana-rpi-add-db-3-min.png&quot; alt=&quot;Панель&quot; title=&quot;Панель&quot; class=&quot;center-image&quot; width=&quot;100%&quot; /&gt;&lt;/p&gt;
+
 &lt;div class=&quot;footnotes&quot;&gt;
   &lt;ol&gt;
     &lt;li id=&quot;fn:edit-config&quot;&gt;
       &lt;p&gt;Элементарные изменения в файлах &lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/portage/package.accept_keywords&lt;/code&gt; т.д. (ну старейшины Gentoo в курсе:wink:) &lt;a href=&quot;#fnref:edit-config&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+    &lt;li id=&quot;fn:2&quot;&gt;
+      &lt;p&gt;Хорошая идея изменить имя суперпользователя и пароль. &lt;a href=&quot;#fnref:2&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
     &lt;/li&gt;
   &lt;/ol&gt;
 &lt;/div&gt;

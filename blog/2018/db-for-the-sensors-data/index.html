@@ -66,7 +66,7 @@
 <h1 class="post-title">Influxdb as a Mechanism for Storing Sensor Readings</h1>
 <p class="post-meta">
 	09 Apr 2018 •
-	16 min. read •
+	17 min. read •
 	<a href="#disqus_thread" data-disqus-identifier="2018-04-09-db-for-the-sensors-data.md">Comments</a> • 
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 <a href="https://feedburner.google.com/fb/a/mailverify?uri=YellowRabbit&amp;loc=en_US" onclick="window.open(this.href, 'mywin',
@@ -213,11 +213,14 @@ openssl x509 <span class="nt">-in</span> influxdb-selfsigned.crt <span class="nt
 <span class="o">&gt;</span> <span class="k">create</span> <span class="k">database</span> <span class="n">thermdb</span>
 <span class="o">&gt;</span> <span class="k">create</span> <span class="k">user</span> <span class="n">sensor</span> <span class="k">with</span> <span class="n">password</span> <span class="s1">'********'</span>
 <span class="o">&gt;</span> <span class="k">grant</span> <span class="k">write</span> <span class="k">on</span> <span class="n">thermdb</span> <span class="k">to</span> <span class="n">sensor</span>
+<span class="o">&gt;</span> <span class="k">create</span> <span class="k">user</span> <span class="n">grafana</span> <span class="k">with</span> <span class="n">password</span> <span class="s1">'********'</span>
+<span class="o">&gt;</span> <span class="k">grant</span> <span class="k">read</span> <span class="k">on</span> <span class="n">thermdb</span> <span class="k">to</span> <span class="n">grafana</span>
 <span class="o">&gt;</span> <span class="k">show</span> <span class="n">users</span>
 <span class="k">user</span>   <span class="k">admin</span>
 <span class="c1">----   -----</span>
 <span class="n">spade</span>  <span class="k">true</span>
 <span class="n">sensor</span> <span class="k">false</span>
+<span class="n">grafana</span> <span class="k">false</span>
 <span class="o">&gt;</span> <span class="n">exit</span>
 
 </code></pre></div></div>
@@ -574,10 +577,57 @@ time                 mean_temp           sensor_id
 </code></pre></div></div>
 </div>
 
+<h2 id="grafana">Grafana</h2>
+<p>Let’s do the visualization of the data. The easiest way is to use such a thing as <a href="https://grafana.com">Grafana</a></p>
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+<meta itemprop="codeSampleType" content="code snippet">
+<meta itemprop="programmingLanguage" content="shell">
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+~# emerge grafana-bin 
+
+</code></pre></div></div>
+</div>
+
+<p>And then follows the usual black magic: installing this package, we do not actually use the server from it, because it still does not work and I’m too lazy to understand why. So we will build our server from the sources and replace the executable file. Note that the whole build goes under the normal user:</p>
+<div itemscope="" itemtype="http://schema.org/SoftwareSourceCode">
+<meta itemprop="codeSampleType" content="code snippet">
+<meta itemprop="programmingLanguage" content="shell">
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+~% go get github.com/grafana/grafana
+~% ~/go/src/github.com/grafana/grafana
+~% go run build.go setup
+~% go run build.go build
+~% <span class="nb">cp</span> ~/go/bin/grafana-server /tmp 
+~% <span class="nb">sudo mv</span> /tmp/grafana-server /usr/bin/
+~% <span class="nb">sudo </span>rc-service grafana start
+
+</code></pre></div></div>
+</div>
+
+<p>In the browser, open the page<code class="highlighter-rouge">http://localhost:3000</code>. User name admin/admin (or what is stated in /etc/grafana/grafana.ini<sup id="fnref:2"><a href="#fn:2" class="footnote">2</a></sup>).
+<img src="/imgs/posts/grafana-rpi-min.png" alt="Start screen" title="Start screen" class="center-image" width="100%"></p>
+
+<p>Add the data source:
+<img src="/imgs/posts/grafana-rpi-add-ds-min.png" alt="Adding a data source" title="Adding a data source" class="center-image" width="100%"></p>
+
+<p><img src="/imgs/posts/grafana-rpi-add-ds-0-min.png" alt="Adding a data source" title="Adding a data source" class="center-image" width="100%"></p>
+
+<p>Next, add a panel, the most simple:
+<img src="/imgs/posts/grafana-rpi-add-db-min.png" alt="Panel" title="Panel" class="center-image" width="100%">
+<img src="/imgs/posts/grafana-rpi-add-db-0-min.png" alt="Panel" title="Panel" class="center-image" width="100%">
+<img src="/imgs/posts/grafana-rpi-add-db-1-min.png" alt="Panel" title="Panel" class="center-image" width="100%">
+<img src="/imgs/posts/grafana-rpi-add-db-2-min.png" alt="Panel" title="Panel" class="center-image" width="100%"></p>
+
+<p>And how do you like this beauty?<img class="emoji" title=":smiley:" alt=":smiley:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f603.png" height="20" width="20">
+<img src="/imgs/posts/grafana-rpi-add-db-3-min.png" alt="Panel" title="Panel" class="center-image" width="100%"></p>
+
 <div class="footnotes">
   <ol>
     <li id="fn:edit-config">
       <p>Elementary changes in the files <code class="highlighter-rouge">/etc/portage/package.accept_keywords</code> etc. (Well, the elders of Gentoo know<img class="emoji" title=":wink:" alt=":wink:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f609.png" height="20" width="20">) <a href="#fnref:edit-config" class="reversefootnote">↩</a></p>
+    </li>
+    <li id="fn:2">
+      <p>It’s a good idea to change the superuser name and password. <a href="#fnref:2" class="reversefootnote">↩</a></p>
     </li>
   </ol>
 </div>
