@@ -504,9 +504,8 @@ time                 mean_temp           sensor_id
         <span class="n">runBlocking</span> <span class="p">{</span>
             <span class="k">while</span> <span class="p">(</span><span class="k">true</span><span class="p">)</span> <span class="p">{</span>
                 <span class="kd">val</span> <span class="py">sensors</span> <span class="p">=</span> <span class="n">findSensors</span><span class="p">()</span>
-                <span class="n">sensors</span><span class="p">.</span><span class="n">forEach</span> <span class="p">{</span>
-                    <span class="kd">val</span> <span class="py">sensor_id</span> <span class="p">=</span> <span class="s">"${it.fileName}"</span>
-                    <span class="kd">val</span> <span class="err">(</span><span class="py">therm</span><span class="p">,</span> <span class="n">status</span><span class="p">)</span> <span class="p">=</span> <span class="n">readSensor</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+                <span class="n">sensors</span><span class="p">.</span><span class="n">forEach</span> <span class="p">{</span> <span class="n">sensor_id</span> <span class="p">-&gt;</span>
+                    <span class="kd">val</span> <span class="err">(</span><span class="py">therm</span><span class="p">,</span> <span class="n">status</span><span class="p">)</span> <span class="p">=</span> <span class="n">readSensor</span><span class="p">(</span><span class="n">sensor_id</span><span class="p">)</span>
                     <span class="k">if</span> <span class="p">(</span><span class="n">status</span><span class="p">)</span> <span class="p">{</span>
                         <span class="n">influxDB</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="n">Point</span><span class="p">.</span><span class="n">measurement</span><span class="p">(</span><span class="n">RAW_TEMP_MEASUREMENT</span><span class="p">)</span>
                                 <span class="p">.</span><span class="n">tag</span><span class="p">(</span><span class="s">"sensor_id"</span><span class="p">,</span> <span class="n">sensor_id</span><span class="p">)</span>
@@ -526,9 +525,10 @@ time                 mean_temp           sensor_id
 <span class="cm">/*
  * Find all sensors in /sys/bus/w1/devices/
  */</span>
-<span class="k">fun</span> <span class="n">findSensors</span><span class="p">():</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Path</span><span class="p">&gt;</span> <span class="p">{</span>
-   <span class="kd">val</span> <span class="py">matcher</span> <span class="p">=</span> <span class="n">FileSystems</span><span class="p">.</span><span class="n">getDefault</span><span class="p">().</span><span class="n">getPathMatcher</span><span class="p">(</span><span class="s">"glob:28-*"</span><span class="p">)</span>
-   <span class="k">return</span><span class="p">(</span><span class="n">Files</span><span class="p">.</span><span class="n">list</span><span class="p">(</span><span class="n">W1_PATH</span><span class="p">).</span><span class="n">filter</span><span class="p">{</span> <span class="n">f</span> <span class="p">-&gt;</span> <span class="n">matcher</span><span class="p">.</span><span class="n">matches</span><span class="p">(</span><span class="n">f</span><span class="p">.</span><span class="n">fileName</span><span class="p">)}.</span><span class="n">collect</span><span class="p">(</span><span class="n">Collectors</span><span class="p">.</span><span class="n">toList</span><span class="p">()))</span>
+<span class="k">fun</span> <span class="n">findSensors</span><span class="p">():</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">String</span><span class="p">&gt;</span> <span class="p">{</span>
+    <span class="kd">val</span> <span class="py">dir</span> <span class="p">=</span> <span class="n">File</span><span class="p">(</span><span class="n">SENSORS_PATH</span><span class="p">)</span>
+    <span class="kd">val</span> <span class="py">fileNames</span> <span class="p">=</span> <span class="n">dir</span><span class="p">.</span><span class="n">list</span><span class="p">().</span><span class="n">filter</span> <span class="p">{</span> <span class="n">name</span> <span class="p">-&gt;</span> <span class="n">name</span><span class="p">.</span><span class="n">startsWith</span><span class="p">(</span><span class="s">"28-"</span><span class="p">)}</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">fileNames</span><span class="p">)</span>
 <span class="p">}</span>
 
 <span class="cm">/*
@@ -537,11 +537,11 @@ time                 mean_temp           sensor_id
  * status = false -&gt; error
  */</span>
 <span class="kd">data class</span> <span class="nc">thermResult</span><span class="p">(</span><span class="kd">val</span> <span class="py">therm</span><span class="p">:</span> <span class="n">Double</span><span class="p">,</span> <span class="kd">val</span> <span class="py">status</span><span class="p">:</span> <span class="n">Boolean</span><span class="p">)</span>
-<span class="k">fun</span> <span class="n">readSensor</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">):</span> <span class="n">thermResult</span> <span class="p">{</span>
+<span class="k">fun</span> <span class="n">readSensor</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="n">String</span><span class="p">):</span> <span class="n">thermResult</span> <span class="p">{</span>
     <span class="kd">var</span> <span class="py">status</span> <span class="p">=</span> <span class="k">false</span>
     <span class="kd">var</span> <span class="py">therm</span> <span class="p">=</span> <span class="m">0.0</span>
     <span class="k">try</span> <span class="p">{</span>
-        <span class="kd">val</span> <span class="py">sensorData</span> <span class="p">=</span> <span class="n">File</span><span class="p">(</span><span class="s">"${path}/w1_slave"</span><span class="p">).</span><span class="n">readLines</span><span class="p">()</span>
+        <span class="kd">val</span> <span class="py">sensorData</span> <span class="p">=</span> <span class="n">File</span><span class="p">(</span><span class="s">"$SENSORS_PATH/$path/w1_slave"</span><span class="p">).</span><span class="n">readLines</span><span class="p">()</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">sensorData</span><span class="p">.</span><span class="n">size</span> <span class="p">==</span> <span class="m">2</span><span class="p">)</span> <span class="p">{</span>
             <span class="k">if</span> <span class="p">(</span><span class="n">sensorData</span><span class="p">[</span><span class="m">0</span><span class="p">].</span><span class="n">endsWith</span><span class="p">(</span><span class="s">"YES"</span><span class="p">))</span> <span class="p">{</span>
                 <span class="n">therm</span> <span class="p">=</span><span class="n">sensorData</span><span class="p">[</span><span class="m">1</span><span class="p">].</span><span class="n">takeLast</span><span class="p">(</span><span class="m">5</span><span class="p">).</span><span class="n">toDouble</span><span class="p">()</span> <span class="p">*</span> <span class="m">0.001</span>
@@ -551,12 +551,13 @@ time                 mean_temp           sensor_id
     <span class="p">}</span> <span class="k">catch</span><span class="p">(</span><span class="n">e</span><span class="p">:</span> <span class="n">Exception</span><span class="p">)</span> <span class="p">{</span>
 
     <span class="p">}</span>
+
     <span class="k">return</span><span class="p">(</span><span class="n">thermResult</span><span class="p">(</span><span class="n">therm</span><span class="p">,</span> <span class="n">status</span><span class="p">))</span>
 <span class="p">}</span>
 
-<span class="k">const</span> <span class="kd">val</span> <span class="py">DB_SERVER</span> <span class="p">=</span> <span class="s">"https://localhost:8086"</span>
+<span class="k">const</span> <span class="kd">val</span> <span class="py">DB_SERVER</span> <span class="p">=</span> <span class="s">"https://localhost.ssl:8086"</span>
 <span class="k">const</span> <span class="kd">val</span> <span class="py">DB_USER</span> <span class="p">=</span> <span class="s">"sensor"</span>
-<span class="k">const</span> <span class="kd">val</span> <span class="py">DB_PASS</span> <span class="p">=</span> <span class="s">"******"</span>
+<span class="k">const</span> <span class="kd">val</span> <span class="py">DB_PASS</span> <span class="p">=</span> <span class="s">"look"</span>
 <span class="k">const</span> <span class="kd">val</span> <span class="py">DB_NAME</span> <span class="p">=</span> <span class="s">"thermdb"</span>
 <span class="k">const</span> <span class="kd">val</span> <span class="py">RAW_TEMP_MEASUREMENT</span> <span class="p">=</span> <span class="s">"temps"</span>
 <span class="k">const</span> <span class="kd">val</span> <span class="py">DEFAULT_RETENTION</span> <span class="p">=</span> <span class="s">"two_hours"</span>
@@ -565,7 +566,6 @@ time                 mean_temp           sensor_id
 <span class="k">const</span> <span class="kd">val</span> <span class="py">SENSOR_READ_INTERVAL</span> <span class="p">=</span> <span class="m">10</span> <span class="p">*</span> <span class="m">1000</span> <span class="c1">// 10 seconds</span>
 
 <span class="k">const</span> <span class="kd">val</span> <span class="py">SENSORS_PATH</span> <span class="p">=</span> <span class="s">"/sys/bus/w1/devices"</span>
-<span class="kd">val</span> <span class="py">W1_PATH</span><span class="p">:</span> <span class="n">Path</span> <span class="p">=</span> <span class="n">Paths</span><span class="p">.</span><span class="k">get</span><span class="p">(</span><span class="n">SENSORS_PATH</span><span class="p">)</span>
 
 </code></pre></div></div>
 </div>
