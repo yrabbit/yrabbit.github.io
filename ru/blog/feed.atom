@@ -7,7 +7,84 @@
 	<author>
 		<name>Yellow Rabbit</name>
 	</author>
-	<updated>2018-04-13T19:04:48+10:00</updated>
+	<updated>2018-05-19T12:48:48+10:00</updated>
+
+	<entry>
+		<title type="text">Преобразователь логических уровней</title>
+		<link href="https://yrabbit.github.io/ru/blog/2018/logical-level-converter/" />
+		<id>https://yrabbit.github.io/blog/2018/logical-level-converter/</id>
+		<published>2018-05-18T00:00:00+10:00</published>
+		<updated>2018-05-18T00:00:00+10:00</updated>
+		<summary type="html">
+
+Есть такая микросхема Max 7219, которая представляет собой контроллер семисегментных индикаторов. Она не только позволяет управлять восемью такими индикаторами, но и допускает каскадное соединение с такими же контроллерами, что позволяет произвольно увеличивать разрядность.
+
+</summary>
+		<content type="html">
+&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;/imgs/logic-level-conv.png&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;script type=&quot;text/javascript&quot; async=&quot;&quot; src=&quot;https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML&quot;&gt;
+&lt;/script&gt;
+
+&lt;p&gt;Есть такая микросхема Max 7219, которая представляет собой контроллер семисегментных индикаторов. Она не только позволяет управлять восемью такими индикаторами, но и допускает каскадное соединение с такими же контроллерами, что позволяет произвольно увеличивать разрядность.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/imgs/posts/max7219-led-controller.jpg&quot; alt=&quot;Микросхема max7219&quot; title=&quot;Контроллер MAX7219&quot; class=&quot;center-image&quot; width=&quot;50%&quot; /&gt;
+Эта микросхема казалась подходящим кандидатом для моего проекта ``Горилла’’, но у неё обнаружились некоторые особенности, в частности она имеет напряжение питания 5V и соответственно TTL логические уровни.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/imgs/posts/ttl-levels.png&quot; alt=&quot;Логические уровни TTL&quot; title=&quot;Логические уровни TTL&quot; class=&quot;center-image&quot; width=&quot;90%&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Выходы соединяются с LED и следующей такой же микросхемой, так что они нас не интересуют. Остаются три входа: CLK, LOAD и DIN. Поскольку выходы GPIO Raspberry Pi являются CMOS, то для представления логического нуля используется напряжение &lt;script type=&quot;math/tex&quot;&gt;\le 0.8V&lt;/script&gt;, а для представления логической единицы &lt;script type=&quot;math/tex&quot;&gt;\ge 2V&lt;/script&gt;.&lt;/p&gt;
+
+&lt;p&gt;Казалось бы всё хорошо и мы попадаем в нужный диапазон TTL логики, однако документация на микросхему указывает, что минимально допустимое напряжение для логической единицы равно 3.5V, что полностью исключает возможность управления от Raspberry Pi&lt;sup id=&quot;fnref:some&quot;&gt;&lt;a href=&quot;#fn:some&quot; class=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/imgs/posts/7219-doc.png&quot; alt=&quot;Фрагмент документации к 7219&quot; title=&quot;Фрагмент документации к 7219&quot; class=&quot;center-image&quot; width=&quot;96%&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Итак нам нужен преобразователь логических уровней.&lt;/p&gt;
+
+&lt;h2 id=&quot;mosfet-как-преобразователь&quot;&gt;MOSFET как преобразователь&lt;/h2&gt;
+
+&lt;p&gt;Рассмотрим следующую простую схему:
+&lt;img src=&quot;/imgs/posts/logic-level-conv-schematic.png&quot; alt=&quot;Схема простейшего преобразователя уровня&quot; title=&quot;Схема простейшего преобразователя уровня&quot; class=&quot;center-image&quot; width=&quot;60%&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Два pull-up резистора обеспечивают логическую единицу с обеих сторон преобразователя. Так что, если на выходе GPIO установлена логическая единица, то падение напряжения на резисторе &lt;script type=&quot;math/tex&quot;&gt;V_{R1}=0&lt;/script&gt;, транзистор закрыт и на входе 7219 установлен высокий уровень благодаря pull-up резистору &lt;script type=&quot;math/tex&quot;&gt;R2&lt;/script&gt;.&lt;/p&gt;
+
+&lt;p&gt;Если же на выходе GPIO установлен логический ноль, тона &lt;script type=&quot;math/tex&quot;&gt;R1&lt;/script&gt; падает 3.3V, транзистор открывается и на входе 7219 получает нулевой потенциал.&lt;/p&gt;
+
+&lt;p&gt;Наш преобразователь работает.&lt;/p&gt;
+
+&lt;p&gt;Но самое замечательное то, что благодаря встроенному диоду этот преобразователь работает и в обратном направлении! :smile:&lt;/p&gt;
+
+&lt;p&gt;С логической единицей всё понятно и неинтересно, посмотрим что будет, если 7219 это выход, на котором установлен логический ноль. Тогда начинает течь ток через встроенный диод, на нём падает что-то около &lt;script type=&quot;math/tex&quot;&gt;0.7V&lt;/script&gt;, следовательно на резисторе образуется падение напряжения &lt;script type=&quot;math/tex&quot;&gt;V_{R1}=2.6V&lt;/script&gt;, транзистор окрывается после чего на &lt;script type=&quot;math/tex&quot;&gt;R1&lt;/script&gt; падает уже все 3.3V эффективно образуя на входе GPIO логический ноль. :smile:&lt;/p&gt;
+
+&lt;h2 id=&quot;Реализация&quot;&gt;Реализация&lt;/h2&gt;
+&lt;p&gt;Транзисторы BSN20 оказались очень маленькими:
+&lt;img src=&quot;/imgs/posts/bsn20-size.jpeg&quot; alt=&quot;BSN20 в натуральную величину&quot; title=&quot;BSN20 и линейка&quot; class=&quot;center-image&quot; width=&quot;80%&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Попробуем припаять на макетную плату один транзистор:
+&lt;img src=&quot;/imgs/posts/first-bsn20-soldered.jpeg&quot; alt=&quot;Один транзистор на плате&quot; title=&quot;Один транзистор на плате&quot; class=&quot;center-image&quot; width=&quot;70%&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;И ещё два для оставшихся линий:
+&lt;img src=&quot;/imgs/posts/all-bsn20-soldered.jpeg&quot; alt=&quot;Все три транзистоора на плате&quot; title=&quot;Все три транзистора на плате&quot; class=&quot;center-image&quot; width=&quot;70%&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Добавляем резисторы:
+&lt;img src=&quot;/imgs/posts/resistors-soldered.jpeg&quot; alt=&quot;На плату установлены резисторы&quot; title=&quot;На плату установлены резисторы&quot; class=&quot;center-image&quot; width=&quot;70%&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Всё в сборе:
+&lt;img src=&quot;/imgs/posts/converter-done.jpeg&quot; alt=&quot;Полностью собранный конвертер&quot; title=&quot;Полностью собранный конвертер&quot; class=&quot;center-image&quot; width=&quot;70%&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;Проверяем-конвертер&quot;&gt;Проверяем конвертер&lt;/h2&gt;
+&lt;p&gt;Ну заодно и 7219:)&lt;/p&gt;
+&lt;video id=&quot;conv35&quot; src=&quot;/video/converter-demo.mp4&quot; width=&quot;50%&quot; controls=&quot;&quot; class=&quot;center-image&quot;&gt;&lt;/video&gt;
+
+&lt;p&gt;Конвертер работает просто замечательно, а вот 7219 мертва. :angry:&lt;/p&gt;
+&lt;div class=&quot;footnotes&quot;&gt;
+  &lt;ol&gt;
+    &lt;li id=&quot;fn:some&quot;&gt;
+      &lt;p&gt;Следует заметить, что в сети полно описаний успешного подключения этой микросхемы к Raspberry Pi. Не знаю как это выходит, возможно разброс параметров у отдельных экземпляров позволяет им работать при более низком уровне логической единицы. &lt;a href=&quot;#fnref:some&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/div&gt;
+</content>
+	</entry>
 
 	<entry>
 		<title type="text">Хранение температуры в базе данных</title>
@@ -2862,173 +2939,6 @@ plot2d([[discrete, tl, kH2lkH4l], [discrete, tl, lowpass(kH2lkH4l, 0.5)],
     &lt;/li&gt;
   &lt;/ol&gt;
 &lt;/div&gt;
-</content>
-	</entry>
-
-	<entry>
-		<title type="text">Web-движок на Lisp: грамматика и элемент text</title>
-		<link href="https://yrabbit.github.io/ru/blog/2016/lisp-toy-web-parse-text/" />
-		<id>https://yrabbit.github.io/blog/2016/lisp-toy-web-parse-text/</id>
-		<published>2016-05-25T20:42:10+10:00</published>
-		<updated>2017-07-31T18:10:40+10:00</updated>
-		<summary type="html">После знакомства с парсером META переходим к рассмотрению грамматики HTML. А также посмотрим как разобрать простейший элемент.
-
-</summary>
-		<content type="html">
-&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;/imgs/post-banners/lisp-webengine-text.jpeg&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
-&lt;p&gt;После знакомства с &lt;a href=&quot;/blog/2016/lisp-toy-web-parsing-meta/&quot;&gt;парсером META&lt;/a&gt; переходим к рассмотрению грамматики HTML. А также посмотрим как разобрать простейший элемент.&lt;/p&gt;
-
-&lt;h2 id=&quot;Наводим-порядок&quot;&gt;Наводим порядок&lt;/h2&gt;
-&lt;p&gt;Ядро META это самостоятельная часть движка, так что можно выделить её в &lt;a href=&quot;/pub/lisp/meta-parser-core.lisp&quot;&gt;отдельный файл&lt;/a&gt; и навести общий порядок в проекте. Файл &lt;code class=&quot;highlighter-rouge&quot;&gt;toy-engine.asd&lt;/code&gt;, описывающий состав и последовательность компиляции модулей движка:&lt;/p&gt;
-
-&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;&lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;&lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;cl&quot; /&gt;
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
-&lt;span class=&quot;c1&quot;&gt;;;;; toy-engine.asd&lt;/span&gt;
-
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;asdf:defsystem&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;#:toy-engine&lt;/span&gt;
-  &lt;span class=&quot;ss&quot;&gt;:description&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Tiny web-engine&quot;&lt;/span&gt;
-  &lt;span class=&quot;ss&quot;&gt;:author&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Yellow Rabbit &amp;lt;yrabbit@example.com&amp;gt;&quot;&lt;/span&gt;
-  &lt;span class=&quot;ss&quot;&gt;:license&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Public domain&quot;&lt;/span&gt;
-  &lt;span class=&quot;ss&quot;&gt;:serial&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;
-  &lt;span class=&quot;ss&quot;&gt;:components&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:file&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;package&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-               &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:file&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;dom&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-               &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:file&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;meta-parser-core&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-               &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:file&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;html-grammar&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-               &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:file&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;toy-engine&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Файлы &lt;code class=&quot;highlighter-rouge&quot;&gt;html-grammar.lisp&lt;/code&gt; и &lt;code class=&quot;highlighter-rouge&quot;&gt;toy-engine.lisp&lt;/code&gt; пока пустые и состоят из одной строчки каждый:&lt;/p&gt;
-
-&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;&lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;&lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;cl&quot; /&gt;
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;in-package&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;#:toy-engine&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;/div&gt;
-
-&lt;h2 id=&quot;Схема-грамматики&quot;&gt;Схема грамматики&lt;/h2&gt;
-&lt;p&gt;Движок будет понимать простейшее подмножество HTML, вот схема его грамматики:
-&lt;img src=&quot;/imgs/posts/lisp-webengine-html-grammar.png&quot; alt=&quot;Схема грамматики для HTML&quot; title=&quot;Простейшая грамматика для HTML&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;Функции-проверки-символов&quot;&gt;Функции проверки символов&lt;/h2&gt;
-&lt;p&gt;Эти простые функции, которые нужны для проверки символов в операции META &lt;code class=&quot;highlighter-rouge&quot;&gt;@&lt;/code&gt;, должны быть доступны во время компиляции:&lt;/p&gt;
-
-&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;&lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;&lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;cl&quot; /&gt;
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;eval-when&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:compile-toplevel&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:load-toplevel&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:execute&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;gen-text-p&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;&quot;Text is always between &amp;gt; and &amp;lt;&quot;&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;char/=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ch&lt;/span&gt; &lt;span class=&quot;sc&quot;&gt;#\&amp;lt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;always-true&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;&quot;Any character is right one&quot;&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;declare&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;ignore&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-    &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;azAZ09-p&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;&quot;Alphanumerical&quot;&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;or&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;and&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;char&amp;gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ch&lt;/span&gt; &lt;span class=&quot;sc&quot;&gt;#\a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-             &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;char&amp;lt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ch&lt;/span&gt; &lt;span class=&quot;sc&quot;&gt;#\z&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;and&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;char&amp;gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ch&lt;/span&gt; &lt;span class=&quot;sc&quot;&gt;#\A&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-             &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;char&amp;lt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ch&lt;/span&gt; &lt;span class=&quot;sc&quot;&gt;#\Z&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;digit-char-p&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
-
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;/div&gt;
-&lt;p&gt;Функция вызываются не явно, а через проверку принадлежности к типу данных:&lt;/p&gt;
-
-&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;&lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;&lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;cl&quot; /&gt;
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;deftype&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;gen-text&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-  &lt;span class=&quot;s&quot;&gt;&quot;All except a &amp;lt;&quot;&lt;/span&gt;
-  &lt;span class=&quot;o&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;satisfies&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;gen-text-p&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;deftype&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;any-text&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-  &lt;span class=&quot;s&quot;&gt;&quot;Any character&quot;&lt;/span&gt;
-  &lt;span class=&quot;o&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;satisfies&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;always-true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;deftype&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tag-text&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-  &lt;span class=&quot;s&quot;&gt;&quot;Tag name is alphanumeric&quot;&lt;/span&gt;
-  &lt;span class=&quot;o&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;satisfies&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;azAZ09-p&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Ещё один полезный тип — пустое место :smile:&lt;/p&gt;
-
-&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;&lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;&lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;cl&quot; /&gt;
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;deftype&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;whitespace&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-  &lt;span class=&quot;o&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;member&lt;/span&gt; &lt;span class=&quot;sc&quot;&gt;#\Space&lt;/span&gt; &lt;span class=&quot;sc&quot;&gt;#\Tab&lt;/span&gt; &lt;span class=&quot;sc&quot;&gt;#\LineFeed&lt;/span&gt; &lt;span class=&quot;sc&quot;&gt;#\Return&lt;/span&gt; &lt;span class=&quot;sc&quot;&gt;#\FormFeed&lt;/span&gt; &lt;span class=&quot;sc&quot;&gt;#\Page&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;/div&gt;
-
-&lt;h2 id=&quot;Генерация-узлов-и-скелет-парсера&quot;&gt;Генерация узлов и скелет парсера&lt;/h2&gt;
-
-&lt;p&gt;Парсер будет создавать дерево DOM прямо по ходу разбора. За каждый тип узла отвечает своя функция, для начала будем распознавать один простой элемент: текст. И его функция:&lt;/p&gt;
-
-&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;&lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;&lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;cl&quot; /&gt;
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
-&lt;span class=&quot;c1&quot;&gt;;; Create nodes&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;;; Text&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;make-text-node&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;text&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;make-instance&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;'text-node&lt;/span&gt;
-		 &lt;span class=&quot;ss&quot;&gt;:text&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;text&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;/div&gt;
-&lt;p&gt;Парсер принимает на входе строку для разбора, возможно номер первого и последнего символов для разбора и возвращает корневой узел получившегося дерева. Пока не знаю как будут присоединяться дочерние узлы, так что скелет парсера имеет вид:&lt;/p&gt;
-
-&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;&lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;&lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;cl&quot; /&gt;
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
-&lt;span class=&quot;c1&quot;&gt;;;; HTML parser&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;parse-html&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;str&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;&amp;amp;optional&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;index&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;end&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;length&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;declare&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;fixnum&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;index&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;end&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;labels&lt;/span&gt;
-      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
-       &lt;span class=&quot;c1&quot;&gt;;; node parsers&lt;/span&gt;
-       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;parse-text&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-          &lt;span class=&quot;s&quot;&gt;&quot;Text until &amp;lt;&quot;&lt;/span&gt;
-          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ch&lt;/span&gt;
-		 &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;text&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;with-output-to-string&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;matchit&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$[@&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;gen-text&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;write-char&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ch&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
-	    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;zerop&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;length&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;text&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-	        &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;
-		&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;make-text-node&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;text&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))))&lt;/span&gt;
-      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;parse-text&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;/div&gt;
-&lt;p&gt;Проверяем на дереве из одного текстового узла:&lt;/p&gt;
-
-&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;&lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;&lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;cl&quot; /&gt;
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
-&lt;span class=&quot;nb&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ql:quickload&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;'toy-engine&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;To&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;load&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;toy-engine&quot;&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;nv&quot;&gt;Load&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ASDF&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;system:&lt;/span&gt;
-    &lt;span class=&quot;nv&quot;&gt;toy-engine&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;; Loading &quot;toy-engine&quot;&lt;/span&gt;
-
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;TOY-ENGINE&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;in-package&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:toy-engine&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-
-&lt;span class=&quot;err&quot;&gt;#&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;&amp;lt;PACKAGE&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;TOY-ENGINE&quot;&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defparameter&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*str*&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;  ''' This is a text&amp;lt; kj&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-
-&lt;span class=&quot;vg&quot;&gt;*STR*&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;parse-html&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*str*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-
-&lt;span class=&quot;err&quot;&gt;#&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;&amp;lt;TEXT-NODE&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;{10050359A3}&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;pp-&amp;gt;dot&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;text-node.dot&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;pp-dom&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
-
-&lt;span class=&quot;s&quot;&gt;&quot;}&quot;&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;*&lt;/span&gt;
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;/div&gt;
-&lt;p&gt;Выглядит неплохо:
-&lt;img src=&quot;/imgs/posts/lisp-webengine-text-node.png&quot; alt=&quot;Дерево после разбора&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
 </content>
 	</entry>
 

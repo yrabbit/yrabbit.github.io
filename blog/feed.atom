@@ -7,7 +7,84 @@
 	<author>
 		<name>Yellow Rabbit</name>
 	</author>
-	<updated>2018-04-13T19:04:48+10:00</updated>
+	<updated>2018-05-19T12:48:48+10:00</updated>
+
+	<entry>
+		<title type="text">Logical Level Converter </title>
+		<link href="https://yrabbit.github.io/blog/2018/logical-level-converter/" />
+		<id>https://yrabbit.github.io/blog/2018/logical-level-converter/</id>
+		<published>2018-05-18T00:00:00+10:00</published>
+		<updated>2018-05-18T00:00:00+10:00</updated>
+		<summary type="html">
+
+There is such a chip Max 7219, which is a seven-segment indicator controller. It not only allows to control eight such indicators, but also allows cascading connection with the same controllers, which allows to arbitrarily increase the bit capacity.
+
+</summary>
+		<content type="html">
+&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;/imgs/logic-level-conv.png&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
+&lt;script type=&quot;text/javascript&quot; async=&quot;&quot; src=&quot;https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML&quot;&gt;
+&lt;/script&gt;
+
+&lt;p&gt;There is such a chip Max 7219, which is a seven-segment indicator controller. It not only allows to control eight such indicators, but also allows cascading connection with the same controllers, which allows to arbitrarily increase the bit capacity.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/imgs/posts/max7219-led-controller.jpg&quot; alt=&quot;max7219 chip&quot; title=&quot;MAX7219 controller&quot; class=&quot;center-image&quot; width=&quot;50%&quot; /&gt;
+This chip seemed to be a suitable candidate for my project ``Gorilla ‘’, but it has some features, in particular it has a supply voltage of 5V and, respectively, TTL logic levels.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/imgs/posts/ttl-levels.png&quot; alt=&quot;TTL logc levels&quot; title=&quot;TTL logic levels&quot; class=&quot;center-image&quot; width=&quot;90%&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The outputs are connected to the LED and the next same chip, so they do not interest us. There remain three inputs: CLK, LOAD and DIN. Since the GPIO Raspberry Pi outputs are CMOS, then the voltage &lt;script type=&quot;math/tex&quot;&gt;\le 0.8V&lt;/script&gt; is used to represent the logical zero, and for the logical 1 representation a voltage &lt;script type=&quot;math/tex&quot;&gt;\ge 2V&lt;/script&gt; is used.&lt;/p&gt;
+
+&lt;p&gt;It would seem all right and we fall into the right range of TTL logic, but the documentation for the chip indicates that the minimum allowable voltage for a logical 1 is 3.5V, which completely eliminates the possibility of control from Raspberry Pi &lt;sup id=&quot;fnref:some&quot;&gt;&lt;a href=&quot;#fn:some&quot; class=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/imgs/posts/7219-doc.png&quot; alt=&quot;Fragment of documentation for 7219&quot; title=&quot;Fragment of documentation for 7219&quot; class=&quot;center-image&quot; width=&quot;96%&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;So we need a logical level converter.&lt;/p&gt;
+
+&lt;h2 id=&quot;mosfet-as-a-converter&quot;&gt;MOSFET as a converter&lt;/h2&gt;
+
+&lt;p&gt;Consider the following simple scheme:
+&lt;img src=&quot;/imgs/posts/logic-level-conv-schematic.png&quot; alt=&quot;The scheme of the simplest level converter&quot; title=&quot;The scheme of the simplest level converter&quot; class=&quot;center-image&quot; width=&quot;60%&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Two pull-up resistors provide a logical 1 on both sides of the converter. So, if the logic output is set at the GPIO output, then the voltage drop across the resistor &lt;script type=&quot;math/tex&quot;&gt;V_{R1} = 0&lt;/script&gt;, the transistor is closed and input 7219 is set high due to the pull-up resistor &lt;script type=&quot;math/tex&quot;&gt;R2&lt;/script&gt;.&lt;/p&gt;
+
+&lt;p&gt;If the GPIO output is set to logic zero, voltage on &lt;script type=&quot;math/tex&quot;&gt;R1&lt;/script&gt; drops 3.3V, the transistor opens and at the input 7219 gets a zero potential.&lt;/p&gt;
+
+&lt;p&gt;Our converter is working.&lt;/p&gt;
+
+&lt;p&gt;But the most remarkable thing is that thanks to the built-in diode this converter works in the opposite direction!:smile:&lt;/p&gt;
+
+&lt;p&gt;With logical 1, everything is clear and uninteresting, let’s see what happens if 7219 is an output on which a logical zero is set. Then the current starts flowing through the built-in diode, something about &lt;script type=&quot;math/tex&quot;&gt;0.7V&lt;/script&gt; falls on it, therefore a voltage drop is formed on the resistor &lt;script type=&quot;math/tex&quot;&gt;V_{R1} = 2.6V&lt;/script&gt;, the transistor is opening, and voltage drop on &lt;script type=&quot;math/tex&quot;&gt;R1&lt;/script&gt; became  all 3.3V effectively forming a logic zero at the input GPIO.&lt;/p&gt;
+
+&lt;h2 id=&quot;implementation&quot;&gt;Implementation&lt;/h2&gt;
+&lt;p&gt;The BSN20 transistors turned out to be very small:
+&lt;img src=&quot;/imgs/posts/bsn20-size.jpeg&quot; alt=&quot;BSN20 at full size&quot; title=&quot;BSN20 and a ruler&quot; class=&quot;center-image&quot; width=&quot;80%&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Let’s try soldering on the prototyping board one transistor:
+&lt;img src=&quot;/imgs/posts/first-bsn20-soldered.jpeg&quot; alt=&quot;One transistor on the board&quot; title=&quot;One transistor on the board&quot; class=&quot;center-image&quot; width=&quot;70%&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;And two more for the remaining lines:
+&lt;img src=&quot;/imgs/posts/all-bsn20-soldered.jpeg&quot; alt=&quot;All three transistors on the board&quot; title=&quot;All three transistors on the board&quot; class=&quot;center-image&quot; width=&quot;70%&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Adding resistors:
+&lt;img src=&quot;/imgs/posts/resistors-soldered.jpeg&quot; alt=&quot;Resistors are installed on the board&quot; title=&quot;Resistors are installed on the board&quot; class=&quot;center-image&quot; width=&quot;70%&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Everything is here:
+&lt;img src=&quot;/imgs/posts/converter-done.jpeg&quot; alt=&quot;Fully assembled converter&quot; title=&quot;Fully assembled converter&quot; class=&quot;center-image&quot; width=&quot;70%&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;check-the-converter&quot;&gt;Check the converter&lt;/h2&gt;
+&lt;p&gt;Well, at the same time and 7219&lt;/p&gt;
+&lt;video id=&quot;conv35&quot; src=&quot;/video/converter-demo.mp4&quot; width=&quot;50%&quot; controls=&quot;&quot; class=&quot;center-image&quot;&gt;&lt;/video&gt;
+
+&lt;p&gt;The converter works just fine, but 7219 is dead. :angry:&lt;/p&gt;
+&lt;div class=&quot;footnotes&quot;&gt;
+  &lt;ol&gt;
+    &lt;li id=&quot;fn:some&quot;&gt;
+      &lt;p&gt;It should be noted that the network is full of descriptions of the successful connection of this chip to Raspberry Pi.  I do not know how it goes, it is possible that the scatter of parameters in individual chips allows them to work at a lower logical 1 level. &lt;a href=&quot;#fnref:some&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/div&gt;
+</content>
+	</entry>
 
 	<entry>
 		<title type="text">Storing Temperature in the Database</title>
@@ -2880,169 +2957,6 @@ It even has a complex constructor :smile:
     &lt;/li&gt;
   &lt;/ol&gt;
 &lt;/div&gt;
-</content>
-	</entry>
-
-	<entry>
-		<title type="text">Web-engine in Lisp: Grammar and Text Element</title>
-		<link href="https://yrabbit.github.io/blog/2016/lisp-toy-web-parse-text/" />
-		<id>https://yrabbit.github.io/blog/2016/lisp-toy-web-parse-text/</id>
-		<published>2016-05-25T20:42:10+10:00</published>
-		<updated>2017-07-31T18:10:40+10:00</updated>
-		<summary type="html">After getting acquainted with META parser  we turn to the grammar of HTML. And also see how to parse the simplest element.
-
-</summary>
-		<content type="html">
-&lt;img src=&quot;https://yrabbit.github.io{&quot;path&quot;=&gt;&quot;/imgs/post-banners/lisp-webengine-text.jpeg&quot;, &quot;width&quot;=&gt;1200, &quot;height&quot;=&gt;300}&quot; alt=&quot;&quot; width=&quot;600&quot; /&gt;&lt;br /&gt;
-&lt;p&gt;After getting acquainted with &lt;a href=&quot;/blog/2016/lisp-toy-web-parsing-meta/&quot;&gt;META parser&lt;/a&gt;  we turn to the grammar of HTML. And also see how to parse the simplest element.&lt;/p&gt;
-
-&lt;h2 id=&quot;making-order&quot;&gt;Making Order&lt;/h2&gt;
-&lt;p&gt;The META kernel is an independent part of the engine, so you can put it into a &lt;a href=&quot;/pub/lisp/meta-parser-core.lisp&quot;&gt;separate file&lt;/a&gt; and put the general order in the project. The file &lt;code class=&quot;highlighter-rouge&quot;&gt;toy-engine.asd&lt;/code&gt;, which describes the composition and sequence of compilation of engine modules:&lt;/p&gt;
-&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;&lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;&lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;cl&quot; /&gt;
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
-&lt;span class=&quot;c1&quot;&gt;;;;; toy-engine.asd&lt;/span&gt;
-
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;asdf:defsystem&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;#:toy-engine&lt;/span&gt;
-  &lt;span class=&quot;ss&quot;&gt;:description&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Tiny web-engine&quot;&lt;/span&gt;
-  &lt;span class=&quot;ss&quot;&gt;:author&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Yellow Rabbit &amp;lt;yrabbit@example.com&amp;gt;&quot;&lt;/span&gt;
-  &lt;span class=&quot;ss&quot;&gt;:license&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Public domain&quot;&lt;/span&gt;
-  &lt;span class=&quot;ss&quot;&gt;:serial&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;
-  &lt;span class=&quot;ss&quot;&gt;:components&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:file&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;package&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-               &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:file&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;dom&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-               &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:file&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;meta-parser-core&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-               &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:file&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;html-grammar&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-               &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:file&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;toy-engine&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;/div&gt;
-&lt;p&gt;The files &lt;code class=&quot;highlighter-rouge&quot;&gt;html-grammar.lisp&lt;/code&gt; and&lt;code class=&quot;highlighter-rouge&quot;&gt; toy-engine.lisp&lt;/code&gt; are still empty and consist of one line each:&lt;/p&gt;
-
-&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;&lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;&lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;cl&quot; /&gt;
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;in-package&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;#:toy-engine&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;/div&gt;
-
-&lt;h2 id=&quot;grammar-diagram&quot;&gt;Grammar Diagram&lt;/h2&gt;
-&lt;p&gt;The engine will understand the simplest subset of HTML, here is a diagram of its grammar:
-&lt;img src=&quot;/imgs/posts/lisp-webengine-html-grammar.png&quot; alt=&quot;Grammar scheme for HTM&quot; title=&quot;The simplest grammar for HTML&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;symbol-validation-functions&quot;&gt;Symbol Validation Functions&lt;/h2&gt;
-&lt;p&gt;These simple functions, which are needed to check the characters in the META operation &lt;code class=&quot;highlighter-rouge&quot;&gt;@&lt;/code&gt;, must be available at compile time:&lt;/p&gt;
-
-&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;&lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;&lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;cl&quot; /&gt;
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;eval-when&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:compile-toplevel&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:load-toplevel&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:execute&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;gen-text-p&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;&quot;Text is always between &amp;gt; and &amp;lt;&quot;&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;char/=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ch&lt;/span&gt; &lt;span class=&quot;sc&quot;&gt;#\&amp;lt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;always-true&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;&quot;Any character is right one&quot;&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;declare&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;ignore&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-    &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;azAZ09-p&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;&quot;Alphanumerical&quot;&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;or&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;and&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;char&amp;gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ch&lt;/span&gt; &lt;span class=&quot;sc&quot;&gt;#\a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-             &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;char&amp;lt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ch&lt;/span&gt; &lt;span class=&quot;sc&quot;&gt;#\z&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;and&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;char&amp;gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ch&lt;/span&gt; &lt;span class=&quot;sc&quot;&gt;#\A&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-             &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;char&amp;lt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ch&lt;/span&gt; &lt;span class=&quot;sc&quot;&gt;#\Z&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;digit-char-p&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;/div&gt;
-&lt;p&gt;The function is called not explicitly, but through checking the membership of the data type:&lt;/p&gt;
-
-&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;&lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;&lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;cl&quot; /&gt;
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;deftype&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;gen-text&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-  &lt;span class=&quot;s&quot;&gt;&quot;All except a &amp;lt;&quot;&lt;/span&gt;
-  &lt;span class=&quot;o&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;satisfies&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;gen-text-p&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;deftype&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;any-text&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-  &lt;span class=&quot;s&quot;&gt;&quot;Any character&quot;&lt;/span&gt;
-  &lt;span class=&quot;o&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;satisfies&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;always-true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;deftype&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tag-text&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-  &lt;span class=&quot;s&quot;&gt;&quot;Tag name is alphanumeric&quot;&lt;/span&gt;
-  &lt;span class=&quot;o&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;satisfies&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;azAZ09-p&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Another useful type is an empty space :smile:&lt;/p&gt;
-
-&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;&lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;&lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;cl&quot; /&gt;
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;deftype&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;whitespace&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-  &lt;span class=&quot;o&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;member&lt;/span&gt; &lt;span class=&quot;sc&quot;&gt;#\Space&lt;/span&gt; &lt;span class=&quot;sc&quot;&gt;#\Tab&lt;/span&gt; &lt;span class=&quot;sc&quot;&gt;#\LineFeed&lt;/span&gt; &lt;span class=&quot;sc&quot;&gt;#\Return&lt;/span&gt; &lt;span class=&quot;sc&quot;&gt;#\FormFeed&lt;/span&gt; &lt;span class=&quot;sc&quot;&gt;#\Page&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;/div&gt;
-
-&lt;h2 id=&quot;generation-of-nodes-and-the-parcers-skeleton&quot;&gt;Generation of nodes and the parcer’s skeleton&lt;/h2&gt;
-
-&lt;p&gt;The parser will create a DOM tree right through the parsing. For each type of node there corresponds its own function, first we will recognize one simple element: text. And its function:&lt;/p&gt;
-&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;&lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;&lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;cl&quot; /&gt;
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
-&lt;span class=&quot;c1&quot;&gt;;; Create nodes&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;;; Text&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;make-text-node&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;text&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;make-instance&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;'text-node&lt;/span&gt;
-		 &lt;span class=&quot;ss&quot;&gt;:text&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;text&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;/div&gt;
-&lt;p&gt;The parser accepts at the input a line for parsing, possibly the number of the first and last characters for parsing and returns the root node of the resulting tree. I do not yet know how the child nodes will join, so the parser’s skeleton looks like this:&lt;/p&gt;
-
-&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;&lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;&lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;cl&quot; /&gt;
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
-&lt;span class=&quot;c1&quot;&gt;;;; HTML parser&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;parse-html&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;str&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;&amp;amp;optional&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;index&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;end&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;length&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;declare&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;fixnum&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;index&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;end&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;labels&lt;/span&gt;
-      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
-       &lt;span class=&quot;c1&quot;&gt;;; node parsers&lt;/span&gt;
-       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;parse-text&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-          &lt;span class=&quot;s&quot;&gt;&quot;Text until &amp;lt;&quot;&lt;/span&gt;
-          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ch&lt;/span&gt;
-		 &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;text&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;with-output-to-string&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;matchit&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$[@&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;gen-text&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;write-char&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ch&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
-	    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;zerop&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;length&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;text&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-	        &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;
-		&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;make-text-node&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;text&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))))&lt;/span&gt;
-      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;parse-text&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;/div&gt;
-&lt;p&gt;We check on the tree from one text node:&lt;/p&gt;
-
-&lt;div itemscope=&quot;&quot; itemtype=&quot;http://schema.org/SoftwareSourceCode&quot;&gt;&lt;meta itemprop=&quot;codeSampleType&quot; content=&quot;code snippet&quot; /&gt;&lt;meta itemprop=&quot;programmingLanguage&quot; content=&quot;cl&quot; /&gt;
-&lt;div class=&quot;language-cl highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
-&lt;span class=&quot;nb&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ql:quickload&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;'toy-engine&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;To&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;load&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;toy-engine&quot;&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;nv&quot;&gt;Load&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ASDF&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;system:&lt;/span&gt;
-    &lt;span class=&quot;nv&quot;&gt;toy-engine&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;; Loading &quot;toy-engine&quot;&lt;/span&gt;
-
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;TOY-ENGINE&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;in-package&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:toy-engine&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-
-&lt;span class=&quot;err&quot;&gt;#&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;&amp;lt;PACKAGE&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;TOY-ENGINE&quot;&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defparameter&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*str*&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;  ''' This is a text&amp;lt; kj&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-
-&lt;span class=&quot;vg&quot;&gt;*STR*&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;parse-html&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;*str*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-
-&lt;span class=&quot;err&quot;&gt;#&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;&amp;lt;TEXT-NODE&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;{10050359A3}&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;pp-&amp;gt;dot&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;text-node.dot&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;pp-dom&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
-
-&lt;span class=&quot;s&quot;&gt;&quot;}&quot;&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;*&lt;/span&gt;
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;/div&gt;
-&lt;p&gt;Looks good::
-&lt;img src=&quot;/imgs/posts/lisp-webengine-text-node.png&quot; alt=&quot;Tree after parsing&quot; title=&quot;Tree after text parsing&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
 </content>
 	</entry>
 

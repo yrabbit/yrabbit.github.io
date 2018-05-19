@@ -1,32 +1,37 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
 	<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="chrome=1">
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="chrome=1" />
 		<meta http-equiv="Content-Language" content="ru">
-<link rel="alternate" hreflang="x-default" href="https://yrabbit.github.io/ru/blog/page3/index.html">
-<link rel="alternate" hreflang="en" href="https://yrabbit.github.io/ru/blog/page3/index.html">
+<link rel="alternate"
+      hreflang="x-default"
+      href="  https://yrabbit.github.io/blog/page3/index.html" />
+<link rel="alternate"
+      hreflang="en"
+      href="  https://yrabbit.github.io/blog/page3/index.html" />
 
 
   
 
-<link rel="alternate" hreflang="ru" href="https://yrabbit.github.io/ru/blog/page3/index.html">
+<link rel="alternate"
+    hreflang="ru"
+    href=" https://yrabbit.github.io/ru/blog/page3/index.html" />
 
 
 
 		<!-- Begin Jekyll SEO tag v2.4.0 -->
-<meta name="generator" content="Jekyll v3.7.3">
-<meta property="og:title" content="{“en”=&gt;”Asm, Lisp, and so on - Programmer’s Blog”, “ru”=&gt;”Ассемблер, Lisp и всё такое - блог программиста”}">
-<meta name="author" content="Yellow Rabbit">
-<meta property="og:locale" content="en">
-<meta name="description" content="A programmer’s blog about experiments with PDP-11 assembler, Lisp, as well as other fun things.">
-<meta property="og:description" content="A programmer’s blog about experiments with PDP-11 assembler, Lisp, as well as other fun things.">
-<link rel="canonical" href="https://yrabbit.github.io/ru/blog/page3/">
-<meta property="og:url" content="https://yrabbit.github.io/blog/page3/">
-<meta property="og:site_name" content="{“en”=&gt;”Asm, Lisp, and so on - Programmer’s Blog”, “ru”=&gt;”Ассемблер, Lisp и всё такое - блог программиста”}">
-<link rel="prev" href="https://yrabbit.github.io/ru/blog/page2/">
-<link rel="next" href="https://yrabbit.github.io/ru/blog/page4/">
+<meta name="generator" content="Jekyll v3.8.1" />
+<meta property="og:title" content="{“en”=&gt;”Asm, Lisp, and so on - Programmer’s Blog”, “ru”=&gt;”Ассемблер, Lisp и всё такое - блог программиста”}" />
+<meta name="author" content="Yellow Rabbit" />
+<meta property="og:locale" content="en" />
+<meta name="description" content="A programmer’s blog about experiments with PDP-11 assembler, Lisp, as well as other fun things." />
+<meta property="og:description" content="A programmer’s blog about experiments with PDP-11 assembler, Lisp, as well as other fun things." />
+<link rel="canonical" href="https://yrabbit.github.io/ru/blog/page3/" />
+<meta property="og:url" content="https://yrabbit.github.io/blog/page3/" />
+<meta property="og:site_name" content="{“en”=&gt;”Asm, Lisp, and so on - Programmer’s Blog”, “ru”=&gt;”Ассемблер, Lisp и всё такое - блог программиста”}" />
+<link rel="prev" href="https://yrabbit.github.io/ru/blog/page2/" />
+<link rel="next" href="https://yrabbit.github.io/ru/blog/page4/" />
 <script type="application/ld+json">
 {"description":"A programmer’s blog about experiments with PDP-11 assembler, Lisp, as well as other fun things.","author":{"@type":"Person","name":"Yellow Rabbit"},"@type":"WebPage","url":"https://yrabbit.github.io/blog/page3/","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://yrabbit.github.io/imgs/blog-log.png"},"name":"Yellow Rabbit"},"headline":"{“en”=&gt;”Asm, Lisp, and so on - Programmer’s Blog”, “ru”=&gt;”Ассемблер, Lisp и всё такое - блог программиста”}","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
@@ -40,11 +45,11 @@
 		</title>
 		
 
-		<link rel="alternate" type="application/atom+xml" title="Yellow Rabbit — Feed" href="https://yrabbit.github.io/ru/blog/feed.atom">
+		<link rel="alternate" type="application/atom+xml" title="Yellow Rabbit — Feed" href="https://yrabbit.github.io/ru/blog/feed.atom" />
 
                 <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Lato:300italic,700italic,300,700">
-		<link rel="stylesheet" href="/css/styles.css">
-		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+		<link rel="stylesheet" href="/css/styles.css" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<!--[if lt IE 9]>
 		<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 		<![endif]-->
@@ -65,6 +70,25 @@
 <hr>
 
 <div class="articles">
+
+  <div>
+	<h2 class="post-title"><a href="/ru/blog/2017/c720-and-syslinux/">Починка загрузчика isolinux для Acer C720</a></h2>
+	<p class="post-meta">
+		18 Nov 2017 •
+		2 мин. читать •
+		<a href="/ru/blog/2017/c720-and-syslinux/#disqus_thread" data-disqus-identifier="2017-11-18-c720-and-syslinux.md">Comments</a>
+	</p>
+
+	
+	<a href="/ru/blog/2017/c720-and-syslinux/" class="post-banner" style="background-image: url(/imgs/post-banners/CD.jpeg);">
+		<img src="/imgs/post-banners/CD.jpeg" alt="Починка загрузчика isolinux для Acer C720">
+	</a>
+	
+	
+	<p class="post-excerpt">Оказалось, что дистрибутив antiX Linux не хочет дружить с моим Acer C720: установщик впадает в так называемый bootloop. Причина заключается в особенностях Sea BIOS, которая забирает себе 16М нижней памяти, что приводит к краху syslinux. Это исправлено в версии 6.04 syslinux, но что делать мне сейчас со старым дистрибутивом на руках? Будем заменять syslinux в ISO.
+
+ [<a href="/ru/blog/2017/c720-and-syslinux/">читать дальше...</a>]</p>
+  </div>	
 
   <div>
 	<h2 class="post-title"><a href="/ru/blog/2017/an-addition-to-the-family-two-tiny-larches/">Добавление к семейству: две маленькие лиственницы</a></h2>
@@ -145,25 +169,6 @@
 	<p class="post-excerpt">Чтобы указывать что за кусок кода я размещаю на странице я на скорую руку набросал плагин для Jekyll. Он добавляет микроразметку к блоку кода.
 
  [<a href="/ru/blog/2017/microdata-for-syntax-highlighter/">читать дальше...</a>]</p>
-  </div>	
-
-  <div>
-	<h2 class="post-title"><a href="/ru/blog/2017/space-mercenary-review/">Обзор игры Космический Наёмник (Space Mercenary)</a></h2>
-	<p class="post-meta">
-		10 Aug 2017 •
-		3 мин. читать •
-		<a href="/ru/blog/2017/space-mercenary-review/#disqus_thread" data-disqus-identifier="2017-08-10-space-mercenary-review.md">Comments</a>
-	</p>
-
-	
-	<a href="/ru/blog/2017/space-mercenary-review/" class="post-banner" style="background-image: url(/imgs/post-banners/nebula.png);">
-		<img src="/imgs/post-banners/nebula.png" alt="Обзор игры Космический Наёмник (Space Mercenary)">
-	</a>
-	
-	
-	<p class="post-excerpt">Бывает, что затеяв рутинную уборку на чердаке, перебираешь старые штуковины в коробках и вдруг попадётся тебе детская твоя машинка, и нахлынут воспоминания и застынешь, позабыв обо всём. Вот так и с игрой “Космический наёмник”. Среди бесплатных мобильных игр так много мусора, что Космический Наемник (aka Space Mercenary 宇宙佣兵) оказался приятным сюрпризом.
-
- [<a href="/ru/blog/2017/space-mercenary-review/">читать дальше...</a>]</p>
   </div>	
 
 </div>

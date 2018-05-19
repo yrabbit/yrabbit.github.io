@@ -1,31 +1,36 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
 	<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="chrome=1">
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="chrome=1" />
 		<meta http-equiv="Content-Language" content="en">
-<link rel="alternate" hreflang="x-default" href="https://yrabbit.github.io/blog/index.html">
-<link rel="alternate" hreflang="en" href="https://yrabbit.github.io/blog/index.html">
+<link rel="alternate"
+      hreflang="x-default"
+      href="  https://yrabbit.github.io/blog/index.html" />
+<link rel="alternate"
+      hreflang="en"
+      href="  https://yrabbit.github.io/blog/index.html" />
 
 
   
 
-<link rel="alternate" hreflang="ru" href="https://yrabbit.github.io/ru/blog/index.html">
+<link rel="alternate"
+    hreflang="ru"
+    href=" https://yrabbit.github.io/ru/blog/index.html" />
 
 
 
 		<!-- Begin Jekyll SEO tag v2.4.0 -->
-<meta name="generator" content="Jekyll v3.7.3">
-<meta property="og:title" content="{“en”=&gt;”Asm, Lisp, and so on - Programmer’s Blog”, “ru”=&gt;”Ассемблер, Lisp и всё такое - блог программиста”}">
-<meta name="author" content="Yellow Rabbit">
-<meta property="og:locale" content="en">
-<meta name="description" content="A programmer’s blog about experiments with PDP-11 assembler, Lisp, as well as other fun things.">
-<meta property="og:description" content="A programmer’s blog about experiments with PDP-11 assembler, Lisp, as well as other fun things.">
-<link rel="canonical" href="https://yrabbit.github.io/blog/">
-<meta property="og:url" content="https://yrabbit.github.io/blog/">
-<meta property="og:site_name" content="{“en”=&gt;”Asm, Lisp, and so on - Programmer’s Blog”, “ru”=&gt;”Ассемблер, Lisp и всё такое - блог программиста”}">
-<link rel="next" href="https://yrabbit.github.io/blog/page2/">
+<meta name="generator" content="Jekyll v3.8.1" />
+<meta property="og:title" content="{“en”=&gt;”Asm, Lisp, and so on - Programmer’s Blog”, “ru”=&gt;”Ассемблер, Lisp и всё такое - блог программиста”}" />
+<meta name="author" content="Yellow Rabbit" />
+<meta property="og:locale" content="en" />
+<meta name="description" content="A programmer’s blog about experiments with PDP-11 assembler, Lisp, as well as other fun things." />
+<meta property="og:description" content="A programmer’s blog about experiments with PDP-11 assembler, Lisp, as well as other fun things." />
+<link rel="canonical" href="https://yrabbit.github.io/blog/" />
+<meta property="og:url" content="https://yrabbit.github.io/blog/" />
+<meta property="og:site_name" content="{“en”=&gt;”Asm, Lisp, and so on - Programmer’s Blog”, “ru”=&gt;”Ассемблер, Lisp и всё такое - блог программиста”}" />
+<link rel="next" href="https://yrabbit.github.io/blog/page2/" />
 <script type="application/ld+json">
 {"description":"A programmer’s blog about experiments with PDP-11 assembler, Lisp, as well as other fun things.","author":{"@type":"Person","name":"Yellow Rabbit"},"@type":"WebPage","url":"https://yrabbit.github.io/blog/","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://yrabbit.github.io/imgs/blog-log.png"},"name":"Yellow Rabbit"},"headline":"{“en”=&gt;”Asm, Lisp, and so on - Programmer’s Blog”, “ru”=&gt;”Ассемблер, Lisp и всё такое - блог программиста”}","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
@@ -39,11 +44,11 @@
 		</title>
 		
 
-		<link rel="alternate" type="application/atom+xml" title="Yellow Rabbit — Feed" href="https://yrabbit.github.io/blog/feed.atom">
+		<link rel="alternate" type="application/atom+xml" title="Yellow Rabbit — Feed" href="https://yrabbit.github.io/blog/feed.atom" />
 
                 <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Lato:300italic,700italic,300,700">
-		<link rel="stylesheet" href="/css/styles.css">
-		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+		<link rel="stylesheet" href="/css/styles.css" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<!--[if lt IE 9]>
 		<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 		<![endif]-->
@@ -64,6 +69,27 @@
 <hr>
 
 <div class="articles">
+
+  <div>
+	<h2 class="post-title"><a href="/blog/2018/logical-level-converter/">Logical Level Converter </a></h2>
+	<p class="post-meta">
+		18 May 2018 •
+		3 min. read •
+		<a href="/blog/2018/logical-level-converter/#disqus_thread" data-disqus-identifier="2018-05-18-logical-level-converter.md">Comments</a>
+	</p>
+
+	
+	<a href="/blog/2018/logical-level-converter/" class="post-banner" style="background-image: url(/imgs/post-banners/logic-level-conv.png);">
+		<img src="/imgs/post-banners/logic-level-conv.png" alt="Logical Level Converter ">
+	</a>
+	
+	
+	<p class="post-excerpt">
+
+There is such a chip Max 7219, which is a seven-segment indicator controller. It not only allows to control eight such indicators, but also allows cascading connection with the same controllers, which allows to arbitrarily increase the bit capacity.
+
+ [<a href="/blog/2018/logical-level-converter/">more...</a>]</p>
+  </div>	
 
   <div>
 	<h2 class="post-title"><a href="/blog/2018/db-for-the-sensors-data/">Storing Temperature in the Database</a></h2>
@@ -153,27 +179,6 @@ Do not pay attention to the diodes, they still will not save. Resistor R1 can be
 Last time we got a garland of four LEDs to turn on and off wonderfully. Let’s try to use the hardware PWM that Raspberry Pi has. Of course, there is nothing to prevent the implementation of PWM in software, but I prefer to use the hardware in the first place - it was also paid for<img class="emoji" title=":smiley:" alt=":smiley:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f603.png" height="20" width="20">
 
  [<a href="/blog/2018/pwm-and-led/">more...</a>]</p>
-  </div>	
-
-  <div>
-	<h2 class="post-title"><a href="/blog/2018/more-lights/">More lights!</a></h2>
-	<p class="post-meta">
-		21 Mar 2018 •
-		5 min. read •
-		<a href="/blog/2018/more-lights/#disqus_thread" data-disqus-identifier="2018-03-21-more-lights.md">Comments</a>
-	</p>
-
-	
-	<a href="/blog/2018/more-lights/" class="post-banner" style="background-image: url(/imgs/post-banners/soldering-iron-min.png);">
-		<img src="/imgs/post-banners/soldering-iron-min.png" alt="More lights!">
-	</a>
-	
-	
-	<p class="post-excerpt">
-
-One blue LED was simply amazing. I have a few more LEDs in different colors. Let’s do something like a mini-garland!
-
- [<a href="/blog/2018/more-lights/">more...</a>]</p>
   </div>	
 
 </div>
